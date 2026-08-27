@@ -47,6 +47,7 @@ qualidade ≥ 75/100 antes de substituir a matriz ativa).
 
 **Decisão** — Control Tower · Mercado · Território · Geointeligência
 **Cliente** — Classificação MBB · Clientes · Customer 360 · Recorrência · Sazonalidade · Oportunidades
+**Comercial** — Participação Comercial · Responsáveis
 **Diagnóstico** — Concorrência · Licitações · Graph Explorer · Sensibilidade · Data Quality
 **Governança** — Importações · Regras
 
@@ -117,6 +118,70 @@ A tela *Data Quality* executa uma suíte determinística a cada renderização (
 sobre o universo filtrado) cobrindo as fronteiras exatas das faixas, valores inválidos,
 identidade do cliente e consistência dos dois denominadores.
 
+## Camada comercial — Participação
+
+Segunda planilha (`enriquecimento_clientes_Prime.xlsx`, 3.299 linhas) cruzada por **CHASSI**
+em **LEFT JOIN**. Ela **não é fonte de mercado**: nunca altera marca, modelo, data, cliente,
+território, classe MBB nem o denominador de Share of Trucks / Share of Clients. Emplacamentos
+continua sendo a *source of truth*.
+
+Auditoria do cruzamento: **98,2% de match** (2.314 de 2.357 emplacamentos), **zero** chassi
+duplicado, **zero** conflito de marca ou modelo. As 985 linhas órfãs da Participação são Van
+(699) e Ônibus (274) — não pertencem ao mercado de caminhões — mais 12 caminhões fora da base.
+Emplacamento sem correspondência é classificado como **Não informado**, nunca como “Sem
+participação”: tratá-lo como ausência de participação distorceria cobertura e captura.
+
+### Três dimensões que não se confundem
+
+```
+Market Share            quanto do mercado comprou Mercedes-Benz
+Commercial Coverage     quanto desse mercado foi trabalhado comercialmente
+Unit Capture Rate       quando participamos, quanto capturamos
+```
+
+```
+Commercial Coverage   = (Venda + Com participação) ÷ (Venda + Com + Sem)
+Coverage Completeness = unidades com status conhecido ÷ total de emplacamentos
+Unit Capture Rate     = Venda ÷ (Venda + Com participação)
+Client Coverage       = clientes com Venda ou Com participação ÷ clientes com status conhecido
+```
+
+“Não informado” fica **fora** do denominador de cobertura e é reportado à parte, para que baixa
+qualidade da planilha não se disfarce de baixa cobertura.
+
+**Unidade não é oportunidade.** Um chassi é uma unidade, não necessariamente uma negociação
+independente — um cliente pode ter comprado 50 caminhões numa única negociação. Por isso a
+métrica se chama *Unit Capture Rate* e nunca “taxa de conversão”, e as perdas são lidas como
+“50 unidades associadas ao motivo Preço”, nunca “50 negociações perdidas”.
+
+**Motivos têm duas leituras obrigatórias**: unidades e clientes únicos. “744 unidades / 155
+clientes” distingue perda pulverizada de perda concentrada numa conta grande. A taxonomia é
+normalizada e o texto original do motivo é sempre preservado.
+
+**O campo `Tipo`** aparece exclusivamente nas unidades “Sem participação” (727 de 727): ele
+qualifica *por que não participamos* (Dentro da Carteira Com/Sem Visita, Fora da Carteira), e
+não o tipo de cliente. **`Invasão`** tem 0,8% de preenchimento — preservado como RAW e marcado
+como não mapeado, sem interpretação.
+
+### Market Share ≠ Participação Comercial
+
+Das 409 Mercedes-Benz emplacadas, **374 (91,4%) são venda nossa** e 35 chegaram ao mercado por
+outro canal da marca. Nenhuma linha “Venda” é de outra marca. O Share of Trucks segue contando
+as 409, porque mede o produto no mercado; a captura conta as 374, porque mede a atuação
+comercial. É a evidência direta de que as duas dimensões medem coisas diferentes.
+
+### Responsável comercial
+
+`Responsável` é o que a planilha declara — **não está comprovado** que corresponde a quem
+fechou a venda. Um cliente pode ter mais de um responsável (6 de 710 casos), por isso as
+métricas são por **unidade** e a contagem de clientes significa “clientes tocados”, não
+carteira exclusiva; a soma de clientes por responsável pode superar o total da equipe.
+
+A dimensão canônica resolve aliases de grafia (`Camila Cavaliere` = `Camila da Silva
+Cavaliere`). Nomes são exibidos abreviados (primeiro nome + inicial). Não há ranking por
+volume de venda: o gráfico Cobertura × Captura usa a **mediana da equipe** como corte, nunca
+50% arbitrário, e considera apenas responsáveis com ao menos 10 unidades de status conhecido.
+
 ## Conceitos analíticos
 
 - **Whitespace** = volume total observado − volume Mercedes-Benz. É o volume que a conta
@@ -148,6 +213,12 @@ O número do CNPJ é **pseudonimizado**: cada raiz real foi trocada por uma raiz
 forma determinística, preservando o agrupamento de clientes (724 raízes), a distinção de
 filiais e os dígitos verificadores válidos. O XLSX com os CNPJs reais e o mapa reverso ficam
 fora do repositório, protegidos pelo `.gitignore`.
+
+> **Atenção — a camada comercial reverte a pseudonimização.** A planilha de Participação traz
+> o CNPJ real e, a pedido explícito, ele foi importado. Como o cruzamento é por chassi, isso
+> permite reconstruir o mapa entre a raiz sintética e o CNPJ verdadeiro de toda a base de
+> clientes. **Esta versão não deve ir para um repositório público**: torne o repositório
+> privado ou gere uma variante sem a coluna `CNPJ_Participacao` antes de publicar.
 
 Razão social, chassi, placa e o comportamento de compra por cliente **permanecem como no
 original**. Como o nome da empresa identifica o cliente de forma mais direta que o CNPJ, a
