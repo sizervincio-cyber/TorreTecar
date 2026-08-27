@@ -46,9 +46,76 @@ qualidade ≥ 75/100 antes de substituir a matriz ativa).
 ## Telas
 
 **Decisão** — Control Tower · Mercado · Território · Geointeligência
-**Cliente** — Clientes · Customer 360 · Recorrência · Sazonalidade · Oportunidades
+**Cliente** — Classificação MBB · Clientes · Customer 360 · Recorrência · Sazonalidade · Oportunidades
 **Diagnóstico** — Concorrência · Licitações · Graph Explorer · Sensibilidade · Data Quality
 **Governança** — Importações · Regras
+
+## Classificação MBB — R1 a W2
+
+As faixas oficiais Mercedes-Benz **não foram alteradas**. A nomenclatura analítica foi
+expandida em duas subclasses por classe oficial, com ordem de exibição fixa `R1 → W2`
+(nunca alfabética):
+
+| Classe oficial | Classe analítica | Código | Faixa |
+|---|---|---|---:|
+| Retail | Retail Base | `R1` | 1–2 |
+| Retail | Retail Plus | `R2` | 3–4 |
+| Middle | Middle Core | `M1` | 5–14 |
+| Middle | Middle Large | `M2` | 15–49 |
+| Wholesale | Wholesale Key | `W1` | 50–299 |
+| Wholesale | Wholesale Strategic | `W2` | 300+ |
+
+**Métrica de classificação:** volume *anualizado* de emplacamentos do cliente (registros na
+base completa do snapshot × 365 ÷ dias de cobertura) — exatamente a mesma métrica que o
+sistema já usava para o perfil comercial. Nenhuma métrica foi substituída: emplacamentos,
+frota, compras históricas e YTD seguem como métricas próprias e independentes.
+
+A faixa é aplicada como intervalo semiaberto `[min, max+1)`: para qualquer valor inteiro o
+resultado é idêntico à tabela oficial. Volume ausente, zero, negativo ou não numérico → `NA`.
+
+A classe **não é persistida** — é recalculada em runtime a partir da matriz, portanto
+snapshots antigos continuam válidos sem migração nem regravação. `classifyCustomerRange()`
+é a fonte única da verdade; o perfil comercial (`VAREJO` / `REGIONAL` / `FROTISTA` /
+`SETOR PÚBLICO` / …) continua existindo como dimensão separada e complementar.
+
+## Share of Trucks × Share of Clients
+
+Toda participação no painel declara o denominador. Um seletor global alterna as duas
+perspectivas em todas as telas onde participação faz sentido:
+
+```
+Share of Trucks  = emplacamentos da marca ÷ emplacamentos do universo filtrado
+Share of Clients = clientes únicos que compraram a marca
+                   ÷ clientes únicos compradores do universo filtrado
+```
+
+**Share of Clients mede penetração e não é aditivo.** Um cliente que comprou Mercedes-Benz,
+Volvo e Scania no mesmo período é contado nas três marcas, então a soma entre marcas pode
+ultrapassar 100% — isso não é erro. Na base atual a soma é ≈ 110%; o excesso sobre 100% é a
+medida de clientes multimarca.
+
+A identidade do cliente usa o mesmo Entity Resolution do resto do sistema
+(`CNPJ raiz → CNPJ completo → CPF → chave tratada`). Emplacamento nunca é contado como
+cliente e filiais da mesma raiz são um único cliente. O balde agregado de PF não
+identificada representa muitos clientes reais sob um único rótulo: permanece integralmente
+no denominador de *Trucks* e é excluído da contagem de clientes únicos, para não inflar
+artificialmente nenhuma penetração.
+
+Métricas derivadas e vizinhas, mantidas semanticamente separadas:
+
+- **Depth Index** = Share of Trucks ÷ Share of Clients. `> 1` volume proporcionalmente maior
+  que a presença em clientes; `≈ 1` equilíbrio; `< 1` presença ampla com baixo volume
+  relativo. Nunca lido isoladamente.
+- **Clientes exclusivos** = clientes que compraram somente aquela marca ÷ clientes
+  compradores. É métrica distinta e não substitui Share of Clients.
+- **Share of Wallet** (Customer 360) = unidades MB do cliente ÷ unidades totais daquele
+  cliente. Mede profundidade *dentro* de uma conta, não penetração no mercado.
+- **Whitespace Clients** = clientes compradores em que a Mercedes-Benz não tem participação,
+  complementando o Whitespace Volume.
+
+A tela *Data Quality* executa uma suíte determinística a cada renderização (43 asserções
+sobre o universo filtrado) cobrindo as fronteiras exatas das faixas, valores inválidos,
+identidade do cliente e consistência dos dois denominadores.
 
 ## Conceitos analíticos
 
