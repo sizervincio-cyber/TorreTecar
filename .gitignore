@@ -9,3 +9,14 @@ coverage/
 playwright-report/
 test-results/
 *.log
+
+# Arquivos grandes / compactados — GitHub avisa acima de 50 MB por arquivo
+*.zip
+prospectos/
+
+# Dados comerciais brutos fora do escopo do dashboard.
+# Apague as linhas abaixo se quiser versioná-los no repositório PRIVADO.
+CARTEIRA - GRANDES CONTAS PESADOS.xlsx
+EMPLACAMENTOS *.xlsx
+Carteira Grandes Frotas .MD
+carteira_gestor_grandes_frotas_*.html
