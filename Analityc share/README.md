@@ -7,19 +7,31 @@ construído como um único arquivo HTML autocontido.
 
 | Arquivo | Papel |
 |---|---|
-| `Market_Intelligence_Command_Center.html` | Aplicação completa (Vue 3 + Chart.js + amCharts 5 + Leaflet + Cytoscape) |
+| `../Analitycmbb.html` | Aplicação completa, na **raiz do repositório** (Vue 3 + Chart.js + amCharts 5 + Leaflet + Cytoscape) |
 | `EMPLACAMENTO - ANÁLISE PERFIL CLIENTES.xlsx` | Matriz fonte — 2.357 emplacamentos, jan–ago/2026 |
+| `capa.jpg` | Imagem de fundo da tela de acesso |
+
+O HTML fica na raiz para produzir uma URL curta no GitHub Pages; os dados continuam
+nesta pasta e são referenciados por caminho relativo (`Analityc share/…`).
 
 ## Como rodar
 
 O arquivo abre direto no navegador, mas para que a planilha seja lida como **fonte viva**
-é preciso servi-lo por HTTP (o `fetch` do XLSX não funciona sob `file://`):
+é preciso servi-lo por HTTP a partir da **raiz do repositório** (o `fetch` do XLSX não
+funciona sob `file://`):
 
 ```bash
-python -m http.server 8741
+python -m http.server 8755
 ```
 
-Depois abra <http://localhost:8741/Market_Intelligence_Command_Center.html>.
+Depois abra <http://localhost:8755/Analitycmbb.html>.
+
+## Acesso
+
+O painel abre numa tela de login (`Tecarmbb` / `Actros2653`), lembrada por sessão do
+navegador. **Isso não é um controle de segurança**: a verificação roda no navegador e tanto
+as credenciais quanto os dados estão no código-fonte da página. Serve para organizar o
+acesso e evitar navegação casual, não para proteger a informação.
 
 No carregamento o painel tenta, nesta ordem:
 
@@ -65,9 +77,12 @@ endereço exato do estabelecimento.
 
 ## Privacidade
 
-O HTML embute registros comerciais reais: razão social, CNPJ, chassi, placa e comportamento
-de compra por cliente. **Mantenha este repositório privado.** Publicar o painel em GitHub
-Pages ou em qualquer host público torna esses dados acessíveis e indexáveis.
+O número do CNPJ é **pseudonimizado**: cada raiz real foi trocada por uma raiz sintética de
+forma determinística, preservando o agrupamento de clientes (724 raízes), a distinção de
+filiais e os dígitos verificadores válidos. O XLSX com os CNPJs reais e o mapa reverso ficam
+fora do repositório, protegidos pelo `.gitignore`.
 
-Para uma versão publicável, gere antes um snapshot anonimizado (mascarar CNPJ, razão social,
-chassi e placa) — os cálculos do painel continuam funcionando sobre dados mascarados.
+Razão social, chassi, placa e o comportamento de compra por cliente **permanecem como no
+original**. Como o nome da empresa identifica o cliente de forma mais direta que o CNPJ, a
+pseudonimização do documento reduz pouco a exposição: em repositório público, este conteúdo
+é informação comercial identificável e indexável.
