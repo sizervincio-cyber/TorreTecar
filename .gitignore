@@ -20,3 +20,7 @@ CARTEIRA - GRANDES CONTAS PESADOS.xlsx
 EMPLACAMENTOS *.xlsx
 Carteira Grandes Frotas .MD
 carteira_gestor_grandes_frotas_*.html
+
+# Backup com CNPJ real e mapa reverso - NUNCA versionar
+EMPLACAMENTO - ANALISE PERFIL CLIENTES (ORIGINAL-CNPJ-REAL).xlsx
+cnpj-map-PRIVADO.json
