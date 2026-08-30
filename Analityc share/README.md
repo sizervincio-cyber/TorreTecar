@@ -43,6 +43,10 @@ Para atualizar os dados, basta **salvar a planilha por cima e recarregar a pági
 ou usar a tela *Importações* para subir outra matriz (validação de schema + gate de
 qualidade ≥ 75/100 antes de substituir a matriz ativa).
 
+A matriz importada pela tela fica **fixada** (`micc_pinned_hash` em localStorage) e tem
+precedência sobre a planilha do servidor, inclusive ao recarregar. A tela *Importações*
+mostra qual fonte está ativa e permite voltar para a planilha do servidor.
+
 ## Telas
 
 **Decisão** — Control Tower · Mercado · Território · Geointeligência
@@ -66,10 +70,21 @@ expandida em duas subclasses por classe oficial, com ordem de exibição fixa `R
 | Wholesale | Wholesale Key | `W1` | 50–299 |
 | Wholesale | Wholesale Strategic | `W2` | 300+ |
 
-**Métrica de classificação:** volume *anualizado* de emplacamentos do cliente (registros na
-base completa do snapshot × 365 ÷ dias de cobertura) — exatamente a mesma métrica que o
-sistema já usava para o perfil comercial. Nenhuma métrica foi substituída: emplacamentos,
-frota, compras históricas e YTD seguem como métricas próprias e independentes.
+**Métrica de classificação:** volume *anualizado* de emplacamentos do cliente **na janela de
+classificação** — exatamente a mesma métrica que o sistema já usava para o perfil comercial.
+Nenhuma métrica foi substituída: emplacamentos, frota, compras históricas e YTD seguem como
+métricas próprias e independentes.
+
+**Janela de classificação** (`rules.classWindowDays`, padrão 365): o volume é medido nos
+últimos 12 meses do snapshot, nunca na base inteira. Com base menor que um ano o
+comportamento é o de sempre — o volume observado é projetado para o ano. Com base maior, não
+há projeção: vale o volume dos últimos 12 meses.
+
+Sem essa janela, uma base multianual dilui o porte do cliente: em 2.425 dias o fator de
+anualização cai para 0,15 e um cliente com 6 caminhões em 6 anos resulta em 0,90 — abaixo de
+1, portanto **sem classificação**. Numa base 2020–2026 isso jogava 87,7% dos clientes em `NA`.
+Clientes que compraram no histórico mas nada dentro da janela aparecem em `NA` rotulado como
+**“sem compra na janela”**: é base inativa no período, não falha de dado.
 
 A faixa é aplicada como intervalo semiaberto `[min, max+1)`: para qualquer valor inteiro o
 resultado é idêntico à tabela oficial. Volume ausente, zero, negativo ou não numérico → `NA`.
