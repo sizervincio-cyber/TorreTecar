@@ -8,8 +8,15 @@ construído como um único arquivo HTML autocontido.
 | Arquivo | Papel |
 |---|---|
 | `../Analitycmbb.html` | Aplicação completa, na **raiz do repositório** (Vue 3 + Chart.js + amCharts 5 + Leaflet + Cytoscape) |
-| `EMPLACAMENTO - ANÁLISE PERFIL CLIENTES.xlsx` | Matriz fonte — 2.357 emplacamentos, jan–ago/2026 |
+| `consolidado_emplacamentos_2020_2026.xlsx` | **Matriz fonte ativa** — 26.092 emplacamentos, jan/2020 a ago/2026 |
+| `EMPLACAMENTO - ANÁLISE PERFIL CLIENTES.xlsx` | Matriz anterior — 2.357 emplacamentos, 2026 YTD (mantida como histórico) |
 | `capa.jpg` | Imagem de fundo da tela de acesso |
+
+A matriz publicada contém **apenas as 19 colunas que o painel efetivamente lê**. As colunas de
+enriquecimento cadastral do arquivo de origem — CPF e nome de sócio/diretor, telefone,
+logradouro, bairro e CEP — são dado pessoal de terceiros e **não vão para o repositório**;
+nenhuma análise depende delas. A data é gravada em ISO `aaaa-mm-dd` e o CNPJ como texto, o que
+elimina na origem as duas corrupções de locale do Excel.
 
 O HTML fica na raiz para produzir uma URL curta no GitHub Pages; os dados continuam
 nesta pasta e são referenciados por caminho relativo (`Analityc share/…`).
