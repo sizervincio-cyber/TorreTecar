@@ -47,6 +47,19 @@ A matriz importada pela tela fica **fixada** (`micc_pinned_hash` em localStorage
 precedência sobre a planilha do servidor, inclusive ao recarregar. A tela *Importações*
 mostra qual fonte está ativa e permite voltar para a planilha do servidor.
 
+### Correção de data no import
+
+Planilha salva com locale en-US converte as datas ambíguas (dia ≤ 12) em data real lendo
+`dd/mm` como `mm/dd`, e deixa as demais como texto. O SheetJS então entrega as convertidas com
+ano de dois dígitos, que o parser rejeitava — os registros entravam **sem data**. Na base
+2020–2026 isso atingia 6.676 de 26.092 (25,6%).
+
+O import detecta a mistura dos dois formatos, relê as convertidas como `dd/mm/aa` (o primeiro
+campo exibido é o dia verdadeiro) e normaliza tudo para ISO. Só aplica quando nenhum valor
+recuperado fica inválido; caso contrário não altera nada. O resultado é declarado na tela
+*Data Quality*, com a contagem exata. **Para eliminar a causa**, exporte a coluna de data como
+texto ou no formato ISO `aaaa-mm-dd`.
+
 ## Telas
 
 **Decisão** — Control Tower · Mercado · Território · Geointeligência
@@ -75,16 +88,39 @@ classificação** — exatamente a mesma métrica que o sistema já usava para o
 Nenhuma métrica foi substituída: emplacamentos, frota, compras históricas e YTD seguem como
 métricas próprias e independentes.
 
-**Janela de classificação** (`rules.classWindowDays`, padrão 365): o volume é medido nos
-últimos 12 meses do snapshot, nunca na base inteira. Com base menor que um ano o
-comportamento é o de sempre — o volume observado é projetado para o ano. Com base maior, não
-há projeção: vale o volume dos últimos 12 meses.
+**Critério de classificação** (`rules.classMode`, padrão `ativos`): o denominador de tempo é
+explícito e selecionável em *Regras*, porque numa base multianual a escolha muda tudo.
 
-Sem essa janela, uma base multianual dilui o porte do cliente: em 2.425 dias o fator de
-anualização cai para 0,15 e um cliente com 6 caminhões em 6 anos resulta em 0,90 — abaixo de
-1, portanto **sem classificação**. Numa base 2020–2026 isso jogava 87,7% dos clientes em `NA`.
-Clientes que compraram no histórico mas nada dentro da janela aparecem em `NA` rotulado como
-**“sem compra na janela”**: é base inativa no período, não falha de dado.
+| Critério | Como lê o volume | Distribuição na base 2020–2026 |
+|---|---|---|
+| `ativos` (padrão) | total ÷ anos em que o cliente comprou | R1 3.293 · R2 264 · M1 156 · M2 41 · W1 9 · **NA 0** |
+| `pico` | maior volume num único ano | R1 3.038 · R2 390 · M1 251 · M2 64 · W1 18 · W2 2 |
+| `cobertura` | total ÷ anos da base inteira | **89% em NA** — não usar em base multianual |
+| `janela` | volume dos últimos 12 meses | 80% em NA (os inativos no período) |
+
+Dividir pela cobertura inteira dilui o porte: em 6,64 anos um cliente com 6 caminhões resulta
+em 0,90 — abaixo de 1, portanto sem classificação. Por isso o padrão é a **média por ano
+ativo**, que é a leitura operacional de “volume médio por ano”: mede a intensidade de compra
+quando o cliente compra. O balde agregado de PF não identificada nunca é classificado — é um
+rótulo com muitos clientes reais, não uma conta.
+
+## Migração de classe
+
+A classe é recalculada **ano a ano**, pelo volume de cada ano-calendário, e comparada entre
+dois períodos. Responde não “qual o porte do cliente” mas **como o porte mudou**: quem subiu,
+quem desceu, quem manteve, quem entrou e quem parou de comprar. Inclui matriz de transição
+(diagonal = manteve, acima = subiu, abaixo = desceu) e a lista das contas ordenada pela maior
+variação de volume.
+
+O padrão compara os dois últimos anos **completos** — o ano corrente costuma estar parcial e
+compará-lo faria a carteira inteira aparentar queda.
+
+## Tração
+
+Quando a matriz traz a coluna de tração, ela vira dimensão de análise e filtro global: share
+por tração nas duas leituras, líder de cada configuração e whitespace. Tração é proxy direto
+de aplicação — 6X4 e 8X4 concentram fora de estrada e carga pesada, 4X2 e 6X2 concentram
+rodoviário e distribuição.
 
 A faixa é aplicada como intervalo semiaberto `[min, max+1)`: para qualquer valor inteiro o
 resultado é idêntico à tabela oficial. Volume ausente, zero, negativo ou não numérico → `NA`.
