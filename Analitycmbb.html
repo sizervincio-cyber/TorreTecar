@@ -176,6 +176,14 @@ html.p169 .shell,html.p916 .shell,html.p169 .sidebar,html.p916 .sidebar,html.p16
 
 #tcoModule{position:fixed;inset:0;z-index:900;overflow:auto;background:var(--bg,#0c0d0f);color:var(--txt,#e8eaec);font-family:Archivo,system-ui,sans-serif}
 #tcoModule[hidden]{display:none}
+
+#tcoModule .frow.chk{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;cursor:pointer;padding:7px 0}
+#tcoModule .frow.chk span{font-size:12px;color:var(--txt-2);line-height:1.3}
+#tcoModule .frow.chk span small{display:block;font-size:10px;color:var(--txt-3);margin-top:2px}
+#tcoModule .frow.chk input[type=checkbox]{width:16px;min-width:16px;height:16px;margin:1px 0 0;accent-color:var(--accent);cursor:pointer;flex:0 0 16px}
+#tcoModule .f-note{font-size:10.5px;color:var(--txt-3);line-height:1.45;margin:-2px 0 8px}
+#tcoModule .comp-off{background:#2a2413;border-left:2px solid var(--warn);border-radius:0 5px 5px 0;padding:6px 9px;margin:0 0 7px;font-size:10.5px;line-height:1.4;color:var(--warn)}
+#tcoModule .comp-off b{color:var(--warn)}
 #tcoModule .tco-back{position:fixed;left:14px;top:12px;z-index:40;background:#22262b;color:#e8eaec;border:1px solid #2a2e34;border-radius:8px;padding:7px 13px;font:600 11px/1 'Archivo Narrow',system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;cursor:pointer}
 #tcoModule .tco-back:hover{background:#2a2e34}
 #tcoModule:has(#tcoView.open) .tco-back{display:none}
@@ -1820,6 +1828,22 @@ const dc=best.res.map.date;const rep={twoDigit:0,fourDigit:0,invalid:0,fixed:0,d
 
 'use strict';
 /* ============ DADOS-BASE (DEMONSTRAÇÃO) ============ */
+/* Componentes do TCO que o usuario pode incluir ou excluir. A ordem dos oito
+   primeiros espelha COMP_COLORS; 're' e 'li' entram depois porque abatem. */
+const COMP_DEFS=[
+ {k:'aq',l:'Preço de aquisição',s:'e a amortização do financiamento'},
+ {k:'ju',l:'Juros do financiamento'},
+ {k:'di',l:'Combustível'},
+ {k:'ar',l:'ARLA 32'},
+ {k:'ma',l:'Manutenção'},
+ {k:'ip',l:'IPVA'},
+ {k:'se',l:'Seguro'},
+ {k:'pa',l:'Custo de parada',s:'receita perdida por indisponibilidade'},
+ {k:'re',l:'Valor residual',s:'abate o TCO'},
+ {k:'li',l:'Liquidez e aplicação',s:'ganho financeiro comparativo'},
+];
+const PART_KEYS=['aq','ju','di','ar','ma','ip','se','pa'];
+const COMP_ALL=COMP_DEFS.reduce((o,c)=>(o[c.k]=1,o),{});
 const FIN_DEF = {pag:'fin', entrada:20, prazo:60, taxa:14, taxaUnit:'aa', carencia:0, carTipo:'cap'};
 const VEHICLES = [
  {id:'a2651', mb:1, marca:'M.BENZ', modelo:'ACTROS 2651S', trac:'6x4', pot:510, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1150000, kml:2.05, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
@@ -1910,6 +1934,9 @@ const GFIELDS = [
  {k:'desagio', l:'Deságio na venda do usado', u:'%', step:0.5},
  {k:'custoVenda', l:'Custos de venda', s:'comissão + preparação', u:'%', step:0.5},
  {k:'empate', l:'Limite de empate técnico', u:'%', step:0.5},
+ {sect:'COMPONENTES DO TCO'},
+ {note:'Desmarque o que não deve entrar. O item sai do cálculo, da tabela e dos gráficos.'},
+ ...COMP_DEFS.map(c=>({k:c.k, l:c.l, s:c.s, type:'check', comp:true})),
 ];
 
 /* ============ ESTADO ============ */
@@ -1952,10 +1979,12 @@ function simulate(v, g){
  const infM=Math.pow(1+g.infDiesel/100,1/12)-1, depM=1-Math.pow(1-v.deprec/100,1/12);
  const {iM,car,carTipo,fin,entrada,pv,prazo,pmt}=finParams(v);
  const kmEf=g.km*disp, recDia=g.receita/Math.max(1,g.diasOper);
+ const F=compFlags();
  let saldo=pv, vm=v.preco, baseAno=v.preco;
  let juros=0,dieselC=0,arlaC=0,manutC=0,ipvaC=0,segC=0,indispC=0;
- const cum=[entrada], mensal=[];
- let acc=entrada;
+ const e0=entrada*F.aq;
+ const cum=[e0], mensal=[];
+ let acc=e0;
  for(let m=1;m<=H;m++){
    if(m>1&&(m-1)%12===0) baseAno=vm;
    const pD=g.diesel*Math.pow(1+infM,m-1);
@@ -1963,24 +1992,31 @@ function simulate(v, g){
    const cd=litros*pD, ca=litros*(v.arla/100)*g.arlaPreco*Math.pow(1+infM,m-1);
    const cm=kmEf*v.manut, ci=baseAno*(v.ipva/100)/12, cs=baseAno*(v.segPct/100)/12;
    const cp=g.diasOper*(1-disp)*recDia*(g.margem/100);
-   dieselC+=cd; arlaC+=ca; manutC+=cm; ipvaC+=ci; segC+=cs; indispC+=cp;
-   let parcela=0;
+   dieselC+=cd*F.di; arlaC+=ca*F.ar; manutC+=cm*F.ma;
+   ipvaC+=ci*F.ip; segC+=cs*F.se; indispC+=cp*F.pa;
+   /* a matematica do financiamento roda inteira: desligar juros muda o que
+      e' CONTABILIZADO, nunca a evolucao do saldo devedor */
+   let jMes=0, amort=0, pagoJ=0, pagoA=0;
    if(fin){
      if(m<=car){                                    // período de carência
-       const j=saldo*iM; juros+=j;
-       if(carTipo==='jur'){ parcela=j; }            // paga só os juros
-       else { saldo+=j; }                           // capitaliza no saldo
+       jMes=saldo*iM;
+       if(carTipo==='jur'){ pagoJ=jMes; }           // paga só os juros
+       else { saldo+=jMes; }                        // capitaliza no saldo
      } else if(m<=car+prazo){                       // amortização Price
-       const j=saldo*iM; juros+=j; saldo=Math.max(0,saldo-(pmt-j)); parcela=pmt;
+       jMes=saldo*iM; amort=pmt-jMes;
+       saldo=Math.max(0,saldo-amort); pagoJ=jMes; pagoA=amort;
      }
    }
+   juros+=jMes*F.ju;
    vm*=(1-depM);
-   const out=cd+ca+cm+ci+cs+cp+parcela;
+   /* o desembolso acumulado segue os mesmos componentes: o juro pago vai com
+      'ju' e a amortizacao com 'aq', que e onde mora o principal */
+   const out=cd*F.di+ca*F.ar+cm*F.ma+ci*F.ip+cs*F.se+cp*F.pa+pagoJ*F.ju+pagoA*F.aq;
    acc+=out; cum.push(acc); mensal.push(out);
  }
- const residual=vm*(1-(g.desagio+g.custoVenda)/100);
- const opex=dieselC+arlaC+manutC+ipvaC+segC+indispC;
- const tco=v.preco+juros+opex-residual;
+ const residual=vm*(1-(g.desagio+g.custoVenda)/100)*F.re;
+ const opex=dieselC+arlaC+manutC+ipvaC+segC+indispC;   // ja filtrados acima
+ const tco=v.preco*F.aq+juros+opex-residual;
  return {H,entrada,pmt,juros,saldoFinal:saldo,dieselC,arlaC,manutC,ipvaC,segC,indispC,opex,vm,residual,tco,
          kmTot:kmEf*H, tcoKm:kmEf*H>0?tco/(kmEf*H):0, tcoMes:tco/H, cum, mensal};
 }
@@ -1990,11 +2026,12 @@ function compare(){
  if(!M||!C) return null;
  const rm=simulate(M,g), rc=simulate(C,g);
  const rd=Math.pow(1+g.taxaAplic/100,1/365)-1;
- rm.liquidez=C.diasVenda>M.diasVenda? rm.residual*(Math.pow(1+rd,C.diasVenda-M.diasVenda)-1):0;
- rc.liquidez=M.diasVenda>C.diasVenda? rc.residual*(Math.pow(1+rd,M.diasVenda-C.diasVenda)-1):0;
+ const fLi=compFlags().li;
+ rm.liquidez=fLi&&C.diasVenda>M.diasVenda? rm.residual*(Math.pow(1+rd,C.diasVenda-M.diasVenda)-1):0;
+ rc.liquidez=fLi&&M.diasVenda>C.diasVenda? rc.residual*(Math.pow(1+rd,M.diasVenda-C.diasVenda)-1):0;
  const rMm=Math.pow(1+g.taxaAplic/100,1/12)-1;
- rm.aplic=(M.pag==='vista'&&C.pag==='vista'&&M.preco<C.preco)?(C.preco-M.preco)*(Math.pow(1+rMm,rm.H)-1):0;
- rc.aplic=(M.pag==='vista'&&C.pag==='vista'&&C.preco<M.preco)?(M.preco-C.preco)*(Math.pow(1+rMm,rc.H)-1):0;
+ rm.aplic=(fLi&&M.pag==='vista'&&C.pag==='vista'&&M.preco<C.preco)?(C.preco-M.preco)*(Math.pow(1+rMm,rm.H)-1):0;
+ rc.aplic=(fLi&&M.pag==='vista'&&C.pag==='vista'&&C.preco<M.preco)?(M.preco-C.preco)*(Math.pow(1+rMm,rc.H)-1):0;
  rm.tcoFinal=rm.tco-rm.liquidez-rm.aplic;
  rc.tcoFinal=rc.tco-rc.liquidez-rc.aplic;
  return {M,C,rm,rc,delta:rm.tcoFinal-rc.tcoFinal,
@@ -2059,7 +2096,20 @@ function renderCatalog(){
 /* ============ GRÁFICOS SVG (instantâneos) ============ */
 const COMP_COLORS=[['Aquisição−residual','var(--c-aq)'],['Juros','var(--c-ju)'],['Diesel','var(--c-di)'],
  ['ARLA','var(--c-ar)'],['Manutenção','var(--c-ma)'],['IPVA','var(--c-ip)'],['Seguro','var(--c-se)'],['Parada','var(--c-pa)']];
-function parts(r, v){ return [v.preco-r.residual, r.juros, r.dieselC, r.arlaC, r.manutC, r.ipvaC, r.segC, r.indispC]; }
+if(!state.comp) state.comp={...COMP_ALL};
+for(const d of COMP_DEFS) if(state.comp[d.k]==null) state.comp[d.k]=1;
+
+function compFlags(){
+ const c=state.comp||{};
+ const o={}; for(const d of COMP_DEFS) o[d.k]=(c[d.k]==null?1:(c[d.k]?1:0));
+ return o;
+}
+function compOn(k){ return compFlags()[k]===1; }
+function compOff(){ return COMP_DEFS.filter(d=>!compOn(d.k)); }
+function parts(r, v){
+ const F=compFlags();
+ return [v.preco*F.aq-r.residual, r.juros, r.dieselC, r.arlaC, r.manutC, r.ipvaC, r.segC, r.indispC];
+}
 
 function chartStack(r){
  const pm=parts(r.rm,r.M), pc=parts(r.rc,r.C);
@@ -2077,7 +2127,7 @@ function chartStack(r){
    ${bar(pm,4,r.M.modelo.split(' ').slice(0,2).join(' '),r.rm.tcoFinal)}
    ${bar(pc,4+BH+GAP-24,r.C.modelo.split(' ').slice(0,2).join(' '),r.rc.tcoFinal)}
  </svg>
- <div class="legend">${COMP_COLORS.map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join('')}</div>`;
+ <div class="legend">${COMP_COLORS.map(([n,c],i)=>compOn(PART_KEYS[i])?`<span><i style="background:${c}"></i>${n}</span>`:'').join('')}</div>`;
 }
 function chartCumulative(r){
  const a=r.rm.cum, b=r.rc.cum, H=a.length-1;
@@ -2110,15 +2160,20 @@ function chartCumulative(r){
  <span style="color:var(--txt-3)">desembolso acumulado (entrada + parcelas + operação)</span></div>`;
 }
 function chartTornado(r){
+ const F=compFlags();
+ /* o rotulo do grupo se refaz com as partes ativas: sem IPVA a barra deixa de
+    se chamar "IPVA+Seguro" e passa a se chamar "Seguro" */
+ const rot=(partes,sep)=>partes.filter(([,k])=>compOn(k)).map(([n])=>n).join(sep||'+');
  const rows=[
-  ['Preço−residual', (r.C.preco-r.rc.residual)-(r.M.preco-r.rm.residual)],
-  ['Juros', r.rc.juros-r.rm.juros],
-  ['Diesel+ARLA', (r.rc.dieselC+r.rc.arlaC)-(r.rm.dieselC+r.rm.arlaC)],
-  ['Manutenção', r.rc.manutC-r.rm.manutC],
-  ['IPVA+Seguro', (r.rc.ipvaC+r.rc.segC)-(r.rm.ipvaC+r.rm.segC)],
-  ['Custo de parada', r.rc.indispC-r.rm.indispC],
-  ['Liquidez+aplic.', (r.rm.liquidez+r.rm.aplic)-(r.rc.liquidez+r.rc.aplic)],
- ];
+  [[['Preço','aq'],['residual','re']],'−', (r.C.preco*F.aq-r.rc.residual)-(r.M.preco*F.aq-r.rm.residual)],
+  [[['Juros','ju']],'+', r.rc.juros-r.rm.juros],
+  [[['Diesel','di'],['ARLA','ar']],'+', (r.rc.dieselC+r.rc.arlaC)-(r.rm.dieselC+r.rm.arlaC)],
+  [[['Manutenção','ma']],'+', r.rc.manutC-r.rm.manutC],
+  [[['IPVA','ip'],['Seguro','se']],'+', (r.rc.ipvaC+r.rc.segC)-(r.rm.ipvaC+r.rm.segC)],
+  [[['Custo de parada','pa']],'+', r.rc.indispC-r.rm.indispC],
+  [[['Liquidez+aplic.','li']],'+', (r.rm.liquidez+r.rm.aplic)-(r.rc.liquidez+r.rc.aplic)],
+ ].filter(x=>x[0].some(([,k])=>compOn(k)))
+  .map(x=>[rot(x[0],x[1]), x[2]]);
  const max=Math.max(...rows.map(x=>Math.abs(x[1])),1);
  const W=560,RH=24,mid=330;
  const bars=rows.map(([n,v],i)=>{
@@ -2137,6 +2192,14 @@ function chartTornado(r){
 }
 
 /* ============ TCO TELA CHEIA ============ */
+/* Um TCO com componentes desligados nao pode ser lido como TCO cheio.
+   O aviso acompanha a tabela e tambem a impressao. */
+function compAviso(){
+ const off=compOff();
+ if(!off.length) return '';
+ return `<div class="comp-off"><b>TCO parcial</b> — fora do cálculo: `+
+   off.map(d=>esc(d.l)).join(' · ')+`</div>`;
+}
 function compRow(n,a,b,kind,fmt){
  fmt=fmt||fBRL;
  const d=a-b, tol=Math.max(Math.abs(b)*state.g.empate/100,0.5);
@@ -2208,20 +2271,21 @@ function renderTco(){
     <div class="panel">
       <h4>DETALHAMENTO COMPONENTE A COMPONENTE</h4>
       <div class="comp-head"><span>COMPONENTE</span><span>M.BENZ</span><span>CONCOR.</span><span>Δ</span></div>
-      ${compRow('Preço de aquisição',M.preco,C.preco,'cost')}
-      <div class="crow"><span class="n" style="font-size:10.5px">🏦 ${finTxt(M)}</span><span></span><span class="n" style="font-size:10.5px;text-align:right;grid-column:3/5">${finTxt(C)}</span></div>
-      ${compRow('Entrada',rm.entrada,rc.entrada,'neutral')}
-      ${compRow('Parcela mensal',rm.pmt,rc.pmt,'neutral')}
-      ${compRow('Juros no horizonte',rm.juros,rc.juros,'cost')}
-      ${compRow('Combustível',rm.dieselC,rc.dieselC,'cost')}
-      ${compRow('ARLA 32',rm.arlaC,rc.arlaC,'cost')}
-      ${compRow('Manutenção',rm.manutC,rc.manutC,'cost')}
-      ${compRow('IPVA',rm.ipvaC,rc.ipvaC,'cost')}
-      ${compRow('Seguro',rm.segC,rc.segC,'cost')}
-      ${compRow('Custo de parada',rm.indispC,rc.indispC,'cost')}
-      ${compRow('(−) Residual líquido',rm.residual,rc.residual,'benefit')}
-      ${compRow('(−) Liquidez do usado',rm.liquidez,rc.liquidez,'benefit')}
-      ${(rm.aplic||rc.aplic)?compRow('(−) Ganho de aplicação',rm.aplic,rc.aplic,'benefit'):''}
+      ${compAviso()}
+      ${compOn('aq')?compRow('Preço de aquisição',M.preco,C.preco,'cost'):''}
+      ${(compOn('aq')||compOn('ju'))?`<div class="crow"><span class="n" style="font-size:10.5px">🏦 ${finTxt(M)}</span><span></span><span class="n" style="font-size:10.5px;text-align:right;grid-column:3/5">${finTxt(C)}</span></div>`:''}
+      ${compOn('aq')?compRow('Entrada',rm.entrada,rc.entrada,'neutral'):''}
+      ${(compOn('aq')||compOn('ju'))?compRow('Parcela mensal',rm.pmt,rc.pmt,'neutral'):''}
+      ${compOn('ju')?compRow('Juros no horizonte',rm.juros,rc.juros,'cost'):''}
+      ${compOn('di')?compRow('Combustível',rm.dieselC,rc.dieselC,'cost'):''}
+      ${compOn('ar')?compRow('ARLA 32',rm.arlaC,rc.arlaC,'cost'):''}
+      ${compOn('ma')?compRow('Manutenção',rm.manutC,rc.manutC,'cost'):''}
+      ${compOn('ip')?compRow('IPVA',rm.ipvaC,rc.ipvaC,'cost'):''}
+      ${compOn('se')?compRow('Seguro',rm.segC,rc.segC,'cost'):''}
+      ${compOn('pa')?compRow('Custo de parada',rm.indispC,rc.indispC,'cost'):''}
+      ${compOn('re')?compRow('(−) Residual líquido',rm.residual,rc.residual,'benefit'):''}
+      ${compOn('li')?compRow('(−) Liquidez do usado',rm.liquidez,rc.liquidez,'benefit'):''}
+      ${(compOn('li')&&(rm.aplic||rc.aplic))?compRow('(−) Ganho de aplicação',rm.aplic,rc.aplic,'benefit'):''}
       <div class="crow total"><span class="n">TCO TOTAL</span><span class="a">${fBRL(rm.tcoFinal)}</span><span class="b">${fBRL(rc.tcoFinal)}</span>
         <span class="d ${tie?'n0':(mbbWins?'g':'r')}">${tie?'=':fPct(Math.abs(deltaPct))}</span></div>
       <div class="crow"><span class="n">TCO / mês</span><span class="a">${fBRL(rm.tcoMes)}</span><span class="b">${fBRL(rc.tcoMes)}</span><span class="d n0"></span></div>
@@ -2252,6 +2316,11 @@ document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawers(); })
 function fieldHTML(f,val,scope){
  if(f.sect) return `<div class="f-sect">${f.sect}</div>`;
  if(f.echo) return `<div class="fin-echo" id="finEcho"></div>`;
+ if(f.note) return `<div class="f-note">${f.note}</div>`;
+ if(f.type==='check'){
+   return `<label class="frow chk"><span>${f.l}${f.s?`<small>${f.s}</small>`:''}</span>
+     <input type="checkbox" data-scope="${scope}" data-k="${f.k}" data-type="check" ${val?'checked':''}></label>`;
+ }
  if(f.type==='select'){
    const opts=f.opts.map(([v,l])=>`<option value="${v}" ${v===val?'selected':''}>${l}</option>`).join('');
    return `<div class="frow"><label>${f.l}${f.s?`<small>${f.s}</small>`:''}</label>
@@ -2293,7 +2362,11 @@ function updateFinEcho(){
   (fim>state.g.horiz?` · ⚠ ${fim-state.g.horiz}m além do horizonte`:'');
 }
 function openGlobals(){
- document.getElementById('dgBody').innerHTML = GFIELDS.map(f=>fieldHTML(f, f.k?state.g[f.k]:null,'g')).join('');
+ document.getElementById('dgBody').innerHTML = GFIELDS.map(f=>{
+   const sc=f.comp?'c':'g';
+   const val=f.k?(f.comp?compFlags()[f.k]:state.g[f.k]):null;
+   return fieldHTML(f,val,sc);
+ }).join('');
  openDrawer('dGlobals');
 }
 function markDirty(){
@@ -2307,6 +2380,13 @@ function markDirty(){
 document.addEventListener('input',e=>{
  const t=e.target; if(!t.dataset||!t.dataset.k) return;
  const k=t.dataset.k;
+ if(t.dataset.scope==='c'){                      // componente do TCO
+   if(!state.comp) state.comp={...COMP_ALL};
+   state.comp[k]=t.checked?1:0;
+   save(); refresh();
+   if(document.getElementById('tcoView').classList.contains('open')) renderTco();
+   return;
+ }
  const val = (t.tagName==='SELECT'||t.dataset.type==='text')? t.value : (+t.value||0);
  if(t.dataset.scope==='g'){ state.g[k]=val; }
  else if(editingId){
@@ -2373,7 +2453,7 @@ document.getElementById('btnPrint169').addEventListener('click',()=>printAs('169
 document.getElementById('btnPrint916').addEventListener('click',()=>printAs('916'));
 document.getElementById('btnReset').addEventListener('click',()=>{
  if(!confirm('Restaurar TODOS os valores de demonstração? Suas edições e veículos cadastrados serão perdidos.')) return;
- state={g:{...GLOBAL_DEFAULTS}, v:{}, custom:[], selM:state.selM&&!isCustom(state.selM)?state.selM:null,
+ state={g:{...GLOBAL_DEFAULTS}, comp:{...COMP_ALL}, v:{}, custom:[], selM:state.selM&&!isCustom(state.selM)?state.selM:null,
         selC:state.selC&&!isCustom(state.selC)?state.selC:null};
  save(); refresh(); closeDrawers();
 });
