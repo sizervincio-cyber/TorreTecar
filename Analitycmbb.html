@@ -126,7 +126,62 @@
 @media(max-width:900px){#gate{grid-template-columns:1fr}.gate-brandside{padding:38px 26px 8px}
   .gate-formside{align-items:stretch;padding:8px 26px 40px}.gate-pillars{display:none}.gate-star{margin-top:24px}}
 
+
+/* ===== MODULO TCO (escopado em #tcoModule) ===== */
+#tcoModule .panel,#tcoModule .kpi,#tcoModule .kpis,#tcoModule .insight,#tcoModule .drawer,#tcoModule .brand,#tcoModule .card,#tcoModule .grid{min-height:0;box-shadow:none;grid-template-columns:none;background:none;border:0;padding:0;margin:0}
+#tcoModule .kpi .label,#tcoModule .kpi .value,#tcoModule .kpi .meta,#tcoModule .insight h4,#tcoModule .insight p,#tcoModule .insight .sev,#tcoModule .brand .eyebrow,#tcoModule .brand h1,#tcoModule .drawer h2,#tcoModule .drawer .close{font-size:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none;color:inherit;font-weight:inherit;margin:0;position:static}
+#tcoModule{
+  --bg:#0c0d0f; --panel:#141619; --panel-2:#1a1d21; --panel-3:#22262b;
+  --line:#2a2e34; --line-soft:#1e2226;
+  --txt:#e8eaec; --txt-2:#9aa1a9; --txt-3:#5f666e;
+  --accent:#4da3ff; --silver:#c9ced4;
+  --good:#3ddc84; --good-dim:rgba(61,220,132,.12);
+  --bad:#ff6b6b; --bad-dim:rgba(255,107,107,.12);
+  --warn:#ffb454; --radius:10px;
+  --font:'Archivo',system-ui,sans-serif;
+  --font-n:'Archivo Narrow',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --c-aq:#8a93a0; --c-ju:#c9764a; --c-di:#4da3ff; --c-ar:#3f7fc4; --c-ma:#b04a5a;
+  --c-ip:#7a6ac9; --c-se:#5aa9a0; --c-pa:#c9a84a;
+}#tcoModule *{margin:0;padding:0;box-sizing:border-box}#tcoModule,#tcoModule{height:100%}#tcoModule{background:var(--bg);color:var(--txt);font-family:var(--font);font-size:14px}#tcoModule button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}#tcoModule input,#tcoModule select{font-family:var(--mono);font-size:13px;color:var(--txt);background:var(--panel-3);
+  border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;outline:none;transition:border-color .15s}#tcoModule input:focus,#tcoModule select:focus{border-color:var(--accent)}#tcoModule input.dirty{border-color:var(--warn)}#tcoModule ::-webkit-scrollbar{width:9px;height:9px}#tcoModule ::-webkit-scrollbar-thumb{background:#2c3138;border-radius:5px}#tcoModule ::-webkit-scrollbar-track{background:transparent}#tcoModule header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:10px 20px;
+  background:var(--panel);border-bottom:1px solid var(--line)}#tcoModule .logo{display:flex;align-items:center;gap:10px}#tcoModule .logo .star{width:26px;height:26px;border:1.5px solid var(--silver);border-radius:50%;display:grid;place-items:center;font-size:13px;color:var(--silver)}#tcoModule .logo b{font-family:var(--font-n);font-weight:700;letter-spacing:.12em;font-size:15px}#tcoModule .logo span{color:var(--txt-3);font-size:11px;letter-spacing:.08em}#tcoModule .mock-badge{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--warn);border:1px dashed rgba(255,180,84,.45);
+  padding:4px 10px;border-radius:20px;letter-spacing:.05em}#tcoModule .hbtn{font-family:var(--font-n);font-weight:600;font-size:12.5px;letter-spacing:.06em;padding:8px 14px;border-radius:7px;
+  border:1px solid var(--line);color:var(--txt-2);transition:.15s;white-space:nowrap}#tcoModule .hbtn:hover{color:var(--txt);border-color:var(--accent)}#tcoModule .hbtn.primary{background:var(--accent);color:#08131f;border-color:var(--accent);font-weight:700}#tcoModule .hbtn.primary:hover{filter:brightness(1.1)}#tcoModule .hbtn.ghost-good{border-color:rgba(61,220,132,.4);color:var(--good)}#tcoModule .hbtn:disabled{opacity:.35;cursor:not-allowed}#tcoModule #catalog{padding:18px 20px 80px;max-width:1500px;margin:0 auto}#tcoModule .sect-head{display:flex;align-items:baseline;gap:10px;margin:14px 0 10px}#tcoModule .sect-head h2{font-family:var(--font-n);font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--txt-2)}#tcoModule .sect-head .hint{font-size:11px;color:var(--txt-3)}#tcoModule .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}#tcoModule .card{position:relative;background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:12px 14px;text-align:left;transition:border-color .15s,transform .12s,opacity .2s;display:block;width:100%}#tcoModule .card:hover{border-color:#3a4048;transform:translateY(-1px)}#tcoModule .card.selected-m{border-color:var(--silver);box-shadow:0 0 0 1px var(--silver)}#tcoModule .card.selected-c{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}#tcoModule .card.dim{opacity:.32;pointer-events:none}#tcoModule .card .brand{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--txt-3)}#tcoModule .card .brand.mb{color:var(--silver)}#tcoModule .card h3{font-family:var(--font-n);font-size:16px;font-weight:700;margin:3px 0 7px;letter-spacing:.02em}#tcoModule .card .spec{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}#tcoModule .card .spec span{font-family:var(--mono);font-size:10px;color:var(--txt-2);background:var(--panel-3);padding:2px 7px;border-radius:4px}#tcoModule .card .kv{display:flex;justify-content:space-between;font-size:12px;padding:2.5px 0;border-top:1px dashed var(--line-soft)}#tcoModule .card .kv b{font-family:var(--mono);font-weight:600;font-size:12px}#tcoModule .card .fin-line{font-family:var(--mono);font-size:9.5px;color:var(--txt-3);margin-top:7px;letter-spacing:.03em}#tcoModule .card .edited-dot{position:absolute;top:11px;right:12px;width:7px;height:7px;border-radius:50%;background:var(--warn);display:none}#tcoModule .card.edited .edited-dot{display:block}#tcoModule .card .tag{position:absolute;top:-8px;left:12px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;
+  padding:2px 8px;border-radius:4px;display:none}#tcoModule .card.selected-m .tag{display:block;background:var(--silver);color:#111}#tcoModule .card.selected-c .tag{display:block;background:var(--accent);color:#08131f}#tcoModule .card.add-card{border-style:dashed;border-color:var(--line);display:grid;place-items:center;min-height:150px;color:var(--txt-3)}#tcoModule .card.add-card:hover{color:var(--accent);border-color:var(--accent)}#tcoModule .card.add-card .plus{font-size:26px;line-height:1}#tcoModule .card.add-card .lbl{font-family:var(--font-n);font-size:12px;letter-spacing:.08em;margin-top:6px}#tcoModule .card .del-v{position:absolute;bottom:10px;right:12px;font-size:10px;color:var(--txt-3);border:1px solid var(--line);
+  border-radius:5px;padding:2px 7px;font-family:var(--mono)}#tcoModule .card .del-v:hover{color:var(--bad);border-color:var(--bad)}#tcoModule #compareBar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:25;display:none;
+  align-items:center;gap:14px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;
+  padding:10px 16px;box-shadow:0 12px 40px rgba(0,0,0,.55)}#tcoModule #compareBar.show{display:flex}#tcoModule #compareBar .pair{font-family:var(--font-n);font-weight:700;font-size:14px}#tcoModule #compareBar .pair em{font-style:normal;color:var(--txt-3);font-weight:400;padding:0 7px}#tcoModule #tcoView{position:fixed;inset:0;z-index:30;background:var(--bg);display:none;flex-direction:column}#tcoModule #tcoView.open{display:flex}#tcoModule .tv-head{display:flex;align-items:center;gap:12px;padding:10px 22px;border-bottom:1px solid var(--line);background:var(--panel)}#tcoModule .tv-head .duel{font-family:var(--font-n);font-weight:800;font-size:17px;letter-spacing:.02em}#tcoModule .tv-head .duel em{font-style:normal;color:var(--txt-3);font-weight:400;padding:0 8px;font-size:13px}#tcoModule .tv-head .meta{font-family:var(--mono);font-size:10.5px;color:var(--txt-3);letter-spacing:.05em}#tcoModule .tv-actions{margin-left:auto;display:flex;gap:8px}#tcoModule .tv-body{flex:1;overflow-y:auto;padding:18px 22px 40px}#tcoModule .tv-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;max-width:1560px;margin:0 auto}#tcoModule .panel{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);padding:14px 16px}#tcoModule .panel h4{font-family:var(--font-n);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--txt-2);margin-bottom:10px}#tcoModule .verdict{border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;border:1px solid var(--line);
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap}#tcoModule .verdict.win-m{background:linear-gradient(135deg,#1e2126,#141619);border-color:#4a5058}#tcoModule .verdict .who{font-family:var(--font-n);font-size:24px;font-weight:800;letter-spacing:.02em}#tcoModule .verdict .eco{font-family:var(--mono);font-size:13px;color:var(--txt-2)}#tcoModule .verdict .eco b{font-size:17px;color:var(--good)}#tcoModule .verdict.win-c .eco b{color:var(--bad)}#tcoModule .verdict.tie .eco b{color:var(--txt-2)}#tcoModule .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}#tcoModule .kpi{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:8px;padding:9px 11px}#tcoModule .kpi .l{font-size:10px;letter-spacing:.08em;color:var(--txt-3);text-transform:uppercase}#tcoModule .kpi .v{font-family:var(--mono);font-size:14.5px;font-weight:700;margin-top:2px}#tcoModule .chart-svg{width:100%;height:auto;display:block}#tcoModule .legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}#tcoModule .legend span{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;color:var(--txt-2)}#tcoModule .legend i{width:9px;height:9px;border-radius:2px;display:inline-block}#tcoModule .comp-head{display:grid;grid-template-columns:1fr 88px 88px 74px;gap:6px;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.08em;color:var(--txt-3);padding:0 2px 6px;border-bottom:1px solid var(--line)}#tcoModule .comp-head span:not(:first-child){text-align:right}#tcoModule .crow{display:grid;grid-template-columns:1fr 88px 88px 74px;gap:6px;align-items:center;padding:5px 2px;
+  border-bottom:1px solid var(--line-soft);font-size:12px}#tcoModule .crow .n{color:var(--txt-2)}#tcoModule .crow .a,#tcoModule .crow .b,#tcoModule .crow .d{font-family:var(--mono);font-size:11.5px;text-align:right}#tcoModule .crow .d{font-weight:700;border-radius:4px;padding:2px 5px}#tcoModule .crow .d.g{color:var(--good);background:var(--good-dim)}#tcoModule .crow .d.r{color:var(--bad);background:var(--bad-dim)}#tcoModule .crow .d.n0{color:var(--txt-3)}#tcoModule .crow.total{border-top:2px solid var(--line);border-bottom:none;padding-top:9px}#tcoModule .crow.total .n{color:var(--txt);font-weight:700;font-family:var(--font-n);letter-spacing:.05em}#tcoModule .crow.total .a,#tcoModule .crow.total .b{font-weight:700;font-size:12.5px}#tcoModule .insight{margin-top:14px;background:var(--panel-2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+  padding:11px 13px;font-size:12.5px;line-height:1.55;color:var(--txt-2)}#tcoModule .insight b{color:var(--txt)}#tcoModule #overlay{position:fixed;inset:0;background:rgba(5,6,8,.55);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}#tcoModule #overlay.open{opacity:1;pointer-events:auto}#tcoModule .drawer{position:fixed;top:0;right:0;bottom:0;width:430px;max-width:94vw;background:var(--panel);
+  border-left:1px solid var(--line);z-index:50;transform:translateX(105%);transition:transform .25s cubic-bezier(.2,.8,.25,1);
+  display:flex;flex-direction:column}#tcoModule .drawer.open{transform:translateX(0)}#tcoModule .d-head{position:relative;padding:16px 20px 12px;border-bottom:1px solid var(--line)}#tcoModule .d-head .brand{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--txt-3)}#tcoModule .d-head h3{font-family:var(--font-n);font-size:21px;font-weight:800;letter-spacing:.02em;margin-top:2px}#tcoModule .d-head .sub{font-size:11.5px;color:var(--txt-3);margin-top:3px}#tcoModule .d-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:7px;border:1px solid var(--line);
+  color:var(--txt-2);font-size:15px;display:grid;place-items:center}#tcoModule .d-close:hover{color:var(--txt);border-color:var(--accent)}#tcoModule .d-body{flex:1;overflow-y:auto;padding:14px 20px 20px}#tcoModule .f-sect{font-family:var(--font-n);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);
+  margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--line-soft)}#tcoModule .f-sect:first-child{margin-top:2px}#tcoModule .frow{display:grid;grid-template-columns:1fr 132px;gap:10px;align-items:center;margin-bottom:8px}#tcoModule .frow label{font-size:12.5px;color:var(--txt-2);line-height:1.3}#tcoModule .frow label small{display:block;font-size:10px;color:var(--txt-3)}#tcoModule .frow .unit{position:relative}#tcoModule .frow .unit em{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-style:normal;
+  font-family:var(--mono);font-size:10px;color:var(--txt-3);pointer-events:none}#tcoModule .frow .unit input{padding-right:42px;text-align:right}#tcoModule .frow input[type=text]{font-family:var(--font);text-align:left}#tcoModule .fin-echo{font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--txt-3);
+  background:var(--panel-2);border:1px solid var(--line-soft);border-radius:7px;padding:9px 11px;margin:2px 0 10px}#tcoModule .fin-echo b{color:var(--accent);font-weight:600}#tcoModule .d-foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:10px}#tcoModule .d-foot .hbtn{flex:1;text-align:center;padding:10px}
+
+@media(max-width:1100px){#tcoModule .tv-grid{grid-template-columns:1fr}#tcoModule .kpis{grid-template-columns:repeat(2,1fr)}
+}
+
+
+@media print{#tcoModule,#tcoModule{height:auto;background:#fff}#tcoModule header,#tcoModule #catalog,#tcoModule #compareBar,#tcoModule .drawer,#tcoModule #overlay,#tcoModule .tv-actions,#tcoModule .no-print{display:none !important}#tcoModule #tcoView{position:static;display:flex !important;background:#fff;height:auto}#tcoModule #tcoView *{color:#111 !important;border-color:#c9cdd2 !important}#tcoModule .tv-head{background:#fff;border-bottom:2px solid #111 !important;padding:2px 0 4px}#tcoModule .tv-head .duel{font-size:14px}#tcoModule .tv-head .duel em{font-size:11px}#tcoModule .tv-head .meta{font-size:8px}#tcoModule .tv-body{overflow:visible;padding:3mm 0 0}#tcoModule .tv-grid{max-width:none;gap:4mm}#tcoModule .panel,#tcoModule .kpi,#tcoModule .verdict,#tcoModule .insight{background:#fff !important;box-shadow:none}#tcoModule .panel{padding:7px 10px;margin-bottom:7px !important}#tcoModule .panel h4{font-size:8.5px;margin-bottom:4px}#tcoModule .verdict{padding:7px 12px;margin-bottom:7px;gap:10px}#tcoModule .verdict .who{font-size:16px}#tcoModule .verdict .eco{font-size:10.5px}#tcoModule .verdict .eco b{font-size:12px;color:#0a7d43 !important}#tcoModule .verdict.win-c .eco b{color:#b3261e !important}#tcoModule .kpis{gap:5px;margin-bottom:7px}#tcoModule .kpi{padding:4px 8px}#tcoModule .kpi .l{font-size:7.5px}#tcoModule .kpi .v{font-size:11px}#tcoModule .comp-head{font-size:7.5px;padding-bottom:3px}#tcoModule .crow{padding:1.5px 2px;font-size:9.5px}#tcoModule .crow .a,#tcoModule .crow .b,#tcoModule .crow .d{font-size:9px}#tcoModule .crow .d{padding:1px 4px}#tcoModule .crow .d.g{color:#0a7d43 !important;background:#e7f4ec !important}#tcoModule .crow .d.r{color:#b3261e !important;background:#fbeaea !important}#tcoModule .crow.total{padding-top:4px}#tcoModule .crow.total .a,#tcoModule .crow.total .b{font-size:10px}#tcoModule .insight{font-size:9.5px;line-height:1.45;padding:6px 9px;margin-top:7px;border-left-color:#111 !important;background:#f4f5f6 !important}#tcoModule .legend{gap:6px;margin-top:3px}#tcoModule .legend span{font-size:7.5px}#tcoModule .legend i{width:7px;height:7px}#tcoModule .chart-svg text{fill:#333 !important}#tcoModule .chart-svg .axis-line{stroke:#c9cdd2 !important}#tcoModule .chart-svg{width:auto;max-width:100%;margin:0 auto;display:block}#tcoModule .ch-cum .chart-svg{height:32mm}#tcoModule .ch-stack .chart-svg{height:16mm}#tcoModule .ch-tor .chart-svg{height:27mm}html.p169 #tcoModule .tv-grid{grid-template-columns:1.1fr .9fr}html.p169 body{zoom:.93}html.p916 #tcoModule .tv-grid{grid-template-columns:1fr}html.p916 #tcoModule .kpis{grid-template-columns:repeat(4,1fr)}html.p916 #tcoModule .ch-cum .chart-svg{height:42mm}html.p916 #tcoModule .ch-tor .chart-svg{height:34mm}
+}
+
+@media print{html.p169,html.p916,html.p169 body,html.p916 body{height:auto !important;min-height:0 !important;overflow:visible !important;background:#fff !important;margin:0 !important;padding:0 !important}
+html.p169 .shell,html.p916 .shell,html.p169 .sidebar,html.p916 .sidebar,html.p169 .topbar,html.p916 .topbar,html.p169 #app,html.p916 #app{display:none !important}html.p169 #tcoModule,html.p916 #tcoModule{position:static !important;display:block !important;background:#fff !important;overflow:visible !important;height:auto !important;inset:auto !important;z-index:auto !important}}
+
+#tcoModule{position:fixed;inset:0;z-index:900;overflow:auto;background:var(--bg,#0c0d0f);color:var(--txt,#e8eaec);font-family:Archivo,system-ui,sans-serif}
+#tcoModule[hidden]{display:none}
+#tcoModule .tco-back{position:fixed;left:14px;top:12px;z-index:40;background:#22262b;color:#e8eaec;border:1px solid #2a2e34;border-radius:8px;padding:7px 13px;font:600 11px/1 'Archivo Narrow',system-ui,sans-serif;letter-spacing:.09em;text-transform:uppercase;cursor:pointer}
+#tcoModule .tco-back:hover{background:#2a2e34}
+#tcoModule:has(#tcoView.open) .tco-back{display:none}
+@media print{#tcoModule .tco-back{display:none !important}#tcoModule .panel,#tcoModule .kpi,#tcoModule .verdict,#tcoModule .insight,#tcoModule .tv-grid,#tcoModule .tv-body,#tcoModule .kpis{break-inside:auto !important;page-break-inside:auto !important}#tcoModule .chartbox{height:auto !important}}
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -1292,9 +1347,9 @@ const OpportunityTable={props:['rows'],emits:['open'],computed:{mbbColors(){retu
    TypeError (clearRect de undefined). O shim descarta o frame órfão em vez de quebrar a página. */
 if(window.L&&L.Canvas&&!L.Canvas.prototype.__miccGuard){for(const fn of ['_redraw','_update','_draw']){const orig=L.Canvas.prototype[fn];if(typeof orig!=='function')continue;L.Canvas.prototype[fn]=function(){if(!this._ctx||!this._map)return;try{return orig.apply(this,arguments)}catch(e){return}}}L.Canvas.prototype.__miccGuard=1}
 const {createApp,nextTick}=Vue;
-createApp({components:{OpportunityTable,MultiPick},data(){return{page:'home',mobileNav:false,lineageOpen:false,lineageKind:'share',focusOpen:false,focusTitle:'',focusSource:null,dragging:false,customerSearch:'',selectedCustomerId:null,aopFocus:null,profileView:'mekko',mekkoSort:'total',treemapMetric:'volume',quadrantBasis:'p90',quadrantCfg:{volume:null,share:null},graphMode:'network',graphTopN:25,graphMinShared:2,geoCache:{},geoMode:'concorrencia',geoRender:'pontos',geoSegment:'profile',geoFilters:{minVolume:0,minWhitespace:0,maxShare:'',dom:'ALL'},geoRankBy:'municipio',geoSelection:null,geoJob:{running:false,paused:false,cancel:false,done:0,total:0,message:'',provider:'brasilapi'},activeHash:EMBED_HASH,rows:EMBED_ROWS,headers:EMBED_HEADERS,snapshots:[],importState:{running:false,progress:0,message:''},filters:{market:'registered',period:'ytd',aop:[],profile:[],subsegment:[],business:[],mbbMacro:[],mbbCode:[],responsavel:[],participacao:[],motivo:[],dealerPart:[],traction:[]},sellerMetric:'coverage',partView:'trucks',shareView:(()=>{try{return localStorage.getItem('micc_shareview')==='clients'?'clients':'trucks'}catch(e){return 'trucks'}})(),shareMatrixDim:'brand',mbbLevel:'detail',sourceMode:'live',dateFix:null,migA:null,migB:null,migFilter:'ALL',dealerScope:'conc',dealerLevel:'grupo',sensitivity:{excludeSpill:false,excludePublic:false,excludePF:false,excludeTop10:false,excludeDirect:false},rules:(()=>{try{const s=JSON.parse(localStorage.getItem('micc_rules')||'null');if(!s)return JSON.parse(JSON.stringify(DEFAULT_RULES));return {...JSON.parse(JSON.stringify(DEFAULT_RULES)),...s,weights:{...DEFAULT_RULES.weights,...(s.weights||{})}}}catch(e){return JSON.parse(JSON.stringify(DEFAULT_RULES))}})(),navGroups:[{name:'Decisão',items:[{n:'01',id:'home',label:'Control Tower'},{n:'02',id:'mercado',label:'Mercado'},{n:'03',id:'territorio',label:'Território'},{n:'04',id:'geo',label:'Geointeligência'}]},{name:'Cliente',items:[{n:'05',id:'classesmbb',label:'Classificação MBB'},{n:'06',id:'clientes',label:'Clientes'},{n:'07',id:'customer360',label:'Customer 360'},{n:'08',id:'recorrencia',label:'Recorrência'},{n:'09',id:'sazonalidade',label:'Sazonalidade'},{n:'10',id:'oportunidades',label:'Oportunidades'}]},{name:'Comercial',items:[{n:'11',id:'participacao',label:'Participação Comercial'},{n:'12',id:'vendedores',label:'Responsáveis'},{n:'13',id:'migracao',label:'Migração de Classe'}]},{name:'Diagnóstico',items:[{n:'14',id:'concorrencia',label:'Concorrência'},{n:'15',id:'licitacoes',label:'Licitações'},{n:'16',id:'graph',label:'Graph Explorer'},{n:'17',id:'sensibilidade',label:'Sensibilidade'},{n:'18',id:'quality',label:'Data Quality'}]},{name:'Governança',items:[{n:'19',id:'importacoes',label:'Importações'},{n:'20',id:'regras',label:'Regras'}]}]}},
+createApp({components:{OpportunityTable,MultiPick},data(){return{page:'home',mobileNav:false,lineageOpen:false,lineageKind:'share',focusOpen:false,focusTitle:'',focusSource:null,dragging:false,customerSearch:'',selectedCustomerId:null,aopFocus:null,profileView:'mekko',mekkoSort:'total',treemapMetric:'volume',quadrantBasis:'p90',quadrantCfg:{volume:null,share:null},graphMode:'network',graphTopN:25,graphMinShared:2,geoCache:{},geoMode:'concorrencia',geoRender:'pontos',geoSegment:'profile',geoFilters:{minVolume:0,minWhitespace:0,maxShare:'',dom:'ALL'},geoRankBy:'municipio',geoSelection:null,geoJob:{running:false,paused:false,cancel:false,done:0,total:0,message:'',provider:'brasilapi'},activeHash:EMBED_HASH,rows:EMBED_ROWS,headers:EMBED_HEADERS,snapshots:[],importState:{running:false,progress:0,message:''},filters:{market:'registered',period:'ytd',aop:[],profile:[],subsegment:[],business:[],mbbMacro:[],mbbCode:[],responsavel:[],participacao:[],motivo:[],dealerPart:[],traction:[]},sellerMetric:'coverage',partView:'trucks',shareView:(()=>{try{return localStorage.getItem('micc_shareview')==='clients'?'clients':'trucks'}catch(e){return 'trucks'}})(),tcoVoltaPara:'home',shareMatrixDim:'brand',mbbLevel:'detail',sourceMode:'live',dateFix:null,migA:null,migB:null,migFilter:'ALL',dealerScope:'conc',dealerLevel:'grupo',sensitivity:{excludeSpill:false,excludePublic:false,excludePF:false,excludeTop10:false,excludeDirect:false},rules:(()=>{try{const s=JSON.parse(localStorage.getItem('micc_rules')||'null');if(!s)return JSON.parse(JSON.stringify(DEFAULT_RULES));return {...JSON.parse(JSON.stringify(DEFAULT_RULES)),...s,weights:{...DEFAULT_RULES.weights,...(s.weights||{})}}}catch(e){return JSON.parse(JSON.stringify(DEFAULT_RULES))}})(),navGroups:[{name:'Decisão',items:[{n:'01',id:'home',label:'Control Tower'},{n:'02',id:'mercado',label:'Mercado'},{n:'03',id:'territorio',label:'Território'},{n:'04',id:'geo',label:'Geointeligência'}]},{name:'Cliente',items:[{n:'05',id:'classesmbb',label:'Classificação MBB'},{n:'06',id:'clientes',label:'Clientes'},{n:'07',id:'customer360',label:'Customer 360'},{n:'08',id:'recorrencia',label:'Recorrência'},{n:'09',id:'sazonalidade',label:'Sazonalidade'},{n:'10',id:'oportunidades',label:'Oportunidades'}]},{name:'Comercial',items:[{n:'11',id:'participacao',label:'Participação Comercial'},{n:'12',id:'vendedores',label:'Responsáveis'},{n:'13',id:'migracao',label:'Migração de Classe'}]},{name:'Diagnóstico',items:[{n:'14',id:'concorrencia',label:'Concorrência'},{n:'15',id:'licitacoes',label:'Licitações'},{n:'16',id:'graph',label:'Graph Explorer'},{n:'17',id:'sensibilidade',label:'Sensibilidade'},{n:'18',id:'quality',label:'Data Quality'}]},{name:'Governança',items:[{n:'19',id:'importacoes',label:'Importações'},{n:'20',id:'regras',label:'Regras'}]},{name:'Simulação',items:[{n:'21',id:'tco',label:'Simulador TCO'}]}]}},
 computed:{
- navFlat(){return this.navGroups.flatMap(g=>g.items)},pageMeta(){const m={home:['Control Tower','Estado do mercado, prioridades e ações em menos de 60 segundos.'],mercado:['Mercado','Market share, evolução e denominadores explícitos.'],territorio:['Território','Mercado local, faturamento direto, spill-in e incerteza territorial.'],geo:['Geointeligência','Volume, share e whitespace por AOP.'],classesmbb:['Classificação MBB','Segmentação R1–W2 com Share of Trucks e Share of Clients lado a lado.'],clientes:['Clientes','Portfólio, perfil e concentração de oportunidade.'],customer360:['Customer 360','Investigação completa de uma conta.'],recorrencia:['Recorrência','Eventos de compra, intervalos e propensão de recompra.'],sazonalidade:['Sazonalidade','Concentração temporal com controle explícito de confiança.'],oportunidades:['Oportunidades','Whitespace qualificado e Opportunity Score explicável.'],participacao:['Participação Comercial','Quanto do mercado foi trabalhado, quanto capturamos e por que perdemos.'],vendedores:['Responsáveis','Cobertura e captura por responsável comercial, sempre contra o mercado disponível.'],migracao:['Migração de Classe','Quem subiu, quem desceu, quem entrou e quem parou de comprar entre dois períodos.'],concorrencia:['Concorrência','Marcas, captura de whitespace e sinais de switching.'],licitacoes:['Licitações','Separação do setor público sem contaminar o mercado privado.'],graph:['Graph Explorer','Relações cliente–marca–dealer–AOP sem hairball.'],sensibilidade:['Sensibilidade','Red Team analítico interativo.'],quality:['Data Quality','Integridade, evidência e limitações.'],importacoes:['Importações','Snapshots, schema resolver e versionamento local.'],regras:['Regras','Parâmetros analíticos configuráveis e versionados localmente.']};return m[this.page]},pageTitle(){return this.pageMeta[0]},pageSubtitle(){return this.pageMeta[1]},
+ navFlat(){return this.navGroups.flatMap(g=>g.items)},pageMeta(){const m={tco:['Simulador TCO','Custo total de propriedade: Mercedes-Benz contra o concorrente real de cada modelo.'],home:['Control Tower','Estado do mercado, prioridades e ações em menos de 60 segundos.'],mercado:['Mercado','Market share, evolução e denominadores explícitos.'],territorio:['Território','Mercado local, faturamento direto, spill-in e incerteza territorial.'],geo:['Geointeligência','Volume, share e whitespace por AOP.'],classesmbb:['Classificação MBB','Segmentação R1–W2 com Share of Trucks e Share of Clients lado a lado.'],clientes:['Clientes','Portfólio, perfil e concentração de oportunidade.'],customer360:['Customer 360','Investigação completa de uma conta.'],recorrencia:['Recorrência','Eventos de compra, intervalos e propensão de recompra.'],sazonalidade:['Sazonalidade','Concentração temporal com controle explícito de confiança.'],oportunidades:['Oportunidades','Whitespace qualificado e Opportunity Score explicável.'],participacao:['Participação Comercial','Quanto do mercado foi trabalhado, quanto capturamos e por que perdemos.'],vendedores:['Responsáveis','Cobertura e captura por responsável comercial, sempre contra o mercado disponível.'],migracao:['Migração de Classe','Quem subiu, quem desceu, quem entrou e quem parou de comprar entre dois períodos.'],concorrencia:['Concorrência','Marcas, captura de whitespace e sinais de switching.'],licitacoes:['Licitações','Separação do setor público sem contaminar o mercado privado.'],graph:['Graph Explorer','Relações cliente–marca–dealer–AOP sem hairball.'],sensibilidade:['Sensibilidade','Red Team analítico interativo.'],quality:['Data Quality','Integridade, evidência e limitações.'],importacoes:['Importações','Snapshots, schema resolver e versionamento local.'],regras:['Regras','Parâmetros analíticos configuráveis e versionados localmente.']};return m[this.page]},pageTitle(){return this.pageMeta[0]},pageSubtitle(){return this.pageMeta[1]},
  records(){return this.normalizeRows(this.rows,this.headers)},minDate(){return this.records.map(r=>r.date).filter(Boolean).sort()[0]},maxDate(){return this.records.map(r=>r.date).filter(Boolean).sort().slice(-1)[0]},snapshotDateBR(){return fmtDateBR(this.maxDate)},coverageDays(){return this.minDate&&this.maxDate?daysBetween(this.minDate,this.maxDate)+1:0},coverageLabel(){return `${fmtDateBR(this.minDate)} → ${fmtDateBR(this.maxDate)}`},classWindowDays(){const w=Number(this.rules.classWindowDays)||365;return this.coverageDays?Math.max(1,Math.min(this.coverageDays,w)):w},classWindowStart(){if(!this.maxDate)return null;const d=new Date(this.maxDate+'T12:00:00');d.setDate(d.getDate()-(this.classWindowDays-1));return d.toISOString().slice(0,10)},classWindowLabel(){if(!this.classWindowStart)return '—';return `${fmtDateBR(this.classWindowStart)} → ${fmtDateBR(this.maxDate)} (${this.classWindowDays} dias)`},classWindowProjected(){return this.classWindowDays<365},annualFactor(){return this.classWindowDays?365/this.classWindowDays:1},coverageAnnualFactor(){return this.coverageDays?365/this.coverageDays:1},analyticalMaturity(){let s=100;if(this.coverageDays<365)s-=18;if(this.coverageDays<730)s-=8;s-=2;return Math.max(0,s)},aops(){return [...new Set(this.records.map(r=>r.dealerAop).filter(Boolean))].sort()},subsegments(){return [...new Set(this.records.map(r=>r.subsegment).filter(Boolean))].sort()},tractions(){return [...new Set(this.records.map(r=>r.traction).filter(Boolean))].sort()},hasTraction(){return this.tractions.length>0},
  dealerIdentity(){const c={},a={};for(const r of this.records){const n=r.dealer||'SEM DEALER';c[n]=(c[n]||0)+1;(a[n]=a[n]||{})[r.dealerAop]=((a[n]||{})[r.dealerAop]||0)+1}const list=Object.keys(c).map(n=>({name:n,count:c[n],aop:Object.entries(a[n]||{}).sort((x,y)=>y[1]-x[1])[0]?.[0]||''}));return resolveDealers(list)},dealerStats(){const dm=this.dealerIdentity.map;const m={};for(const r of this.records){const id=dm[r.dealer||'SEM DEALER'];const k=id?id.display:(r.dealer||'SEM DEALER');if(!m[k])m[k]={total:0,counts:{}};m[k].total++;m[k].counts[r.dealerAop]=(m[k].counts[r.dealerAop]||0)+1}for(const [k,v] of Object.entries(m)){const pairs=Object.entries(v.counts).sort((a,b)=>b[1]-a[1]);v.home=pairs[0]?.[0]||'';v.dominance=safeDiv(pairs[0]?.[1]||0,v.total)}return m},
  enrichedRecords(){const dm=this.dealerIdentity.map;return this.records.map(r=>{const id=dm[r.dealer||'SEM DEALER']||null;r=id?{...r,dealerGroup:id.grupo,dealerUnit:id.display,dealerUnitKey:id.chave,dealerFactory:id.fabrica}:r;const ds=this.dealerStats[r.dealerUnit||r.dealer]||{total:0,home:'',dominance:0};let territory='INDETERMINADO';if(r.directBilling)territory='DIRECT';else if(ds.total>=this.rules.dealerMinRecords&&ds.dominance>=this.rules.dealerDominance)territory=ds.home===r.dealerAop?'LOCAL':'SPILL_IN';return {...r,territory,dealerHome:ds.home,dealerDominance:ds.dominance,part:attachParticipation(r)}})},
@@ -1513,7 +1568,13 @@ methods:{
   series.data.setAll(data);series.set('selectedDataItem',series.dataItems[0])},
  destroyCharts(){for(const c of Object.values(LIB.charts)){try{c.destroy()}catch(e){}}LIB.charts={}},chart(id,config){const el=document.getElementById(id);if(!el||!window.Chart)return;if(LIB.charts[id])LIB.charts[id].destroy();LIB.charts[id]=new Chart(el,config);return LIB.charts[id]},
  chartDefaults(){return{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{boxWidth:9,boxHeight:9,font:{size:10},color:'#475467'}},tooltip:{backgroundColor:'#111827',padding:10,titleFont:{size:11},bodyFont:{size:10}}},scales:{x:{grid:{color:'#eef0f3'},ticks:{color:'#667085',font:{size:10}}},y:{grid:{color:'#eef0f3'},ticks:{color:'#667085',font:{size:10}}}}}},
- renderPage(){clearTimeout(LIB.debTimer);LIB.debTimer=null;LIB.renderSeq++;const seq=LIB.renderSeq;nextTick(()=>{if(seq!==LIB.renderSeq)return;this.destroyCharts();this.disposeAm5();if(LIB.leafletMap){const m=LIB.leafletMap;LIB.leafletMap=null;LIB.geoBounds=null;try{m.stop();m.eachLayer(l=>{try{m.removeLayer(l)}catch(e){}});m.off();m.remove()}catch(e){}}if(LIB.cy){try{LIB.cy.destroy()}catch(e){}LIB.cy=null}if(this.page==='home')this.renderHome();if(this.page==='mercado')this.renderMarket();if(this.page==='territorio')this.renderTerritory();if(this.page==='geo')this.renderGeo();if(this.page==='sazonalidade')this.renderSeason();if(this.page==='participacao')this.renderParticipacao();if(this.page==='vendedores')this.renderSellers();if(this.page==='classesmbb')this.renderMbbClasses();if(this.page==='clientes')this.renderCustomers();if(this.page==='customer360')this.renderCustomer360();if(this.page==='recorrencia')this.renderRecurrence();if(this.page==='oportunidades')this.renderOpportunity();if(this.page==='concorrencia'){this.renderCompetition();this.renderTreemap()}if(this.page==='graph')this.renderGraph()})},
+ renderPage(){clearTimeout(LIB.debTimer);LIB.debTimer=null;LIB.renderSeq++;const seq=LIB.renderSeq;nextTick(()=>{if(seq!==LIB.renderSeq)return;this.destroyCharts();this.disposeAm5();if(LIB.leafletMap){const m=LIB.leafletMap;LIB.leafletMap=null;LIB.geoBounds=null;try{m.stop();m.eachLayer(l=>{try{m.removeLayer(l)}catch(e){}});m.off();m.remove()}catch(e){}}if(LIB.cy){try{LIB.cy.destroy()}catch(e){}LIB.cy=null}if(this.page!=='tco')this.tcoVoltaPara=this.page;
+const _tco=document.getElementById('tcoModule');
+if(_tco){const on=this.page==='tco';_tco.hidden=!on;
+ if(on){window.__sairTCO=()=>{this.page=this.tcoVoltaPara||'home';};
+  try{window.TCO_INIT&&window.TCO_INIT();window.TCO_REFRESH&&window.TCO_REFRESH()}
+  catch(e){console.error('TCO',e)}}}
+if(this.page==='home')this.renderHome();if(this.page==='mercado')this.renderMarket();if(this.page==='territorio')this.renderTerritory();if(this.page==='geo')this.renderGeo();if(this.page==='sazonalidade')this.renderSeason();if(this.page==='participacao')this.renderParticipacao();if(this.page==='vendedores')this.renderSellers();if(this.page==='classesmbb')this.renderMbbClasses();if(this.page==='clientes')this.renderCustomers();if(this.page==='customer360')this.renderCustomer360();if(this.page==='recorrencia')this.renderRecurrence();if(this.page==='oportunidades')this.renderOpportunity();if(this.page==='concorrencia'){this.renderCompetition();this.renderTreemap()}if(this.page==='graph')this.renderGraph()})},
  renderHome(){const def=this.chartDefaults(),cli=this.shareView==='clients';this.chart('scatterAop',{type:'bubble',data:{datasets:this.aopMetrics.map(x=>({label:x.aop,data:[{x:cli?x.marketClients:x.market,y:(cli?x.shareOfClients:x.shareOfTrucks)*100,r:Math.max(8,Math.min(30,Math.sqrt(x.whitespace)*1.3))}],backgroundColor:'rgba(37,99,235,.55)',borderColor:'#1d4ed8'}))},options:{...def,onClick:(e,els)=>{if(!els.length)return;const x=this.aopMetrics[els[0].datasetIndex];if(x)this.togglePick('aop',x.aop)},onHover:(e,els)=>{if(e.native)e.native.target.style.cursor=els.length?'pointer':'default'},plugins:{...def.plugins,tooltip:{callbacks:{label:(ctx)=>{const x=this.aopMetrics[ctx.datasetIndex];if(!x)return '';return [x.aop,`Share of Trucks: ${this.fmtPct(x.shareOfTrucks)} (${this.fmtInt(x.mb)}/${this.fmtInt(x.market)} emplac.)`,`Share of Clients: ${this.fmtPct(x.shareOfClients)} (${this.fmtInt(x.mbClients)}/${this.fmtInt(x.marketClients)} clientes)`,`Depth Index: ${this.fmtDepth(x.depthIndex)}`,`Whitespace: ${this.fmtInt(x.whitespace)} emplac. · ${this.fmtInt(x.whitespaceClients)} clientes`]}}}},scales:{x:{...def.scales.x,title:{display:true,text:cli?'Clientes compradores do AOP':'Volume de emplacamentos do AOP'}},y:{...def.scales.y,min:0,max:Math.max(35,...this.aopMetrics.map(x=>(cli?x.shareOfClients:x.shareOfTrucks)*100+5)),title:{display:true,text:(cli?'Share of Clients':'Share of Trucks')+' MB (%)'}}}}});this.shareLine('shareTrend');this.barWhitespace('whitespaceAop')},
  shareLine(id){const d=this.monthlyMetrics,def=this.chartDefaults();this.chart(id,{type:'line',data:{labels:d.map(x=>x.month.slice(5,7)+'/'+x.month.slice(0,4)),datasets:[{label:'Share of Trucks',data:d.map(x=>x.shareOfTrucks*100),borderColor:'#111827',backgroundColor:'#111827',pointRadius:3,tension:.2},{label:'Share of Clients',data:d.map(x=>x.shareOfClients*100),borderColor:'#3b82f6',backgroundColor:'#3b82f6',borderDash:[5,4],pointRadius:3,tension:.2}]},options:{...def,plugins:{...def.plugins,tooltip:{callbacks:{afterLabel:(ctx)=>{const x=d[ctx.dataIndex];return ctx.datasetIndex===0?`MB ${x.mb} / mercado ${x.total} emplacamentos`:`MB ${x.mbClients} / mercado ${x.marketClients} clientes únicos`}}}},scales:{x:def.scales.x,y:{...def.scales.y,ticks:{...def.scales.y.ticks,callback:v=>v+'%'}}}}})},barWhitespace(id){const d=[...this.aopMetrics].sort((a,b)=>b.whitespace-a.whitespace),def=this.chartDefaults();this.chart(id,{type:'bar',data:{labels:d.map(x=>x.aop),datasets:[{label:'Whitespace',data:d.map(x=>x.whitespace),backgroundColor:'#94a3b8'}]},options:{...def,indexAxis:'y',onClick:(e,els)=>{if(!els.length)return;const x=d[els[0].index];if(x)this.togglePick('aop',x.aop)},onHover:(e,els)=>{if(e.native)e.native.target.style.cursor=els.length?'pointer':'default'},plugins:{...def.plugins,legend:{display:false}}}})},
  renderTraction(){if(!this.hasTraction)return;const d=this.tractionRows,def=this.chartDefaults();this.chart('tractionChart',{type:'bar',data:{labels:d.map(x=>x.traction),datasets:[{label:'Share of Trucks (%)',data:d.map(x=>+(x.shareOfTrucks*100).toFixed(2)),backgroundColor:'#111827'},{label:'Share of Clients (%)',data:d.map(x=>+(x.shareOfClients*100).toFixed(2)),backgroundColor:'#93c5fd'}]},options:{...def,onClick:(e,els)=>{if(!els.length)return;const t=d[els[0].index];if(t)this.togglePick('traction',t.traction)},plugins:{...def.plugins,tooltip:{callbacks:{afterBody:(c)=>{const t=d[c[0].dataIndex];return [`Mercado: ${this.fmtInt(t.marketTrucks)} emplac. · ${this.fmtInt(t.marketClients)} clientes`,`MB: ${this.fmtInt(t.mbTrucks)} emplac. · ${this.fmtInt(t.mbClients)} clientes`,`Líder: ${t.lider} (${this.fmtPct(t.liderShare)})`,`Whitespace: ${this.fmtInt(t.whitespaceTrucks)}`]}}}},scales:{x:def.scales.x,y:{...def.scales.y,beginAtZero:true,ticks:{...def.scales.y.ticks,callback:v=>Number(v).toFixed(0)+'%'}}}}})},renderMarket(){const d=this.aopMetrics,def=this.chartDefaults();const hl=(on,off)=>d.map(x=>!this.aopFocus||x.aop===this.aopFocus?on:off);this.chart('marketAop',{type:'bar',data:{labels:d.map(x=>x.aop),datasets:[{label:'Mercedes-Benz',data:d.map(x=>x.mb),backgroundColor:hl(BRAND_COLORS['M.BENZ'],'rgba(17,24,39,.22)')},{label:'Demais marcas',data:d.map(x=>x.market-x.mb),backgroundColor:hl('#d0d5dd','rgba(208,213,221,.35)')}]},options:{...def,onClick:(e,els)=>{if(!els.length)return;const aop=d[els[0].index]?.aop;if(!aop)return;this.aopFocus=this.aopFocus===aop?null:aop;this.renderPage()},onHover:(e,els)=>{if(e.native)e.native.target.style.cursor=els.length?'pointer':'default'},scales:{x:{...def.scales.x,stacked:true},y:{...def.scales.y,stacked:true}}}});this.brandChart('brands',this.brandRankingFocused);this.shareLine('shareTrend2');this.renderTraction()},brandChart(id,data){const cli=this.shareView==='clients';const d=[...(data||this.brandRanking)].sort((a,b)=>cli?(b.clients-a.clients):(b.trucks-a.trucks)),def=this.chartDefaults();this.chart(id,{type:'bar',data:{labels:d.map(x=>x.brand),datasets:[{label:cli?'Clientes únicos':'Emplacamentos',data:d.map(x=>cli?x.clients:x.trucks),backgroundColor:d.map(x=>BRAND_COLORS[x.brand]||'#94a3b8')}]},options:{...def,indexAxis:'y',plugins:{...def.plugins,legend:{display:false},tooltip:{callbacks:{afterLabel:(ctx)=>{const x=d[ctx.dataIndex];return [`Share of Trucks: ${this.fmtPct(x.shareOfTrucks)} (${this.fmtInt(x.trucks)} emplac.)`,`Share of Clients: ${this.fmtPct(x.shareOfClients)} (${this.fmtInt(x.clients)} clientes)`,`Depth Index: ${this.fmtDepth(x.depthIndex)}`]}}}}}})},
@@ -1674,5 +1735,661 @@ const dc=best.res.map.date;const rep={twoDigit:0,fourDigit:0,invalid:0,fixed:0,d
  async seedSnapshot(){try{const db=await this.db();const tx=db.transaction('snapshots','readonly'),req=tx.objectStore('snapshots').get(EMBED_HASH);req.onsuccess=()=>{if(!req.result)this.saveSnapshot({hash:EMBED_HASH,count:this.records.length,maxDate:this.snapshotDateBR,source:'EMPLACAMENTO - ANÁLISE PERFIL CLIENTES.xlsx (embutido)',headers:this.headers,rows:this.rows}).then(()=>this.loadSnapshots());else this.loadSnapshots()}}catch(e){} }
 },mounted(){if(!this.selectedCustomerId&&this.allCustomers.length)this.selectedCustomerId=this.allCustomers[0].id;this.seedSnapshot();this.loadGeoCache().then(()=>nextTick(()=>this.renderPage()));this.bootSource();nextTick(()=>this.renderPage())}
 }).mount('#app');
+</script>
+<div id="tcoModule" hidden><button class="tco-back" onclick="window.__sairTCO&&window.__sairTCO()">◂ Command Center</button>
+<header>
+  <div class="logo">
+    <div class="star">✦</div>
+    <div><b>TCO ENGINE</b><br><span>MERCEDES-BENZ TRUCKS · TECAR</span></div>
+  </div>
+  <div class="mock-badge">DADOS DE DEMONSTRAÇÃO — PREENCHA SUAS PREMISSAS</div>
+  <button class="hbtn" id="btnReset" title="Restaura todos os valores de demonstração">↺ Restaurar padrão</button>
+  <button class="hbtn primary" id="btnGlobals">⚙ Premissas da operação</button>
+</header>
+
+<div id="catalog">
+  <div class="sect-head">
+    <h2>1 · MERCEDES-BENZ</h2>
+    <span class="hint">clique para selecionar · clique de novo para editar as premissas do veículo</span>
+  </div>
+  <div class="grid" id="gridMbb"></div>
+  <div class="sect-head">
+    <h2>2 · CONCORRENTES</h2>
+    <span class="hint" id="hintConc"></span>
+  </div>
+  <div class="grid" id="gridConc"></div>
+</div>
+
+<div id="compareBar">
+  <span class="pair" id="cbPair"></span>
+  <button class="hbtn primary" id="btnOpenTco">Abrir TCO ▸</button>
+</div>
+
+<!-- ============ TCO TELA CHEIA ============ -->
+<section id="tcoView" aria-label="Resultado TCO">
+  <div class="tv-head">
+    <button class="hbtn" id="btnBack">◂ Catálogo</button>
+    <div>
+      <div class="duel" id="tvDuel"></div>
+      <div class="meta" id="tvMeta"></div>
+    </div>
+    <div class="tv-actions">
+      <button class="hbtn" id="btnEditM">✎ M.Benz</button>
+      <button class="hbtn" id="btnEditC">✎ Concorrente</button>
+      <button class="hbtn" id="btnEditG">⚙ Operação</button>
+      <button class="hbtn ghost-good" id="btnPrint169">⎙ Imprimir 16:9</button>
+      <button class="hbtn ghost-good" id="btnPrint916">⎙ Imprimir 9:16</button>
+    </div>
+  </div>
+  <div class="tv-body"><div class="tv-grid" id="tvGrid"></div></div>
+</section>
+
+<div id="overlay"></div>
+
+<aside class="drawer" id="dVehicle">
+  <div class="d-head">
+    <div class="brand" id="dvBrand"></div>
+    <h3 id="dvModel"></h3>
+    <div class="sub" id="dvSub"></div>
+    <button class="d-close" data-close>✕</button>
+  </div>
+  <div class="d-body" id="dvBody"></div>
+  <div class="d-foot">
+    <button class="hbtn" id="dvReset">Restaurar veículo</button>
+    <button class="hbtn primary" data-close>Aplicar e fechar</button>
+  </div>
+</aside>
+
+<aside class="drawer" id="dGlobals">
+  <div class="d-head">
+    <div class="brand">PREMISSAS DA OPERAÇÃO</div>
+    <h3>Sua operação</h3>
+    <div class="sub">Valem para os dois veículos. Financiamento é por veículo/marca — edite no card.</div>
+    <button class="d-close" data-close>✕</button>
+  </div>
+  <div class="d-body" id="dgBody"></div>
+  <div class="d-foot">
+    <button class="hbtn primary" data-close>Aplicar e fechar</button>
+  </div>
+</aside>
+
+</div>
+<script>window.TCO_INIT=function(){
+ const ROOT=document.getElementById('tcoModule');
+ if(!ROOT||ROOT.dataset.ready)return; ROOT.dataset.ready='1';
+
+'use strict';
+/* ============ DADOS-BASE (DEMONSTRAÇÃO) ============ */
+const FIN_DEF = {pag:'fin', entrada:20, prazo:60, taxa:14, taxaUnit:'aa', carencia:0, carTipo:'cap'};
+const VEHICLES = [
+ {id:'a2651', mb:1, marca:'M.BENZ', modelo:'ACTROS 2651S', trac:'6x4', pot:510, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1150000, kml:2.05, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'a2653', mb:1, marca:'M.BENZ', modelo:'ACTROS 2653S', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1190000, kml:2.00, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'a2548', mb:1, marca:'M.BENZ', modelo:'ACTROS 2548S', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:1020000, kml:2.30, arla:5.5, manut:0.25, deprec:9, disp:96, diasVenda:40, segPct:3.1, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'ax2545', mb:1, marca:'M.BENZ', modelo:'AXOR 2545 S', trac:'6x2', pot:450, seg:'Extrapesado', aplic:'Carreta LS', preco:890000, kml:2.25, arla:5.5, manut:0.26, deprec:10, disp:95, diasVenda:45, segPct:3.1, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'at3033', mb:1, marca:'M.BENZ', modelo:'ATEGO 3033CE', trac:'8x2', pot:330, seg:'Semipesado', aplic:'Rígido 8x2', preco:640000, kml:2.90, arla:5, manut:0.21, deprec:10, disp:95, diasVenda:45, segPct:3.0, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'fh540', marca:'VOLVO', modelo:'FH 540 6X4T', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1180000, kml:2.00, arla:6, manut:0.30, deprec:9, disp:95, diasVenda:45, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'fh460', marca:'VOLVO', modelo:'FH 460 6X2T', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1040000, kml:2.25, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'fh500', marca:'VOLVO', modelo:'FH 500 6X2T', trac:'6x2', pot:500, seg:'Extrapesado', aplic:'Carreta LS', preco:1090000, kml:2.18, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'r560', marca:'SCANIA', modelo:'R560 A6X4', trac:'6x4', pot:560, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1230000, kml:1.95, arla:6.5, manut:0.30, deprec:9, disp:96, diasVenda:30, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'r540', marca:'SCANIA', modelo:'R540 A6X4', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1180000, kml:2.00, arla:6.5, manut:0.30, deprec:9, disp:95, diasVenda:40, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'r500', marca:'SCANIA', modelo:'R500 A6X4', trac:'6x4', pot:500, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1130000, kml:2.05, arla:6.5, manut:0.30, deprec:9, disp:95, diasVenda:45, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'r450', marca:'SCANIA', modelo:'R450 A6X2', trac:'6x2', pot:450, seg:'Extrapesado', aplic:'Carreta LS', preco:1050000, kml:2.20, arla:6, manut:0.28, deprec:9, disp:95, diasVenda:45, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'r460', marca:'SCANIA', modelo:'R460 A6X2', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1080000, kml:2.22, arla:6, manut:0.28, deprec:9, disp:95, diasVenda:45, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'g370', marca:'SCANIA', modelo:'G370 A6X2', trac:'6x2', pot:370, seg:'Extrapesado', aplic:'Carreta LS', preco:920000, kml:2.35, arla:5.5, manut:0.26, deprec:10, disp:94, diasVenda:55, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'xf530', marca:'DAF', modelo:'XF FTT 530', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1120000, kml:2.02, arla:6, manut:0.30, deprec:10, disp:94, diasVenda:60, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'xf480', marca:'DAF', modelo:'XF FTS 480', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:1010000, kml:2.22, arla:6, manut:0.28, deprec:10, disp:94, diasVenda:65, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'vw29530', marca:'VW', modelo:'29.530 MTM 6X4', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:980000, kml:1.95, arla:6.5, manut:0.32, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'vw28480', marca:'VW', modelo:'28.480 MTM 6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:900000, kml:2.15, arla:6, manut:0.30, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'vw25480', marca:'VW', modelo:'25.480 CTM 6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:870000, kml:2.18, arla:6, manut:0.30, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'sw540', marca:'IVECO', modelo:'S-WAY 540-6X4', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1060000, kml:1.98, arla:6.5, manut:0.30, deprec:11, disp:93, diasVenda:75, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'sw480', marca:'IVECO', modelo:'S-WAY 480-6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:970000, kml:2.18, arla:6, manut:0.28, deprec:11, disp:93, diasVenda:75, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'vw30320', marca:'VW', modelo:'30.320 CRM 8X2', trac:'8x2', pot:320, seg:'Semipesado', aplic:'Rígido 8x2', preco:620000, kml:2.80, arla:5, manut:0.23, deprec:11, disp:93, diasVenda:60, segPct:3.1, ipva:1.5, ...FIN_DEF},
+ {id:'p320', marca:'SCANIA', modelo:'P320 B8X2', trac:'8x2', pot:320, seg:'Semipesado', aplic:'Rígido 8x2', preco:660000, kml:2.75, arla:5, manut:0.23, deprec:10, disp:94, diasVenda:55, segPct:3.1, ipva:1.5, ...FIN_DEF},
+ {id:'vm360', marca:'VOLVO', modelo:'VM 360 8X2 R', trac:'8x2', pot:360, seg:'Semipesado', aplic:'Rígido 8x2', preco:650000, kml:2.85, arla:5, manut:0.23, deprec:10, disp:94, diasVenda:55, segPct:3.1, ipva:1.5, ...FIN_DEF},
+ {id:'cf310', marca:'DAF', modelo:'CF FAC 310', trac:'8x2', pot:310, seg:'Semipesado', aplic:'Rígido 8x2', preco:630000, kml:2.82, arla:5, manut:0.23, deprec:10, disp:93, diasVenda:65, segPct:3.1, ipva:1.5, ...FIN_DEF},
+];
+const MATRIX = {
+ a2651:['fh540','r560','r540','r500','xf530','vw29530','sw540'],
+ a2653:['fh540','r560','r540','r500','xf530','vw29530','sw540'],
+ a2548:['fh460','fh500','r450','r460','sw480','xf480','vw28480'],
+ ax2545:['fh460','r450','vw28480','g370','vw25480'],
+ at3033:['vw30320','p320','vm360','cf310'],
+};
+const GLOBAL_DEFAULTS = {
+ km:10000, horiz:60, diasOper:25, diesel:6.20, infDiesel:5, arlaPreco:3.50,
+ taxaAplic:10.5, receita:85000, margem:35, desagio:5, custoVenda:3, empate:1,
+};
+const VFIELDS = [
+ {sect:'AQUISIÇÃO'},
+ {k:'preco', l:'Preço de aquisição', s:'valor de nota fiscal', u:'R$', step:5000},
+ {sect:'FINANCIAMENTO — condição desta marca'},
+ {k:'pag', l:'Forma de pagamento', type:'select', opts:[['fin','Financiado'],['vista','À vista']]},
+ {k:'entrada', l:'Entrada', u:'%', step:5},
+ {k:'prazo', l:'Prazo (parcelas após a carência)', u:'meses', step:6, min:1, max:120},
+ {k:'taxaUnit', l:'Unidade da taxa', type:'select', opts:[['aa','% ao ano'],['am','% ao mês']]},
+ {k:'taxa', l:'Taxa de juros do banco da marca', s:'na unidade escolhida acima', u:'%', step:0.05},
+ {k:'carencia', l:'Carência', s:'meses sem amortizar principal', u:'meses', step:1, min:0, max:36},
+ {k:'carTipo', l:'Tipo de carência', type:'select',
+  opts:[['cap','Capitalizada — juros vão ao saldo'],['jur','Paga só os juros na carência']]},
+ {echo:1},
+ {sect:'OPERAÇÃO'},
+ {k:'kml', l:'Consumo estimado', s:'medido com carga e rota reais', u:'km/L', step:0.01},
+ {k:'arla', l:'Consumo de ARLA 32', s:'% sobre o diesel', u:'%', step:0.5},
+ {k:'manut', l:'Manutenção média', s:'preventiva + corretiva', u:'R$/km', step:0.01},
+ {k:'disp', l:'Disponibilidade mecânica', s:'% de dias aptos a operar', u:'%', step:0.5},
+ {sect:'VALOR NO TEMPO'},
+ {k:'deprec', l:'Depreciação anual', s:'composta, sobre valor de mercado', u:'%a.a.', step:0.5},
+ {k:'diasVenda', l:'Dias para vender o usado', s:'liquidez na revenda', u:'dias', step:5},
+ {sect:'IMPOSTOS & SEGURO'},
+ {k:'ipva', l:'IPVA', s:'sobre o valor do ano', u:'%', step:0.1},
+ {k:'segPct', l:'Seguro anual', s:'sobre o valor do ano', u:'%', step:0.1},
+];
+const NEWFIELDS = [
+ {sect:'IDENTIFICAÇÃO'},
+ {k:'marca', l:'Marca', type:'text'},
+ {k:'modelo', l:'Modelo', type:'text'},
+ {k:'trac', l:'Tração', type:'select', opts:[['4x2','4x2'],['6x2','6x2'],['6x4','6x4'],['8x2','8x2'],['8x4','8x4']]},
+ {k:'pot', l:'Potência', u:'cv', step:10},
+ {k:'seg', l:'Segmento', type:'select', opts:[['Extrapesado','Extrapesado'],['Semipesado','Semipesado'],['Pesado','Pesado'],['Leve','Leve']]},
+];
+const GFIELDS = [
+ {sect:'OPERAÇÃO'},
+ {k:'km', l:'Km planejado por mês', u:'km', step:500},
+ {k:'diasOper', l:'Dias operacionais por mês', u:'dias', step:1},
+ {k:'horiz', l:'Horizonte de análise', s:'12 a 120 meses', u:'meses', step:6, min:12, max:120},
+ {sect:'COMBUSTÍVEL'},
+ {k:'diesel', l:'Preço do diesel hoje', u:'R$/L', step:0.05},
+ {k:'infDiesel', l:'Inflação esperada do diesel', u:'%a.a.', step:0.5},
+ {k:'arlaPreco', l:'Preço do ARLA 32', u:'R$/L', step:0.05},
+ {sect:'CAPITAL'},
+ {k:'taxaAplic', l:'Custo de oportunidade', s:'aplicação do capital livre', u:'%a.a.', step:0.5},
+ {sect:'RECEITA (custo de parada)'},
+ {k:'receita', l:'Receita potencial por mês', u:'R$', step:5000},
+ {k:'margem', l:'Margem de contribuição', u:'%', step:1},
+ {sect:'REVENDA'},
+ {k:'desagio', l:'Deságio na venda do usado', u:'%', step:0.5},
+ {k:'custoVenda', l:'Custos de venda', s:'comissão + preparação', u:'%', step:0.5},
+ {k:'empate', l:'Limite de empate técnico', u:'%', step:0.5},
+];
+
+/* ============ ESTADO ============ */
+const LS='tco-engine-v2';
+let state = load() || {g:{...GLOBAL_DEFAULTS}, v:{}, custom:[], selM:null, selC:null};
+if(!state.custom) state.custom=[];
+state.custom.forEach(v=>{ if(!v.taxaUnit)v.taxaUnit='aa'; if(v.carencia==null)v.carencia=0; if(!v.carTipo)v.carTipo='cap'; });
+function load(){ try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;} }
+function save(){ try{localStorage.setItem(LS, JSON.stringify(state));}catch(e){} }
+function allVehicles(){ return VEHICLES.concat(state.custom); }
+function baseOf(id){ return allVehicles().find(v=>v.id===id); }
+function vdata(id){ const b=baseOf(id); return b ? {...b, ...(state.v[id]||{})} : null; }
+function isCustom(id){ return state.custom.some(v=>v.id===id); }
+function isEdited(id){ return !!state.v[id] && Object.keys(state.v[id]).length>0; }
+function compatible(mId, cId){
+ if(!mId) return true;
+ if(isCustom(mId) || isCustom(cId)) return true;   // veículos cadastrados pelo usuário: sempre habilitados
+ return (MATRIX[mId]||[]).includes(cId);
+}
+
+/* ============ MOTOR (mensal) — financiamento POR VEÍCULO ============ */
+function finParams(v){
+ const unit=v.taxaUnit||'aa';
+ const iM = unit==='am' ? (+v.taxa||0)/100 : Math.pow(1+(+v.taxa||0)/100,1/12)-1;
+ const iAA = Math.pow(1+iM,12)-1;
+ const car = Math.max(0, Math.min(36, Math.round(+v.carencia||0)));
+ const carTipo = v.carTipo||'cap';
+ const fin = v.pag==='fin';
+ const entrada = fin ? v.preco*(v.entrada/100) : v.preco;
+ const pv = fin ? v.preco-entrada : 0;
+ const prazo = Math.max(1,+v.prazo||1);
+ // saldo no fim da carência: capitalizada → juros incorporados; paga-juros → saldo intacto
+ const saldoPosCar = carTipo==='cap' ? pv*Math.pow(1+iM,car) : pv;
+ const pmt = pv<=0 ? 0 : (iM===0 ? saldoPosCar/prazo : saldoPosCar*iM/(1-Math.pow(1+iM,-prazo)));
+ return {iM,iAA,car,carTipo,fin,entrada,pv,prazo,saldoPosCar,pmt};
+}
+function simulate(v, g){
+ const H=Math.min(120,Math.max(1,+g.horiz||60));
+ const disp=v.disp/100;
+ const infM=Math.pow(1+g.infDiesel/100,1/12)-1, depM=1-Math.pow(1-v.deprec/100,1/12);
+ const {iM,car,carTipo,fin,entrada,pv,prazo,pmt}=finParams(v);
+ const kmEf=g.km*disp, recDia=g.receita/Math.max(1,g.diasOper);
+ let saldo=pv, vm=v.preco, baseAno=v.preco;
+ let juros=0,dieselC=0,arlaC=0,manutC=0,ipvaC=0,segC=0,indispC=0;
+ const cum=[entrada], mensal=[];
+ let acc=entrada;
+ for(let m=1;m<=H;m++){
+   if(m>1&&(m-1)%12===0) baseAno=vm;
+   const pD=g.diesel*Math.pow(1+infM,m-1);
+   const litros=v.kml>0? kmEf/v.kml:0;
+   const cd=litros*pD, ca=litros*(v.arla/100)*g.arlaPreco*Math.pow(1+infM,m-1);
+   const cm=kmEf*v.manut, ci=baseAno*(v.ipva/100)/12, cs=baseAno*(v.segPct/100)/12;
+   const cp=g.diasOper*(1-disp)*recDia*(g.margem/100);
+   dieselC+=cd; arlaC+=ca; manutC+=cm; ipvaC+=ci; segC+=cs; indispC+=cp;
+   let parcela=0;
+   if(fin){
+     if(m<=car){                                    // período de carência
+       const j=saldo*iM; juros+=j;
+       if(carTipo==='jur'){ parcela=j; }            // paga só os juros
+       else { saldo+=j; }                           // capitaliza no saldo
+     } else if(m<=car+prazo){                       // amortização Price
+       const j=saldo*iM; juros+=j; saldo=Math.max(0,saldo-(pmt-j)); parcela=pmt;
+     }
+   }
+   vm*=(1-depM);
+   const out=cd+ca+cm+ci+cs+cp+parcela;
+   acc+=out; cum.push(acc); mensal.push(out);
+ }
+ const residual=vm*(1-(g.desagio+g.custoVenda)/100);
+ const opex=dieselC+arlaC+manutC+ipvaC+segC+indispC;
+ const tco=v.preco+juros+opex-residual;
+ return {H,entrada,pmt,juros,saldoFinal:saldo,dieselC,arlaC,manutC,ipvaC,segC,indispC,opex,vm,residual,tco,
+         kmTot:kmEf*H, tcoKm:kmEf*H>0?tco/(kmEf*H):0, tcoMes:tco/H, cum, mensal};
+}
+function compare(){
+ if(!state.selM||!state.selC) return null;
+ const g=state.g, M=vdata(state.selM), C=vdata(state.selC);
+ if(!M||!C) return null;
+ const rm=simulate(M,g), rc=simulate(C,g);
+ const rd=Math.pow(1+g.taxaAplic/100,1/365)-1;
+ rm.liquidez=C.diasVenda>M.diasVenda? rm.residual*(Math.pow(1+rd,C.diasVenda-M.diasVenda)-1):0;
+ rc.liquidez=M.diasVenda>C.diasVenda? rc.residual*(Math.pow(1+rd,M.diasVenda-C.diasVenda)-1):0;
+ const rMm=Math.pow(1+g.taxaAplic/100,1/12)-1;
+ rm.aplic=(M.pag==='vista'&&C.pag==='vista'&&M.preco<C.preco)?(C.preco-M.preco)*(Math.pow(1+rMm,rm.H)-1):0;
+ rc.aplic=(M.pag==='vista'&&C.pag==='vista'&&C.preco<M.preco)?(M.preco-C.preco)*(Math.pow(1+rMm,rc.H)-1):0;
+ rm.tcoFinal=rm.tco-rm.liquidez-rm.aplic;
+ rc.tcoFinal=rc.tco-rc.liquidez-rc.aplic;
+ return {M,C,rm,rc,delta:rm.tcoFinal-rc.tcoFinal,
+         deltaPct: rc.tcoFinal!==0?(rm.tcoFinal-rc.tcoFinal)/Math.abs(rc.tcoFinal):0};
+}
+
+/* ============ FORMAT ============ */
+const fBRL=n=>'R$ '+Math.round(n).toLocaleString('pt-BR');
+const fK=n=>Math.round(n)===0?'R$ 0':(Math.abs(n)>=1e6?('R$ '+(n/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+' mi'):('R$ '+Math.round(n/1000)+' mil'));
+const fBRL2=n=>'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fPct=n=>(n*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ============ CATÁLOGO ============ */
+function cardHTML(v){
+ const d=vdata(v.id);
+ const u=d.taxaUnit==='am'?'a.m.':'a.a.';
+ const fin = d.pag==='fin'
+   ? `Financ. ${d.entrada}% ent · ${d.prazo}m · ${(+d.taxa).toLocaleString('pt-BR')}% ${u}`+((+d.carencia||0)>0?` · car. ${d.carencia}m`:'')
+   : 'À vista';
+ return `<button class="card ${isEdited(v.id)?'edited':''}" data-id="${v.id}">
+   <span class="tag">${v.mb?'SELECIONADO':'COMPARANDO'}</span>
+   <span class="edited-dot" title="premissas editadas"></span>
+   <div class="brand ${v.mb?'mb':''}">${esc(v.marca)}${isCustom(v.id)?' · CADASTRADO':''}</div>
+   <h3>${esc(v.modelo)}</h3>
+   <div class="spec"><span>${esc(v.trac)}</span><span>${v.pot} cv</span><span>${esc(v.seg)}</span></div>
+   <div class="kv"><span>Preço</span><b>${fBRL(d.preco)}</b></div>
+   <div class="kv"><span>Consumo</span><b>${(+d.kml).toLocaleString('pt-BR',{minimumFractionDigits:2})} km/L</b></div>
+   <div class="kv"><span>Disponib. · venda</span><b>${d.disp}% · ${d.diasVenda}d</b></div>
+   <div class="fin-line">🏦 ${fin}</div>
+   ${isCustom(v.id)?'<span class="del-v" data-del="'+v.id+'">excluir</span>':''}
+ </button>`;
+}
+function addCardHTML(kind){
+ return `<button class="card add-card" data-add="${kind}">
+   <span><span class="plus">＋</span><br><span class="lbl">CADASTRAR VEÍCULO</span></span></button>`;
+}
+function renderCatalog(){
+ const all=allVehicles();
+ const mbb=all.filter(v=>v.mb), conc=all.filter(v=>!v.mb);
+ document.getElementById('gridMbb').innerHTML = mbb.map(cardHTML).join('')+addCardHTML('mbb');
+ document.getElementById('gridConc').innerHTML = conc.map(cardHTML).join('')+addCardHTML('conc');
+ document.querySelectorAll('#gridConc .card[data-id]').forEach(c=>{
+   const id=c.dataset.id;
+   if(state.selM && !compatible(state.selM,id)) c.classList.add('dim');
+   if(id===state.selC) c.classList.add('selected-c');
+ });
+ document.querySelectorAll('#gridMbb .card[data-id]').forEach(c=>{
+   if(c.dataset.id===state.selM) c.classList.add('selected-m');
+ });
+ document.getElementById('hintConc').textContent = state.selM
+   ? `pares compatíveis com o ${vdata(state.selM).modelo} — clientes reais que compraram os dois modelos`
+   : 'selecione um Mercedes-Benz para habilitar os pares compatíveis (grafo real de competição)';
+ const bar=document.getElementById('compareBar');
+ if(state.selM&&state.selC){
+   document.getElementById('cbPair').innerHTML =
+     esc(vdata(state.selM).modelo)+'<em>×</em>'+esc(vdata(state.selC).modelo);
+   bar.classList.add('show');
+ } else bar.classList.remove('show');
+}
+
+/* ============ GRÁFICOS SVG (instantâneos) ============ */
+const COMP_COLORS=[['Aquisição−residual','var(--c-aq)'],['Juros','var(--c-ju)'],['Diesel','var(--c-di)'],
+ ['ARLA','var(--c-ar)'],['Manutenção','var(--c-ma)'],['IPVA','var(--c-ip)'],['Seguro','var(--c-se)'],['Parada','var(--c-pa)']];
+function parts(r, v){ return [v.preco-r.residual, r.juros, r.dieselC, r.arlaC, r.manutC, r.ipvaC, r.segC, r.indispC]; }
+
+function chartStack(r){
+ const pm=parts(r.rm,r.M), pc=parts(r.rc,r.C);
+ const max=Math.max(r.rm.tcoFinal+r.rm.liquidez+r.rm.aplic, r.rc.tcoFinal+r.rc.liquidez+r.rc.aplic,
+                    pm.reduce((a,b)=>a+b,0), pc.reduce((a,b)=>a+b,0));
+ const W=560,BH=34,GAP=46,L=110;
+ const bar=(p,y,name,total)=>{
+   let x=L, cells='';
+   p.forEach((val,i)=>{ const w=val/max*(W-L-70); if(w>0.5){cells+=`<rect x="${x}" y="${y}" width="${w}" height="${BH}" fill="${COMP_COLORS[i][1]}" rx="1"/>`;} x+=Math.max(0,w); });
+   return cells+
+    `<text x="${L-8}" y="${y+BH/2+4}" text-anchor="end" font-size="11" font-weight="700" fill="var(--txt)" font-family="var(--font-n)">${esc(name)}</text>`+
+    `<text x="${x+6}" y="${y+BH/2+4}" font-size="10" fill="var(--txt-2)" font-family="var(--mono)">${fK(total)}</text>`;
+ };
+ return `<svg class="chart-svg" viewBox="0 0 ${W} ${BH*2+GAP+14}" role="img" aria-label="Composição do TCO">
+   ${bar(pm,4,r.M.modelo.split(' ').slice(0,2).join(' '),r.rm.tcoFinal)}
+   ${bar(pc,4+BH+GAP-24,r.C.modelo.split(' ').slice(0,2).join(' '),r.rc.tcoFinal)}
+ </svg>
+ <div class="legend">${COMP_COLORS.map(([n,c])=>`<span><i style="background:${c}"></i>${n}</span>`).join('')}</div>`;
+}
+function chartCumulative(r){
+ const a=r.rm.cum, b=r.rc.cum, H=a.length-1;
+ const W=560,Hh=210,P={l:56,r:14,t:12,b:26};
+ const max=Math.max(a[H],b[H]);
+ const X=i=>P.l+i/H*(W-P.l-P.r), Y=v=>P.t+(1-v/max)*(Hh-P.t-P.b);
+ const path=arr=>arr.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+ let cross='';
+ for(let i=1;i<=H;i++){
+   if((a[i]-b[i])*(a[i-1]-b[i-1])<0){
+     cross=`<line x1="${X(i)}" y1="${P.t}" x2="${X(i)}" y2="${Hh-P.b}" stroke="var(--warn)" stroke-dasharray="3 3" stroke-width="1"/>
+      <text x="${X(i)+4}" y="${P.t+10}" font-size="9.5" fill="var(--warn)" font-family="var(--mono)">virada · mês ${i}</text>`;
+     break;
+   }
+ }
+ const ticks=[0,.25,.5,.75,1].map(f=>{
+   const v=max*f;
+   return `<line class="axis-line" x1="${P.l}" y1="${Y(v)}" x2="${W-P.r}" y2="${Y(v)}" stroke="var(--line-soft)" stroke-width="1"/>
+     <text x="${P.l-6}" y="${Y(v)+3}" text-anchor="end" font-size="9" fill="var(--txt-3)" font-family="var(--mono)">${fK(v)}</text>`;
+ }).join('');
+ const xt=[0,.25,.5,.75,1].map(f=>{const m=Math.round(H*f);
+   return `<text x="${X(m)}" y="${Hh-8}" text-anchor="middle" font-size="9" fill="var(--txt-3)" font-family="var(--mono)">${m}m</text>`;}).join('');
+ return `<svg class="chart-svg" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Custo acumulado">
+   ${ticks}${xt}${cross}
+   <path d="${path(a)}" fill="none" stroke="var(--silver)" stroke-width="2.2"/>
+   <path d="${path(b)}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+ </svg>
+ <div class="legend"><span><i style="background:var(--silver)"></i>${esc(r.M.modelo)}</span>
+ <span><i style="background:var(--accent)"></i>${esc(r.C.modelo)}</span>
+ <span style="color:var(--txt-3)">desembolso acumulado (entrada + parcelas + operação)</span></div>`;
+}
+function chartTornado(r){
+ const rows=[
+  ['Preço−residual', (r.C.preco-r.rc.residual)-(r.M.preco-r.rm.residual)],
+  ['Juros', r.rc.juros-r.rm.juros],
+  ['Diesel+ARLA', (r.rc.dieselC+r.rc.arlaC)-(r.rm.dieselC+r.rm.arlaC)],
+  ['Manutenção', r.rc.manutC-r.rm.manutC],
+  ['IPVA+Seguro', (r.rc.ipvaC+r.rc.segC)-(r.rm.ipvaC+r.rm.segC)],
+  ['Custo de parada', r.rc.indispC-r.rm.indispC],
+  ['Liquidez+aplic.', (r.rm.liquidez+r.rm.aplic)-(r.rc.liquidez+r.rc.aplic)],
+ ];
+ const max=Math.max(...rows.map(x=>Math.abs(x[1])),1);
+ const W=560,RH=24,mid=330;
+ const bars=rows.map(([n,v],i)=>{
+   const y=i*RH+4, w=Math.abs(v)/max*150;
+   const good=v>0;
+   return `<text x="${mid-190}" y="${y+RH/2+3}" text-anchor="end" font-size="10.5" fill="var(--txt-2)" font-family="var(--font)">${n}</text>
+     <rect x="${good?mid:mid-w}" y="${y+4}" width="${Math.max(w,1)}" height="${RH-11}" rx="2" fill="${good?'var(--good)':'var(--bad)'}" opacity=".85"/>
+     <text x="${good?mid+w+5:mid-w-5}" y="${y+RH/2+3}" text-anchor="${good?'start':'end'}" font-size="9.5" fill="${good?'var(--good)':'var(--bad)'}" font-family="var(--mono)">${fK(Math.abs(v))}</text>`;
+ }).join('');
+ return `<svg class="chart-svg" viewBox="0 0 ${W} ${rows.length*RH+18}" role="img" aria-label="Vantagem por componente">
+   <line x1="${mid}" y1="0" x2="${mid}" y2="${rows.length*RH+8}" stroke="var(--line)" stroke-width="1"/>
+   ${bars}
+   <text x="${mid+6}" y="${rows.length*RH+16}" font-size="9" fill="var(--good)" font-family="var(--mono)">→ vantagem M.BENZ</text>
+   <text x="${mid-6}" y="${rows.length*RH+16}" text-anchor="end" font-size="9" fill="var(--bad)" font-family="var(--mono)">vantagem concorrente ←</text>`+
+ `</svg>`;
+}
+
+/* ============ TCO TELA CHEIA ============ */
+function compRow(n,a,b,kind,fmt){
+ fmt=fmt||fBRL;
+ const d=a-b, tol=Math.max(Math.abs(b)*state.g.empate/100,0.5);
+ let cls='n0', txt='=';
+ if(kind!=='neutral'&&Math.abs(d)>tol){
+   const mbbWins=kind==='cost'? d<0 : d>0;
+   cls=mbbWins?'g':'r';
+   txt=(mbbWins?'MBB ':'CONC ')+(Math.abs(b)>0.001?fPct(Math.abs(d)/Math.abs(b)):'—');
+ }
+ return `<div class="crow"><span class="n">${n}</span><span class="a">${fmt(a)}</span><span class="b">${fmt(b)}</span><span class="d ${cls}">${txt}</span></div>`;
+}
+function insight(r,tie,mbbWins){
+ const {M,C,rm,rc,delta}=r;
+ if(tie) return `<b>Empate técnico.</b> A diferença de ${fBRL(Math.abs(delta))} está dentro do limite configurado (${state.g.empate}%). A decisão deve considerar fatores qualitativos: rede de atendimento, plano de manutenção, valor de marca e relacionamento.`;
+ const comps=[
+  {n:'aquisição − residual', d:(rc.tco-rc.opex-rc.juros)-(rm.tco-rm.opex-rm.juros)},
+  {n:'combustível', d:rc.dieselC-rm.dieselC},{n:'manutenção', d:rc.manutC-rm.manutC},
+  {n:'custo de parada', d:rc.indispC-rm.indispC},{n:'juros do financiamento', d:rc.juros-rm.juros},
+  {n:'liquidez do usado', d:rm.liquidez-rc.liquidez},
+ ].sort((a,b)=>mbbWins? b.d-a.d : a.d-b.d);
+ const top=comps[0], w=mbbWins?M:C, l=mbbWins?C:M;
+ return `O <b>${esc(w.modelo)}</b> entrega TCO <b>${fBRL(Math.abs(delta))} menor</b> que o ${esc(l.modelo)} em ${rm.H} meses. `+
+        `Maior fator: <b>${top.n}</b> (${fBRL(Math.abs(top.d))}). `+
+        `Custo por km: ${fBRL2(mbbWins?rm.tcoKm:rc.tcoKm)} contra ${fBRL2(mbbWins?rc.tcoKm:rm.tcoKm)}.`;
+}
+function renderTco(){
+ const r=compare(); if(!r) return;
+ const {M,C,rm,rc,delta,deltaPct}=r;
+ const tie=Math.abs(deltaPct)<=state.g.empate/100, mbbWins=delta<0;
+ document.getElementById('tvDuel').innerHTML = esc(M.modelo)+'<em>×</em>'+esc(C.modelo);
+ document.getElementById('tvMeta').textContent =
+   `${rm.H} MESES · ${state.g.km.toLocaleString('pt-BR')} KM/MÊS · DIESEL R$ ${state.g.diesel.toLocaleString('pt-BR',{minimumFractionDigits:2})} · GERADO EM ${new Date().toLocaleDateString('pt-BR')} · DADOS DE DEMONSTRAÇÃO — EDITÁVEIS`;
+ const finTxt=v=>{
+   if(v.pag!=='fin') return 'à vista';
+   const u=v.taxaUnit==='am'?'a.m.':'a.a.';
+   const car=(+v.carencia||0)>0?` · carência ${v.carencia}m (${(v.carTipo||'cap')==='cap'?'capitalizada':'paga juros'})`:'';
+   return `financiado ${v.entrada}% ent · ${v.prazo}m · ${(+v.taxa).toLocaleString('pt-BR')}% ${u}${car}`;
+ };
+ document.getElementById('tvGrid').innerHTML = `
+  <div>
+    <div class="verdict ${tie?'tie':(mbbWins?'win-m':'win-c')}">
+      <div>
+        <div class="who">${tie?'EMPATE TÉCNICO':esc((mbbWins?M:C).modelo)}</div>
+        <div class="eco">${tie
+          ?`diferença de <b>${fBRL(Math.abs(delta))}</b> (${fPct(Math.abs(deltaPct))}) — abaixo do limite de ${state.g.empate}%`
+          :`economia de <b>${fBRL(Math.abs(delta))}</b> · ${fPct(Math.abs(deltaPct))} no TCO de ${rm.H} meses`}</div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">TCO ${esc(M.modelo.split(' ')[0])}</div><div class="v">${fBRL(rm.tcoFinal)}</div></div>
+      <div class="kpi"><div class="l">TCO ${esc(C.modelo)}</div><div class="v">${fBRL(rc.tcoFinal)}</div></div>
+      <div class="kpi"><div class="l">TCO/km · MBB</div><div class="v">${fBRL2(rm.tcoKm)}</div></div>
+      <div class="kpi"><div class="l">TCO/km · Conc.</div><div class="v">${fBRL2(rc.tcoKm)}</div></div>
+    </div>
+    <div class="panel ch-cum" style="margin-bottom:14px">
+      <h4>CUSTO ACUMULADO — QUEM FICA MAIS BARATO AO LONGO DO TEMPO</h4>
+      ${chartCumulative(r)}
+    </div>
+    <div class="panel ch-stack" style="margin-bottom:14px">
+      <h4>COMPOSIÇÃO DO TCO</h4>
+      ${chartStack(r)}
+    </div>
+    <div class="panel ch-tor">
+      <h4>ONDE CADA UM GANHA</h4>
+      ${chartTornado(r)}
+    </div>
+  </div>
+  <div>
+    <div class="panel">
+      <h4>DETALHAMENTO COMPONENTE A COMPONENTE</h4>
+      <div class="comp-head"><span>COMPONENTE</span><span>M.BENZ</span><span>CONCOR.</span><span>Δ</span></div>
+      ${compRow('Preço de aquisição',M.preco,C.preco,'cost')}
+      <div class="crow"><span class="n" style="font-size:10.5px">🏦 ${finTxt(M)}</span><span></span><span class="n" style="font-size:10.5px;text-align:right;grid-column:3/5">${finTxt(C)}</span></div>
+      ${compRow('Entrada',rm.entrada,rc.entrada,'neutral')}
+      ${compRow('Parcela mensal',rm.pmt,rc.pmt,'neutral')}
+      ${compRow('Juros no horizonte',rm.juros,rc.juros,'cost')}
+      ${compRow('Combustível',rm.dieselC,rc.dieselC,'cost')}
+      ${compRow('ARLA 32',rm.arlaC,rc.arlaC,'cost')}
+      ${compRow('Manutenção',rm.manutC,rc.manutC,'cost')}
+      ${compRow('IPVA',rm.ipvaC,rc.ipvaC,'cost')}
+      ${compRow('Seguro',rm.segC,rc.segC,'cost')}
+      ${compRow('Custo de parada',rm.indispC,rc.indispC,'cost')}
+      ${compRow('(−) Residual líquido',rm.residual,rc.residual,'benefit')}
+      ${compRow('(−) Liquidez do usado',rm.liquidez,rc.liquidez,'benefit')}
+      ${(rm.aplic||rc.aplic)?compRow('(−) Ganho de aplicação',rm.aplic,rc.aplic,'benefit'):''}
+      <div class="crow total"><span class="n">TCO TOTAL</span><span class="a">${fBRL(rm.tcoFinal)}</span><span class="b">${fBRL(rc.tcoFinal)}</span>
+        <span class="d ${tie?'n0':(mbbWins?'g':'r')}">${tie?'=':fPct(Math.abs(deltaPct))}</span></div>
+      <div class="crow"><span class="n">TCO / mês</span><span class="a">${fBRL(rm.tcoMes)}</span><span class="b">${fBRL(rc.tcoMes)}</span><span class="d n0"></span></div>
+      <div class="insight">${insight(r,tie,mbbWins)}</div>
+    </div>
+  </div>`;
+}
+function openTco(){ if(!compare()) return; renderTco(); document.getElementById('tcoView').classList.add('open'); }
+function closeTco(){ document.getElementById('tcoView').classList.remove('open'); }
+
+/* ============ IMPRESSÃO 16:9 / 9:16 ============ */
+function printAs(ratio){
+ const st=document.getElementById('pageStyle')||document.head.appendChild(Object.assign(document.createElement('style'),{id:'pageStyle'}));
+ document.documentElement.classList.remove('p169','p916');
+ if(ratio==='169'){ st.textContent='@page{size:320mm 180mm;margin:8mm}'; document.documentElement.classList.add('p169'); }
+ else { st.textContent='@page{size:180mm 320mm;margin:8mm}'; document.documentElement.classList.add('p916'); }
+ window.print();
+}
+
+/* ============ DRAWERS ============ */
+const overlay=document.getElementById('overlay');
+function openDrawer(id){ document.getElementById(id).classList.add('open'); overlay.classList.add('open'); }
+function closeDrawers(){ ROOT.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open')); overlay.classList.remove('open'); refresh(); }
+overlay.addEventListener('click',closeDrawers);
+ROOT.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeDrawers));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawers(); });
+
+function fieldHTML(f,val,scope){
+ if(f.sect) return `<div class="f-sect">${f.sect}</div>`;
+ if(f.echo) return `<div class="fin-echo" id="finEcho"></div>`;
+ if(f.type==='select'){
+   const opts=f.opts.map(([v,l])=>`<option value="${v}" ${v===val?'selected':''}>${l}</option>`).join('');
+   return `<div class="frow"><label>${f.l}${f.s?`<small>${f.s}</small>`:''}</label>
+     <select data-scope="${scope}" data-k="${f.k}">${opts}</select></div>`;
+ }
+ if(f.type==='text'){
+   return `<div class="frow"><label>${f.l}</label>
+     <input type="text" data-scope="${scope}" data-k="${f.k}" data-type="text" value="${esc(val==null?'':val)}"></div>`;
+ }
+ return `<div class="frow"><label>${f.l}${f.s?`<small>${f.s}</small>`:''}</label>
+   <span class="unit"><input type="number" inputmode="decimal" data-scope="${scope}" data-k="${f.k}"
+     value="${val}" step="${f.step||1}" ${f.min!=null?`min="${f.min}"`:''} ${f.max!=null?`max="${f.max}"`:''}><em>${f.u||''}</em></span></div>`;
+}
+let editingId=null;
+function openVehicle(id){
+ editingId=id;
+ const base=baseOf(id), d=vdata(id);
+ document.getElementById('dvBrand').textContent=base.marca+' · '+base.trac+' · '+base.pot+' cv'+(isCustom(id)?' · CADASTRADO POR VOCÊ':'');
+ document.getElementById('dvModel').textContent=base.modelo;
+ document.getElementById('dvSub').textContent=base.seg+' · '+(base.aplic||'')+' — preencha com os SEUS números';
+ const idFields = isCustom(id)? NEWFIELDS.map(f=>fieldHTML(f, f.k?d[f.k]:null,'v')).join('') : '';
+ document.getElementById('dvBody').innerHTML = idFields + VFIELDS.map(f=>fieldHTML(f, f.k?d[f.k]:null,'v')).join('');
+ markDirty(); updateFinEcho(); openDrawer('dVehicle');
+}
+function updateFinEcho(){
+ const el=document.getElementById('finEcho');
+ if(!el||!editingId) return;
+ const d=vdata(editingId);
+ if(d.pag!=='fin'){ el.innerHTML='Compra à vista — desembolso integral no mês 0, sem juros.'; return; }
+ const f=finParams(d);
+ const fim=f.car+f.prazo;
+ el.innerHTML =
+  `Taxa equivalente: <b>${(f.iM*100).toLocaleString('pt-BR',{maximumFractionDigits:3})}% a.m.</b> ≡ `+
+  `<b>${(f.iAA*100).toLocaleString('pt-BR',{maximumFractionDigits:2})}% a.a.</b><br>`+
+  (f.car>0
+    ? `Carência de <b>${f.car}m</b> (${f.carTipo==='cap'?'juros capitalizados: saldo vai a '+fK(f.saldoPosCar):'pagando ~'+fBRL(f.pv*f.iM)+'/mês de juros'})<br>`
+    : '')+
+  `Parcela Price: <b>${fBRL(f.pmt)}</b> · 1ª no mês <b>${f.car+1}</b> · última no mês <b>${fim}</b>`+
+  (fim>state.g.horiz?` · ⚠ ${fim-state.g.horiz}m além do horizonte`:'');
+}
+function openGlobals(){
+ document.getElementById('dgBody').innerHTML = GFIELDS.map(f=>fieldHTML(f, f.k?state.g[f.k]:null,'g')).join('');
+ openDrawer('dGlobals');
+}
+function markDirty(){
+ if(!editingId||isCustom(editingId)) return;
+ const base=baseOf(editingId);
+ document.querySelectorAll('#dvBody [data-k]').forEach(inp=>{
+   const cur=inp.dataset.type==='text'||inp.tagName==='SELECT'? inp.value : +inp.value;
+   inp.classList.toggle('dirty', String(cur)!==String(base[inp.dataset.k]));
+ });
+}
+document.addEventListener('input',e=>{
+ const t=e.target; if(!t.dataset||!t.dataset.k) return;
+ const k=t.dataset.k;
+ const val = (t.tagName==='SELECT'||t.dataset.type==='text')? t.value : (+t.value||0);
+ if(t.dataset.scope==='g'){ state.g[k]=val; }
+ else if(editingId){
+   if(isCustom(editingId)){
+     const cv=state.custom.find(v=>v.id===editingId); if(cv) cv[k]=val;
+   } else {
+     const base=baseOf(editingId);
+     if(!state.v[editingId]) state.v[editingId]={};
+     if(val===base[k]) delete state.v[editingId][k]; else state.v[editingId][k]=val;
+     markDirty();
+   }
+ }
+ save(); updateFinEcho();
+ if(document.getElementById('tcoView').classList.contains('open')) renderTco();
+});
+
+/* ============ CADASTRO DE VEÍCULO ============ */
+function addVehicle(kind){
+ const id='u'+Date.now().toString(36);
+ const nv={id, mb:kind==='mbb'?1:0, marca:kind==='mbb'?'M.BENZ':'OUTRA MARCA', modelo:'NOVO MODELO',
+   trac:'6x4', pot:500, seg:'Extrapesado', aplic:'—',
+   preco:1000000, kml:2.00, arla:6, manut:0.28, deprec:10, disp:95, diasVenda:60, segPct:3.2, ipva:1.5, ...FIN_DEF};
+ state.custom.push(nv); save(); renderCatalog(); openVehicle(id);
+}
+
+/* ============ EVENTOS ============ */
+document.getElementById('catalog').addEventListener('click',e=>{
+ const del=e.target.closest('[data-del]');
+ if(del){
+   e.stopPropagation();
+   const id=del.dataset.del;
+   if(confirm('Excluir este veículo cadastrado?')){
+     state.custom=state.custom.filter(v=>v.id!==id);
+     delete state.v[id];
+     if(state.selM===id) state.selM=null;
+     if(state.selC===id) state.selC=null;
+     save(); refresh();
+   }
+   return;
+ }
+ const add=e.target.closest('[data-add]');
+ if(add){ addVehicle(add.dataset.add); return; }
+ const card=e.target.closest('.card[data-id]'); if(!card) return;
+ const id=card.dataset.id, v=baseOf(id);
+ if(v.mb){
+   if(state.selM===id){ openVehicle(id); return; }
+   state.selM=id;
+   if(state.selC && !compatible(id,state.selC)) state.selC=null;
+ } else {
+   if(state.selM && !compatible(state.selM,id)) return;
+   if(state.selC===id){ openVehicle(id); return; }
+   state.selC=id;
+ }
+ save(); refresh();
+ if(state.selM&&state.selC) openTco();   // abre o TCO em tela cheia automaticamente
+});
+document.getElementById('btnOpenTco').addEventListener('click',openTco);
+document.getElementById('btnBack').addEventListener('click',closeTco);
+document.getElementById('btnGlobals').addEventListener('click',openGlobals);
+document.getElementById('btnEditG').addEventListener('click',openGlobals);
+document.getElementById('btnEditM').addEventListener('click',()=>state.selM&&openVehicle(state.selM));
+document.getElementById('btnEditC').addEventListener('click',()=>state.selC&&openVehicle(state.selC));
+document.getElementById('btnPrint169').addEventListener('click',()=>printAs('169'));
+document.getElementById('btnPrint916').addEventListener('click',()=>printAs('916'));
+document.getElementById('btnReset').addEventListener('click',()=>{
+ if(!confirm('Restaurar TODOS os valores de demonstração? Suas edições e veículos cadastrados serão perdidos.')) return;
+ state={g:{...GLOBAL_DEFAULTS}, v:{}, custom:[], selM:state.selM&&!isCustom(state.selM)?state.selM:null,
+        selC:state.selC&&!isCustom(state.selC)?state.selC:null};
+ save(); refresh(); closeDrawers();
+});
+document.getElementById('dvReset').addEventListener('click',()=>{
+ if(editingId&&!isCustom(editingId)){ delete state.v[editingId]; save(); openVehicle(editingId); }
+});
+
+function refresh(){
+ renderCatalog();
+ if(document.getElementById('tcoView').classList.contains('open')){
+   if(compare()) renderTco(); else closeTco();
+ }
+}
+refresh();
+
+ window.TCO_REFRESH=refresh;
+};
 </script>
 </body></html>
