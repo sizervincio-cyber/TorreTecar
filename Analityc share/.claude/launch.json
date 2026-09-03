@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8741"],
       "port": 8741
+    },
+    {
+      "name": "micc-root",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8799", "--directory", "C:/Users/sizer/OneDrive/Desktop/Torre Tecar"],
+      "port": 8799
     }
   ]
 }
