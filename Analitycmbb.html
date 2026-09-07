@@ -175,7 +175,7 @@
 html.p169 .shell,html.p916 .shell,html.p169 .sidebar,html.p916 .sidebar,html.p169 .topbar,html.p916 .topbar,html.p169 #app,html.p916 #app{display:none !important}html.p169 #tcoModule,html.p916 #tcoModule{position:static !important;display:block !important;background:#fff !important;overflow:visible !important;height:auto !important;inset:auto !important;z-index:auto !important}}
 
 #tcoModule{position:fixed;inset:0;z-index:900;overflow:auto;background:var(--bg,#0c0d0f);color:var(--txt,#e8eaec);font-family:Archivo,system-ui,sans-serif}
-#tcoModule[hidden]{display:none}
+#tcoModule .panel.hyp{margin-bottom:14px}#tcoModule .hyp h4 .hint{font-weight:400;letter-spacing:0;text-transform:none;color:var(--txt-3);font-size:11px;margin-left:8px}#tcoModule .hyp-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px}#tcoModule .hyp-tabs .hint{font-size:11.5px;color:var(--txt-2)}#tcoModule .hyp .hbtn.on{background:var(--accent);color:#0c0d0f;border-color:var(--accent)}#tcoModule .hrow{display:grid;grid-template-columns:1.4fr 120px 120px 150px 130px 74px;gap:8px;align-items:center;padding:7px 2px;border-bottom:1px solid var(--line-soft);font-size:12.5px}#tcoModule .hrow.head{font-size:10px;letter-spacing:.1em;color:var(--txt-3);border-bottom:1px solid var(--line);padding-bottom:4px}#tcoModule .hrow .n small,#tcoModule .hrow .v small{display:block;font-size:10.5px;color:var(--txt-3);font-weight:400}#tcoModule .hrow .v{text-align:right}#tcoModule .hrow .v.pos{color:var(--good)}#tcoModule .hrow .v.neg{color:var(--bad)}#tcoModule .hrow .dim{color:var(--txt-3);text-align:left}#tcoModule .hv{font-style:normal;font-size:9.5px;letter-spacing:.08em;padding:2px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}#tcoModule .hv.m{background:var(--good-dim);color:var(--good);border-color:transparent}#tcoModule .hv.c{background:var(--bad-dim);color:var(--bad);border-color:transparent}#tcoModule .hv.tie{background:var(--panel-3);color:var(--silver)}#tcoModule .hyp-faixa{background:var(--panel-2);border-left:3px solid var(--silver);border-radius:0 6px 6px 0;padding:9px 12px;font-size:12px;line-height:1.45;margin:0 0 10px}#tcoModule .hyp-free{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--txt-2)}#tcoModule .hyp-free input{width:150px;margin-left:6px;background:var(--panel-2);border:1px solid var(--line);color:var(--txt);border-radius:6px;padding:5px 8px;font:12px var(--font)}#tcoModule .hyp-applied{background:var(--good-dim);border-left:3px solid var(--good);border-radius:0 6px 6px 0;padding:8px 12px;font-size:12px;margin:8px 0 6px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}@media print{#tcoModule #tvHyp{display:none !important}}#tcoModule[hidden]{display:none}
 
 #tcoModule .frow.chk{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;cursor:pointer;padding:7px 0}
 #tcoModule .frow.chk span{font-size:12px;color:var(--txt-2);line-height:1.3}
@@ -2026,8 +2026,11 @@ function simulate(v, g){
 }
 function compare(){
  if(!state.selM||!state.selC) return null;
- const g=state.g, M=vdata(state.selM), C=vdata(state.selC);
+ const M=vdata(state.selM), C=vdata(state.selC);
  if(!M||!C) return null;
+ return compareVehicles(M,C,state.g);
+}
+function compareVehicles(M,C,g){
  const rm=simulate(M,g), rc=simulate(C,g);
  const rd=Math.pow(1+g.taxaAplic/100,1/365)-1;
  const fLi=compFlags().li;
@@ -2229,6 +2232,102 @@ function insight(r,tie,mbbWins){
         `Maior fator: <b>${top.n}</b> (${fBRL(Math.abs(top.d))}). `+
         `Custo por km: ${fBRL2(mbbWins?rm.tcoKm:rc.tcoKm)} contra ${fBRL2(mbbWins?rc.tcoKm:rm.tcoKm)}.`;
 }
+
+/* ============ TESTE DE HIPÓTESE — EQUALIZAÇÃO DE PREÇO ============ */
+/* Pergunta: qual preço de aquisição (da M.Benz ou do concorrente) leva os dois TCOs
+   ao empate técnico? deltaPct=(TCO_M−TCO_C)/|TCO_C|; empate = |deltaPct| ≤ g.empate/100.
+   Resolve por bissecção sobre o preço, mantendo todas as demais premissas. */
+function compareOv(mOv,cOv){
+ const M={...vdata(state.selM),...(mOv||{})}, C={...vdata(state.selC),...(cOv||{})};
+ return compareVehicles(M,C,state.g);
+}
+function hypSolve(side,targetPct){
+ const base=compare(); if(!base) return null;
+ const cur=+(side==='M'?base.M.preco:base.C.preco)||0;
+ const f=P=>{const r=side==='M'?compareOv({preco:P},null):compareOv(null,{preco:P});return r.deltaPct-targetPct};
+ let lo=Math.max(1,cur*0.05), hi=Math.max(cur*4,cur+2e6); let flo=f(lo), fhi=f(hi);
+ if(!isFinite(flo)||!isFinite(fhi)) return {err:true};
+ if(Math.abs(fhi-flo)<1e-9) return {flat:true};
+ if(flo*fhi>0) return {out:true};
+ for(let i=0;i<80;i++){const mid=(lo+hi)/2, fm=f(mid); if((fm<0)===(flo<0)){lo=mid;flo=fm}else{hi=mid;fhi=fm}}
+ const P=(lo+hi)/2; const r=side==='M'?compareOv({preco:P},null):compareOv(null,{preco:P});
+ return {P, r, cur, dif:P-cur, difPct:cur?(P-cur)/cur:0};
+}
+function hypVerdict(r){
+ const e=state.g.empate/100;
+ if(Math.abs(r.deltaPct)<=e+1e-9) return ['tie','EMPATE TÉCNICO'];
+ return r.delta<0?['m','M.BENZ VENCE']:['c','CONCORRENTE VENCE'];
+}
+function hypRow(lbl,zona,sol,side,vlabel){
+ if(!sol) return '';
+ if(sol.flat) return `<div class="hrow"><span class="n">${lbl}</span><span class="v dim" style="grid-column:2/7">o preço não altera o TCO com os componentes ativos (aquisição desligada)</span></div>`;
+ if(sol.out||sol.err) return `<div class="hrow"><span class="n">${lbl}</span><span class="v dim" style="grid-column:2/7">sem solução entre 5% e 400% do preço atual</span></div>`;
+ const v=vlabel||hypVerdict(sol.r);
+ const other=side==='M'?sol.r.rc.tcoFinal:sol.r.rm.tcoFinal, mine=side==='M'?sol.r.rm.tcoFinal:sol.r.rc.tcoFinal;
+ return `<div class="hrow"><span class="n"><b>${lbl}</b><small>${zona}</small></span>
+  <span class="v"><b>${fBRL(sol.P)}</b></span>
+  <span class="v ${sol.dif<0?'neg':'pos'}">${sol.dif<0?'−':'+'}${fBRL(Math.abs(sol.dif))}<small>${sol.dif<0?'−':'+'}${fPct(Math.abs(sol.difPct))}</small></span>
+  <span class="v">${fBRL(mine)}<small>vs ${fBRL(other)}</small></span>
+  <span class="v"><i class="hv ${v[0]}">${v[1]}</i><small>Δ ${fPct(sol.r.deltaPct)}</small></span>
+  <span class="v"><button class="hbtn" data-hyp-apply="${side}" data-p="${Math.round(sol.P)}">Aplicar</button></span></div>`;
+}
+function hypPanel(r){
+ const side=(state.hyp&&state.hyp.side)||'M';
+ const e=state.g.empate/100, {M,C}=r;
+ const who=side==='M'?M:C, fixed=side==='M'?C:M;
+ const cur=+who.preco||0, v=hypVerdict(r);
+ /* limites: para M o preço sobe o deltaPct; para C o preço desce o deltaPct */
+ const TIE=['tie','EMPATE TÉCNICO'], WM=['m','M.BENZ VENCE'], WC=['c','CONCORRENTE VENCE'];
+ const piso = side==='M'?hypSolve('M',-e):hypSolve('C',e);
+ const igual= side==='M'?hypSolve('M',0):hypSolve('C',0);
+ const teto = side==='M'?hypSolve('M',e):hypSolve('C',-e);
+ const rows = side==='M'
+  ? [hypRow('Piso do empate','abaixo deste preço a Mercedes-Benz vence sozinha, fora do empate',piso,'M',TIE),
+     hypRow('Igualdade exata','os dois TCOs se cruzam neste preço',igual,'M',TIE),
+     hypRow('Teto do empate','acima deste preço o concorrente vence',teto,'M',TIE)]
+  : [hypRow('Piso do empate','abaixo deste preço o concorrente vence sozinho, fora do empate',piso,'C',TIE),
+     hypRow('Igualdade exata','os dois TCOs se cruzam neste preço',igual,'C',TIE),
+     hypRow('Teto do empate','acima deste preço a Mercedes-Benz vence',teto,'C',TIE)];
+ const faixa=(piso&&piso.P&&teto&&teto.P)
+  ? `<div class="hyp-faixa">Faixa de empate técnico para o <b>${esc(who.modelo)}</b>: <b>${fBRL(piso.P)}</b> a <b>${fBRL(teto.P)}</b> — amplitude de ${fBRL(Math.abs(teto.P-piso.P))}. Preço atual ${fBRL(cur)} ${cur<piso.P?`está <b>abaixo do piso</b>: ${side==='M'?'a Mercedes-Benz vence fora do empate':'o concorrente vence fora do empate'}.`:cur>teto.P?`está <b>acima do teto</b>: ${side==='M'?'o concorrente vence':'a Mercedes-Benz vence'}.`:'está <b>dentro da faixa</b>: empate técnico.'}</div>`
+  : '';
+ const applied=state.hyp&&state.hyp.applied;
+ const banner=applied?`<div class="hyp-applied">Hipótese aplicada: preço ${applied.side==='M'?'M.Benz':'do concorrente'} alterado de <b>${fBRL(applied.prev)}</b> para <b>${fBRL(applied.now)}</b>. <button class="hbtn" data-hyp-undo="1">Desfazer</button></div>`:'';
+ return `<div class="panel hyp" id="tvHyp">
+  <h4>TESTE DE HIPÓTESE — EQUALIZAÇÃO DE PREÇO <span class="hint">regra de empate: |Δ TCO| ≤ ${state.g.empate}% · demais premissas mantidas</span></h4>
+  ${banner}
+  <div class="hyp-tabs">
+    <button class="hbtn ${side==='M'?'on':''}" data-hyp-side="M">Alterar preço M.Benz</button>
+    <button class="hbtn ${side==='C'?'on':''}" data-hyp-side="C">Alterar preço do concorrente</button>
+    <span class="hint">hoje: ${esc(who.modelo)} a <b>${fBRL(cur)}</b> · ${esc(fixed.modelo)} fixo em ${fBRL(+fixed.preco||0)} · resultado atual <i class="hv ${v[0]}">${v[1]}</i> (Δ ${fPct(r.deltaPct)})</span>
+  </div>
+  ${faixa}
+  <div class="hrow head"><span>CENÁRIO</span><span>PREÇO NECESSÁRIO</span><span>VARIAÇÃO</span><span>TCO RESULTANTE</span><span>NESTE PREÇO</span><span></span></div>
+  ${rows.join('')}
+  <div class="hyp-free"><label>Testar outro preço ${side==='M'?'M.Benz':'do concorrente'} <input type="number" id="hypFree" step="1000" min="0" placeholder="${Math.round(cur)}"></label><span id="hypFreeOut" class="hint">digite um valor para ver o TCO e o veredicto sem alterar o cenário</span></div>
+ </div>`;
+}
+function hypFreeCalc(){
+ const inp=document.getElementById('hypFree'), out=document.getElementById('hypFreeOut'); if(!inp||!out) return;
+ const P=+inp.value; if(!(P>0)){out.textContent='digite um valor para ver o TCO e o veredicto sem alterar o cenário';return}
+ const side=(state.hyp&&state.hyp.side)||'M';
+ const r=side==='M'?compareOv({preco:P},null):compareOv(null,{preco:P}); const v=hypVerdict(r);
+ out.innerHTML=`TCO M.Benz ${fBRL(r.rm.tcoFinal)} × concorrente ${fBRL(r.rc.tcoFinal)} → <i class="hv ${v[0]}">${v[1]}</i> (Δ ${fPct(r.deltaPct)}) <button class="hbtn" data-hyp-apply="${side}" data-p="${Math.round(P)}">Aplicar</button>`;
+}
+function hypApply(side,P){
+ const id=side==='M'?state.selM:state.selC; if(!id) return;
+ const prevRaw=state.v[id]&&state.v[id].preco!==undefined?state.v[id].preco:null;
+ const prev=+vdata(id).preco||0;
+ if(!state.hyp) state.hyp={};
+ if(!state.hyp.applied) state.hyp.applied={side,id,prevRaw,prev,now:P}; else {state.hyp.applied.now=P; state.hyp.applied.side=side; if(state.hyp.applied.id!==id){state.hyp.applied.id=id;state.hyp.applied.prevRaw=prevRaw;state.hyp.applied.prev=prev}}
+ state.v[id]={...(state.v[id]||{}),preco:P}; save(); refresh(); renderTco();
+}
+function hypUndo(){
+ const a=state.hyp&&state.hyp.applied; if(!a) return;
+ if(a.prevRaw===null||a.prevRaw===undefined){ if(state.v[a.id]){delete state.v[a.id].preco; if(!Object.keys(state.v[a.id]).length) delete state.v[a.id];} }
+ else state.v[a.id]={...(state.v[a.id]||{}),preco:a.prevRaw};
+ state.hyp.applied=null; save(); refresh(); renderTco();
+}
 function renderTco(){
  const r=compare(); if(!r) return;
  const {M,C,rm,rc,delta,deltaPct}=r;
@@ -2258,6 +2357,7 @@ function renderTco(){
       <div class="kpi"><div class="l">TCO/km · MBB</div><div class="v">${fBRL2(rm.tcoKm)}</div></div>
       <div class="kpi"><div class="l">TCO/km · Conc.</div><div class="v">${fBRL2(rc.tcoKm)}</div></div>
     </div>
+    ${hypPanel(r)}
     <div class="panel ch-cum" style="margin-bottom:14px">
       <h4>CUSTO ACUMULADO — QUEM FICA MAIS BARATO AO LONGO DO TEMPO</h4>
       ${chartCumulative(r)}
@@ -2472,6 +2572,14 @@ function refresh(){
  }
 }
 refresh();
+ /* teste de hipótese */
+ document.getElementById('tvGrid').addEventListener('click',e=>{
+   const t=e.target.closest('[data-hyp-side],[data-hyp-apply],[data-hyp-undo]'); if(!t) return;
+   if(t.dataset.hypSide){ state.hyp={...(state.hyp||{}),side:t.dataset.hypSide}; save(); renderTco(); return; }
+   if(t.dataset.hypApply){ hypApply(t.dataset.hypApply,+t.dataset.p); return; }
+   if(t.dataset.hypUndo){ hypUndo(); }
+ });
+ document.getElementById('tvGrid').addEventListener('input',e=>{ if(e.target.id==='hypFree') hypFreeCalc(); });
 
  window.TCO_REFRESH=refresh;
 };
