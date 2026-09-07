@@ -1947,7 +1947,9 @@ const GFIELDS = [
 const LS='tco-engine-v2';
 let state = load() || {g:{...GLOBAL_DEFAULTS}, v:{}, custom:[], selM:null, selC:null};
 if(!state.custom) state.custom=[];
-state.custom.forEach(v=>{ if(!v.taxaUnit)v.taxaUnit='aa'; if(v.carencia==null)v.carencia=0; if(!v.carTipo)v.carTipo='cap'; });
+state.custom.forEach(v=>{ if(!v.taxaUnit)v.taxaUnit='aa'; if(v.carencia==null)v.carencia=0; if(!v.carTipo)v.carTipo='cap';
+ /* veiculo cadastrado guarda os valores nele mesmo; override em state.v travaria a edicao */
+ if(state.v && state.v[v.id]){ Object.assign(v, state.v[v.id]); delete state.v[v.id]; if(state.hyp&&state.hyp.applied&&state.hyp.applied.id===v.id) state.hyp.applied=null; } });
 function load(){ try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;} }
 function save(){ try{localStorage.setItem(LS, JSON.stringify(state));}catch(e){} }
 function allVehicles(){ return VEHICLES.concat(state.custom); }
@@ -2314,19 +2316,36 @@ function hypFreeCalc(){
  const r=side==='M'?compareOv({preco:P},null):compareOv(null,{preco:P}); const v=hypVerdict(r);
  out.innerHTML=`TCO M.Benz ${fBRL(r.rm.tcoFinal)} × concorrente ${fBRL(r.rc.tcoFinal)} → <i class="hv ${v[0]}">${v[1]}</i> (Δ ${fPct(r.deltaPct)}) <button class="hbtn" data-hyp-apply="${side}" data-p="${Math.round(P)}">Aplicar</button>`;
 }
+function hypPriceSet(id,P){
+ /* mesma gravacao usada pelo drawer: cadastrado altera o proprio veiculo,
+    catalogo grava override em state.v (e limpa quando volta ao valor de fabrica) */
+ if(isCustom(id)){ const cv=state.custom.find(v=>v.id===id); if(cv) cv.preco=P; return; }
+ const base=baseOf(id); if(!base) return;
+ if(!state.v[id]) state.v[id]={};
+ if(P===base.preco) delete state.v[id].preco; else state.v[id].preco=P;
+ if(!Object.keys(state.v[id]).length) delete state.v[id];
+}
+function hypSyncDrawer(id){
+ if(typeof editingId==='undefined'||editingId!==id) return;
+ const inp=document.querySelector('#dvBody [data-k="preco"]');
+ if(inp){ inp.value=Math.round(+vdata(id).preco||0); markDirty(); updateFinEcho(); }
+}
 function hypApply(side,P){
  const id=side==='M'?state.selM:state.selC; if(!id) return;
- const prevRaw=state.v[id]&&state.v[id].preco!==undefined?state.v[id].preco:null;
- const prev=+vdata(id).preco||0;
+ const custom=isCustom(id), prev=+vdata(id).preco||0;
+ const prevRaw=custom?prev:(state.v[id]&&state.v[id].preco!==undefined?state.v[id].preco:null);
  if(!state.hyp) state.hyp={};
- if(!state.hyp.applied) state.hyp.applied={side,id,prevRaw,prev,now:P}; else {state.hyp.applied.now=P; state.hyp.applied.side=side; if(state.hyp.applied.id!==id){state.hyp.applied.id=id;state.hyp.applied.prevRaw=prevRaw;state.hyp.applied.prev=prev}}
- state.v[id]={...(state.v[id]||{}),preco:P}; save(); refresh(); renderTco();
+ const a=state.hyp.applied;
+ if(!a||a.id!==id) state.hyp.applied={side,id,custom,prevRaw,prev,now:P};
+ else { a.now=P; a.side=side; }
+ hypPriceSet(id,P); save(); refresh(); renderTco(); hypSyncDrawer(id);
 }
 function hypUndo(){
  const a=state.hyp&&state.hyp.applied; if(!a) return;
- if(a.prevRaw===null||a.prevRaw===undefined){ if(state.v[a.id]){delete state.v[a.id].preco; if(!Object.keys(state.v[a.id]).length) delete state.v[a.id];} }
+ if(a.custom) hypPriceSet(a.id,a.prevRaw);
+ else if(a.prevRaw===null||a.prevRaw===undefined){ if(state.v[a.id]){delete state.v[a.id].preco; if(!Object.keys(state.v[a.id]).length) delete state.v[a.id];} }
  else state.v[a.id]={...(state.v[a.id]||{}),preco:a.prevRaw};
- state.hyp.applied=null; save(); refresh(); renderTco();
+ state.hyp.applied=null; save(); refresh(); renderTco(); hypSyncDrawer(a.id);
 }
 function renderTco(){
  const r=compare(); if(!r) return;
@@ -2502,6 +2521,7 @@ document.addEventListener('input',e=>{
      if(val===base[k]) delete state.v[editingId][k]; else state.v[editingId][k]=val;
      markDirty();
    }
+   if(k==='preco'&&state.hyp&&state.hyp.applied&&state.hyp.applied.id===editingId) state.hyp.applied=null;
  }
  save(); updateFinEcho();
  if(document.getElementById('tcoView').classList.contains('open')) renderTco();
