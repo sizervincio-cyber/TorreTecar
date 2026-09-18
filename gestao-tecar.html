@@ -248,7 +248,7 @@ tbody tr:hover td{background:#FAFBFC}
     <div class="card"><h3>Margem aparente de estoque e Banco Mercedes</h3><div class="chart t"><canvas id="cMg"></canvas></div></div></div></section>
   <section class="sec"><div class="sh"><span class="n">3</span><h2>Produtividade</h2><span class="s">volume × receita × margem × giro</span></div>
    <div class="g" style="grid-template-columns:1.1fr 1fr">
-    <div class="card"><h3>Vendedores <em>clique na bolha para abrir</em></h3><div class="chart t"><canvas id="cVend"></canvas></div></div>
+    <div class="card"><h3>Vendedores · capilaridade <em>volume faturado × clientes atendidos · tamanho = faturamento</em></h3><div class="chart t" style="height:340px"><canvas id="cVend"></canvas></div><p class="nota">Cor pela margem aparente: <b style="color:#0078D4">azul</b> 3% ou mais · <b style="color:#B26A00">âmbar</b> 0 a 3% · <b style="color:#C42B1C">vermelho</b> negativa. Linhas tracejadas na mediana dos vendedores; a diagonal é o limite de 1 cliente por caminhão. Capilaridade = clientes atendidos ÷ unidades faturadas. Vendedores com 3+ unidades; clique na bolha para abrir.</p></div>
     <div class="card"><h3>Filiais</h3><g-tab :rows="G.casa" :cols="['n','fat','mg','dMdn','pen','bm']" dim="Casa vendedora" :total="A.fat" @abrir="x=>abrirG('Filial',x)"></g-tab>
      <h3 style="margin-top:12px">Segmentos</h3><g-tab :rows="G.seg" :cols="['n','fat','mg','resU','dMdn']" dim="Segmento" :total="A.fat" @abrir="x=>abrirG('Segmento',x)"></g-tab></div></div></section>
   <section class="sec"><div class="sh"><span class="n">4</span><h2>Capital</h2><span class="s">aging do que foi vendido, capital × tempo e margem negativa</span></div>
@@ -300,7 +300,7 @@ tbody tr:hover td{background:#FAFBFC}
  <!-- =========== VENDEDORES =========== -->
  <template v-if="tab==='vend'">
   <section class="sec"><div class="sh"><h2>Volume × receita × margem × giro</h2><span class="s">sem ranking só por faturamento</span></div>
-   <div class="card"><g-tab :rows="G.vend" :cols="['n','fat','tk','res','resU','mg','nEst','nFA','mixFA','dMed','pen','bm','cli','unCli']" dim="Vendedor" :total="A.fat" @abrir="x=>abrirG('Vendedor',x)"></g-tab>
+   <div class="card"><g-tab :rows="G.vend" :cols="['n','fat','tk','res','resU','mg','nEst','nFA','mixFA','dMed','pen','bm','cli','cap','unCli']" dim="Vendedor" :total="A.fat" @abrir="x=>abrirG('Vendedor',x)"></g-tab>
     <p class="nota">Margem sobre todas as origens do vendedor: quem vende muito FA-Direto tem margem aparente perto de zero por construção. Dias médios só sobre vendas de estoque.</p></div></section>
   <section class="sec"><div class="sh"><h2>Vendedor × segmento</h2><span class="s">unidades e cor pela margem aparente · verde positiva, vermelho negativa</span></div>
    <div class="card tscroll"><table class="heat"><thead><tr><th class="l">Vendedor</th><th v-for="s in heat.segs">{{s}}</th></tr></thead>
@@ -710,7 +710,7 @@ const COLS = {
   mg: ['Margem ap.', x => fmt.pc(x.mg)], mk: ['Markup', x => fmt.pc(x.mk)], resU: ['Result./un', x => fmt.mil(x.resU)], dMed: ['Dias méd.', x => fmt.n(x.dMed)],
   dMdn: ['Mediana d', x => fmt.n(x.dMdn)], p25: ['P25', x => fmt.n(x.p25)], p75: ['P75', x => fmt.n(x.p75)], p90: ['P90', x => fmt.n(x.p90)], le30: ['≤30 d', x => fmt.pc(x.le30, 0)],
   le60: ['≤60 d', x => fmt.pc(x.le60, 0)], gt90: ['>90 d', x => fmt.pc(x.gt90, 0)], gt180: ['>180 d', x => fmt.pc(x.gt180, 0)], pen: ['Financ.', x => fmt.pc(x.penU, 0)],
-  bm: ['Banco MB', x => fmt.pc(x.bm, 0)], cli: ['Clientes', x => fmt.n(x.cli)], unCli: ['Un/cliente', x => fmt.n(x.cli ? x.n / x.cli : null, 1)],
+  bm: ['Banco MB', x => fmt.pc(x.bm, 0)], cli: ['Clientes', x => fmt.n(x.cli)], unCli: ['Un/cliente', x => fmt.n(x.cli ? x.n / x.cli : null, 1)], cap: ['Capilaridade', x => fmt.pc(x.n ? x.cli / x.n : null, 0)],
   nEst: ['Estoque', x => fmt.n(x.nEst)], nFA: ['FA-Dir.', x => fmt.n(x.nFA)], mixFA: ['% FA', x => fmt.pc(x.n ? x.nFA / x.n : null, 0)], neg: ['Neg.', x => fmt.n(x.neg)],
   negV: ['Perda ap.', x => fmt.mil(x.negV)], capT: ['Cap.×tempo', x => fmt.n(x.capT / 1e6, 0)], nInst: ['Com inst.', x => fmt.n(x.nInst)], nBM: ['Banco MB un', x => fmt.n(x.nBM)] };
 const GTab = {
@@ -908,12 +908,34 @@ const app = createApp({
           { label: 'Banco Mercedes', data: s.map(x => x.bm == null ? null : +(100 * x.bm).toFixed(1)), borderColor: '#0078D4', backgroundColor: '#0078D4', tension: .25, yAxisID: 'y1' }] },
           options: { ...base, scales: { x: { ticks: tk, grid: { display: false } }, y: { min: 0, ticks: { ...tk, callback: v => v + '%' }, grid: gr, title: { display: true, text: 'margem', color: '#666' } },
             y1: { position: 'right', min: 0, max: 100, ticks: { ...tk, callback: v => v + '%' }, grid: { display: false }, title: { display: true, text: 'Banco Mercedes', color: '#666' } } } } });
-        const vb = this.G.vend.filter(v => v.nR >= 3);
-        mk('cVend', { type: 'bubble', data: { datasets: [{ label: 'Vendedores (tamanho = faturamento)', data: vb.map(v => ({ x: v.n, y: +(100 * (v.mg || 0)).toFixed(2), r: 4 + Math.sqrt(v.fat / 1e6) * 2.2, k: v.k })),
-          backgroundColor: vb.map(v => (v.mg || 0) < 0 ? 'rgba(196,43,28,.55)' : 'rgba(0,120,212,.45)') }] },
+        // capilaridade: unidades faturadas × clientes atendidos (tamanho = faturamento, cor = margem aparente)
+        const vb = this.G.vend.filter(v => v.n >= 3 && v.k !== '(vazio)');
+        const medV = a => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor((s.length - 1) / 2)] : 0; };
+        const cX = medV(vb.map(v => v.n)), cY = medV(vb.map(v => v.cli)), mx = Math.max(10, ...vb.map(v => v.n)) * 1.4;
+        const corMg = m => m == null ? 'rgba(138,141,145,.5)' : m < 0 ? 'rgba(196,43,28,.6)' : m < .03 ? 'rgba(178,106,0,.55)' : 'rgba(0,120,212,.45)';
+        mk('cVend', { type: 'bubble', data: { datasets: [{ label: 'Vendedores', data: vb.map(v => ({ x: v.n, y: v.cli, r: 4 + Math.sqrt(v.fat / 1e6) * 2, k: v.k, mg: v.mg, fat: v.fat })),
+          backgroundColor: vb.map(v => corMg(v.mg)) }] },
           options: { ...base, onClick: (e, el) => { if (el[0]) this.abrirG('Vendedor', vb[el[0].index]); },
-            plugins: { ...base.plugins, tooltip: { callbacks: { label: c => `${c.raw.k}: ${c.raw.x} un · margem ${c.raw.y}%` } } },
-            scales: { x: { title: { display: true, text: 'unidades', color: '#666' }, ticks: tk, grid: gr }, y: { title: { display: true, text: 'margem aparente (todas as origens)', color: '#666' }, ticks: { ...tk, callback: v => v + '%' }, grid: gr } } } });
+            plugins: { ...base.plugins, legend: { display: false }, tooltip: { callbacks: { label: c => { const r = c.raw;
+              return [`${r.k}: ${r.x} un · ${r.y} clientes`, `capilaridade ${fmt.pc(r.y / r.x, 0)} · ${fmt.n(r.x / r.y, 1)} un/cliente`, `faturamento ${fmt.mi(r.fat)} · margem ${fmt.pc(r.mg)}`]; } } } },
+            scales: { x: { type: 'logarithmic', min: 2, max: mx, title: { display: true, text: 'volume faturado (unidades, escala log)', color: '#666' }, ticks: { ...tk, callback: v => [2, 5, 10, 20, 50, 100, 200, 500].includes(v) ? v : '' }, grid: gr },
+              y: { type: 'logarithmic', min: 1, max: mx, title: { display: true, text: 'clientes atendidos (escala log)', color: '#666' }, ticks: { ...tk, callback: v => [1, 2, 5, 10, 20, 50, 100, 200, 500].includes(v) ? v : '' }, grid: gr } } },
+          plugins: [{ id: 'cap', afterDraw: ch => { const c = ch.ctx, X = ch.scales.x, Y = ch.scales.y, A = ch.chartArea; c.save();
+            c.strokeStyle = '#8A8D91'; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(X.getPixelForValue(cX), A.top); c.lineTo(X.getPixelForValue(cX), A.bottom);
+            c.moveTo(A.left, Y.getPixelForValue(cY)); c.lineTo(A.right, Y.getPixelForValue(cY)); c.stroke();
+            c.strokeStyle = '#C6C8CA'; c.setLineDash([2, 3]); c.beginPath(); const lo = Math.max(X.min, Y.min), hi = Math.min(X.max, Y.max);
+            c.moveTo(X.getPixelForValue(lo), Y.getPixelForValue(lo)); c.lineTo(X.getPixelForValue(hi), Y.getPixelForValue(hi)); c.stroke(); c.setLineDash([]);
+                        c.fillStyle = '#3A4452'; c.font = '600 10px Segoe UI';
+            const pts = ch.getDatasetMeta(0).data, pos = [], hit = (b) => pos.some(o => b.x < o.x + o.w && b.x + b.w > o.x && b.y < o.y + o.h && b.y + b.h > o.y);
+            pts.forEach(pt => pos.push({ x: pt.x - pt.options.radius, y: pt.y - pt.options.radius, w: 2 * pt.options.radius, h: 2 * pt.options.radius }));
+            vb.map((v, i) => ({ v, pt: pts[i] })).sort((a, b) => b.v.fat - a.v.fat).forEach(({ v, pt }) => {
+              const w = c.measureText(v.k).width, r = pt.options.radius, h = 11;
+              const cand = [{ x: pt.x + r + 3, y: pt.y - 6 }, { x: pt.x - r - 3 - w, y: pt.y - 6 }, { x: pt.x - w / 2, y: pt.y - r - 13 }, { x: pt.x - w / 2, y: pt.y + r + 2 }];
+              const ok = cand.find(b => b.x >= A.left && b.x + w <= A.right && b.y >= A.top && b.y + h <= A.bottom && !hit({ x: b.x, y: b.y, w, h }));
+              if (ok) { c.fillText(v.k, ok.x, ok.y + 9); pos.push({ x: ok.x, y: ok.y, w, h }); } });
+            c.fillStyle = '#8A8D91'; c.font = '10px Segoe UI';
+            c.fillText('muitos clientes, pouco volume', A.left + 6, A.top + 12); c.fillText('alto volume, alta capilaridade', A.right - 160, A.top + 12);
+            c.fillText('poucos clientes, pouco volume', A.left + 6, A.bottom - 6); c.fillText('alto volume em poucos clientes', A.right - 166, A.bottom - 6); c.restore(); } }] });
         const Q = this.quadrante;
         mk('cQuad', { type: 'bubble', data: { datasets: [{ label: 'Modelos com 3+ vendas, sem FA-Direto (tamanho = faturamento)', data: Q.L.map(m => ({ x: m.n, y: +(100 * (m.mg || 0)).toFixed(2), r: 3 + Math.sqrt(m.fat / 1e6) * 1.8, k: m.k, d: m.dMdn })),
           backgroundColor: Q.L.map(m => m.n >= Q.cN && (m.mg || 0) >= Q.cM ? 'rgba(16,124,16,.55)' : m.n >= Q.cN ? 'rgba(178,106,0,.55)' : (m.mg || 0) >= Q.cM ? 'rgba(0,120,212,.45)' : 'rgba(196,43,28,.45)') }] },
