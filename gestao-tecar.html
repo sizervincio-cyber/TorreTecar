@@ -3,11 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Gestão Tecar · MVP</title>
+<title>Gestão Tecar · Faturamento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#F5F6F7;--card:#FFFFFF;--ink:#171717;--ink2:#666666;--ink3:#8A8D91;--line:#E5E5E5;--line2:#C6C8CA;--blue:#0078D4;--blue2:#E8F2FB;
  --black:#111111;--red:#C42B1C;--red2:#FDECEA;--amber:#B26A00;--amber2:#FFF4E0;--green:#107C10;--green2:#E9F5E9;--r:6px;--sh:0 1px 2px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.02)}
@@ -146,775 +147,806 @@ tbody tr:hover td{background:#FAFBFC}
 @media (max-width:760px){.wrap{padding:12px}.top1{flex-wrap:wrap;padding:10px 12px}.top2{padding:8px 12px}.att,.g6,.g7,.g4,.g2{grid-template-columns:repeat(2,1fr)}.brand{min-width:0}.search{order:3;max-width:none;flex-basis:100%}
  .fs{grid-template-columns:80px 1fr 50px}.fs>:nth-child(n+4){display:none}.pl{grid-template-columns:28px 1fr auto}.pl>:nth-child(3),.pl>:nth-child(4),.pl>:nth-child(5){display:none}.tscroll{overflow-x:auto}.cmd{flex-direction:column;align-items:flex-start}}
 .tscroll{overflow-x:auto}
+
+.tabs{display:flex;gap:2px;padding:0 24px;border-top:1px solid var(--line);overflow-x:auto;background:#fff}
+.tabs button{border:0;background:none;padding:9px 12px;font-size:12.5px;font-weight:600;color:var(--ink2);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--blue)}.tabs button:hover{color:var(--ink)}
+.empty{max-width:720px;margin:60px auto;background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:28px 32px}
+.empty h2{font-size:20px;margin-bottom:6px}.empty p{color:var(--ink2);line-height:1.55;margin-bottom:10px}
+.up-btn{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:4px;background:var(--blue);color:#fff;font-weight:600;cursor:pointer}
+.up-btn input{display:none}
+.stat{font-size:11.5px;color:var(--ink2);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pp{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--amber);background:var(--amber2);border-radius:3px;padding:1px 6px;margin-left:4px}
+.als{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
+.al{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:9px 12px;border-left:3px solid var(--line2);cursor:pointer;text-align:left;border-top:0;border-right:0;border-bottom:0}
+.al:hover{box-shadow:0 0 0 1px var(--blue)}.al b{display:block;font-size:12.5px}.al small{color:var(--ink2);font-size:11.5px}
+.al.Alta{border-left-color:var(--red)}.al.Média{border-left-color:var(--amber)}.al.Baixa{border-left-color:var(--green)}.al.Dados{border-left-color:var(--ink3)}
+.scg{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.sc2{background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:11px 13px;position:relative}
+.sc2 .l{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);padding-right:18px}
+.sc2 .v{font-size:22px;font-weight:700;margin:4px 0 3px}.sc2 .d{font-size:11px;color:var(--ink2)}
+.sc2 .i{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;border:1px solid var(--line2);background:#fff;font-size:11px;font-weight:700;color:var(--ink2);line-height:1}
+.ficha{margin-top:10px;background:#fff;border-radius:var(--r);box-shadow:var(--sh);padding:12px 16px;display:grid;grid-template-columns:160px 1fr;gap:4px 14px;font-size:12.5px}
+.ficha b{color:var(--ink2);font-weight:600}
+.heat td{text-align:center;font-size:11px;padding:4px 6px}
+.nota{font-size:11.5px;color:var(--ink2);line-height:1.5;margin-top:6px}
+.cmpl{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:4px}.cmpl b{color:var(--ink)}
+.chart.t{height:300px}
+@media (max-width:1200px){.scg{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:760px){.scg{grid-template-columns:repeat(2,1fr)}.tabs{padding:0 12px}.ficha{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div id="app" v-cloak>
 <header class="top">
  <div class="top1">
-  <div class="brand"><div class="star">✦</div><div><b>GESTÃO TECAR</b><small>Mercedes-Benz Caminhões · Inteligência Comercial &amp; Gestão da Concessionária</small></div></div>
-  <div class="search"><span>⌕</span>
-   <input v-model="q" @focus="qOpen=true" @blur="fecharBusca" placeholder="Buscar cliente, CNPJ, chassi, vendedor, modelo ou oportunidade...">
-   <div class="sres" v-if="qOpen && busca.length"><div v-for="r in busca" @mousedown.prevent="r.go()"><span>{{r.t}}</span><em>{{r.s}}</em></div></div>
-  </div>
+  <div class="brand"><div class="star">✦</div><div><b>GESTÃO TECAR</b><small>CEO + CFO Analytics · Faturamento de veículos Mercedes-Benz</small></div></div>
+  <div class="search" v-if="raw"><span>⌕</span><input v-model="q" placeholder="Buscar chassi, cliente, vendedor, modelo ou NF (3+ caracteres)..." @keydown.enter="busca.length&&abrir('Busca: '+q,busca)">
+   <div class="sres" v-if="busca.length"><div @mousedown.prevent="abrir('Busca: '+q,busca)"><span>{{busca.length}} registros encontrados</span><em>abrir lista</em></div></div></div>
   <div class="tact">
-   <span class="demo" title="Os dados apresentados são simulados. Neste protótipo, os emplacamentos Mercedes-Benz são utilizados como proxy dos faturamentos.">AMBIENTE DEMONSTRATIVO</span>
-   <button class="ib" @click="abrirOpps('Aprovações pendentes',aprov)">Aprovações <span class="badge">{{aprov.length}}</span></button>
-   <button class="ib" @click="irPlano()">Alertas <span class="badge a">{{decisoes.length}}</span></button>
-   <div class="user" title="Diretoria comercial (usuário demonstrativo)">DC</div>
+   <span class="stat" v-if="raw"><span>{{raw.meta.arquivo}}</span><span>· {{raw.meta.registros}} registros</span><span>· até {{d(maxD)}}</span>
+    <span class="tag" :class="empl?'t-ok':'t-al'" :title="empl?'Emplacamentos lidos da Torre':'Abra o módulo pela Torre para cruzar com emplacamentos'">{{empl?'emplacamentos conectados':'sem emplacamentos'}}</span></span>
+   <label class="btn" v-if="raw" style="display:inline-flex;align-items:center">Substituir planilha<input type="file" accept=".xlsx,.xls" @change="importar" style="display:none"></label>
+   <button class="btn" v-if="raw" @click="remover">Remover</button>
   </div>
  </div>
+ <template v-if="raw">
  <div class="top2">
-  <label>Mês</label><select v-model="f.mes"><option value="2026-09">Setembro/2026 · atual</option></select>
-  <label>Unidade</label><select v-model="f.un" @change="f.vend=''"><option value="">Todas as unidades</option><option v-for="u in g.UNIDADES" :value="u.id">{{u.nome}}</option></select>
-  <label>Vendedor</label><select v-model="f.vend"><option value="">Todos</option><option v-for="v in g.VENDEDORES.filter(v=>!f.un||v.un===f.un)" :value="v.id">{{v.nome}}</option></select>
-  <label>Modelo</label><select v-model="f.mod"><option value="">Todos</option><option v-for="m in ['Actros','Axor','Atego','Accelo']" :value="m">{{m}}</option></select>
-  <label>Segmento</label><select v-model="f.seg"><option value="">Todos</option><option v-for="s in ['Extrapesado','Pesado','Semipesado','Leve']" :value="s">{{s}}</option></select>
-  <label class="chk"><input type="checkbox" v-model="f.gc"> Grandes Contas</label>
+  <label>De</label><select v-model="f.ini"><option value="">início</option><option v-for="m in meses" :value="m">{{ym(m)}}</option></select>
+  <label>Até</label><select v-model="f.fim"><option value="">fim</option><option v-for="m in meses" :value="m">{{ym(m)}}</option></select>
+  <label>Filial</label><select v-model="f.casa"><option value="">Todas</option><option v-for="x in opts.casa" :value="x">{{x}}</option></select>
+  <label>Origem</label><select v-model="f.origem"><option value="">Todas</option><option v-for="x in opts.origem" :value="x">{{x}}</option></select>
+  <label>Segmento</label><select v-model="f.seg"><option value="">Todos</option><option v-for="x in opts.seg" :value="x">{{x}}</option></select>
+  <label>Vendedor</label><select v-model="f.vend"><option value="">Todos</option><option v-for="x in opts.vend" :value="x">{{x}}</option></select>
+  <label>Modalidade</label><select v-model="f.mod"><option value="">Todas</option><option v-for="x in opts.mod" :value="x">{{x}}</option></select>
   <button class="clr" v-if="filtrado" @click="limpar">Limpar filtros</button>
  </div>
+ <nav class="tabs"><button v-for="t in TABS" :class="{on:tab===t[0]}" @click="tab=t[0]">{{t[1]}}</button></nav>
+ </template>
 </header>
 
-<main class="wrap">
- <div class="ph"><div><h1>Gestão da Concessionária</h1><p>Resultado, faturamento, estoque, pipeline e decisões que precisam de ação.</p></div>
-  <span class="small mute">Posição de {{dbr(hoje)}}/2026 · {{dias.dec}} de {{dias.tot}} dias úteis</span></div>
+<!-- SEM DADOS -->
+<div class="empty" v-if="!raw">
+ <h2>Importe a tabela de gestão</h2>
+ <p>O módulo lê a planilha de faturamento (uma linha por chassi, com NF fábrica, NF de venda, cliente, vendedor, modalidade e instituição financeira). A leitura acontece neste navegador: os dados ficam só neste computador e não são publicados.</p>
+ <p>Aberto pela Torre, o módulo também cruza cada chassi com os emplacamentos Mercedes-Benz já carregados nela.</p>
+ <label class="up-btn">Selecionar planilha (.xlsx)<input type="file" accept=".xlsx,.xls" @change="importar"></label>
+ <p v-if="msg" class="nota">{{msg}}</p><p v-if="erro" class="nota dn">{{erro}}</p>
+ <p class="nota">Colunas esperadas: ESTOQUE/FADIRETO, NF FÁBRICA, EMISSÃO, VR. NF, MODELO, SEGMENTO, CHASSI, COR, ANO, CASA EMISSORA NF, CASA VENDEDORA, CLIENTE, CIDADE, ESTADO, VENDEDOR, N° FISCAL VENDA, EMISSÃO, ANO VENDA, MÊS VENDA, VR. NF VDA, MODALIDADE, INST. FINANC.</p>
+</div>
 
- <!-- COMMAND CENTER -->
- <div class="cmd">
-  <div style="flex:1"><div class="t">Command Center</div>
-   <p><b>{{res.n}} caminhões faturados</b> no mês, equivalentes a <b>{{pc(ritmo.ating,0)}} da meta</b> de {{meta}}.
-    O forecast projeta <b>{{fc.forecast}} unidades</b><template v-if="fc.gap<0">, mantendo <i>gap de {{-fc.gap}} caminhões</i></template><template v-else>, acima da meta</template>;
-    com os {{fc.best}} de best case chega a {{fc.upside}}. Existem <b>{{resumo.alta}} oportunidades de alta confiança</b> no mês, das quais {{resumo.dep}} dependem de aprovação comercial.
-    <i>{{mi(resumo.cap90)}}</i> do estoque está acima de 90 dias.</p></div>
-  <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-   <span class="pill" :class="fc.st==='NORMAL'?'p-ok':fc.st==='ATENÇÃO'?'p-at':'p-cr'">RITMO DA META · {{fc.st}}</span>
-   <button class="btn lt" @click="irPlano()">Ver plano de ação</button>
-  </div>
- </div>
+<main class="wrap" v-if="raw">
+ <p v-if="msg" class="nota up">{{msg}}</p><p v-if="erro" class="nota dn">{{erro}}</p>
+ <div class="ph"><div><h1>{{TABS.find(t=>t[0]===tab)[1]}}</h1>
+  <p>Resultado bruto aparente = VR. NF VDA − VR. NF. Não é lucro contábil: faltam bônus, comissões, custos de preparação e impostos.
+   <span v-if="parcial" class="pp" :title="'Última venda em '+d(maxD)">{{ym(parcial.ym).toUpperCase()}} · MÊS PARCIAL</span></p></div>
+  <span class="small mute">{{n(A.n)}} veículos no filtro · {{d(meses[0]+'-01')}} a {{d(maxD)}}</span></div>
 
- <!-- 01 ATENÇÃO HOJE -->
- <section class="sec"><div class="sh"><span class="n">01</span><h2>Atenção hoje</h2><span class="s">cada número abre a lista para agir</span></div>
-  <div class="att">
-   <button v-for="a in atencao" class="at" :class="a.v?a.c:'ok'" @click="a.go()"><div class="v">{{a.v}}</div><div class="l">{{a.l}}</div></button>
-   <div class="at" :class="fc.st==='NORMAL'?'ok':fc.st==='ATENÇÃO'?'al':'cr'" style="cursor:default">
-    <div class="l" style="font-weight:700;letter-spacing:.06em">RITMO DA META</div>
-    <div class="v" style="font-size:18px;margin-top:4px">{{fc.st}}</div>
-    <div class="l">forecast + best case = {{fc.upside}} de {{meta}}</div></div>
-  </div></section>
+ <!-- ALERTAS (sempre visíveis) -->
+ <section class="sec" v-if="tab==='ceo'||tab==='score'"><div class="sh"><h2>Alertas executivos</h2><span class="s">referência: histórico, mediana e quartis da própria base · sem metas inventadas</span></div>
+  <div class="als"><button v-for="a in alertas" class="al" :class="a.s" @click="a.go()"><b>{{a.t}}</b><small>{{a.d}}</small></button></div></section>
 
- <!-- 02 RESULTADO DO MÊS -->
- <section class="sec"><div class="sh"><span class="n">02</span><h2>Resultado do mês</h2><span class="s">{{cmp?'vs mês anterior · vs setembro/2025':'comparativos exibidos sem filtros'}}</span></div>
-  <div class="g g6">
-   <button class="kpi" @click="abrirFat('Faturados no mês',F)"><div class="l">Faturados</div><div class="v">{{res.n}}<small>un</small></div>
-    <div class="cmp"><span>Meta: <b>{{meta}}</b> · {{pc(ritmo.ating,0)}}</span><template v-if="cmp"><span :class="delta(cmp.fat[0])[1]">{{delta(cmp.fat[0])[0]}} vs mês ant.</span><span :class="delta(cmp.fat[1])[1]">{{delta(cmp.fat[1])[0]}} vs set/25</span></template></div></button>
-   <button class="kpi" @click="abrirFat('Receita faturada',F)"><div class="l">Receita faturada</div><div class="v">{{mi(res.rec)}}</div>
-    <div class="cmp" v-if="cmp"><span :class="delta(cmp.rec[0])[1]">{{delta(cmp.rec[0])[0]}} vs mês ant.</span><span :class="delta(cmp.rec[1])[1]">{{delta(cmp.rec[1])[0]}} vs set/25</span></div></button>
-   <button class="kpi" @click="abrirFat('Margem bruta',F)"><div class="l">Margem bruta</div><div class="v">{{mil(res.mg)}}</div>
-    <div class="cmp" v-if="cmp"><span :class="delta(cmp.mg[0])[1]">{{delta(cmp.mg[0])[0]}} vs mês ant.</span><span :class="delta(cmp.mg[1])[1]">{{delta(cmp.mg[1])[0]}} vs set/25</span></div></button>
-   <button class="kpi" @click="abrirFat('Margem por negócio',[...F].sort((a,b)=>a.margem_percentual-b.margem_percentual))"><div class="l">Margem média</div><div class="v">{{pc(res.mgp,2)}}</div>
-    <div class="cmp"><span>Piso: {{pc(g.PISO_MARGEM,1)}}</span><template v-if="cmp"><span :class="delta(cmp.mgp[0],1)[1]">{{delta(cmp.mgp[0],1)[0]}} vs mês ant.</span></template></div></button>
-   <button class="kpi" @click="abrirFat('Ticket por caminhão',[...F].sort((a,b)=>b.valor_faturado-a.valor_faturado))"><div class="l">Ticket médio</div><div class="v">{{mil(res.ticket)}}</div>
-    <div class="cmp"><span>Desconto médio {{pc(res.desc,1)}}</span><template v-if="cmp"><span :class="delta(cmp.tk[0])[1]">{{delta(cmp.tk[0])[0]}} vs mês ant.</span></template></div></button>
-   <button class="kpi" @click="abrirFat('Margem por caminhão',[...F].sort((a,b)=>a.margem_reais-b.margem_reais))"><div class="l">Margem / caminhão</div><div class="v">{{mil(res.mgc)}}</div>
-    <div class="cmp" v-if="cmp"><span :class="delta(cmp.mgc[0])[1]">{{delta(cmp.mgc[0])[0]}} vs mês ant.</span><span :class="delta(cmp.mgc[1])[1]">{{delta(cmp.mgc[1])[0]}} vs set/25</span></div></button>
-  </div></section>
+ <!-- =========== DASHBOARD CEO =========== -->
+ <template v-if="tab==='ceo'">
+  <section class="sec"><div class="sh"><span class="n">1</span><h2>Scorecard</h2><span class="s">resultado e margem calculados só sobre venda de estoque; FA-Direto à parte</span></div>
+   <div class="g g6">
+    <button class="kpi" @click="abrir('Veículos faturados',V)"><div class="l">Unidades</div><div class="v">{{n(A.n)}}</div><div class="cmp"><span>{{n(A.nEst)}} estoque · {{n(A.nFA)}} FA-Direto</span></div></button>
+    <button class="kpi" @click="abrir('Faturamento',V)"><div class="l">Faturamento</div><div class="v">{{mi(A.fat)}}</div><div class="cmp"><span>{{mi(S(V.filter(g=>g.origem==='FA-DIRETO'),g=>g.vrVda))}} em FA-Direto</span></div></button>
+    <button class="kpi" @click="abrir('Venda de estoque',VE)"><div class="l">Resultado bruto aparente</div><div class="v">{{mi(AE.res)}}</div><div class="cmp"><span>venda de estoque · {{mil(AE.resU)}}/un</span></div></button>
+    <button class="kpi" @click="abrir('Venda de estoque',VE)"><div class="l">Margem aparente</div><div class="v">{{pc(AE.mg)}}</div><div class="cmp"><span>markup {{pc(AE.mk)}} · estoque</span></div></button>
+    <button class="kpi" @click="abrir('Faturamento',V)"><div class="l">Ticket médio</div><div class="v">{{mil(A.tk)}}</div><div class="cmp"><span>todas as origens</span></div></button>
+    <button class="kpi" @click="tab='giro'"><div class="l">Dias até venda</div><div class="v">{{n(AE.dMdn)}}<small>d mediana</small></div><div class="cmp"><span>média {{n(AE.dMed)}} d · P90 {{n(AE.p90)}} d</span></div></button>
+   </div>
+   <div class="card" style="margin-top:10px" v-if="tempo"><div class="cmpl">
+    <span>Mês atual <b>{{ym(tempo.cur.m)}}</b>: <b>{{tempo.cur.n}}</b> un · <b>{{mi(tempo.cur.fat)}}</b><template v-if="tempo.cur.parcial"> <span class="pp">PARCIAL até dia {{parcial.dia}}</span> · run-rate {{n(tempo.rr)}} un / {{mi(tempo.rrF)}}</template></span>
+    <span v-if="tempo.lastC && tempo.prevC">Último mês fechado <b>{{ym(tempo.lastC.m)}}</b> vs <b>{{ym(tempo.prevC.m)}}</b>: unidades <b :class="tempo.vN<0?'dn':'up'">{{pc(tempo.vN,0)}}</b> · faturamento <b :class="tempo.vF<0?'dn':'up'">{{pc(tempo.vF,0)}}</b></span>
+    <span>Média mensal (meses fechados) <b>{{n(tempo.mN,0)}}</b> un · <b>{{mi(tempo.mF)}}</b></span>
+    <span>Acumulado <b>{{n(tempo.ytdN)}}</b> un · <b>{{mi(tempo.ytdF)}}</b> · mês atual = {{pc(tempo.partN,0)}} do acumulado</span></div></div>
+  </section>
+  <section class="sec"><div class="sh"><span class="n">2</span><h2>Tendência</h2><span class="s">* mês parcial em tom claro · não comparar direto com mês fechado</span></div>
+   <div class="g g2"><div class="card"><h3>Unidades por origem e faturamento</h3><div class="chart t"><canvas id="cTend"></canvas></div></div>
+    <div class="card"><h3>Margem aparente de estoque e Banco Mercedes</h3><div class="chart t"><canvas id="cMg"></canvas></div></div></div></section>
+  <section class="sec"><div class="sh"><span class="n">3</span><h2>Produtividade</h2><span class="s">volume × receita × margem × giro</span></div>
+   <div class="g" style="grid-template-columns:1.1fr 1fr">
+    <div class="card"><h3>Vendedores <em>clique na bolha para abrir</em></h3><div class="chart t"><canvas id="cVend"></canvas></div></div>
+    <div class="card"><h3>Filiais</h3><g-tab :rows="G.casa" :cols="['n','fat','mg','dMdn','pen','bm']" dim="Casa vendedora" :total="A.fat" @abrir="x=>abrirG('Filial',x)"></g-tab>
+     <h3 style="margin-top:12px">Segmentos</h3><g-tab :rows="G.seg" :cols="['n','fat','mg','resU','dMdn']" dim="Segmento" :total="A.fat" @abrir="x=>abrirG('Segmento',x)"></g-tab></div></div></section>
+  <section class="sec"><div class="sh"><span class="n">4</span><h2>Capital</h2><span class="s">aging do que foi vendido, capital × tempo e margem negativa</span></div>
+   <div class="g g3">
+    <div class="card"><h3>Dias até venda · estoque</h3><div class="chart"><canvas id="cAging"></canvas></div></div>
+    <div class="card"><h3>Maior capital × tempo <em>VR. NF × dias · não é custo financeiro</em></h3>
+     <table><tbody><tr v-for="g in capTop.slice(0,8)"><td class="l"><button class="lk" @click="abrir(g.chassi,[g])">{{g.modelo}}</button></td><td>{{g.dias}} d</td><td>{{n(g.capT/1e6,0)}} mi R$·dia</td></tr></tbody></table></div>
+    <div class="card"><h3>Margem aparente negativa · estoque</h3>
+     <div class="big dn">{{AE.neg}}</div><p class="small mute">{{pc(AE.nR?AE.neg/AE.nR:null,0)}} das vendas de estoque · {{mil(AE.negV)}} de resultado aparente negativo · {{pc(AE.negFat/(AE.fat||1),0)}} do faturamento de estoque</p>
+     <button class="btn sm" style="margin-top:8px" @click="tab='rec'">Ver operações para investigação</button></div></div></section>
+  <section class="sec"><div class="sh"><span class="n">5</span><h2>Financeiro</h2></div>
+   <div class="g g3">
+    <div class="card"><h3>Penetração de financiamento</h3><div class="big">{{pc(A.penU,0)}}</div><p class="small mute">das unidades com modalidade · {{pc(A.penF,0)}} do faturamento</p></div>
+    <div class="card"><h3>Banco Mercedes</h3><div class="big">{{pc(A.bm,0)}}</div><p class="small mute">{{A.nBM}} de {{A.nInst}} operações com instituição preenchida</p></div>
+    <div class="card"><h3>Mix de modalidades</h3><div class="chart" style="height:170px"><canvas id="cMod"></canvas></div></div></div></section>
+ </template>
 
- <!-- 03 META + FORECAST -->
- <section class="sec"><div class="sh"><span class="n">03</span><h2>Meta + forecast</h2><span class="s">faturado + commit = forecast · pipeline não entra no forecast</span></div>
-  <div class="g" style="grid-template-columns:1fr 1.5fr 1fr">
-   <div class="card"><h3>Meta do mês</h3>
-    <div class="mrow"><span>Meta</span><b>{{meta}} caminhões</b></div><div class="mrow"><span>Faturados</span><b>{{res.n}}</b></div>
-    <div class="mrow"><span>Faltam</span><b>{{ritmo.falta}}</b></div><div class="mrow"><span>Dias úteis restantes</span><b>{{dias.rest}}</b></div>
-    <div class="mrow"><span>Ritmo atual</span><b>{{n1(ritmo.atual)}} caminhão/dia</b></div><div class="mrow"><span>Ritmo necessário</span><b>{{n1(ritmo.nec)}} caminhão/dia</b></div>
-    <div class="mrow"><span>Atingimento</span><b>{{pc(ritmo.ating,0)}}</b></div>
-    <div class="bar" :class="ritmo.ating>=100?'ok':ritmo.ating>=75?'al':'cr'" style="margin-top:6px"><i :style="{width:Math.min(100,ritmo.ating)+'%'}"></i></div></div>
-   <div class="card"><h3>Forecast do mês <em>commit = pedidos com faturamento previsto no mês</em></h3>
-    <div class="eq">
-     <button class="b" style="border:0" @click="abrirFat('Faturados',F)"><div class="n">{{res.n}}</div><div class="k">Faturados</div></button><span class="op">+</span>
-     <button class="b" style="border:0" @click="abrirOpps('Commit do mês',OM.filter(o=>o.fase==='Pedido'))"><div class="n">{{fc.commit}}</div><div class="k">Commit</div></button><span class="op">=</span>
-     <div class="b f"><div class="n">{{fc.forecast}}</div><div class="k">Forecast</div></div><span class="op">vs</span>
-     <div class="b"><div class="n">{{meta}}</div><div class="k">Meta</div></div>
-     <div class="b" :style="{background:fc.gap<0?'var(--red2)':'var(--green2)'}"><div class="n" :class="fc.gap<0?'dn':'up'">{{fc.gap>0?'+':''}}{{fc.gap}}</div><div class="k">Gap</div></div>
-    </div>
-    <div class="g g2" style="margin-top:10px">
-     <div class="mrow lk" @click="abrirOpps('Best case do mês',OM.filter(o=>o.fase==='Aprovação'))"><span>Best case (em aprovação no mês)</span><b>+{{fc.best}} un</b></div>
-     <div class="mrow lk" @click="abrirOpps('Pipeline do mês',OM.filter(o=>['Negociação','Proposta','Oportunidade'].includes(o.fase)))"><span>Pipeline do mês (negociação e proposta)</span><b>{{fc.pipe}} un</b></div>
-    </div></div>
-   <div class="card"><h3>Pipeline coverage</h3>
-    <div class="big">{{isFinite(fc.cov)?n1(fc.cov,2)+'x':'meta batida'}}</div>
-    <span class="tag" :class="fc.covSt==='Confortável'?'t-ok':fc.covSt==='Atenção'?'t-al':'t-cr'">{{fc.covSt}}</span>
-    <div class="mrow" style="margin-top:8px"><span>Pipeline ponderado do mês</span><b>{{n1(fc.pond,1)}} un</b></div>
-    <div class="mrow"><span>Gap para a meta</span><b>{{fc.gapMeta}} un</b></div>
-    <p class="small mute" style="margin-top:6px">Σ (quantidade × probabilidade da fase) ÷ gap. Acima de 3,0x confortável; 2,0 a 3,0x atenção; abaixo de 2,0x crítico.</p></div>
-  </div></section>
+ <!-- =========== SCORECARD =========== -->
+ <template v-if="tab==='score'">
+  <section class="sec"><div class="sh"><h2>Executive scorecard</h2><span class="s">18 KPIs · clique em “i” para ver a ficha do indicador</span></div>
+   <div class="scg"><div class="sc2" v-for="s in score"><div class="l">{{SCORE_META[s[0]].nome}}</div><button class="i" @click="info=info===s[0]?null:s[0]">i</button>
+    <div class="v">{{s[1]}}</div><div class="d">{{s[2]}}</div></div></div>
+   <div class="ficha" v-if="info"><b>Indicador</b><span><strong>{{SCORE_META[info].nome}}</strong></span>
+    <b>Objetivo gerencial</b><span>{{SCORE_META[info].obj}}</span><b>Fórmula</b><span>{{SCORE_META[info].f}}</span><b>Campos</b><span>{{SCORE_META[info].campos}}</span>
+    <b>Unidade</b><span>{{SCORE_META[info].um}}</span><b>Periodicidade</b><span>{{SCORE_META[info].per}}</span><b>Filtros</b><span>{{SCORE_META[info].filt}}</span>
+    <b>Interpretação</b><span>{{SCORE_META[info].int}}</span><b>Risco de interpretação</b><span>{{SCORE_META[info].risco}}</span><b>Visual</b><span>{{SCORE_META[info].vis}}</span></div></section>
+  <section class="sec"><div class="sh"><h2>Rentabilidade por origem</h2><span class="s">origens não são misturadas na margem</span></div>
+   <div class="card"><g-tab :rows="G.origem" :cols="['n','fat','tk','res','mg','mk','resU','neg','negV','dMdn','pen']" dim="Origem" :total="A.fat" @abrir="x=>abrirG('Origem',x)"></g-tab>
+    <p class="nota" v-if="faDireto.n">FA-Direto: {{faDireto.iguais}} de {{faDireto.n}} operações têm VR. NF ≈ VR. NF VDA (margem aparente abaixo de 1%). Possível remuneração por comissão, bônus, incentivo ou holdback, que não existe nesta base: não concluir que a operação não tem rentabilidade.</p></div></section>
+  <section class="sec"><div class="sh"><h2>Série mensal</h2><span class="s">mês atual, anterior, variação, média e acumulado</span></div>
+   <div class="card tscroll"><table><thead><tr><th class="l">Mês</th><th>Unid.</th><th>Faturamento</th><th>Ticket</th><th>Result. estoque</th><th>Margem estoque</th><th>Mediana dias</th><th>Financ.</th><th>Banco MB</th><th>Estoque</th><th>FA-Dir.</th></tr></thead>
+    <tbody><tr v-for="s in serie"><td class="l">{{ym(s.m)}} <span v-if="s.parcial" class="pp">PARCIAL</span></td><td>{{s.n}}</td><td>{{mi(s.fat)}}</td><td>{{mil(s.tk)}}</td><td>{{mil(s.resE)}}</td><td :class="s.mgE<0?'dn':''">{{pc(s.mgE)}}</td><td>{{n(s.dE)}}</td><td>{{pc(s.penU,0)}}</td><td>{{pc(s.bm,0)}}</td><td>{{s.nEstm}}</td><td>{{s.nFAm}}</td></tr>
+     <tr class="tot" v-if="tempo"><td class="l">Acumulado</td><td>{{tempo.ytdN}}</td><td>{{mi(tempo.ytdF)}}</td><td>{{mil(A.tk)}}</td><td>{{mil(AE.res)}}</td><td>{{pc(AE.mg)}}</td><td>{{n(AE.dMdn)}}</td><td>{{pc(A.penU,0)}}</td><td>{{pc(A.bm,0)}}</td><td>{{A.nEst}}</td><td>{{A.nFA}}</td></tr></tbody></table></div></section>
+ </template>
 
- <!-- 04 FATURAMENTO POR MODELO -->
- <section class="sec"><div class="sh"><span class="n">04</span><h2>Faturamento por modelo</h2><span class="s">clique na barra para ver os caminhões</span></div>
-  <div class="g" style="grid-template-columns:1.2fr 1fr 1fr">
-   <div class="card"><h3>Faturados por modelo</h3><div class="chart"><canvas id="chModelo"></canvas></div></div>
-   <div class="card"><h3>Modelo · receita · margem</h3><div class="tscroll"><table><thead><tr><th class="l">Modelo</th><th>Faturados</th><th>Receita</th><th>Margem</th><th>%</th></tr></thead>
-    <tbody><tr v-for="m in porModelo"><td class="l"><button class="lk" @click="abrirFat('Faturados · '+m.nome,F.filter(x=>x.modelo===m.id))">{{m.nome}}</button></td><td>{{m.n}}</td><td>{{mi(m.rec)}}</td><td>{{mil(m.mg)}}</td><td>{{pc(100*m.mg/m.rec)}}</td></tr>
-    <tr class="tot"><td class="l">Total</td><td>{{res.n}}</td><td>{{mi(res.rec)}}</td><td>{{mil(res.mg)}}</td><td>{{pc(res.mgp)}}</td></tr></tbody></table></div></div>
-   <div class="card"><h3>Mix de faturamento <em>% das unidades</em></h3><div class="chart" style="height:120px"><canvas id="chMix"></canvas></div>
-    <div class="g g2 small" style="margin-top:8px">
-     <div><div v-for="(c,i) in ['Actros','Axor','Atego','Accelo']" class="mrow"><span><i :style="{display:'inline-block',width:'9px',height:'9px',background:['#111111','#0078D4','#8A8D91','#C6C8CA'][i],marginRight:'5px'}"></i>{{c}}</span><b>{{mix.fam[c]||0}}</b></div></div>
-     <div><div v-for="(c,i) in ['Extrapesado','Pesado','Semipesado','Leve']" class="mrow"><span><i :style="{display:'inline-block',width:'9px',height:'9px',background:['#111111','#0078D4','#8A8D91','#C6C8CA'][i],marginRight:'5px'}"></i>{{c}}</span><b>{{mix.seg[c]||0}}</b></div></div>
-    </div></div>
-  </div></section>
+ <!-- =========== VENDAS E PRODUTO =========== -->
+ <template v-if="tab==='vendas'">
+  <section class="sec"><div class="sh"><h2>Quadrante de produto</h2><span class="s">cortes na mediana de volume e de margem · sem FA-Direto · só modelos com 3+ vendas</span></div>
+   <div class="g" style="grid-template-columns:1.3fr 1fr"><div class="card"><div class="chart t" style="height:340px"><canvas id="cQuad"></canvas></div>
+    <p class="nota">Verde: alto volume + alta margem · âmbar: alto volume + baixa margem · azul: baixo volume + alta margem · vermelho: baixo volume + baixa margem. Mediana de corte: {{n(quadrante.cN)}} un e {{pc(quadrante.cM)}}.</p></div>
+    <div class="card"><h3>Classificação</h3><div class="tscroll"><table><thead><tr><th class="l">Modelo</th><th>Un</th><th>Margem</th><th>Mediana d</th><th class="l">Quadrante</th></tr></thead>
+     <tbody><tr v-for="m in [...quadrante.L].sort((a,b)=>b.n-a.n)"><td class="l"><button class="lk" @click="abrirG('Modelo',m)">{{m.k}}</button></td><td>{{m.n}}</td><td :class="m.mg<0?'dn':''">{{pc(m.mg)}}</td><td>{{n(m.dMdn)}}</td><td class="l small">{{m.q}}</td></tr></tbody></table></div></div></div></section>
+  <section class="sec"><div class="sh"><h2>Por segmento</h2></div><div class="card"><g-tab :rows="G.seg" :cols="['n','fat','tk','res','mg','resU','dMed','dMdn','nEst','nFA','pen','cli']" dim="Segmento" :total="A.fat" @abrir="x=>abrirG('Segmento',x)"></g-tab></div></section>
+  <section class="sec"><div class="sh"><h2>Por modelo</h2><span class="s">todas as origens · margem só onde há VR. NF e VR. NF VDA</span></div><div class="card"><g-tab :rows="G.modelo" :cols="['n','fat','tk','res','mg','resU','dMdn','nEst','nFA','pen','cli']" dim="Modelo" :total="A.fat" @abrir="x=>abrirG('Modelo',x)"></g-tab></div></section>
+  <section class="sec"><div class="sh"><h2>Faixas de margem aparente · venda de estoque</h2></div>
+   <div class="g g6"><button class="kpi" v-for="x in faixasMg" @click="abrir('Margem '+x.k,x.l)"><div class="l">{{x.k}}</div><div class="v">{{x.n}}</div><div class="cmp"><span>{{mi(x.fat)}}</span></div></button></div></section>
+ </template>
 
- <!-- 05 PIPELINE -->
- <section class="sec"><div class="sh"><span class="n">05</span><h2>Pipeline · funil comercial</h2><span class="s">quantidade, valor, conversão entre fases e tempo médio</span></div>
-  <div class="g" style="grid-template-columns:1.6fr 1fr">
-   <div class="card"><h3>Funil <em>fase atual ou além · tempo médio em dias (demonstrativo)</em></h3>
-    <div class="funnel">
-     <div class="fs small mute" style="cursor:default"><span>Fase</span><span></span><span style="text-align:right">Qtd</span><span style="text-align:right">Valor</span><span style="text-align:right">Conversão</span><span style="text-align:right">Tempo</span></div>
-     <div class="fs" v-for="r in funil" @click="abrirFunil(r)">
-      <span>{{r.k}}</span><div><div class="fb" :style="{width:r.w+'%',background:r.k==='Faturados'?'#111':''}">{{r.n??'—'}}</div></div>
-      <span style="text-align:right">{{r.n??'—'}}</span><span style="text-align:right">{{r.v?mi(r.v):'—'}}</span>
-      <span style="text-align:right">{{r.conv?pc(r.conv,0):'—'}}</span><span style="text-align:right">{{r.t?r.t+' d':'—'}}</span></div>
-    </div></div>
-   <div class="card"><h3>Resultado por unidade</h3><div class="tscroll"><table><thead><tr><th class="l">Unidade</th><th>Fat.</th><th>Meta</th><th>Ating.</th><th>Receita</th><th>Margem</th><th>Pipeline</th><th>Forecast</th></tr></thead>
-    <tbody><tr v-for="u in porUnidade"><td class="l"><button class="lk" @click="abrirFat('Faturados · '+u.nome,F.filter(x=>x.unidade===u.id))">{{u.nome}}</button></td><td>{{u.n}}</td><td>{{u.meta}}</td>
-     <td><span class="tag" :class="u.ating>=90?'t-ok':u.ating>=70?'t-al':'t-cr'">{{pc(u.ating,0)}}</span></td><td>{{mi(u.rec)}}</td><td>{{pc(u.mgp)}}</td><td>{{u.pipe}}</td><td>{{u.forecast}}</td></tr>
-     <tr class="tot"><td class="l">Total</td><td>{{res.n}}</td><td>{{meta}}</td><td>{{pc(ritmo.ating,0)}}</td><td>{{mi(res.rec)}}</td><td>{{pc(res.mgp)}}</td><td>{{porUnidade.reduce((a,u)=>a+u.pipe,0)}}</td><td>{{fc.forecast}}</td></tr></tbody></table></div>
-    <p class="small mute" style="margin-top:6px">Pipeline = unidades em aberto com previsão no mês. Forecast = faturados + pedidos do mês.</p></div>
-  </div></section>
+ <!-- =========== VENDEDORES =========== -->
+ <template v-if="tab==='vend'">
+  <section class="sec"><div class="sh"><h2>Volume × receita × margem × giro</h2><span class="s">sem ranking só por faturamento</span></div>
+   <div class="card"><g-tab :rows="G.vend" :cols="['n','fat','tk','res','resU','mg','nEst','nFA','mixFA','dMed','pen','bm','cli','unCli']" dim="Vendedor" :total="A.fat" @abrir="x=>abrirG('Vendedor',x)"></g-tab>
+    <p class="nota">Margem sobre todas as origens do vendedor: quem vende muito FA-Direto tem margem aparente perto de zero por construção. Dias médios só sobre vendas de estoque.</p></div></section>
+  <section class="sec"><div class="sh"><h2>Vendedor × segmento</h2><span class="s">unidades e cor pela margem aparente · verde positiva, vermelho negativa</span></div>
+   <div class="card tscroll"><table class="heat"><thead><tr><th class="l">Vendedor</th><th v-for="s in heat.segs">{{s}}</th></tr></thead>
+    <tbody><tr v-for="r in heat.rows"><td class="l">{{r.k}}</td><td v-for="c in r.c" :style="heatBg(c)" :title="c.n?pc(c.mg):''">{{c.n||''}}</td></tr></tbody></table></div></section>
+ </template>
 
- <!-- 06 NEGÓCIOS PARA FECHAR -->
- <section class="sec"><div class="sh"><span class="n">06</span><h2>Negócios para fechar</h2><span class="s">previsão no mês primeiro, ordenados por unidades ponderadas</span></div>
-  <div class="card tscroll"><table><thead><tr><th class="l">Cliente</th><th class="l">Modelo</th><th>Qtd</th><th>Valor</th><th class="l">Fase</th><th>Prob.</th><th>Margem</th><th class="l">Vendedor</th><th>Previsão</th><th class="l">Risco</th><th></th></tr></thead>
-   <tbody><tr v-for="o in paraFechar"><td class="l"><button class="lk" @click="abrirCliente(o.cliente)">{{g.CLI[o.cliente].nome}}</button></td><td class="l">{{g.MOD[o.modelo].nome}}</td><td>{{o.qtd}}</td><td>{{mil(o.valor)}}</td>
-    <td class="l">{{o.fase}}</td><td>{{pc(o.prob*100,0)}}</td><td :class="o.margem<g.PISO_MARGEM?'dn':''">{{pc(o.margem)}}</td><td class="l"><button class="lk" @click="abrirVendedor(o.vendedor)">{{vd(o.vendedor)}}</button></td>
-    <td>{{dbr(o.previsao)}}</td><td class="l"><span class="tag" :class="risco(o)[1]">{{risco(o)[0]}}</span></td><td><button class="btn sm" @click="abrirOpps('Negócio '+o.id,[o])">Abrir</button></td></tr></tbody></table></div></section>
+ <!-- =========== FILIAIS =========== -->
+ <template v-if="tab==='filiais'">
+  <section class="sec"><div class="sh"><h2>Casa vendedora</h2></div><div class="card"><g-tab :rows="G.casa" :cols="['n','fat','tk','res','resU','mg','nEst','nFA','mixFA','dMed','dMdn','pen','bm','cli']" dim="Casa vendedora" :total="A.fat" @abrir="x=>abrirG('Filial',x)"></g-tab></div></section>
+  <section class="sec"><div class="sh"><h2>Operação interfilial</h2><span class="s">casa emissora da NF ≠ casa vendedora</span></div>
+   <div class="g" style="grid-template-columns:1fr 2fr"><div class="card"><h3>Taxa interfilial</h3><div class="big">{{pc(inter.taxa)}}</div><p class="small mute">{{inter.n}} veículos emitidos numa casa e vendidos por outra</p></div>
+    <div class="card"><h3>Fluxo casa emissora → casa vendedora</h3><table><tbody><tr v-for="x in inter.fluxos"><td class="l"><button class="lk" @click="abrir(x.k,x.l)">{{x.k}}</button></td><td>{{x.n}} un</td><td>{{mi(x.fat)}}</td></tr></tbody></table></div></div></section>
+ </template>
 
- <!-- 07 GRANDES CONTAS -->
- <section class="sec"><div class="sh"><span class="n">07</span><h2>Grandes Contas</h2><span class="s">share of wallet = caminhões MB ÷ frota total do cliente</span></div>
-  <div class="g g6" style="margin-bottom:10px">
-   <div class="kpi" style="cursor:default"><div class="l">Clientes estratégicos</div><div class="v">{{gc.k.n}}</div></div>
-   <div class="kpi" style="cursor:default"><div class="l">Frota mapeada</div><div class="v">{{gc.k.fr.toLocaleString('pt-BR')}}<small>un</small></div></div>
-   <div class="kpi" style="cursor:default"><div class="l">Mercedes-Benz na frota</div><div class="v">{{gc.k.mb}}<small>un</small></div></div>
-   <div class="kpi" style="cursor:default"><div class="l">Share of wallet</div><div class="v">{{pc(gc.k.sow)}}</div></div>
-   <button class="kpi" @click="abrirOpps('Oportunidades de Grandes Contas',g.OPP.filter(o=>g.CLI[o.cliente].gc))"><div class="l">Oportunidades abertas</div><div class="v">{{gc.k.op}}</div></button>
-   <div class="kpi" style="cursor:default"><div class="l">Potencial de renovação</div><div class="v">{{gc.k.renov}}<small>un</small></div><div class="cmp"><span>frota em idade de troca · não é venda</span></div></div>
-  </div>
-  <div class="card tscroll"><table><thead><tr><th class="l">Cliente</th><th>Frota</th><th>Mercedes-Benz</th><th>Outras marcas</th><th>Share MBB</th><th>Potencial renov.</th><th>Pipeline</th><th>Última compra</th><th class="l">Vendedor</th></tr></thead>
-   <tbody><tr v-for="r in gc.rows"><td class="l"><button class="lk" @click="abrirCliente(r.c.id)">{{r.c.nome}}</button></td><td>{{r.frota}}</td><td>{{r.mb}}</td><td>{{r.out}}</td>
-    <td><div style="display:flex;align-items:center;gap:6px;justify-content:flex-end">{{pc(r.sow,0)}}<div class="bar" :class="r.sow>=30?'ok':r.sow>=10?'al':'cr'" style="width:60px"><i :style="{width:Math.min(100,r.sow)+'%'}"></i></div></div></td>
-    <td>{{r.renov}}</td><td>{{r.pipe}} un</td><td>{{dbr(r.ult)}}/{{r.ult.slice(2,4)}}</td><td class="l"><button class="lk" @click="abrirVendedor(r.c.vend)">{{vd(r.c.vend)}}</button></td></tr></tbody></table>
-   <p class="small mute" style="margin-top:6px">Os caminhões de outras marcas indicam espaço de conquista ao longo do ciclo de renovação, não vendas imediatas.</p></div></section>
+ <!-- =========== ESTOQUE E GIRO =========== -->
+ <template v-if="tab==='giro'">
+  <section class="sec"><div class="sh"><h2>Dias até venda · origem estoque</h2><span class="s">data da venda − data da NF fábrica · mede o que foi vendido, não o estoque atual</span></div>
+   <div class="g g6"><div class="kpi"><div class="l">Média</div><div class="v">{{n(AE.dMed)}}<small>d</small></div></div><div class="kpi"><div class="l">Mediana</div><div class="v">{{n(AE.dMdn)}}<small>d</small></div></div>
+    <div class="kpi"><div class="l">P25 · P75</div><div class="v">{{n(AE.p25)}} · {{n(AE.p75)}}</div></div><div class="kpi"><div class="l">P90</div><div class="v">{{n(AE.p90)}}<small>d</small></div></div>
+    <div class="kpi"><div class="l">≤30 · ≤60 dias</div><div class="v">{{pc(AE.le30,0)}} · {{pc(AE.le60,0)}}</div></div><div class="kpi"><div class="l">>90 · >180 dias</div><div class="v">{{pc(AE.gt90,0)}} · {{pc(AE.gt180,0)}}</div></div></div>
+   <div class="g" style="grid-template-columns:1fr 1.3fr;margin-top:10px"><div class="card"><h3>Distribuição</h3><div class="chart t"><canvas id="cAging"></canvas></div></div>
+    <div class="card"><h3>Faixas <em>capital × tempo em milhões de R$·dia</em></h3><table><thead><tr><th class="l">Faixa</th><th>Veículos</th><th>VR. NF</th><th>Capital × tempo</th></tr></thead>
+     <tbody><tr v-for="x in faixasD"><td class="l"><button class="lk" @click="abrir('Dias até venda '+x.k,x.l)">{{x.k}} dias</button></td><td>{{x.n}}</td><td>{{mi(x.nf)}}</td><td>{{n(x.capT/1e6,0)}}</td></tr></tbody></table></div></div></section>
+  <section class="sec"><div class="sh"><h2>Maiores consumidores de capital × tempo</h2><span class="s">VR. NF × dias em estoque · indicador de capital empatado, não custo financeiro</span></div>
+   <div class="card tscroll"><table><thead><tr><th class="l">Modelo</th><th class="l">Chassi</th><th class="l">Filial</th><th class="l">Vendedor</th><th>NF fábrica</th><th>Venda</th><th>Dias</th><th>VR. NF</th><th>Cap.×tempo (mi R$·dia)</th><th>Margem ap.</th></tr></thead>
+    <tbody><tr v-for="g in capTop"><td class="l">{{g.modelo}}</td><td class="l"><button class="lk" @click="abrir(g.chassi,[g])">{{g.chassi}}</button></td><td class="l">{{g.casaVd}}</td><td class="l">{{g.vend}}</td><td>{{d(g.dtFab)}}</td><td>{{d(g.dtVda)}}</td><td>{{g.dias}}</td><td>{{mil(g.vrNf)}}</td><td>{{n(g.capT/1e6,0)}}</td><td :class="g.mg<0?'dn':''">{{pc(g.mg)}}</td></tr></tbody></table></div></section>
+  <section class="sec"><div class="sh"><h2>Giro por dimensão · estoque</h2></div>
+   <div class="g g2"><div class="card"><h3>Modelo</h3><g-tab :rows="GE.modelo" :cols="['n','dMed','dMdn','p90','gt90','capT','mg']" dim="Modelo" :lim="25" @abrir="x=>abrirG('Modelo',x)"></g-tab></div>
+    <div class="card"><h3>Segmento</h3><g-tab :rows="GE.seg" :cols="['n','dMed','dMdn','p90','gt90','capT','mg']" dim="Segmento" @abrir="x=>abrirG('Segmento',x)"></g-tab>
+     <h3 style="margin-top:12px">Filial</h3><g-tab :rows="GE.casa" :cols="['n','dMed','dMdn','p90','gt90','capT']" dim="Filial" @abrir="x=>abrirG('Filial',x)"></g-tab>
+     <h3 style="margin-top:12px">Vendedor</h3><g-tab :rows="GE.vend" :cols="['n','dMed','dMdn','p90','gt90']" dim="Vendedor" @abrir="x=>abrirG('Vendedor',x)"></g-tab></div></div></section>
+ </template>
 
- <!-- 08 ESTOQUE + AGING -->
- <section class="sec"><div class="sh"><span class="n">08</span><h2>Estoque + aging</h2><span class="s">custo de carregamento estimado a {{n1(g.TAXA_CARREG,1)}}% ao mês sobre o custo (premissa)</span></div>
-  <div class="g g7" style="margin-bottom:10px">
-   <button class="kpi" @click="abrirEstoque('Disponíveis',E.filter(e=>!e.reservado))"><div class="l">Disponíveis</div><div class="v">{{est.disp}}</div></button>
-   <button class="kpi" @click="abrirEstoque('Reservados',E.filter(e=>e.reservado))"><div class="l">Reservados</div><div class="v">{{est.res}}</div></button>
-   <div class="kpi" style="cursor:default"><div class="l">Aging médio</div><div class="v">{{n1(est.aging,0)}}<small>dias</small></div></div>
-   <div class="kpi" style="cursor:default"><div class="l">Valor do estoque</div><div class="v">{{mi(est.valor)}}</div></div>
-   <button class="kpi" @click="abrirEstoque('Estoque acima de 90 dias',E.filter(e=>e.dias>90))"><div class="l">Capital 90+</div><div class="v">{{mi(est.cap90)}}</div><div class="cmp"><span>{{est.n90}} veículos</span></div></button>
-   <div class="kpi" style="cursor:default"><div class="l">Custo de carregamento</div><div class="v">{{mil(est.carreg)}}<small>/mês</small></div></div>
-   <div class="kpi" style="cursor:default"><div class="l">Giro anualizado</div><div class="v">{{n1(est.valor?12*res.rec*(1-res.mgp/100)/est.valor:0,1)}}x</div><div class="cmp"><span>CMV do mês × 12 ÷ estoque</span></div></div>
-  </div>
-  <div class="g" style="grid-template-columns:1.3fr 1fr">
-   <div class="card"><h3>Aging do estoque</h3>
-    <div class="aging"><div v-for="(a,i) in est.faixas" v-show="a.n" @click="abrirEstoque('Aging '+a.k+' dias',a.lista)" :style="{flex:a.n,background:['#107C10','#5B9F3A','#8A8D91','#B26A00','#C42B1C','#7A1A10'][i]}">{{a.n}}</div></div>
-    <table style="margin-top:10px"><thead><tr><th class="l">Faixa</th><th>Unidades</th><th>Custo</th><th>Custo financeiro acumulado</th></tr></thead>
-     <tbody><tr v-for="a in est.faixas"><td class="l"><button class="lk" @click="abrirEstoque('Aging '+a.k+' dias',a.lista)">{{a.k}} dias</button></td><td>{{a.n}}</td><td>{{mi(a.v)}}</td><td>{{mil(a.cf)}}</td></tr>
-     <tr class="tot"><td class="l">Total</td><td>{{est.tot}}</td><td>{{mi(est.valor)}}</td><td>{{mil(est.faixas.reduce((x,a)=>x+a.cf,0))}}</td></tr></tbody></table></div>
-   <div class="card"><h3>Estoque × demanda <em>negociação ou além, 60 dias · demanda = unidades × probabilidade</em></h3>
-    <table><thead><tr><th class="l">Modelo</th><th>Estoque livre</th><th>Pipeline bruto</th><th>Demanda pond.</th><th>Gap</th><th class="l">Alerta</th></tr></thead>
-     <tbody><tr v-for="r in estDem"><td class="l">{{r.m.nome}}</td><td>{{r.est}}</td><td class="mute">{{r.bruto}}</td><td>{{r.dem}}</td><td :class="r.gap<0?'gap-neg':r.gap>=3?'gap-pos':''">{{r.gap>0?'+':''}}{{r.gap}}</td><td class="l"><span class="tag" :class="r.al[1]">{{r.al[0]}}</span></td></tr></tbody></table></div>
-  </div></section>
+ <!-- =========== FINANCIAMENTO =========== -->
+ <template v-if="tab==='fin'">
+  <section class="sec"><div class="g g4"><div class="kpi"><div class="l">Penetração por unidades</div><div class="v">{{pc(A.penU)}}</div><div class="cmp"><span>{{A.nFin}} de {{A.nEl}} com modalidade</span></div></div>
+   <div class="kpi"><div class="l">Penetração por faturamento</div><div class="v">{{pc(A.penF)}}</div></div>
+   <div class="kpi"><div class="l">Banco Mercedes</div><div class="v">{{pc(A.bm)}}</div><div class="cmp"><span>{{A.nBM}} de {{A.nInst}} com instituição</span></div></div>
+   <div class="kpi"><div class="l">Vendas associadas ao Banco MB</div><div class="v">{{mi(S(V.filter(g=>g.inst==='BANCO MERCEDES'),g=>g.vrVda))}}</div><div class="cmp"><span>valor da venda, não valor financiado</span></div></div></div></section>
+  <section class="sec"><div class="sh"><h2>Por modalidade</h2></div><div class="card"><g-tab :rows="G.mod" :cols="['n','fat','tk','res','mg','dMed','dMdn','nEst','nFA','cli']" dim="Modalidade" :total="A.fat" @abrir="x=>abrirG('Modalidade',x)"></g-tab></div></section>
+  <section class="sec"><div class="sh"><h2>Por instituição financeira</h2><span class="s">faturamento = valor das vendas associadas ao financiamento</span></div><div class="card"><g-tab :rows="G.inst" :cols="['n','fat','tk','mg','nEst','nFA','cli']" dim="Instituição" :total="A.fat" @abrir="x=>abrirG('Instituição',x)"></g-tab></div></section>
+  <section class="sec"><div class="sh"><h2>Banco Mercedes × demais</h2><span class="s">participação sobre operações com instituição preenchida</span></div>
+   <div class="g g2"><div class="card"><h3>Por filial</h3><g-tab :rows="bmBy.casa" :cols="['nInst','nBM','bm']" dim="Filial" @abrir="x=>abrirG('Filial',x)"></g-tab>
+     <h3 style="margin-top:12px">Por segmento</h3><g-tab :rows="bmBy.seg" :cols="['nInst','nBM','bm']" dim="Segmento" @abrir="x=>abrirG('Segmento',x)"></g-tab></div>
+    <div class="card"><h3>Por vendedor <em>3+ operações</em></h3><g-tab :rows="bmBy.vend" :cols="['nInst','nBM','bm']" dim="Vendedor" @abrir="x=>abrirG('Vendedor',x)"></g-tab>
+     <h3 style="margin-top:12px">Por modelo <em>3+ operações</em></h3><g-tab :rows="bmBy.modelo" :cols="['nInst','nBM','bm']" dim="Modelo" :lim="15" @abrir="x=>abrirG('Modelo',x)"></g-tab></div></div></section>
+ </template>
 
- <!-- 09 VENDEDORES -->
- <section class="sec"><div class="sh"><span class="n">09</span><h2>Performance dos vendedores</h2><span class="s">o diagnóstico diz o que cada um precisa, não só quem vendeu mais</span></div>
-  <div class="card tscroll"><table><thead><tr><th class="l">Vendedor</th><th class="l">Unidade</th><th>Meta</th><th>Fat.</th><th>Ating.</th><th>Receita</th><th>Margem</th><th>Pipeline</th><th>Conversão</th><th>Forecast</th><th>SLA</th><th class="l">Diagnóstico</th></tr></thead>
-   <tbody><tr v-for="v in porVendedor"><td class="l"><button class="lk" @click="abrirVendedor(v.id)">{{v.nome}}</button></td><td class="l">{{un(v.un)}}</td><td>{{v.meta}}</td><td>{{v.n}}</td>
-    <td><span class="tag" :class="v.ating>=90?'t-ok':v.ating>=60?'t-al':'t-cr'">{{pc(v.ating,0)}}</span></td><td>{{mi(v.rec)}}</td><td :class="v.mgp&&v.mgp<6.2?'dn':''">{{v.n?pc(v.mgp):'—'}}</td><td>{{v.pipe}} un</td>
-    <td>{{pc(v.conv,0)}}</td><td>{{v.forecast}}</td><td>{{n1(v.sla,1)}} d</td><td class="l"><span class="tag" :class="v.diag[1]">{{v.diag[0]}}</span></td></tr></tbody></table>
-   <p class="small mute" style="margin-top:6px">Conversão = faturados ÷ (faturados + unidades em aberto com previsão no mês). SLA = dias médios desde a última atividade nas oportunidades.</p></div></section>
+ <!-- =========== CLIENTES E GEOGRAFIA =========== -->
+ <template v-if="tab==='cli'">
+  <section class="sec"><div class="g g6"><div class="kpi"><div class="l">Clientes únicos</div><div class="v">{{clientes.n}}</div></div><div class="kpi"><div class="l">Unidades por cliente</div><div class="v">{{n(clientes.unCli,1)}}</div></div>
+   <div class="kpi"><div class="l">Top 5 · top 10</div><div class="v">{{pc(clientes.t5,0)}} · {{pc(clientes.t10,0)}}</div></div><div class="kpi"><div class="l">Top 20</div><div class="v">{{pc(clientes.t20,0)}}</div></div>
+   <div class="kpi"><div class="l">Índice de concentração (HHI)</div><div class="v">{{n(clientes.hhi)}}</div><div class="cmp"><span>abaixo de 1.500 = não concentrado</span></div></div>
+   <div class="kpi"><div class="l">Recorrentes</div><div class="v">{{clientes.rec}}</div><div class="cmp"><span>compraram em 2+ meses</span></div></div></div></section>
+  <section class="sec"><div class="sh"><h2>Pareto de clientes</h2><span class="s">em âmbar, possíveis intermediários (leasing, locadora, revenda, empresa do grupo) · confirmar o cliente econômico final</span></div>
+   <div class="card"><div class="chart t"><canvas id="cPareto"></canvas></div></div></section>
+  <section class="sec"><div class="g g2"><div class="card"><h3>Clientes</h3><g-tab :rows="G.cli" :cols="['n','fat','tk','mg','nFA','pen']" dim="Cliente" :total="A.fat" :lim="40" @abrir="x=>abrirG('Cliente',x)"></g-tab></div>
+   <div class="card"><h3>Possíveis intermediários ({{clientes.interm.length}})</h3><g-tab :rows="clientes.interm" :cols="['n','fat','mg']" dim="Cliente" @abrir="x=>abrirG('Cliente',x)"></g-tab>
+    <h3 style="margin-top:12px">Estado</h3><g-tab :rows="G.uf" :cols="['n','fat','tk','mg','cli']" dim="UF" :total="A.fat" @abrir="x=>abrirG('UF',x)"></g-tab>
+    <h3 style="margin-top:12px">Cidade</h3><g-tab :rows="G.cid" :cols="['n','fat','mg']" dim="Cidade" :lim="15" @abrir="x=>abrirG('Cidade',x)"></g-tab></div></div></section>
+ </template>
 
- <!-- 10 NEGÓCIOS TRAVADOS -->
- <section class="sec"><div class="sh"><span class="n">10</span><h2>Negócios travados</h2><span class="s">agrupados por motivo</span></div>
-  <div class="g g4"><button class="kpi" v-for="t in travados" @click="abrirTravado(t)"><div class="l">{{t.m}}</div><div class="v">{{t.n}}<small>negócios</small></div>
-   <div class="cmp"><span>{{mi(t.v)}}</span><span>{{t.d}} dias parados em média · máx. {{t.max}}</span></div></button></div></section>
+ <!-- =========== QUALIDADE DA RECEITA =========== -->
+ <template v-if="tab==='rec'">
+  <section class="sec"><div class="g g4"><div class="kpi"><div class="l">Vendas com margem negativa</div><div class="v dn">{{A.neg}}</div><div class="cmp"><span>{{pc(A.nR?A.neg/A.nR:null)}} das vendas com os dois valores</span></div></div>
+   <div class="kpi"><div class="l">Vendas com margem zero</div><div class="v">{{A.zero}}</div><div class="cmp"><span>quase todas FA-Direto</span></div></div>
+   <div class="kpi"><div class="l">Resultado aparente negativo</div><div class="v dn">{{mil(A.negV)}}</div></div>
+   <div class="kpi"><div class="l">Faturamento com margem negativa</div><div class="v">{{pc(A.negFat/(A.fat||1))}}</div></div></div>
+   <p class="nota">São operações para investigação, não erro comercial confirmado: a venda pode ter bônus de fábrica, trade-in ou condição especial que não estão nesta base.</p></section>
+  <section class="sec"><div class="sh"><h2>Incidência</h2></div><div class="g g2">
+   <div class="card"><h3>Por modelo</h3><g-tab :rows="CORE.grupo(negativos,g=>g.modelo)" :cols="['n','negV']" dim="Modelo" :lim="12" @abrir="x=>abrirG('Negativas · modelo',x)"></g-tab>
+    <h3 style="margin-top:12px">Por origem</h3><g-tab :rows="CORE.grupo(negativos,g=>g.origem)" :cols="['n','negV']" dim="Origem" @abrir="x=>abrirG('Negativas · origem',x)"></g-tab>
+    <h3 style="margin-top:12px">Por modalidade</h3><g-tab :rows="CORE.grupo(negativos,g=>g.mod)" :cols="['n','negV']" dim="Modalidade" @abrir="x=>abrirG('Negativas · modalidade',x)"></g-tab></div>
+   <div class="card"><h3>Por vendedor</h3><g-tab :rows="CORE.grupo(negativos,g=>g.vend)" :cols="['n','negV']" dim="Vendedor" @abrir="x=>abrirG('Negativas · vendedor',x)"></g-tab>
+    <h3 style="margin-top:12px">Por cliente</h3><g-tab :rows="CORE.grupo(negativos,g=>g.cliente)" :cols="['n','negV']" dim="Cliente" :lim="12" @abrir="x=>abrirG('Negativas · cliente',x)"></g-tab></div></div></section>
+ </template>
 
- <!-- 11 FATURAMENTO + ENTREGA -->
- <section class="sec"><div class="sh"><span class="n">11</span><h2>Faturamento + entrega</h2><span class="s">pedido, faturamento, preparação e entrega são etapas distintas</span></div>
-  <div class="g" style="grid-template-columns:1.6fr 1fr">
-   <div class="card"><h3>Pipeline operacional</h3>
-    <div class="flow">
-     <button class="st" @click="abrirOpps('Pedidos aguardando faturamento',O.filter(o=>o.fase==='Pedido'))"><div class="n">{{entrega.ped}}</div><div class="k">Pedidos</div></button><span class="ar">→</span>
-     <button class="st" @click="abrirFat('Faturados',F)"><div class="n">{{entrega.fat}}</div><div class="k">Faturados</div></button><span class="ar">→</span>
-     <button class="st" @click="abrirFat('Em preparação',entrega.prep)"><div class="n">{{entrega.prep.length}}</div><div class="k">Em preparação</div></button><span class="ar">→</span>
-     <button class="st" @click="abrirFat('Prontos para entrega',entrega.pr)"><div class="n">{{entrega.pr.length}}</div><div class="k">Prontos</div></button><span class="ar">→</span>
-     <button class="st" @click="abrirFat('Entregues no mês (faturados em setembro)',entrega.ent)"><div class="n">{{entrega.entMes}}</div><div class="k">Entregues</div></button>
-    </div>
-    <p class="small mute" style="margin-top:8px">Pedidos = {{entrega.fat}} faturados + {{entrega.ped-entrega.fat}} aguardando faturamento. Entregues no mês = {{entrega.ent.length}} faturados em setembro<template v-if="entrega.extra"> + {{entrega.extra}} faturados em agosto</template>.</p></div>
-   <div class="card"><h3>SLA operacional <em>dias médios</em></h3>
-    <div class="mrow"><span>Pedido → faturamento</span><b>{{n1(entrega.sla.pf,1)}}</b></div><div class="mrow"><span>Faturamento → preparação</span><b>{{n1(entrega.sla.fp,1)}}</b></div>
-    <div class="mrow"><span>Preparação → entrega</span><b>{{n1(entrega.sla.pe,1)}}</b></div><div class="mrow"><span>Tempo médio total</span><b>{{n1(entrega.sla.tot,1)}}</b></div>
-    <div class="mrow lk" @click="abrirFat('Entregas atrasadas',entrega.atras)"><span>Entregas atrasadas</span><b :class="entrega.atras.length?'dn':''">{{entrega.atras.length}}</b></div>
-    <div class="mrow"><span>Promessas de faturamento vencidas</span><b>{{entrega.prom}}</b></div></div>
-  </div>
-  <div class="g g2" style="margin-top:10px">
-   <div class="card"><h3>Financiamento <button class="btn sm" @click="abrirFin">Ver propostas</button></h3>
-    <div class="g g4 small"><div class="mrow"><span>Submetidas</span><b>{{fin.n}}</b></div><div class="mrow"><span>Aprovadas</span><b>{{fin.ap}}</b></div><div class="mrow"><span>Pendentes</span><b>{{fin.pend}}</b></div><div class="mrow"><span>Reprovadas</span><b>{{fin.rep}}</b></div>
-     <div class="mrow"><span>Taxa de aprovação</span><b>{{pc(fin.tx,0)}}</b></div><div class="mrow"><span>Valor financiado</span><b>{{mi(fin.valor)}}</b></div><div class="mrow"><span>Entrada média</span><b>{{pc(fin.ent,0)}}</b></div><div class="mrow"><span>Prazo médio</span><b>{{n1(fin.prazo,0)}} m</b></div></div>
-    <p class="small mute">Tempo médio de aprovação: {{n1(fin.dias,1)}} dias. Taxa de aprovação = aprovadas ÷ decididas.</p></div>
-   <div class="card"><h3>Trade-in <button class="btn sm" @click="abrirTrd">Ver usados</button></h3>
-    <div class="g g4 small"><div class="mrow"><span>Avaliados</span><b>{{trd.n}}</b></div><div class="mrow"><span>Aprovados</span><b>{{trd.ap}}</b></div><div class="mrow"><span>Valor avaliado</span><b>{{mi(trd.av)}}</b></div><div class="mrow"><span>Valor negociado</span><b>{{mi(trd.neg)}}</b></div>
-     <div class="mrow"><span>Margem esperada</span><b>{{pc(trd.mg)}}</b></div><div class="mrow"><span>Usados em estoque</span><b>{{trd.est}}</b></div><div class="mrow"><span>Dias médios</span><b>{{n1(trd.dias,0)}}</b></div><div class="mrow"><span>Capital imobilizado</span><b>{{mi(trd.cap)}}</b></div></div></div>
-  </div></section>
+ <!-- =========== EMPLACAMENTO × FATURAMENTO =========== -->
+ <template v-if="tab==='emp'">
+  <div class="empty" style="margin:20px 0" v-if="!cruz"><h2>Emplacamentos não conectados</h2><p>Abra este módulo pelo menu da Torre (23 · Gestão Tecar) para cruzar cada chassi faturado com os emplacamentos Mercedes-Benz carregados nela.</p><button class="btn" @click="lerTorre">Tentar de novo</button></div>
+  <template v-else>
+   <section class="sec"><div class="g g6">
+    <div class="kpi"><div class="l">Fora do escopo</div><div class="v">{{cruz.fora}}</div><div class="cmp"><span>Sprinter e ônibus: a base de emplacamentos só tem caminhões</span></div></div>
+    <div class="kpi"><div class="l">Caminhões faturados</div><div class="v">{{cruz.esc}}</div></div>
+    <button class="kpi" @click="abrir('Caminhões faturados e já emplacados',base.filter(g=>g.emp))"><div class="l">Já emplacados</div><div class="v">{{cruz.hit}}</div><div class="cmp"><span>{{pc(cruz.taxa,0)}} do total · {{pc(cruz.taxaAte,0)}} até {{d(cruz.dMax)}}</span></div></button>
+    <div class="kpi"><div class="l">Venda → emplacamento</div><div class="v">{{n(cruz.lag.mdn)}}<small>d mediana</small></div><div class="cmp"><span>P25 {{cruz.lag.p25}} · P75 {{cruz.lag.p75}} · P90 {{cruz.lag.p90}} d</span></div></div>
+    <button class="kpi" @click="abrir('Faturados até a data da base de emplacamento e ainda não emplacados',cruz.naoEmp)"><div class="l">Faturados sem emplacamento</div><div class="v">{{cruz.naoEmp.length}}</div><div class="cmp"><span>vendidos até {{d(cruz.dMax)}}</span></div></button>
+    <button class="kpi" @click="abrir('Proprietário diferente do cliente faturado',cruz.dono)"><div class="l">Dono ≠ cliente faturado</div><div class="v">{{cruz.dono.length}}</div><div class="cmp"><span>leasing e intermediação</span></div></button></div>
+    <p class="nota">Base de emplacamentos da Torre até {{d(cruz.dMax)}}. Faturamentos mais recentes ainda não tiveram tempo de emplacar: a mediana entre venda e emplacamento é de {{cruz.lag.mdn}} dias.</p></section>
+   <section class="sec"><div class="g" style="grid-template-columns:1.4fr 1fr"><div class="card"><h3>Faturados × emplacados por mês</h3><div class="chart t"><canvas id="cEmp"></canvas></div></div>
+    <div class="card"><h3>Emplacamento por origem</h3><table><thead><tr><th class="l">Origem</th><th>Caminhões</th><th>Emplacados</th><th>%</th></tr></thead>
+     <tbody><tr v-for="x in cruz.porOrig"><td class="l">{{x.o}}</td><td>{{x.n}}</td><td>{{x.h}}</td><td>{{pc(x.n?x.h/x.n:null,0)}}</td></tr></tbody></table>
+     <h3 style="margin-top:12px">Concessionário no emplacamento</h3><table><tbody><tr v-for="c in cruz.concH"><td class="l">{{c[0]}}</td><td>{{c[1]}}</td></tr></tbody></table>
+     <p class="nota">FA-Direto costuma ser emplacado em nome da Mercedes-Benz do Brasil como concessionário.</p></div></div></section>
+   <section class="sec"><div class="sh"><h2>Emplacamentos Mercedes-Benz da região sem faturamento na base</h2><span class="s">AOPs Goiânia e Anápolis, desde {{ym(meses[0])}}</span></div>
+    <div class="g" style="grid-template-columns:1fr 1.4fr"><div class="card"><div class="mrow"><span>Emplacados na região</span><b>{{cruz.reg}}</b></div><div class="mrow"><span>Com faturamento na base</span><b>{{cruz.regCom}} · {{pc(cruz.reg?cruz.regCom/cruz.reg:null,0)}}</b></div>
+     <div class="mrow"><span>Sem faturamento na base</span><b>{{cruz.sem.length}}</b></div><p class="nota">Vendas de outras concessionárias ou da fábrica na região, ou lacunas da tabela de gestão quando o emplacamento é da Tecar.</p></div>
+     <div class="card"><h3>Sem faturamento, por concessionário</h3><table><tbody><tr v-for="c in cruz.semConc"><td class="l">{{c[0]}}</td><td>{{c[1]}}</td></tr></tbody></table></div></div></section>
+  </template>
+ </template>
 
- <!-- 12 DECISION CENTER -->
- <section class="sec"><div class="sh"><span class="n">12</span><h2>Precisa da sua decisão hoje</h2><span class="s">Decision Center</span></div>
-  <div class="card"><div class="dc"><div class="dci" v-for="d in decisoes"><span class="tag" :class="d.c">{{d.s}}</span><div class="d"><b>{{d.t}}</b><small>{{d.d}}</small></div><button class="btn pr sm" @click="d.go()">{{d.cta}}</button></div></div></div></section>
+ <!-- =========== QUALIDADE DOS DADOS =========== -->
+ <template v-if="tab==='dq' && dq">
+  <section class="sec"><div class="g" style="grid-template-columns:1fr 2fr"><div class="card"><h3>Data Quality Score</h3><div class="big" :class="dq.score>=.98?'up':dq.score>=.95?'':'dn'">{{pc(dq.score)}}</div>
+    <p class="small mute">{{raw.meta.linhas}} linhas lidas · {{raw.meta.vazias}} linhas totalmente vazias ignoradas · {{raw.meta.registros}} registros · {{dq.I.length}} ocorrências</p></div>
+   <div class="card"><h3>Verificações</h3><div class="mrow" v-for="c in dq.checks"><span>{{c[0]}}</span><b :class="c[1]<.98?'dn':''">{{pc(c[1])}}</b></div></div></div></section>
+  <section class="sec"><div class="sh"><h2>Tabela de inconsistências</h2><span class="s">nenhum registro é excluído em silêncio · clique para ver as linhas</span></div>
+   <div class="card"><table><thead><tr><th class="l">Inconsistência</th><th class="l">Gravidade</th><th>Registros</th><th class="l">Exemplo (linha da planilha)</th></tr></thead>
+    <tbody><tr v-for="t in dqTipos"><td class="l"><button class="lk" @click="abrir(t.t,t.l.map(i=>i.g))">{{t.t}}</button></td><td class="l"><span class="tag" :class="t.sev==='Alta'?'t-cr':t.sev==='Média'?'t-al':''">{{t.sev}}</span></td><td>{{t.l.length}}</td>
+     <td class="l small mute">linha {{t.l[0].g.l}} · {{t.l[0].g.chassi||'sem chassi'}} {{t.l[0].nota?'· '+t.l[0].nota:''}}</td></tr></tbody></table>
+    <p class="nota">NF de venda igual à NF fábrica é o padrão esperado do FA-Direto e só é apontada fora dele. Instituições e modalidades equivalentes são unificadas na leitura (ex.: BRADESCO → BANCO BRADESCO; FCO BANCO DO BRASIL → FCO + Banco do Brasil).</p></div></section>
+ </template>
 
- <!-- 13 MARGENS CRÍTICAS -->
- <section class="sec"><div class="sh"><span class="n">13</span><h2>Margens críticas</h2><span class="s">alto desconto + baixa margem · clique no ponto para abrir</span></div>
-  <div class="g" style="grid-template-columns:1fr 1.6fr">
-   <div class="card"><h3>Indicadores de margem</h3>
-    <div class="mrow"><span>Margem bruta</span><b>{{mil(res.mg)}}</b></div><div class="mrow"><span>Margem %</span><b>{{pc(res.mgp,2)}}</b></div>
-    <div class="mrow"><span>Margem / caminhão</span><b>{{mil(res.mgc)}}</b></div><div class="mrow"><span>Desconto médio sobre tabela</span><b>{{pc(res.desc,1)}}</b></div>
-    <div class="mrow lk" @click="abrirFat('Abaixo do piso',mg.ab)"><span>Vendas abaixo do piso ({{pc(g.PISO_MARGEM,1)}})</span><b class="dn">{{mg.ab.length}}</b></div>
-    <div class="mrow"><span>Margem sacrificada</span><b>{{mil(mg.sacr)}}</b></div>
-    <div class="mrow lk" @click="abrirOpps('Aprovações de exceção',aprov)"><span>Aprovações de exceção pendentes</span><b>{{mg.aprov}}</b></div>
-    <p class="small mute" style="margin-top:6px">Margem sacrificada = Σ (piso − margem realizada) × valor faturado, nas vendas abaixo do piso.</p></div>
-   <div class="card"><h3>Margem × desconto <em>tamanho = valor do negócio</em></h3><div class="chart" style="height:280px"><canvas id="chMargem"></canvas></div></div>
-  </div></section>
-
- <!-- 14 ESTOQUE QUE PRECISA GIRAR -->
- <section class="sec"><div class="sh"><span class="n">14</span><h2>Estoque que precisa girar</h2><span class="s">acima de 90 dias</span></div>
-  <div class="card tscroll"><table><thead><tr><th class="l">Modelo</th><th class="l">Chassi</th><th class="l">Unidade</th><th>Dias</th><th>Custo</th><th>Preço</th><th>Margem</th><th>Custo financeiro</th><th>Oport. assoc.</th><th class="l">Ações</th></tr></thead>
-   <tbody><tr v-for="e in girar"><td class="l">{{g.MOD[e.modelo].nome}}</td><td class="l"><button class="lk" @click="abrirVeiculo(e)">{{e.chassi}}</button></td><td class="l">{{un(e.unidade)}}</td>
-    <td><span class="tag" :class="e.dias>120?'t-cr':'t-al'">{{e.dias}}</span></td><td>{{mil(e.custo)}}</td><td>{{mil(e.preco)}}</td><td>{{pc(e.mgp)}}</td><td>{{mil(e.cf)}}</td><td>{{e.ops}}</td>
-    <td class="l" style="display:flex;gap:4px"><button class="btn sm" v-for="a in ['Reprecificar','Criar campanha','Transferir','Associar cliente','Solicitar condição']" @click="acao(a,e.chassi)">{{a}}</button></td></tr></tbody></table></div></section>
-
- <!-- PLANO DE AÇÃO -->
- <section class="sec" id="sec-plano"><div class="sh"><span class="n">▶</span><h2>Plano de ação</h2><span class="s">gerado a partir dos dados do mês</span><button class="btn sm r" @click="showPlan=!showPlan">{{showPlan?'Recolher':'Abrir'}}</button></div>
-  <div class="plan" v-if="showPlan"><div class="pl" v-for="(p,i) in plano"><span class="pn">{{i+1}}</span><div class="tt">{{p.t}}<small>{{p.d}}</small></div>
-   <div class="small"><span class="mute">Impacto</span><br><b>{{p.imp}}</b></div><div class="small"><span class="mute">Responsável</span><br>{{p.resp}}</div><div class="small"><span class="mute">Prazo</span><br>{{p.prazo}}</div>
-   <button class="btn pr sm" @click="p.go()">{{p.cta}}</button></div></div></section>
-
- <!-- RED TEAM -->
- <section class="sec"><div class="sh"><span class="n">✓</span><h2>Premissas e validação</h2><span class="s">red team do protótipo</span><button class="btn sm r" @click="showRT=!showRT">{{showRT?'Recolher':'Abrir'}}</button></div>
-  <div class="card" v-if="showRT"><ul class="rt"><li v-for="r in redTeam"><b :class="r.ok?'up':'dn'">{{r.ok?'OK':'FALHA'}}</b><span>{{r.t}}</span></li></ul>
-   <p class="small mute" style="margin-top:8px">Dados demonstrativos — emplacamentos utilizados como proxy de faturamento. Nomes, CNPJs, chassis, valores, margens e prazos são fictícios; sem conexão com ERP, DMS, CRM ou base de emplacamentos.</p></div></section>
-
- <p class="foot">Gestão Tecar · MVP · Dados demonstrativos — emplacamentos utilizados como proxy de faturamento.</p>
+ <!-- =========== CATÁLOGO =========== -->
+ <template v-if="tab==='cat'">
+  <section class="sec"><div class="sh"><h2>Catálogo de KPIs</h2><span class="s">P0 conselho/CEO/CFO · P1 gestão comercial · P2 diagnóstico operacional</span>
+   <select class="r" v-model="catF" style="height:28px"><option value="">Todas as prioridades</option><option>P0</option><option>P1</option><option>P2</option></select></div>
+   <div class="card tscroll"><table><thead><tr><th class="l">KPI</th><th class="l">Pilar</th><th class="l">Fórmula</th><th class="l">Campos</th><th class="l">Granularidade</th><th class="l">Interpretação</th><th class="l">Visual</th><th class="l">Prior.</th></tr></thead>
+    <tbody><tr v-for="k in CATALOGO.filter(k=>!catF||k[7]===catF)"><td class="l" style="white-space:normal;min-width:180px"><b>{{k[0]}}</b></td><td class="l">{{k[1]}}</td><td class="l" style="white-space:normal;min-width:200px">{{k[2]}}</td>
+     <td class="l" style="white-space:normal">{{k[3]}}</td><td class="l">{{k[4]}}</td><td class="l" style="white-space:normal;min-width:160px">{{k[5]}}</td><td class="l">{{k[6]}}</td><td class="l"><span class="tag" :class="k[7]==='P0'?'t-bl':''">{{k[7]}}</span></td></tr></tbody></table></div></section>
+ </template>
+ <template v-if="tab==='novos'">
+  <section class="sec"><div class="sh"><h2>KPIs recomendados que exigem novas fontes de dados</h2><span class="s">não são calculados aqui para não parecerem reais</span></div>
+   <div class="card"><table><thead><tr><th class="l">KPI</th><th class="l">Campos que precisam ser adicionados</th></tr></thead>
+    <tbody><tr v-for="x in NOVOS_DADOS"><td class="l"><b>{{x[0]}}</b></td><td class="l" style="white-space:normal">{{x[1]}}</td></tr></tbody></table></div></section>
+ </template>
+ <p class="foot">Gestão Tecar · dados da tabela de gestão importados neste navegador · resultado bruto aparente não é lucro contábil</p>
 </main>
 
 <!-- DRAWER -->
 <template v-if="drawer">
  <div class="drawer-bg" @click="drawer=null"></div>
- <aside class="drawer" role="dialog" aria-modal="true">
-  <div class="dh"><div><h3>{{drawer.t}}</h3><p>{{drawer.s}}</p></div><button class="x" @click="drawer=null" aria-label="Fechar">×</button></div>
-  <div class="db">
-   <table v-if="drawer.tipo==='fat'"><thead><tr><th class="l">Caminhão</th><th class="l">Cliente</th><th class="l">Vendedor</th><th class="l">Unidade</th><th>Faturado em</th><th>Valor</th><th>Desc.</th><th>Margem</th><th class="l">Entrega</th></tr></thead>
-    <tbody><tr v-for="x in drawer.L"><td class="l"><button class="lk" @click="abrirVeiculo(x)">{{g.MOD[x.modelo].nome}}</button></td><td class="l"><button class="lk" @click="abrirCliente(x.cliente)">{{g.CLI[x.cliente].nome}}</button></td>
-     <td class="l"><button class="lk" @click="abrirVendedor(x.vendedor)">{{vd(x.vendedor)}}</button></td><td class="l">{{un(x.unidade)}}</td><td>{{dbr(x.data_faturamento)}}</td><td>{{mil(x.valor_faturado)}}</td><td>{{pc(x.desconto)}}</td>
-     <td :class="x.margem_percentual<g.PISO_MARGEM?'dn':''">{{mil(x.margem_reais)}} · {{pc(x.margem_percentual)}}</td><td class="l"><span class="tag" :class="x.status_entrega==='Entregue'?'t-ok':x.data_prevista_entrega<hoje?'t-cr':'t-bl'">{{x.status_entrega}}</span> {{x.status_entrega==='Entregue'?'':dbr(x.data_prevista_entrega)}}</td></tr></tbody></table>
-   <table v-if="drawer.tipo==='opp'"><thead><tr><th class="l">Negócio</th><th class="l">Cliente</th><th class="l">Modelo</th><th>Qtd</th><th>Valor</th><th class="l">Fase</th><th>Prob.</th><th>Desc.</th><th>Margem</th><th class="l">Vendedor</th><th>Previsão</th><th class="l">Situação</th></tr></thead>
-    <tbody><tr v-for="o in drawer.L"><td class="l">{{o.id}}</td><td class="l"><button class="lk" @click="abrirCliente(o.cliente)">{{g.CLI[o.cliente].nome}}</button></td><td class="l">{{g.MOD[o.modelo].nome}}</td><td>{{o.qtd}}</td><td>{{mil(o.valor)}}</td><td class="l">{{o.fase}}</td>
-     <td>{{pc(o.prob*100,0)}}</td><td>{{pc(o.desconto)}}</td><td :class="o.margem<g.PISO_MARGEM?'dn':''">{{pc(o.margem)}}</td><td class="l"><button class="lk" @click="abrirVendedor(o.vendedor)">{{vd(o.vendedor)}}</button></td><td>{{dbr(o.previsao)}}</td>
-     <td class="l"><span class="tag" :class="risco(o)[1]">{{risco(o)[0]}}</span><span class="small mute" v-if="o.parado"> · {{o.parado}} d</span></td></tr></tbody></table>
-   <div v-if="drawer.tipo==='opp' && drawer.L.some(o=>o.aprovPendente)" style="margin-top:10px;display:flex;gap:6px"><button class="btn pr" @click="acao('Aprovação','os negócios selecionados')">Aprovar margem</button><button class="btn" @click="acao('Contraproposta','os negócios selecionados')">Pedir contraproposta</button></div>
-   <table v-if="drawer.tipo==='est'"><thead><tr><th class="l">Modelo</th><th class="l">Chassi</th><th class="l">Unidade</th><th>Dias</th><th>Custo</th><th>Preço</th><th class="l">Reserva</th><th class="l">Ação</th></tr></thead>
-    <tbody><tr v-for="e in drawer.L"><td class="l">{{g.MOD[e.modelo].nome}}</td><td class="l"><button class="lk" @click="abrirVeiculo(e)">{{e.chassi}}</button></td><td class="l">{{un(e.unidade)}}</td><td>{{e.dias}}</td><td>{{mil(e.custo)}}</td><td>{{mil(e.preco)}}</td>
-     <td class="l">{{e.reservado?g.CLI[e.reservaCli].nome+' até '+dbr(e.reservaAte):'—'}}</td><td class="l"><button class="btn sm" @click="acao(e.reservado?'Renovação de reserva':'Campanha',e.chassi)">{{e.reservado?'Renovar reserva':'Criar campanha'}}</button></td></tr></tbody></table>
-   <table v-if="drawer.tipo==='fin'"><thead><tr><th class="l">Proposta</th><th class="l">Cliente</th><th class="l">Banco</th><th class="l">Status</th><th>Valor</th><th>Entrada</th><th>Prazo</th><th>Dias em análise</th></tr></thead>
-    <tbody><tr v-for="x in drawer.L"><td class="l">{{x.id}} · {{x.ref}}</td><td class="l"><button class="lk" @click="abrirCliente(x.cliente)">{{g.CLI[x.cliente].nome}}</button></td><td class="l">{{x.banco}}</td>
-     <td class="l"><span class="tag" :class="x.status==='Aprovada'?'t-ok':x.status==='Pendente'?'t-al':'t-cr'">{{x.status}}</span></td><td>{{mil(x.valor)}}</td><td>{{x.entrada}}%</td><td>{{x.prazo}} m</td><td>{{x.dias}}</td></tr></tbody></table>
-   <table v-if="drawer.tipo==='trd'"><thead><tr><th class="l">Usado</th><th class="l">Cliente</th><th class="l">Status</th><th>Avaliado</th><th>Negociado</th><th>Margem esp.</th><th class="l">Estoque</th></tr></thead>
-    <tbody><tr v-for="x in drawer.L"><td class="l">{{x.usado}}</td><td class="l"><button class="lk" @click="abrirCliente(x.cliente)">{{g.CLI[x.cliente].nome}}</button></td><td class="l">{{x.status}}</td><td>{{mil(x.avaliado)}}</td><td>{{mil(x.negociado)}}</td><td>{{pc(x.margem)}}</td><td class="l">{{x.emEstoque?x.dias+' dias':'—'}}</td></tr></tbody></table>
-   <template v-if="drawer.tipo==='cli'">
-    <div class="kv"><div><small>Frota</small><b>{{drawer.c.frota}}</b></div><div><small>Mercedes-Benz</small><b>{{drawer.c.mb}} · {{pc(drawer.c.frota?100*drawer.c.mb/drawer.c.frota:0,0)}}</b></div>
-     <div><small>Potencial de renovação</small><b>{{drawer.c.renov}} un</b></div><div><small>Vendedor</small><b><button class="lk" @click="abrirVendedor(drawer.c.vend)">{{vd(drawer.c.vend)}}</button></b></div></div>
-    <h4 style="margin:6px 0">Faturados no mês ({{drawer.F.length}})</h4>
-    <table v-if="drawer.F.length"><tbody><tr v-for="x in drawer.F"><td class="l"><button class="lk" @click="abrirVeiculo(x)">{{g.MOD[x.modelo].nome}}</button></td><td>{{dbr(x.data_faturamento)}}</td><td>{{mil(x.valor_faturado)}}</td><td>{{pc(x.margem_percentual)}}</td><td class="l">{{x.status_entrega}}</td></tr></tbody></table>
-    <p v-else class="small mute">Sem faturamento no mês.</p>
-    <h4 style="margin:12px 0 6px">Oportunidades ({{drawer.O.length}})</h4>
-    <table v-if="drawer.O.length"><tbody><tr v-for="o in drawer.O"><td class="l">{{o.id}}</td><td class="l">{{g.MOD[o.modelo].nome}}</td><td>{{o.qtd}} un</td><td>{{mil(o.valor)}}</td><td class="l">{{o.fase}}</td><td>{{dbr(o.previsao)}}</td><td class="l"><span class="tag" :class="risco(o)[1]">{{risco(o)[0]}}</span></td></tr></tbody></table>
-    <p v-else class="small mute">Sem oportunidades abertas.</p>
-    <p v-if="drawer.R.length" class="small" style="margin-top:10px">Veículos reservados: {{drawer.R.map(e=>g.MOD[e.modelo].nome+' ('+e.chassi+')').join(', ')}}</p></template>
-   <template v-if="drawer.tipo==='vend'">
-    <div class="kv"><div><small>Meta</small><b>{{drawer.v.meta}}</b></div><div><small>Faturados</small><b>{{drawer.F.length}}</b></div><div><small>Pipeline</small><b>{{drawer.O.reduce((a,o)=>a+o.qtd,0)}} un</b></div>
-     <div><small>Diagnóstico</small><b>{{drawer.v.diag?drawer.v.diag[0]:'—'}}</b></div></div>
-    <h4 style="margin:6px 0">Faturados</h4>
-    <table><tbody><tr v-for="x in drawer.F"><td class="l"><button class="lk" @click="abrirVeiculo(x)">{{g.MOD[x.modelo].nome}}</button></td><td class="l"><button class="lk" @click="abrirCliente(x.cliente)">{{g.CLI[x.cliente].nome}}</button></td><td>{{mil(x.valor_faturado)}}</td><td>{{pc(x.margem_percentual)}}</td></tr></tbody></table>
-    <h4 style="margin:12px 0 6px">Oportunidades</h4>
-    <table><tbody><tr v-for="o in drawer.O"><td class="l"><button class="lk" @click="abrirCliente(o.cliente)">{{g.CLI[o.cliente].nome}}</button></td><td class="l">{{g.MOD[o.modelo].nome}}</td><td>{{o.qtd}} un</td><td class="l">{{o.fase}}</td><td>{{dbr(o.previsao)}}</td><td class="l"><span class="tag" :class="risco(o)[1]">{{risco(o)[0]}}</span></td></tr></tbody></table></template>
-   <template v-if="drawer.tipo==='vei'">
-    <div class="kv"><div><small>Modelo</small><b>{{g.MOD[drawer.x.modelo].nome}}</b></div><div><small>Tração</small><b>{{g.MOD[drawer.x.modelo].tr}}</b></div><div><small>Segmento</small><b>{{g.MOD[drawer.x.modelo].seg}}</b></div><div><small>Unidade</small><b>{{un(drawer.x.unidade)}}</b></div></div>
-    <table><tbody>
-     <tr><td class="l">Chassi (fictício)</td><td class="l">{{drawer.x.chassi}}</td></tr>
-     <template v-if="drawer.x.data_faturamento"><tr><td class="l">Cliente</td><td class="l"><button class="lk" @click="abrirCliente(drawer.x.cliente)">{{g.CLI[drawer.x.cliente].nome}}</button></td></tr>
-      <tr><td class="l">Vendedor</td><td class="l">{{vd(drawer.x.vendedor)}}</td></tr><tr><td class="l">Pedido · faturamento</td><td class="l">{{dbr(drawer.x.data_pedido)}} · {{dbr(drawer.x.data_faturamento)}}</td></tr>
-      <tr><td class="l">Valor de tabela · desconto</td><td class="l">{{brl(drawer.x.valor_tabela)}} · {{pc(drawer.x.desconto)}}</td></tr><tr><td class="l">Valor faturado</td><td class="l">{{brl(drawer.x.valor_faturado)}}</td></tr>
-      <tr><td class="l">Margem</td><td class="l">{{brl(drawer.x.margem_reais)}} · {{pc(drawer.x.margem_percentual)}}</td></tr><tr><td class="l">Financiamento · trade-in</td><td class="l">{{drawer.x.financiamento}} · {{drawer.x.trade_in?'sim':'não'}}</td></tr>
-      <tr><td class="l">Entrega</td><td class="l">{{drawer.x.status_entrega}} · prevista {{dbr(drawer.x.data_prevista_entrega)}}</td></tr></template>
-     <template v-else><tr><td class="l">Dias em estoque</td><td class="l">{{drawer.x.dias}}</td></tr><tr><td class="l">Custo · preço</td><td class="l">{{brl(drawer.x.custo)}} · {{brl(drawer.x.preco)}}</td></tr>
-      <tr><td class="l">Reserva</td><td class="l">{{drawer.x.reservado?g.CLI[drawer.x.reservaCli].nome+' até '+dbr(drawer.x.reservaAte):'Disponível'}}</td></tr></template>
-    </tbody></table></template>
-  </div></aside>
+ <aside class="drawer" role="dialog" aria-modal="true" style="width:min(1180px,97vw)">
+  <div class="dh"><div><h3>{{drawer.t}}</h3><p>{{drawer.L.length}} registros · {{mi(drawer.a.fat)}} · resultado aparente {{mil(drawer.a.res)}} · margem {{pc(drawer.a.mg)}}</p></div><button class="x" @click="drawer=null" aria-label="Fechar">×</button></div>
+  <div class="db"><div class="tscroll"><table><thead><tr><th class="l">Linha</th><th class="l">Origem</th><th class="l">Modelo</th><th class="l">Chassi</th><th class="l">Cliente</th><th class="l">Vendedor</th><th class="l">Filial</th>
+   <th>NF fábrica</th><th>Venda</th><th>Dias</th><th>VR. NF</th><th>VR. NF VDA</th><th>Result.</th><th>Margem</th><th class="l">Modalidade</th><th class="l">Instituição</th><th class="l">Emplacamento</th></tr></thead>
+   <tbody><tr v-for="g in drawer.L.slice(0,500)"><td class="l mute">{{g.l}}</td><td class="l">{{g.origem}}</td><td class="l">{{g.modelo}}</td><td class="l">{{g.chassi}}</td><td class="l">{{g.cliente}}</td><td class="l">{{g.vend}}</td><td class="l">{{g.casaVd}}</td>
+    <td>{{d(g.dtFab)}}</td><td>{{d(g.dtVda)}}</td><td>{{g.dias??'—'}}</td><td>{{mil(g.vrNf)}}</td><td>{{mil(g.vrVda)}}</td><td :class="g.res<0?'dn':''">{{mil(g.res)}}</td><td :class="g.mg<0?'dn':''">{{pc(g.mg)}}</td>
+    <td class="l">{{g.mod||'—'}}</td><td class="l">{{g.inst||'—'}}</td><td class="l small">{{g.emp?d(g.emp.d)+' · '+g.emp.conc.slice(0,22)+(g.emp.dono?' · '+g.emp.dono.slice(0,22):''):(g.foraEmp?'fora do escopo':'—')}}</td></tr></tbody></table></div>
+   <p class="nota" v-if="drawer.L.length>500">Mostrando 500 de {{drawer.L.length}}.</p></div></aside>
 </template>
-<div class="toast" v-if="toast">{{toast}}</div>
 </div>
 <script>
 /* ============================================================
-   GESTÃO TECAR · dataset demonstrativo (sem conexão com base real)
-   Regra do protótipo: emplacamento Mercedes-Benz = faturamento.
-   Todos os nomes, CNPJs, chassis e valores são fictícios.
+   GESTÃO TECAR · núcleo de dados (sem dados embutidos)
+   A tabela de gestão é importada no navegador e fica só neste
+   computador (localStorage). Nada é enviado a servidor.
    ============================================================ */
-const GT = (() => {
-  let s = 20260918;                                     // semente fixa: o mock é sempre o mesmo
-  const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-  const ri = (a, b) => a + Math.floor(rnd() * (b - a + 1));
-  const pick = a => a[Math.floor(rnd() * a.length)];
-  const HOJE = new Date(2026, 8, 18);
-  const iso = d => d.toISOString().slice(0, 10);
-  const add = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
-  const FERIADOS = ['2026-09-07', '2026-10-12', '2026-11-02', '2026-11-15', '2026-11-20', '2026-12-25'];
-  const util = d => d.getDay() % 6 !== 0 && !FERIADOS.includes(iso(d));
-  const diasUteis = (a, b) => { let n = 0; for (let d = new Date(a); d <= b; d = add(d, 1)) if (util(d)) n++; return n; };
-  const MES_INI = new Date(2026, 8, 1), MES_FIM = new Date(2026, 8, 30);
-  const uteisMes = []; for (let d = new Date(MES_INI); d <= HOJE; d = add(d, 1)) if (util(d)) uteisMes.push(new Date(d));
-
-  const UNIDADES = [{ id: 'GYN', nome: 'Aparecida / Goiânia', meta: 20 }, { id: 'ANA', nome: 'Anápolis', meta: 12 }];
-  const VENDEDORES = [
-    { id: 'V1', nome: 'Ana Ribeiro', un: 'GYN', meta: 5 }, { id: 'V2', nome: 'Paulo Andrade', un: 'GYN', meta: 4 },
-    { id: 'V3', nome: 'Carla Menezes', un: 'GYN', meta: 4 }, { id: 'V4', nome: 'Diego Prado', un: 'GYN', meta: 4 },
-    { id: 'V5', nome: 'Eduardo Lins', un: 'GYN', meta: 3 }, { id: 'V6', nome: 'Fábio Teles', un: 'ANA', meta: 5 },
-    { id: 'V7', nome: 'Gisele Amaral', un: 'ANA', meta: 4 }, { id: 'V8', nome: 'Hugo Castro', un: 'ANA', meta: 3 }];
-  const MODELOS = [
-    { id: 'A2653', nome: 'Actros 2653 S', fam: 'Actros', tr: '6x4', seg: 'Extrapesado', preco: 985000 },
-    { id: 'A2553', nome: 'Actros 2553 S', fam: 'Actros', tr: '6x2', seg: 'Extrapesado', preco: 915000 },
-    { id: 'A2045', nome: 'Actros 2045', fam: 'Actros', tr: '4x2', seg: 'Extrapesado', preco: 760000 },
-    { id: 'X2544', nome: 'Axor 2544', fam: 'Axor', tr: '6x2', seg: 'Pesado', preco: 640000 },
-    { id: 'X2038', nome: 'Axor 2038', fam: 'Axor', tr: '4x2', seg: 'Pesado', preco: 575000 },
-    { id: 'T3030', nome: 'Atego 3030', fam: 'Atego', tr: '8x4', seg: 'Pesado', preco: 540000 },
-    { id: 'T2730', nome: 'Atego 2730', fam: 'Atego', tr: '6x4', seg: 'Pesado', preco: 470000 },
-    { id: 'T1719', nome: 'Atego 1719', fam: 'Atego', tr: '4x2', seg: 'Semipesado', preco: 385000 },
-    { id: 'C1017', nome: 'Accelo 1017', fam: 'Accelo', tr: '4x2', seg: 'Leve', preco: 295000 }];
-  const MOD = Object.fromEntries(MODELOS.map(m => [m.id, m]));
-  const SEGS = ['Transporte rodoviário', 'Agronegócio', 'Construção', 'Distribuição', 'Mineração', 'Frigorífico'];
-  const P1 = ['Serra Azul', 'Rota Central', 'Cerrado Vivo', 'Planalto Norte', 'Vale Dourado', 'Horizonte Leste', 'Aliança', 'Três Rios', 'Brasil Central', 'Ipê Amarelo',
-    'Buriti', 'Araguaia Sul', 'Pirineus', 'Jatobá', 'Veredas', 'Boa Safra', 'Chapada', 'Monte Alto', 'Pedra Branca', 'Campo Largo'];
-  const P2 = ['Transportes', 'Logística', 'Agro', 'Cargas'];
-  const CLIENTES = [];
-  for (let i = 0; i < 60; i++) {
-    const nome = `${P1[i % 20]} ${P2[Math.floor(i / 20) % 4]} Ltda`;
-    const cnpj = `${String(ri(10, 99))}.${String(ri(100, 999))}.${String(ri(100, 999))}/0001-${String(ri(10, 99))}`;
-    const gc = i < 20;
-    const frota = gc ? ri(40, 220) : ri(3, 30);
-    const mbPct = gc ? [0, .05, .1, .15, .2, .3, .45][ri(0, 6)] : rnd() * .4;
-    CLIENTES.push({ id: 'C' + String(i + 1).padStart(2, '0'), nome, cnpj, seg: SEGS[i % 6], un: i % 3 === 2 ? 'ANA' : 'GYN', gc, frota,
-      mb: Math.round(frota * mbPct), renov: Math.round(frota * (.15 + rnd() * .25)), ultCompra: iso(add(HOJE, -ri(20, 900))) });
+const CORE = (() => {
+  const KEY = 'gt_fat_v1';
+  const up = v => (v === null || v === undefined) ? '' : String(v).replace(/\s+/g, ' ').trim().toUpperCase();
+  const semAc = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const INST = { 'BRADESCO': 'BANCO BRADESCO', 'BANCO ITAU': 'BANCO ITAÚ', 'BANCO ITAU UNIBANCO': 'BANCO ITAÚ', 'BANCO ITAUCARD': 'BANCO ITAÚ',
+    'SICOOB': 'BANCO SICOOB', 'SICREDI': 'BANCO SICREDI', 'RODOBENS': 'BANCO RODOBENS', 'BANCO DA AMAZONIA': 'BANCO DA AMAZÔNIA' };
+  const MODAL = { 'FCO BANCO DO BRASIL': 'FCO', 'CONSÓRCIO': 'CONSORCIO', 'RECURSO PROPRIO': 'RECURSOS PROPRIOS', 'RECURSOS PRÓPRIOS': 'RECURSOS PROPRIOS' };
+  const RP = 'RECURSOS PROPRIOS';
+  const ORIGENS = ['ESTOQUE', 'FA-DIRETO', 'GOVERNO', 'IMOBILIZADO'];
+  const pad = n => String(n).padStart(2, '0');
+  const isoD = d => d ? `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` : '';
+  function toDate(v) {
+    if (v instanceof Date && !isNaN(v)) return v;
+    if (typeof v === 'number') { const d = new Date(Math.round((v - 25569) * 864e5)); return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()); }
+    const s = String(v || '').trim(); let m;
+    if ((m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/))) return new Date(+m[3], +m[2] - 1, +m[1]);
+    if ((m = s.match(/^(\d{4})-(\d{2})-(\d{2})/))) return new Date(+m[1], +m[2] - 1, +m[3]);
+    return null;
   }
-  CLIENTES.forEach(c => { c.vend = pick(VENDEDORES.filter(v => v.un === c.un)).id; });
-  const CLI = Object.fromEntries(CLIENTES.map(c => [c.id, c]));
-  const chassi = () => '9BM' + Array.from({ length: 14 }, () => '0123456789ABCDEFGHJKLMNPRSTUVWXYZ'[ri(0, 32)]).join('');
+  const toNum = v => { if (typeof v === 'number') return v; const s = String(v || '').trim(); if (!s) return null;
+    const n = parseFloat(s.includes(',') ? s.replace(/\./g, '').replace(',', '.') : s); return isFinite(n) ? n : null; };
+  const dias = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
 
-  /* ---------- 24 faturados no mês (proxy: 24 emplacamentos MB) ---------- */
-  const MIX = ['A2653', 'A2653', 'A2653', 'A2653', 'A2653', 'A2653', 'A2653', 'A2553', 'A2553', 'A2553', 'A2553', 'A2553', 'A2553',
-    'A2045', 'A2045', 'A2045', 'X2544', 'X2544', 'X2038', 'X2038', 'T3030', 'T3030', 'T2730', 'T1719'];
-  const PORV = { V1: 5, V2: 4, V3: 3, V4: 2, V5: 2, V6: 4, V7: 3, V8: 1 };   // soma 16 GYN + 8 ANA = 24
-  const vendSeq = Object.entries(PORV).flatMap(([v, n]) => Array(n).fill(v));
-  const FAT = [];
-  const statusEnt = [...Array(11).fill('Entregue'), ...Array(5).fill('Pronto'), ...Array(8).fill('Em preparação')];
-  MIX.forEach((m, i) => {
-    const v = VENDEDORES.find(x => x.id === vendSeq[i]);
-    const cands = CLIENTES.filter(c => c.un === v.un && (MOD[m].seg === 'Extrapesado' ? c.gc || rnd() < .3 : true));
-    const c = cands[ri(0, cands.length - 1)];
-    const tab = MOD[m].preco;
-    let desc = +(2 + rnd() * 5).toFixed(1);
-    if (i === 4 || i === 15) desc = +(8.5 + rnd()).toFixed(1);                // 2 vendas abaixo do piso
-    const vf = Math.round(tab * (1 - desc / 100));
-    const mp = +(Math.max(1.2, 11.8 - desc * .9 - rnd() * 1.0)).toFixed(2);
-    const df = uteisMes[Math.min(uteisMes.length - 1, Math.floor(i * uteisMes.length / 24))];
-    const st = statusEnt[i];
-    const prev = add(df, ri(10, 25));
-    FAT.push({ id: 'F' + String(i + 1).padStart(3, '0'), data_faturamento: iso(df), data_pedido: iso(add(df, -ri(4, 18))), modelo: m, versao: MOD[m].nome,
-      tracao: MOD[m].tr, chassi: chassi(), ano_modelo: '2026/2027', cliente: c.id, vendedor: v.id, unidade: v.un, segmento: MOD[m].seg,
-      valor_tabela: tab, desconto: desc, valor_faturado: vf, margem_reais: Math.round(vf * mp / 100), margem_percentual: mp,
-      financiamento: rnd() < .55 ? 'Banco MB' : (rnd() < .5 ? 'Banco parceiro' : 'À vista'), trade_in: rnd() < .3,
-      status_entrega: st, data_preparacao: iso(add(df, ri(1, 4))), data_prevista_entrega: iso(st === 'Entregue' ? add(df, ri(6, 12)) : (i % 4 === 0 ? add(HOJE, -ri(1, 5)) : prev)),
-      data_entrega: st === 'Entregue' ? iso(add(df, ri(6, 12))) : null });
-  });
-  FAT.forEach(f => { if (f.data_entrega && f.data_entrega > iso(HOJE)) f.data_entrega = iso(HOJE); });
-  const ENTREGUES_MES_ANTERIOR = 8;                  // faturados em agosto e entregues em setembro
-
-  /* ---------- 100 oportunidades ---------- */
-  const FASES = [{ f: 'Oportunidade', p: .10 }, { f: 'Proposta', p: .25 }, { f: 'Negociação', p: .50 }, { f: 'Aprovação', p: .75 }, { f: 'Pedido', p: .95 }];
-  const PROB = Object.fromEntries(FASES.map(x => [x.f, x.p]));
-  const plano = [['Pedido', 7], ['Aprovação', 10], ['Negociação', 21], ['Proposta', 30], ['Oportunidade', 32]];
-  const OPP = []; let k = 0;
-  const MOTIVOS = ['Aguardando cliente', 'Aguardando diretoria', 'Aguardando banco', 'Aguardando fábrica', 'Aguardando trade-in', 'Aguardando documentação', 'Preço/margem', 'Sem atividade'];
-  const mesAtualFim = iso(MES_FIM);
-  plano.forEach(([fase, n]) => {
-    for (let j = 0; j < n; j++) {
-      k++;
-      const c = CLIENTES[(k * 7) % 60];
-      const m = c.gc ? pick(['A2653', 'A2653', 'A2553', 'A2553', 'A2045', 'X2544']) : pick(['A2553', 'A2045', 'X2544', 'X2038', 'T3030', 'T2730', 'T1719', 'C1017']);
-      let qtd = c.gc ? pick([1, 1, 2, 2, 3, 4, 5]) : pick([1, 1, 1, 2]);
-      let prev;
-      if (fase === 'Pedido') { qtd = 1; prev = j < 4 ? add(HOJE, ri(2, 10)) : add(HOJE, ri(15, 40)); }        // 4 commit no mês
-      else if (fase === 'Aprovação') { if (j < 3) qtd = 1; prev = j < 3 ? add(HOJE, ri(3, 11)) : add(HOJE, ri(14, 60)); } // 3 best case
-      else if (fase === 'Negociação') prev = j < 12 ? add(HOJE, ri(4, 12)) : add(HOJE, ri(14, 75));
-      else if (fase === 'Proposta') prev = j < 6 ? add(HOJE, ri(5, 12)) : add(HOJE, ri(20, 90));
-      else prev = add(HOJE, ri(30, 120));
-      if (iso(prev) > mesAtualFim && prev < add(MES_FIM, 1)) prev = add(MES_FIM, 1);
-      const desc = +(1.5 + rnd() * 7).toFixed(1);
-      const tab = MOD[m].preco;
-      const mp = +(Math.max(1.5, 11 - desc - rnd() * 2)).toFixed(2);
-      const valor = Math.round(tab * qtd * (1 - desc / 100));
-      OPP.push({ id: 'O' + String(k).padStart(3, '0'), cliente: c.id, modelo: m, qtd, valor, fase, prob: PROB[fase], desconto: desc, margem: mp,
-        vendedor: c.vend, unidade: c.un, previsao: iso(prev), ultAtiv: ri(0, 8), motivo: null, parado: 0, aprovPendente: false });
+  /* ---------- leitura da planilha (matriz de células) ---------- */
+  function parse(aoa, nomeArq) {
+    const hi = aoa.findIndex(r => r && r.some(c => semAc(up(c)) === 'CHASSI') && r.some(c => semAc(up(c)).startsWith('VR. NF')));
+    if (hi < 0) throw new Error('Cabeçalho não encontrado: a planilha precisa ter as colunas CHASSI e VR. NF VDA.');
+    const H = aoa[hi].map(c => semAc(up(c)));
+    const col = (nome, n = 0) => { let k = -1; for (let i = 0, c = 0; i < H.length; i++) if (H[i] === nome) { if (c === n) { k = i; break; } c++; } return k; };
+    const C = { origem: H.findIndex(h => h.startsWith('ESTOQUE')), nfFab: col('NF FABRICA'), dtFab: col('EMISSAO', 0), vrNf: col('VR. NF'), modelo: col('MODELO'),
+      seg: col('SEGMENTO'), chassi: col('CHASSI'), cor: col('COR'), ano: col('ANO'), casaEm: col('CASA EMISSORA NF'), casaVd: col('CASA VENDEDORA'),
+      cliente: col('CLIENTE'), cidade: col('CIDADE'), uf: col('ESTADO'), vend: col('VENDEDOR'), nfVda: H.findIndex(h => h.startsWith('N') && h.includes('FISCAL VENDA')),
+      dtVda: col('EMISSAO', 1), vrVda: col('VR. NF VDA'), mod: col('MODALIDADE'), inst: H.findIndex(h => h.startsWith('INST')) };
+    const falt = Object.entries(C).filter(([, i]) => i < 0).map(([k]) => k);
+    if (falt.length) throw new Error('Colunas não encontradas: ' + falt.join(', '));
+    const R = []; let vazias = 0;
+    for (let i = hi + 1; i < aoa.length; i++) {
+      const r = aoa[i] || [];
+      if (!r.some(c => c !== null && c !== undefined && String(c).trim() !== '')) { vazias++; continue; }
+      const g = k => r[C[k]];
+      const instRaw = up(g('inst')).replace(/_+$/, '').trim(), modRaw = up(g('mod')).replace(/_+$/, '').trim();
+      let inst = INST[instRaw] || instRaw, mod = MODAL[modRaw] || modRaw;
+      if (modRaw === 'FCO BANCO DO BRASIL' && !inst) inst = 'BANCO DO BRASIL';
+      const dF = toDate(g('dtFab')), dV = toDate(g('dtVda'));
+      R.push({ l: i + 1, origem: up(g('origem')), nfFab: up(g('nfFab')), dtFab: dF && dF.getFullYear() > 2000 ? isoD(dF) : '', vrNf: toNum(g('vrNf')),
+        modelo: up(g('modelo')), seg: up(g('seg')), chassi: up(g('chassi')).replace(/\s/g, ''), cor: up(g('cor')), ano: up(g('ano')),
+        casaEm: up(g('casaEm')), casaVd: up(g('casaVd')), cliente: up(g('cliente')), cidade: up(g('cidade')), uf: up(g('uf')), vend: up(g('vend')),
+        nfVda: up(g('nfVda')), dtVda: dV && dV.getFullYear() > 2000 ? isoD(dV) : '', dtVdaRaw: dV ? isoD(dV) : '', vrVda: toNum(g('vrVda')), mod, modRaw, inst, instRaw });
     }
-  });
-  // travamentos: 22 negócios parados por motivo; 5 sem atividade há mais de 10 dias
-  const abertos = OPP.filter(o => o.fase !== 'Oportunidade');
-  const travSeq = [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 6, 7, 7, 7, 7];
-  travSeq.forEach((mi, i) => { const o = abertos[(i * 5 + 3) % abertos.length]; o.motivo = MOTIVOS[mi]; o.parado = ri(6, 38); if (mi === 7) o.ultAtiv = ri(11, 30); });
-  const semAtiv = OPP.filter(o => o.ultAtiv > 10);
-  while (semAtiv.length < 5) { const o = OPP.find(x => x.ultAtiv <= 10 && x.fase === 'Proposta'); o.ultAtiv = ri(11, 25); semAtiv.push(o); }
-  // 4 aprovações de margem aguardando a diretoria
-  OPP.filter(o => o.fase === 'Aprovação').slice(0, 4).forEach(o => { o.aprovPendente = true; o.margem = +(2.4 + rnd() * 1.3).toFixed(2); });
-  const fab = OPP.filter(o => o.motivo === 'Aguardando fábrica');
-  const neg = OPP.filter(o => o.fase === 'Negociação' && !o.motivo && !o.aprovPendente);
-  while (fab.length < 2) { const o = neg.shift(); o.motivo = 'Aguardando fábrica'; o.parado = ri(6, 20); fab.push(o); }
-  fab.slice(0, 2).forEach(o => o.aguardaCond = true);
+    return { rows: R, meta: { arquivo: nomeArq, importado: new Date().toISOString(), linhas: aoa.length - hi - 1, vazias, registros: R.length } };
+  }
+  function salvar(d) { try { localStorage.setItem(KEY, JSON.stringify(d)); return true; } catch (e) { return false; } }
+  function carregar() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
+  function apagar() { try { localStorage.removeItem(KEY); } catch (e) {} }
 
-  /* ---------- 40 veículos em estoque ---------- */
-  const faixa = [[0, 30, 15], [31, 60, 10], [61, 90, 6], [91, 120, 6], [121, 180, 2], [181, 260, 1]];
-  const EST = []; let e = 0;
-  const estModelos = ['A2553', 'A2553', 'A2553', 'A2553', 'A2553', 'A2553', 'A2553', 'A2653', 'A2653', 'A2653', 'A2045', 'A2045', 'A2045', 'A2045', 'X2544', 'X2544', 'X2544',
-    'X2038', 'X2038', 'X2038', 'T3030', 'T3030', 'T3030', 'T2730', 'T2730', 'T2730', 'T2730', 'T1719', 'T1719', 'T1719', 'T1719', 'T1719', 'C1017', 'C1017', 'C1017', 'C1017', 'C1017', 'C1017', 'C1017', 'C1017'];
-  faixa.forEach(([a, b, n]) => { for (let j = 0; j < n; j++) {
-    const m = estModelos[e]; e++;
-    const custo = Math.round(MOD[m].preco * (.88 + rnd() * .03));
-    EST.push({ id: 'E' + String(e).padStart(3, '0'), modelo: m, chassi: chassi(), unidade: e % 3 === 0 ? 'ANA' : 'GYN', dias: ri(a, b), custo, preco: MOD[m].preco,
-      reservado: false, reservaAte: null, reservaCli: null });
-  } });
-  [3, 9, 14, 20, 26, 33].map(i => EST[i]).forEach((v, i) => { v.reservado = true; v.reservaCli = CLIENTES[i * 3].id; v.reservaAte = iso(i < 3 ? HOJE : add(HOJE, ri(2, 9))); });
-  const TAXA_CARREG = 1.1;                           // % ao mês sobre o custo — premissa editável
+  /* ---------- enriquecimento: resultado aparente, dias, emplacamento ---------- */
+  function enriquecer(rows, empl) {
+    rows.forEach(g => {
+      g.valida = !!(g.dtVda && g.vrVda);
+      g.res = g.vrNf && g.vrVda ? g.vrVda - g.vrNf : null;
+      g.mg = g.res !== null ? g.res / g.vrVda : null;
+      g.mk = g.res !== null && g.vrNf ? g.res / g.vrNf : null;
+      g.dias = g.dtFab && g.dtVda ? dias(g.dtFab, g.dtVda) : null;
+      g.ym = g.dtVda ? g.dtVda.slice(0, 7) : '';
+      g.fam = (g.modelo.split(/[\s/]/)[0] || '').replace('SPRINTER', 'SPRINTER');
+      g.fin = g.mod && g.mod !== RP;
+      g.capT = g.origem === 'ESTOQUE' && g.dias !== null && g.dias >= 0 && g.vrNf ? g.vrNf * g.dias : 0;
+      g.foraEmp = ['SPRINTER', 'ONIBUS'].includes(g.seg);
+      const e = empl && empl.map[g.chassi];
+      g.emp = e || null;
+      g.lag = e && g.dtVda ? dias(g.dtVda, e.d) : null;
+    });
+    return rows;
+  }
 
-  /* ---------- financiamento e trade-in ---------- */
-  const FIN = []; const finSt = [...Array(9).fill('Aprovada'), ...Array(4).fill('Pendente'), ...Array(2).fill('Reprovada')];
-  finSt.forEach((st, i) => { const o = i < 8 ? FAT[i * 3] : null; const op = o ? null : OPP.filter(x => ['Aprovação', 'Pedido', 'Negociação'].includes(x.fase))[i];
-    const valor = o ? o.valor_faturado : op.valor;
-    FIN.push({ id: 'FN' + (i + 1), ref: o ? o.id : op.id, cliente: o ? o.cliente : op.cliente, banco: i % 3 === 0 ? 'Banco parceiro' : 'Banco MB', status: st,
-      valor: Math.round(valor * (.7 + rnd() * .15)), entrada: ri(10, 30), prazo: pick([48, 60, 60, 72]), dias: st === 'Pendente' ? ri(4, 15) : ri(2, 9) }); });
-  const TRD = [];
-  for (let i = 0; i < 10; i++) { const av = ri(28, 52) * 10000; const neg = Math.round(av * (.92 + rnd() * .1));
-    TRD.push({ id: 'TR' + (i + 1), cliente: CLIENTES[i * 4].id, usado: pick(['Scania R450 2020', 'Volvo FH 460 2019', 'Actros 2651 2020', 'DAF XF 480 2021', 'VW 29.520 2019']),
-      avaliado: av, negociado: neg, status: i < 6 ? 'Aprovado' : 'Em avaliação', margem: +(4 + rnd() * 6).toFixed(1), emEstoque: i < 5, dias: i < 5 ? ri(12, 140) : 0 }); }
+  /* ---------- agregador único ---------- */
+  const qt = (a, p) => a.length ? a[Math.min(a.length - 1, Math.floor(p * (a.length - 1)))] : null;
+  function agg(L) {
+    const n = L.length, fat = sum(L, g => g.vrVda), R = L.filter(g => g.res !== null), res = sum(R, g => g.res), fatR = sum(R, g => g.vrVda), nfR = sum(R, g => g.vrNf);
+    const neg = R.filter(g => g.res < 0), E = L.filter(g => g.origem === 'ESTOQUE' && g.dias !== null && g.dias >= 0);
+    const d = E.map(g => g.dias).sort((a, b) => a - b), el = L.filter(g => g.mod), fin = el.filter(g => g.fin), ci = L.filter(g => g.inst);
+    return { n, fat, tk: n ? fat / n : 0, nR: R.length, res, mg: fatR ? res / fatR : null, mk: nfR ? res / nfR : null, resU: R.length ? res / R.length : null,
+      neg: neg.length, negV: sum(neg, g => g.res), negFat: sum(neg, g => g.vrVda), zero: R.filter(g => Math.abs(g.mg) < 0.001).length,
+      nE: d.length, dMed: d.length ? sum(d, x => x) / d.length : null, dMdn: qt(d, .5), p25: qt(d, .25), p75: qt(d, .75), p90: qt(d, .9),
+      le30: d.length ? d.filter(x => x <= 30).length / d.length : null, le60: d.length ? d.filter(x => x <= 60).length / d.length : null,
+      gt90: d.length ? d.filter(x => x > 90).length / d.length : null, gt180: d.length ? d.filter(x => x > 180).length / d.length : null,
+      nEl: el.length, nFin: fin.length, penU: el.length ? fin.length / el.length : null, penF: sum(el, g => g.vrVda) ? sum(fin, g => g.vrVda) / sum(el, g => g.vrVda) : null,
+      nInst: ci.length, nBM: ci.filter(g => g.inst === 'BANCO MERCEDES').length, bm: ci.length ? ci.filter(g => g.inst === 'BANCO MERCEDES').length / ci.length : null,
+      cli: new Set(L.map(g => g.cliente).filter(Boolean)).size, capT: sum(L, g => g.capT),
+      nEst: L.filter(g => g.origem === 'ESTOQUE').length, nFA: L.filter(g => g.origem === 'FA-DIRETO').length };
+  }
+  const sum = (a, f) => a.reduce((x, y) => x + (f(y) || 0), 0);
+  function grupo(L, fk, min = 1) {
+    const m = new Map(); L.forEach(g => { const k = fk(g) || '(vazio)'; if (!m.has(k)) m.set(k, []); m.get(k).push(g); });
+    return [...m.entries()].map(([k, a]) => ({ k, a, ...agg(a) })).filter(x => x.n >= min).sort((a, b) => b.fat - a.fat);
+  }
 
-  const COMP = { mesAnterior: { fat: 22, receita: 17.2e6, margem: 1.09e6 }, anoAnterior: { fat: 19, receita: 13.9e6, margem: 0.95e6 }, leads: 184 };
-  return { HOJE, iso, add, util, diasUteis, MES_INI, MES_FIM, UNIDADES, VENDEDORES, MODELOS, MOD, CLIENTES, CLI, FAT, OPP, EST, FIN, TRD, COMP,
-    ENTREGUES_MES_ANTERIOR, TAXA_CARREG, MOTIVOS, PISO_MARGEM: 4.0, FASES };
+  /* ---------- qualidade dos dados ---------- */
+  function qualidade(rows, hoje) {
+    const I = [], c = k => { const m = {}; rows.forEach(g => { if (g[k]) m[g[k]] = (m[g[k]] || 0) + 1; }); return m; };
+    const dch = c('chassi'), dnf = c('nfFab'), dnv = c('nfVda');
+    const add = (g, t, sev, nota) => I.push({ g, t, sev, nota: nota || '' });
+    rows.forEach(g => {
+      if (!g.dtVda) add(g, 'Data de venda ausente ou inválida', 'Alta', g.dtVdaRaw ? 'data registrada: ' + g.dtVdaRaw : '');
+      else if (g.dtVda > hoje) add(g, 'Data de venda futura', 'Alta');
+      if (!g.dtFab) add(g, 'Data da NF fábrica ausente', 'Média');
+      if (g.dtFab && g.dtVda && g.dtVda < g.dtFab) add(g, 'Venda anterior à NF fábrica', 'Média', `${dias(g.dtVda, g.dtFab)} dias antes`);
+      if (g.chassi && dch[g.chassi] > 1) add(g, 'Chassi duplicado', 'Alta');
+      if (g.chassi && !/^[A-HJ-NPR-Z0-9]{17}$/.test(g.chassi)) add(g, 'Chassi fora do padrão (17 caracteres)', 'Média');
+      if (!g.chassi) add(g, 'Chassi vazio', 'Alta');
+      if (g.nfFab && dnf[g.nfFab] > 1) add(g, 'NF fábrica duplicada', 'Alta');
+      if (g.nfVda && dnv[g.nfVda] > 1) add(g, 'NF de venda duplicada', 'Alta');
+      if (g.nfVda && g.nfVda === g.nfFab && g.origem !== 'FA-DIRETO') add(g, 'NF de venda igual à NF fábrica fora do FA-Direto', 'Média');
+      if (!g.nfVda) add(g, 'NF de venda vazia', 'Média');
+      if (!g.vrVda) add(g, 'Valor de venda vazio', 'Alta');
+      if (!g.vrNf) add(g, 'Valor da NF fábrica vazio', 'Média');
+      if (!g.vend) add(g, 'Vendedor vazio', 'Baixa');
+      if (!g.mod) add(g, 'Modalidade vazia', 'Baixa');
+      if (g.fin && !g.inst && g.mod !== 'PARCELAMENTO TECAR') add(g, 'Instituição vazia com financiamento', 'Baixa');
+      if (!g.origem) add(g, 'Origem vazia (estoque/FA-direto)', 'Média');
+      if (g.mg !== null && g.mg < -0.10) add(g, 'Margem aparente abaixo de −10%', 'Média', 'para investigação');
+      if (g.mg !== null && g.mg > 0.30) add(g, 'Margem aparente acima de 30%', 'Média', 'para investigação');
+    });
+    const n = rows.length || 1, pct = f => rows.filter(f).length / n;
+    const finL = rows.filter(g => g.fin && g.mod !== 'PARCELAMENTO TECAR'), both = rows.filter(g => g.dtFab && g.dtVda);
+    const checks = [
+      ['Chassi válido e único', pct(g => g.chassi && dch[g.chassi] === 1 && /^[A-HJ-NPR-Z0-9]{17}$/.test(g.chassi))],
+      ['NF de venda preenchida', pct(g => g.nfVda)], ['Data de venda válida', pct(g => g.dtVda && g.dtVda <= hoje)],
+      ['Vendedor preenchido', pct(g => g.vend)], ['Modalidade preenchida', pct(g => g.mod)],
+      ['Instituição preenchida quando financiado', finL.length ? finL.filter(g => g.inst).length / finL.length : 1],
+      ['Datas cronologicamente coerentes', both.length ? both.filter(g => g.dtVda >= g.dtFab).length / both.length : 1],
+      ['Sem duplicidade de chassi e NF', pct(g => !(g.chassi && dch[g.chassi] > 1) && !(g.nfFab && dnf[g.nfFab] > 1) && !(g.nfVda && dnv[g.nfVda] > 1))]];
+    return { I, checks, score: checks.reduce((a, [, v]) => a + v, 0) / checks.length };
+  }
+
+  /* ---------- emplacamentos vindos da Torre (mesma origem) ---------- */
+  function emplTorre() {
+    try {
+      const f = window.parent && window.parent !== window && window.parent.__gtEmpl; if (!f) return null;
+      const { headers, rows } = f(); const H = headers.map(h => semAc(up(h)));
+      const ix = n => H.indexOf(n), iC = ix('CHASSI'), iD = ix('DATA EMPLACAMENTO'), iM = ix('MARCA'), iMo = ix('MODELO'), iCo = ix('CONCESSIONARIO'),
+        iA = ix('DEALER AOP'), iU = ix('UF'), iN = ix('NOMEPROPRIETARIO'), iS = ix('SUBSEGMENTO');
+      if (iC < 0 || iD < 0) return null;
+      const map = {}, mb = []; let dMax = '';
+      rows.forEach(r => { const g = k => Array.isArray(r) ? r[k] : r[headers[k]];
+        if (up(g(iM)) !== 'M.BENZ') return; const d = toDate(g(iD)); if (!d) return;
+        const e = { ch: up(g(iC)), d: isoD(d), mod: up(g(iMo)), conc: up(g(iCo)), aop: up(g(iA)), uf: up(g(iU)), dono: up(g(iN)), sub: up(g(iS)) };
+        map[e.ch] = e; mb.push(e); if (e.d > dMax) dMax = e.d; });
+      return { map, mb, dMax, total: rows.length };
+    } catch (e) { return null; }
+  }
+  return { parse, salvar, carregar, apagar, enriquecer, agg, grupo, qualidade, emplTorre, sum, qt, dias, ORIGENS, RP };
 })();
 
-</script>
-<script>
 /* ============================================================
-   GESTÃO TECAR · lógica (KPIs, fórmulas, drill-downs)
+   Catálogo de KPIs, fichas do scorecard e novos dados necessários
+   (conteúdo metodológico — não contém dados da base)
+   ============================================================ */
+const SCORE_META = {
+  un: { nome: 'Veículos faturados', obj: 'Medir o volume vendido no período.', f: 'Contagem de chassis com data de venda válida', campos: 'CHASSI, EMISSÃO (venda)', um: 'unidades', per: 'Diária / mensal', filt: 'Período, filial, origem, segmento, vendedor', int: 'Responde “estamos vendendo mais?”.', risco: 'Mês parcial não é comparável a mês fechado.', vis: 'Card + barra mensal' },
+  fat: { nome: 'Faturamento total', obj: 'Receita bruta faturada em NF de venda.', f: 'Σ VR. NF VDA', campos: 'VR. NF VDA', um: 'R$', per: 'Mensal', filt: 'Todos', int: 'Tamanho da operação em reais.', risco: 'FA-Direto infla faturamento sem resultado aparente na base.', vis: 'Card + linha mensal' },
+  tk: { nome: 'Ticket médio', obj: 'Valor médio por veículo.', f: 'Faturamento ÷ unidades', campos: 'VR. NF VDA', um: 'R$/un', per: 'Mensal', filt: 'Todos', int: 'Sobe com mix de pesados e extrapesados.', risco: 'Mix de Sprinter e ônibus muda o ticket sem mudar preço.', vis: 'Card' },
+  res: { nome: 'Resultado bruto aparente', obj: 'Diferença entre venda e NF fábrica.', f: 'Σ (VR. NF VDA − VR. NF)', campos: 'VR. NF VDA, VR. NF', um: 'R$', per: 'Mensal', filt: 'Origem separada', int: 'Aproximação do resultado do veículo.', risco: 'Não é lucro contábil: faltam bônus, comissões, custos de preparação e impostos.', vis: 'Card + barra por origem' },
+  mg: { nome: 'Margem aparente %', obj: 'Qualidade do preço sobre a venda.', f: 'Resultado aparente ÷ faturamento (linhas com os dois valores)', campos: 'VR. NF VDA, VR. NF', um: '%', per: 'Mensal', filt: 'Calcular por origem', int: 'Compara preço de venda com custo de NF fábrica.', risco: 'FA-Direto tem margem ≈ 0 por construção; misturar derruba a média.', vis: 'Linha mensal' },
+  resU: { nome: 'Resultado médio por unidade', obj: 'Resultado aparente por caminhão.', f: 'Resultado aparente ÷ unidades com os dois valores', campos: 'VR. NF VDA, VR. NF', um: 'R$/un', per: 'Mensal', filt: 'Origem, segmento', int: 'Compara produtos de tickets diferentes.', risco: 'Sensível a poucas vendas de alto valor.', vis: 'Barra por segmento' },
+  est: { nome: 'Veículos originados de estoque', obj: 'Volume da venda tradicional.', f: 'Contagem com origem = ESTOQUE', campos: 'ESTOQUE/FADIRETO', um: 'unidades', per: 'Mensal', filt: 'Todos', int: 'Base da rentabilidade própria.', risco: 'Origem vazia fica fora.', vis: 'Barra empilhada' },
+  fa: { nome: 'Veículos FA-Direto', obj: 'Volume faturado direto pela fábrica.', f: 'Contagem com origem = FA-DIRETO', campos: 'ESTOQUE/FADIRETO', um: 'unidades', per: 'Mensal', filt: 'Todos', int: 'Remuneração provável por comissão ou incentivo, fora da base.', risco: 'Não concluir que não tem rentabilidade.', vis: 'Barra empilhada' },
+  mix: { nome: 'Mix estoque × FA-Direto', obj: 'Dependência do faturamento direto.', f: 'Unidades FA-Direto ÷ total', campos: 'ESTOQUE/FADIRETO', um: '%', per: 'Mensal', filt: 'Filial, segmento', int: 'Mostra quanto do volume não passa pelo estoque.', risco: 'Mix alto não é bom nem ruim sem a receita de comissão.', vis: 'Barra 100%' },
+  dMed: { nome: 'Dias médios até venda', obj: 'Velocidade de giro do estoque.', f: 'Média de (data venda − data NF fábrica), só ESTOQUE', campos: 'EMISSÃO fábrica, EMISSÃO venda', um: 'dias', per: 'Mensal', filt: 'Modelo, filial, vendedor', int: 'Quanto tempo o capital ficou parado.', risco: 'Média puxada por poucos veículos muito antigos.', vis: 'Card + histograma' },
+  dMdn: { nome: 'Mediana de dias até venda', obj: 'Giro típico, sem distorção dos extremos.', f: 'Mediana de dias, só ESTOQUE', campos: 'Datas de NF', um: 'dias', per: 'Mensal', filt: 'Modelo, filial', int: 'Metade das vendas gira em até esse prazo.', risco: 'Esconde a cauda longa: olhar P90.', vis: 'Card' },
+  le60: { nome: '% vendido em até 60 dias', obj: 'Parcela do estoque que gira rápido.', f: 'Vendas de estoque com dias ≤ 60 ÷ vendas de estoque', campos: 'Datas de NF', um: '%', per: 'Mensal', filt: 'Modelo, filial', int: 'Quanto mais alto, menos capital parado.', risco: 'Depende da data da NF fábrica ser a entrada real.', vis: 'Barra' },
+  gt90: { nome: '% vendido acima de 90 dias', obj: 'Cauda de estoque envelhecido.', f: 'Vendas de estoque com dias > 90 ÷ vendas de estoque', campos: 'Datas de NF', um: '%', per: 'Mensal', filt: 'Modelo, filial', int: 'Sinal de produto ou preço desalinhado.', risco: 'Mede o que já foi vendido, não o estoque parado hoje.', vis: 'Barra' },
+  pen: { nome: 'Penetração de financiamento', obj: 'Uso de crédito na venda.', f: 'Unidades com modalidade ≠ Recursos Próprios ÷ unidades com modalidade', campos: 'MODALIDADE', um: '%', per: 'Mensal', filt: 'Filial, vendedor, segmento', int: 'Oportunidade de F&I.', risco: 'Consórcio e leasing entram como financiados.', vis: 'Card + barra por modalidade' },
+  bm: { nome: 'Penetração Banco Mercedes', obj: 'Participação do banco da marca.', f: 'Operações com Banco Mercedes ÷ operações com instituição preenchida', campos: 'INST. FINANC.', um: '%', per: 'Mensal', filt: 'Filial, vendedor, segmento, modelo', int: 'KPI estratégico da montadora.', risco: 'Base só cobre operações com instituição preenchida.', vis: 'Linha mensal + barra por filial' },
+  neg: { nome: 'Unidades com margem negativa', obj: 'Operações vendidas abaixo da NF fábrica.', f: 'Contagem com resultado aparente < 0', campos: 'VR. NF VDA, VR. NF', um: 'unidades', per: 'Semanal', filt: 'Origem, vendedor, modelo', int: 'Operações para investigação.', risco: 'Pode haver bônus de fábrica não registrado.', vis: 'Card + tabela' },
+  negV: { nome: 'Valor perdido em margens negativas', obj: 'Tamanho da perda aparente.', f: 'Σ resultado aparente das operações negativas', campos: 'VR. NF VDA, VR. NF', um: 'R$', per: 'Mensal', filt: 'Origem, vendedor', int: 'Quanto de resultado aparente saiu.', risco: 'Não é perda contábil confirmada.', vis: 'Card' },
+  conc: { nome: 'Concentração por cliente', obj: 'Dependência de poucos compradores.', f: 'Faturamento dos 5 maiores clientes ÷ faturamento total; HHI', campos: 'CLIENTE, VR. NF VDA', um: '%', per: 'Mensal', filt: 'Filial, segmento', int: 'Risco comercial e de crédito.', risco: 'Leasing e intermediários aparecem como cliente.', vis: 'Pareto' }
+};
+const CATALOGO = [
+  ['Unidades faturadas', 'Vendas', 'Contagem de chassis com venda válida', 'CHASSI, EMISSÃO venda', 'Dia, mês', 'Volume', 'Barra', 'P0'],
+  ['Faturamento', 'Vendas', 'Σ VR. NF VDA', 'VR. NF VDA', 'Mês', 'Receita bruta', 'Linha', 'P0'],
+  ['Ticket médio', 'Vendas', 'Faturamento ÷ unidades', 'VR. NF VDA', 'Mês, modelo', 'Preço médio e mix', 'Card', 'P0'],
+  ['Variação mensal de unidades e faturamento', 'Vendas', '(mês − mês anterior) ÷ mês anterior, só meses fechados', 'EMISSÃO venda', 'Mês', 'Tendência', 'Linha', 'P0'],
+  ['Run-rate mensal', 'Vendas', 'Unidades do mês ÷ dias corridos × dias do mês', 'EMISSÃO venda', 'Mês', 'Projeção do mês parcial', 'Card', 'P1'],
+  ['Acumulado YTD e participação do mês', 'Vendas', 'Σ desde janeiro; mês ÷ YTD', 'EMISSÃO venda', 'Ano', 'Ritmo do ano', 'Card', 'P0'],
+  ['Unidades por modelo, segmento, vendedor, filial, cidade, UF, cliente e origem', 'Vendas', 'Contagem por dimensão', 'Dimensões da base', 'Mês', 'Composição', 'Barra', 'P1'],
+  ['Resultado bruto aparente', 'Rentabilidade', 'Σ (VR. NF VDA − VR. NF)', 'VR. NF VDA, VR. NF', 'Mês, origem', 'Não é lucro contábil', 'Card', 'P0'],
+  ['Margem aparente %', 'Rentabilidade', 'Resultado aparente ÷ VR. NF VDA', 'VR. NF VDA, VR. NF', 'Mês, origem', 'Qualidade do preço', 'Linha', 'P0'],
+  ['Markup %', 'Rentabilidade', 'Resultado aparente ÷ VR. NF', 'VR. NF VDA, VR. NF', 'Modelo', 'Sobre o custo de NF', 'Tabela', 'P1'],
+  ['Resultado médio por unidade', 'Rentabilidade', 'Resultado aparente ÷ unidades', 'VR. NF VDA, VR. NF', 'Segmento, modelo', 'Contribuição por caminhão', 'Barra', 'P0'],
+  ['Margem por modelo, segmento, vendedor, filial, cliente, modalidade, instituição e origem', 'Rentabilidade', 'Margem aparente por dimensão', 'Dimensões + valores', 'Mês', 'Onde o resultado nasce', 'Tabela / heatmap', 'P1'],
+  ['Faixas de margem (negativa, 0–3, 3–5, 5–8, 8–10, 10%+)', 'Rentabilidade', 'Contagem por faixa', 'VR. NF VDA, VR. NF', 'Mês', 'Distribuição do preço', 'Histograma', 'P1'],
+  ['Margem perdida em operações negativas', 'Rentabilidade', 'Σ resultado < 0; % unidades; % faturamento', 'VR. NF VDA, VR. NF', 'Mês', 'Operações para investigação', 'Card + tabela', 'P0'],
+  ['Dias até venda (estoque)', 'Giro', 'Data venda − data NF fábrica', 'EMISSÃO fábrica, EMISSÃO venda', 'Chassi', 'Tempo de capital parado', 'Histograma', 'P0'],
+  ['Média, mediana, P25, P75, P90 de dias', 'Giro', 'Estatísticas de dias, só ESTOQUE', 'Datas', 'Modelo, filial, vendedor', 'Giro típico e cauda', 'Box plot / tabela', 'P1'],
+  ['% vendido em ≤30, ≤60, >90 e >180 dias', 'Giro', 'Contagem por faixa ÷ vendas de estoque', 'Datas', 'Mês', 'Envelhecimento', 'Barra', 'P0'],
+  ['Índice capital × tempo', 'Giro', 'VR. NF × dias em estoque', 'VR. NF, datas', 'Chassi, modelo', 'Capital consumido ao longo do tempo (não é custo financeiro)', 'Barra', 'P1'],
+  ['Giro por modelo, segmento, filial e vendedor', 'Giro', 'Dias médios e mediana por dimensão', 'Datas + dimensão', 'Mês', 'Quem gira mais rápido', 'Tabela', 'P1'],
+  ['Scorecard do vendedor (volume × receita × margem × giro)', 'Comercial', 'Agregado por VENDEDOR', 'Todos', 'Mês', 'Sem ranking só por faturamento', 'Bubble', 'P1'],
+  ['Mix por vendedor (segmento, modelo, origem)', 'Comercial', 'Participação por dimensão', 'VENDEDOR + dimensão', 'Mês', 'Especialização', 'Heatmap', 'P2'],
+  ['Clientes atendidos e unidades por cliente', 'Comercial', 'Clientes distintos; unidades ÷ clientes', 'CLIENTE', 'Vendedor', 'Carteira ativa', 'Tabela', 'P2'],
+  ['Resultado por filial', 'Filiais', 'Agregado por CASA VENDEDORA', 'Todos', 'Mês', 'Contribuição da unidade', 'Barra', 'P0'],
+  ['Taxa de operação interfilial', 'Filiais', 'Casa emissora ≠ casa vendedora ÷ total', 'CASA EMISSORA NF, CASA VENDEDORA', 'Mês', 'Aproveitamento de estoque entre casas', 'Fluxo', 'P1'],
+  ['Quadrante de produto (volume × margem × giro)', 'Produto', 'Mediana de volume e de margem como cortes', 'MODELO, SEGMENTO, valores, datas', 'Trimestre', 'Portfólio', 'Scatter', 'P1'],
+  ['Penetração de financiamento (unidades e faturamento)', 'Financeiro', 'Financiadas ÷ elegíveis', 'MODALIDADE, VR. NF VDA', 'Mês', 'F&I', 'Card', 'P0'],
+  ['Mix, ticket, margem e dias por modalidade', 'Financeiro', 'Agregado por MODALIDADE', 'MODALIDADE + valores', 'Mês', 'Crédito × preço × giro', 'Tabela', 'P1'],
+  ['Operações por instituição financeira', 'Financeiro', 'Agregado por INST. FINANC.; valor das vendas associadas', 'INST. FINANC., VR. NF VDA', 'Mês', 'Não é valor financiado', 'Barra', 'P1'],
+  ['Penetração Banco Mercedes', 'Financeiro', 'Banco Mercedes ÷ instituição preenchida', 'INST. FINANC.', 'Mês, filial, vendedor, segmento, modelo', 'KPI da marca', 'Linha', 'P0'],
+  ['Clientes únicos, recorrência e ticket por cliente', 'Clientes', 'Distintos; clientes com 2+ meses de compra', 'CLIENTE, EMISSÃO venda', 'Ano', 'Base e fidelidade', 'Tabela', 'P1'],
+  ['Concentração top 5, 10, 20 e HHI', 'Clientes', 'Σ top N ÷ total; Σ (participação%)²', 'CLIENTE, VR. NF VDA', 'Mês', 'Dependência', 'Pareto', 'P0'],
+  ['Possíveis intermediários (leasing, locadoras, revendas, grupo)', 'Clientes', 'Nome do cliente por palavra-chave + proprietário do emplacamento', 'CLIENTE, emplacamento', 'Chassi', 'Cliente econômico final', 'Tabela', 'P2'],
+  ['Unidades, faturamento, margem e ticket por UF e cidade', 'Geografia', 'Agregado por ESTADO, CIDADE', 'ESTADO, CIDADE', 'Mês', 'Presença regional', 'Barra / mapa', 'P1'],
+  ['% vendas com margem negativa e zero; incidência por modelo, vendedor, cliente, modalidade e origem', 'Qualidade da receita', 'Contagens e somas', 'Valores + dimensões', 'Mês', 'Operações para investigação', 'Tabela', 'P0'],
+  ['Data Quality Score', 'Qualidade dos dados', 'Média de 8 verificações', 'Todos', 'Carga', 'Confiabilidade da análise', 'Card', 'P0'],
+  ['Taxa de emplacamento dos faturados', 'Emplacamento × faturamento', 'Faturados com chassi emplacado ÷ faturados no escopo (caminhões)', 'CHASSI + base de emplacamentos', 'Mês', 'Aderência entre venda e registro', 'Barra', 'P1'],
+  ['Dias entre venda e emplacamento', 'Emplacamento × faturamento', 'Data emplacamento − data venda', 'Datas', 'Chassi', 'Prazo de entrega e registro', 'Histograma', 'P1'],
+  ['Emplacamentos MB da região sem faturamento na base', 'Emplacamento × faturamento', 'Chassi emplacado nas AOPs sem NF na base', 'CHASSI, CONCESSIONÁRIO', 'Mês', 'Vendas de outras casas ou lacuna da base', 'Tabela', 'P1'],
+  ['Proprietário diferente do cliente faturado', 'Emplacamento × faturamento', 'Nome do proprietário ≠ cliente', 'CLIENTE, NOMEPROPRIETARIO', 'Chassi', 'Leasing e intermediação', 'Tabela', 'P2']];
+const NOVOS_DADOS = [
+  ['EBITDA, lucro líquido, margem líquida', 'Despesas operacionais, rateios e DRE por filial'],
+  ['Rentabilidade real do FA-Direto', 'Comissão, bônus, incentivo e holdback por chassi'],
+  ['Resultado real do veículo', 'Custos de preparação, frete, emplacamento, acessórios, comissão e impostos por chassi'],
+  ['Custo financeiro efetivo do estoque', 'Taxa de floor plan e juros por período'],
+  ['Estoque físico atual, cobertura e dias de estoque atual', 'Posição de estoque diária com data de entrada'],
+  ['Receita de financiamento e seguros (F&I)', 'Retorno do banco, comissão de seguro e valor financiado'],
+  ['Valor efetivamente financiado', 'Valor financiado e entrada por contrato'],
+  ['Conversão lead→venda e proposta→venda', 'CRM com oportunidades, propostas e perdas'],
+  ['CAC e LTV', 'Custo comercial e de marketing; histórico completo do cliente, incluindo pós-venda'],
+  ['Comissão do vendedor', 'Regra e valor de comissão por venda'],
+  ['Receita de peças e manutenção', 'Faturamento de pós-venda por cliente e chassi'],
+  ['Market share', 'Emplacamentos de todas as marcas por região (já existe na Torre para caminhões)'],
+  ['Meta comercial', 'Metas por vendedor, filial e segmento'],
+  ['Cliente econômico final', 'CNPJ do cliente, CNPJ do arrendatário no leasing e grupo econômico']];
+
+/* ============================================================
+   GESTÃO TECAR · CEO + CFO Analytics · Faturamento (Vue 3)
    ============================================================ */
 const { createApp, nextTick } = Vue;
-const brl = v => 'R$ ' + Math.round(v).toLocaleString('pt-BR');
-const mi = v => 'R$ ' + (v / 1e6).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' mi';
-const mil = v => 'R$ ' + Math.round(v / 1e3).toLocaleString('pt-BR') + ' mil';
-const pc = (v, d = 1) => (isFinite(v) ? v : 0).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
-const n1 = (v, d = 2) => (isFinite(v) ? v : 0).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
-const dbr = s => s ? s.slice(8, 10) + '/' + s.slice(5, 7) : '—';
-const sum = (a, f) => a.reduce((x, y) => x + f(y), 0);
-const CHARTS = {};
-const TEMPO_FASE = { 'Leads': 4, 'Oportunidades': 6, 'Propostas': 9, 'Negociação': 12, 'Aprovação': 5, 'Pedidos': 11, 'Faturados': 0 };
+const S = CORE.sum;
+const fmt = {
+  mi: v => v == null ? '—' : 'R$ ' + (v / 1e6).toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' mi',
+  mil: v => v == null ? '—' : 'R$ ' + Math.round(v / 1e3).toLocaleString('pt-BR') + ' mil',
+  brl: v => v == null ? '—' : 'R$ ' + Math.round(v).toLocaleString('pt-BR'),
+  pc: (v, d = 1) => v == null || !isFinite(v) ? '—' : (100 * v).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%',
+  n: (v, d = 0) => v == null || !isFinite(v) ? '—' : v.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }),
+  d: s => s ? s.slice(8, 10) + '/' + s.slice(5, 7) + '/' + s.slice(2, 4) : '—',
+  ym: s => { if (!s) return '—'; const M = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']; return M[+s.slice(5, 7) - 1] + '/' + s.slice(2, 4); }
+};
+const CH = {};
+const TABS = [['ceo', 'Dashboard CEO'], ['score', 'Scorecard'], ['vendas', 'Vendas e produto'], ['vend', 'Vendedores'], ['filiais', 'Filiais'],
+  ['giro', 'Estoque e giro'], ['fin', 'Financiamento'], ['cli', 'Clientes e geografia'], ['rec', 'Qualidade da receita'], ['emp', 'Emplacamento × faturamento'],
+  ['dq', 'Qualidade dos dados'], ['cat', 'Catálogo de KPIs'], ['novos', 'Novos dados']];
+const hhi = arr => { const t = S(arr, x => x); return t ? S(arr, x => (100 * x / t) ** 2) : 0; };
+const tok = s => new Set((s.match(/[A-Z]{4,}/g) || []).filter(w => !['LTDA', 'TRANSPORTES', 'TRANSPORTE', 'SERVICOS', 'LOGISTICA', 'COMERCIO', 'EIRELI', 'EMPRESA'].includes(w)));
+const INTERM = /LEASING|ARRENDAMENTO|BANCO|VEICULOS|VEÍCULOS|CAMINHOES|CAMINHÕES|LOCA[CÇ]|TECAR|RENT/;
 
-createApp({
+const COLS = {
+  n: ['Unid.', x => fmt.n(x.n)], fat: ['Faturamento', x => fmt.mi(x.fat)], tk: ['Ticket', x => fmt.mil(x.tk)], res: ['Result. aparente', x => fmt.mil(x.res)],
+  mg: ['Margem ap.', x => fmt.pc(x.mg)], mk: ['Markup', x => fmt.pc(x.mk)], resU: ['Result./un', x => fmt.mil(x.resU)], dMed: ['Dias méd.', x => fmt.n(x.dMed)],
+  dMdn: ['Mediana d', x => fmt.n(x.dMdn)], p25: ['P25', x => fmt.n(x.p25)], p75: ['P75', x => fmt.n(x.p75)], p90: ['P90', x => fmt.n(x.p90)], le30: ['≤30 d', x => fmt.pc(x.le30, 0)],
+  le60: ['≤60 d', x => fmt.pc(x.le60, 0)], gt90: ['>90 d', x => fmt.pc(x.gt90, 0)], gt180: ['>180 d', x => fmt.pc(x.gt180, 0)], pen: ['Financ.', x => fmt.pc(x.penU, 0)],
+  bm: ['Banco MB', x => fmt.pc(x.bm, 0)], cli: ['Clientes', x => fmt.n(x.cli)], unCli: ['Un/cliente', x => fmt.n(x.cli ? x.n / x.cli : null, 1)],
+  nEst: ['Estoque', x => fmt.n(x.nEst)], nFA: ['FA-Dir.', x => fmt.n(x.nFA)], mixFA: ['% FA', x => fmt.pc(x.n ? x.nFA / x.n : null, 0)], neg: ['Neg.', x => fmt.n(x.neg)],
+  negV: ['Perda ap.', x => fmt.mil(x.negV)], capT: ['Cap.×tempo', x => fmt.n(x.capT / 1e6, 0)], nInst: ['Com inst.', x => fmt.n(x.nInst)], nBM: ['Banco MB un', x => fmt.n(x.nBM)] };
+const GTab = {
+  props: { rows: Array, cols: Array, dim: String, total: Number, lim: { type: Number, default: 400 }, nome: String },
+  emits: ['abrir'],
+  data() { return { C: COLS, fmt } },
+  methods: { cor(k, x) { if (k === 'mg' && x.mg != null) return x.mg < 0 ? 'dn' : ''; if (k === 'neg' && x.neg) return 'dn'; return ''; } },
+  template: `<div class="tscroll"><table><thead><tr><th class="l">{{dim}}</th><th v-if="total">% fat.</th><th v-for="k in cols">{{C[k][0]}}</th></tr></thead>
+    <tbody><tr v-for="x in rows.slice(0,lim)"><td class="l"><button class="lk" @click="$emit('abrir',x)">{{x.k}}</button></td><td v-if="total">{{fmt.pc(x.fat/total,1)}}</td>
+    <td v-for="k in cols" :class="cor(k,x)">{{C[k][1](x)}}</td></tr></tbody></table></div>`
+};
+const app = createApp({
+  components: { GTab },
   data() {
-    return { g: GT, f: { mes: '2026-09', un: '', vend: '', mod: '', seg: '', gc: false }, q: '', qOpen: false, drawer: null, toast: '', showPlan: false, showRT: false };
+    const d = CORE.carregar();
+    return { raw: d, empl: null, tab: 'ceo', TABS, f: { ini: '', fim: '', casa: '', origem: '', seg: '', vend: '', mod: '' }, drawer: null, info: null,
+      msg: '', erro: '', q: '', SCORE_META, CATALOGO, NOVOS_DADOS, catF: '', CORE };
   },
   computed: {
-    hoje() { return this.g.iso(this.g.HOJE); },
-    fimMes() { return this.g.iso(this.g.MES_FIM); },
-    filtrado() { return !!(this.f.un || this.f.vend || this.f.mod || this.f.seg || this.f.gc); },
-    vendScope() { return this.g.VENDEDORES.filter(v => (!this.f.un || v.un === this.f.un) && (!this.f.vend || v.id === this.f.vend)); },
-    okCli() { return c => !this.f.gc || this.g.CLI[c].gc; },
-    okMod() { return m => (!this.f.mod || this.g.MOD[m].fam === this.f.mod) && (!this.f.seg || this.g.MOD[m].seg === this.f.seg); },
-    F() { const V = new Set(this.vendScope.map(v => v.id)); return this.g.FAT.filter(x => V.has(x.vendedor) && this.okMod(x.modelo) && this.okCli(x.cliente)); },
-    O() { const V = new Set(this.vendScope.map(v => v.id)); return this.g.OPP.filter(x => V.has(x.vendedor) && this.okMod(x.modelo) && this.okCli(x.cliente)); },
-    E() { return this.g.EST.filter(x => (!this.f.un || x.unidade === this.f.un) && this.okMod(x.modelo)); },
-    OM() { return this.O.filter(o => o.previsao <= this.fimMes); },
-    // ---------- resultado ----------
-    res() {
-      const F = this.F, n = F.length, rec = sum(F, x => x.valor_faturado), mg = sum(F, x => x.margem_reais);
-      return { n, rec, mg, mgp: rec ? 100 * mg / rec : 0, ticket: n ? rec / n : 0, mgc: n ? mg / n : 0,
-        desc: sum(F, x => x.valor_tabela) ? 100 * (1 - rec / sum(F, x => x.valor_tabela)) : 0 };
-    },
-    meta() { return sum(this.vendScope, v => v.meta); },
-    dias() { const g = this.g; const dec = g.diasUteis(g.MES_INI, g.HOJE), rest = g.diasUteis(g.add(g.HOJE, 1), g.MES_FIM); return { dec, rest, tot: dec + rest }; },
-    ritmo() {
-      const falta = Math.max(0, this.meta - this.res.n);
-      return { falta, atual: this.res.n / this.dias.dec, nec: this.dias.rest ? falta / this.dias.rest : 0, ating: this.meta ? 100 * this.res.n / this.meta : 0 };
-    },
-    fc() {
-      const OM = this.OM, u = a => sum(a, o => o.qtd);
-      const commit = u(OM.filter(o => o.fase === 'Pedido')), best = u(OM.filter(o => o.fase === 'Aprovação'));
-      const pipe = u(OM.filter(o => ['Negociação', 'Proposta', 'Oportunidade'].includes(o.fase)));
-      const pond = sum(OM, o => o.qtd * o.prob), forecast = this.res.n + commit, gapMeta = Math.max(0, this.meta - this.res.n);
-      const cov = gapMeta ? pond / gapMeta : Infinity;
-      const upside = forecast + best, st = upside >= this.meta ? 'NORMAL' : upside >= .9 * this.meta ? 'ATENÇÃO' : 'CRÍTICO';
-      return { commit, best, pipe, pond, forecast, gap: forecast - this.meta, gapMeta, cov, upside, st,
-        covSt: cov >= 3 ? 'Confortável' : cov >= 2 ? 'Atenção' : 'Crítico' };
-    },
-    cmp() {
-      const c = this.g.COMP, r = this.res; if (this.filtrado) return null;
-      const d = (a, b) => b ? 100 * (a - b) / b : 0;
-      return { fat: [d(r.n, c.mesAnterior.fat), d(r.n, c.anoAnterior.fat)], rec: [d(r.rec, c.mesAnterior.receita), d(r.rec, c.anoAnterior.receita)],
-        mg: [d(r.mg, c.mesAnterior.margem), d(r.mg, c.anoAnterior.margem)],
-        mgp: [r.mgp - 100 * c.mesAnterior.margem / c.mesAnterior.receita, r.mgp - 100 * c.anoAnterior.margem / c.anoAnterior.receita],
-        tk: [d(r.ticket, c.mesAnterior.receita / c.mesAnterior.fat), d(r.ticket, c.anoAnterior.receita / c.anoAnterior.fat)],
-        mgc: [d(r.mgc, c.mesAnterior.margem / c.mesAnterior.fat), d(r.mgc, c.anoAnterior.margem / c.anoAnterior.fat)] };
-    },
-    porModelo() {
-      const m = {}; this.F.forEach(x => { const k = x.modelo; m[k] = m[k] || { id: k, nome: this.g.MOD[k].nome, fam: this.g.MOD[k].fam, n: 0, rec: 0, mg: 0 };
-        m[k].n++; m[k].rec += x.valor_faturado; m[k].mg += x.margem_reais; });
-      return Object.values(m).sort((a, b) => b.n - a.n || b.rec - a.rec);
-    },
-    mix() {
-      const by = k => { const m = {}; this.F.forEach(x => { const v = this.g.MOD[x.modelo][k]; m[v] = (m[v] || 0) + 1; }); return m; };
-      return { fam: by('fam'), seg: by('seg') };
-    },
-    porUnidade() {
-      return this.g.UNIDADES.filter(u => !this.f.un || u.id === this.f.un).map(u => {
-        const F = this.F.filter(x => x.unidade === u.id), OM = this.OM.filter(o => o.unidade === u.id);
-        const meta = sum(this.vendScope.filter(v => v.un === u.id), v => v.meta);
-        const n = F.length, rec = sum(F, x => x.valor_faturado), mg = sum(F, x => x.margem_reais);
-        return { ...u, n, meta, ating: meta ? 100 * n / meta : 0, rec, mg, mgp: rec ? 100 * mg / rec : 0, pipe: sum(OM, o => o.qtd),
-          forecast: n + sum(OM.filter(o => o.fase === 'Pedido'), o => o.qtd) };
+    hoje() { const t = new Date(); return `${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}`; },
+    base() { return this.raw ? CORE.enriquecer(this.raw.rows.map(r => ({ ...r })), this.empl) : []; },
+    validas() { return this.base.filter(g => g.valida); },
+    meses() { return [...new Set(this.validas.map(g => g.ym))].sort(); },
+    maxD() { return this.validas.reduce((m, g) => g.dtVda > m ? g.dtVda : m, ''); },
+    parcial() { if (!this.maxD) return null; const [y, m] = this.maxD.split('-').map(Number); const fim = new Date(y, m, 0).getDate();
+      return +this.maxD.slice(8, 10) < fim ? { ym: this.maxD.slice(0, 7), dia: +this.maxD.slice(8, 10), fim } : null; },
+    opts() { const u = k => [...new Set(this.validas.map(g => g[k]).filter(Boolean))].sort(); return { casa: u('casaVd'), origem: u('origem'), seg: u('seg'), vend: u('vend'), mod: u('mod') }; },
+    V() { const f = this.f; return this.validas.filter(g => (!f.ini || g.ym >= f.ini) && (!f.fim || g.ym <= f.fim) && (!f.casa || g.casaVd === f.casa) &&
+      (!f.origem || g.origem === f.origem) && (!f.seg || g.seg === f.seg) && (!f.vend || g.vend === f.vend) && (!f.mod || g.mod === f.mod)); },
+    VE() { return this.V.filter(g => g.origem === 'ESTOQUE'); },
+    A() { return CORE.agg(this.V); },
+    AE() { return CORE.agg(this.VE); },
+    filtrado() { return Object.values(this.f).some(Boolean); },
+    // ---------- séries mensais ----------
+    serie() {
+      return this.meses.filter(m => (!this.f.ini || m >= this.f.ini) && (!this.f.fim || m <= this.f.fim)).map(m => {
+        const L = this.V.filter(g => g.ym === m), a = CORE.agg(L), e = CORE.agg(L.filter(g => g.origem === 'ESTOQUE'));
+        return { m, parcial: this.parcial && this.parcial.ym === m, ...a, mgE: e.mg, resE: e.res, dE: e.dMdn, nFAm: a.nFA, nEstm: a.nEst };
       });
     },
-    porVendedor() {
-      return this.vendScope.map(v => {
-        const F = this.F.filter(x => x.vendedor === v.id), O = this.O.filter(o => o.vendedor === v.id), OM = O.filter(o => o.previsao <= this.fimMes);
-        const n = F.length, rec = sum(F, x => x.valor_faturado), mg = sum(F, x => x.margem_reais), pipe = sum(O, o => o.qtd), pipeM = sum(OM, o => o.qtd);
-        const conv = n + pipeM ? 100 * n / (n + pipeM) : 0, trav = O.filter(o => o.motivo).length, sla = O.length ? sum(O, o => o.ultAtiv) / O.length : 0;
-        const falta = Math.max(0, v.meta - n), mgp = rec ? 100 * mg / rec : 0;
-        let diag = ['No ritmo', 't-ok'];
-        if (falta > 0 && sum(OM, o => o.qtd * o.prob) < falta) diag = ['Precisa de oportunidades', 't-cr'];
-        else if (pipe >= 8 && conv < 45) diag = ['Pipeline sem conversão', 't-al'];
-        if (n >= 3 && mgp < 6.2) diag = ['Volume com margem baixa', 't-al'];
-        if (trav >= 3) diag = ['Negociações travadas', 't-cr'];
-        return { ...v, n, rec, mg, mgp, pipe, conv, forecast: n + sum(OM.filter(o => o.fase === 'Pedido'), o => o.qtd), sla, trav, diag, ating: 100 * n / v.meta };
-      }).sort((a, b) => b.ating - a.ating);
+    compl() { return this.serie.filter(s => !s.parcial); },
+    tempo() {
+      const s = this.serie; if (!s.length) return null;
+      const cur = s[s.length - 1], prev = s.length > 1 ? s[s.length - 2] : null, C = this.compl;
+      const media = k => C.length ? S(C, x => x[k]) / C.length : null, v = (a, b) => a != null && b ? (a - b) / b : null;
+      const rr = cur.parcial && this.parcial ? cur.n / this.parcial.dia * this.parcial.fim : null;
+      const lastC = C[C.length - 1], prevC = C.length > 1 ? C[C.length - 2] : null;
+      return { cur, prev, lastC, prevC, rr, rrF: cur.parcial && this.parcial ? cur.fat / this.parcial.dia * this.parcial.fim : null,
+        vN: v(lastC && lastC.n, prevC && prevC.n), vF: v(lastC && lastC.fat, prevC && prevC.fat), mN: media('n'), mF: media('fat'),
+        ytdN: S(s, x => x.n), ytdF: S(s, x => x.fat), partN: S(s, x => x.n) ? cur.n / S(s, x => x.n) : null };
     },
-    funil() {
-      const O = this.O, F = this.F, ord = ['Oportunidade', 'Proposta', 'Negociação', 'Aprovação', 'Pedido'];
-      const ate = i => O.filter(o => ord.indexOf(o.fase) >= i);
-      const st = [['Oportunidades', ate(0)], ['Propostas', ate(1)], ['Negociação', ate(2)], ['Aprovação', ate(3)], ['Pedidos', ate(4)]];
-      const rows = [{ k: 'Leads', n: this.filtrado ? null : this.g.COMP.leads, v: null }];
-      st.forEach(([k, a]) => rows.push({ k, n: a.length + F.length, v: sum(a, o => o.valor) + sum(F, x => x.valor_faturado), lista: a }));
-      rows.push({ k: 'Faturados', n: F.length, v: sum(F, x => x.valor_faturado) });
-      rows.forEach((r, i) => { r.conv = i && rows[i - 1].n ? 100 * r.n / rows[i - 1].n : null; r.t = TEMPO_FASE[r.k]; });
-      const mx = Math.max(...rows.map(r => r.n || 0)); rows.forEach(r => r.w = r.n ? Math.max(8, 100 * r.n / mx) : 0);
-      return rows;
-    },
-    risco() { return o => o.aprovPendente ? ['Aprovação de margem', 't-cr'] : o.margem < this.g.PISO_MARGEM ? ['Margem abaixo do piso', 't-cr'] : o.motivo ? [o.motivo, 't-al'] : o.ultAtiv > 10 ? ['Sem atividade', 't-al'] : ['Baixo', 't-ok']; },
-    paraFechar() {
-      const lim = this.g.iso(this.g.add(this.g.MES_FIM, 30));
-      return this.O.filter(o => o.previsao <= lim && o.fase !== 'Oportunidade').sort((a, b) => (a.previsao <= this.fimMes ? 0 : 1) - (b.previsao <= this.fimMes ? 0 : 1) || b.prob * b.qtd - a.prob * a.qtd).slice(0, 12);
-    },
-    travados() {
-      return this.g.MOTIVOS.map(m => { const a = this.O.filter(o => o.motivo === m);
-        return { m, n: a.length, v: sum(a, o => o.valor), d: a.length ? Math.round(sum(a, o => o.parado) / a.length) : 0, max: Math.max(0, ...a.map(o => o.parado)), lista: a }; }).filter(x => x.n);
-    },
-    gc() {
-      const C = this.g.CLIENTES.filter(c => c.gc && (!this.f.un || c.un === this.f.un) && (!this.f.vend || c.vend === this.f.vend));
-      const rows = C.map(c => { const op = this.g.OPP.filter(o => o.cliente === c.id); const ft = this.g.FAT.filter(x => x.cliente === c.id);
-        const ult = [c.ultCompra, ...ft.map(x => x.data_faturamento)].sort().pop();
-        return { c, frota: c.frota, mb: c.mb, out: c.frota - c.mb, sow: c.frota ? 100 * c.mb / c.frota : 0, renov: c.renov, pipe: sum(op, o => o.qtd), nOp: op.length, ult, fat: ft.length }; })
-        .sort((a, b) => b.frota - a.frota);
-      const fr = sum(rows, r => r.frota), mb = sum(rows, r => r.mb);
-      return { rows, k: { n: rows.length, fr, mb, sow: fr ? 100 * mb / fr : 0, op: sum(rows, r => r.nOp), renov: sum(rows, r => r.renov) } };
-    },
-    est() {
-      const E = this.E, t = this.g.TAXA_CARREG / 100;
-      const B = [['0–30', 0, 30], ['31–60', 31, 60], ['61–90', 61, 90], ['91–120', 91, 120], ['121–180', 121, 180], ['180+', 181, 9999]];
-      const faixas = B.map(([k, a, b]) => { const l = E.filter(e => e.dias >= a && e.dias <= b);
-        return { k, n: l.length, v: sum(l, e => e.custo), cf: sum(l, e => e.custo * t * e.dias / 30), lista: l }; });
-      const v90 = E.filter(e => e.dias > 90);
-      return { tot: E.length, disp: E.filter(e => !e.reservado).length, res: E.filter(e => e.reservado).length, valor: sum(E, e => e.custo),
-        cap90: sum(v90, e => e.custo), n90: v90.length, carreg: sum(E, e => e.custo * t), aging: E.length ? sum(E, e => e.dias) / E.length : 0, faixas,
-        n120: E.filter(e => e.dias > 120).length };
-    },
-    girar() {
-      const t = this.g.TAXA_CARREG / 100;
-      return this.E.filter(e => e.dias > 90).sort((a, b) => b.dias - a.dias).map(e => ({ ...e, mgp: 100 * (e.preco - e.custo) / e.preco,
-        cf: e.custo * t * e.dias / 30, ops: this.g.OPP.filter(o => o.modelo === e.modelo).length }));
-    },
-    estDem() {
-      const lim = this.g.iso(this.g.add(this.g.HOJE, 60));
-      return this.g.MODELOS.filter(m => this.okMod(m.id)).map(m => {
-        const est = this.E.filter(e => e.modelo === m.id && !e.reservado).length;
-        const L = this.O.filter(o => o.modelo === m.id && o.previsao <= lim && o.prob >= .5);
-        const bruto = sum(L, o => o.qtd), dem = Math.round(sum(L, o => o.qtd * o.prob));
-        const gap = est - dem;
-        return { m, est, bruto, dem, gap, al: dem && gap < 0 ? ['Ruptura potencial', 't-cr'] : gap >= 3 ? ['Excesso de estoque', 't-al'] : ['Equilibrado', 't-ok'] };
-      }).filter(x => x.est || x.dem);
-    },
-    mg() {
-      const F = this.F, piso = this.g.PISO_MARGEM, ab = F.filter(x => x.margem_percentual < piso);
-      return { ab, sacr: sum(ab, x => (piso - x.margem_percentual) / 100 * x.valor_faturado), aprov: this.O.filter(o => o.aprovPendente).length };
-    },
-    entrega() {
-      const F = this.F, ped = F.length + this.O.filter(o => o.fase === 'Pedido').length;
-      const prep = F.filter(x => x.status_entrega === 'Em preparação'), pr = F.filter(x => x.status_entrega === 'Pronto'), ent = F.filter(x => x.status_entrega === 'Entregue');
-      const extra = this.filtrado ? 0 : this.g.ENTREGUES_MES_ANTERIOR;
-      const dd = (a, b) => (new Date(b) - new Date(a)) / 864e5, avg = a => a.length ? sum(a, x => x) / a.length : 0;
-      const atras = F.filter(x => x.status_entrega !== 'Entregue' && x.data_prevista_entrega < this.hoje);
-      return { ped, fat: F.length, prep, pr, ent, entMes: ent.length + extra, extra, atras,
-        sla: { pf: avg(F.map(x => dd(x.data_pedido, x.data_faturamento))), fp: avg(F.map(x => dd(x.data_faturamento, x.data_preparacao))),
-          pe: avg(ent.map(x => dd(x.data_preparacao, x.data_entrega))), tot: avg(ent.map(x => dd(x.data_pedido, x.data_entrega))) },
-        prom: this.O.filter(o => o.fase === 'Pedido' && o.previsao < this.hoje).length };
-    },
-    fin() {
-      const L = this.g.FIN, ap = L.filter(x => x.status === 'Aprovada'), dec = L.filter(x => x.status !== 'Pendente');
-      return { L, n: L.length, ap: ap.length, pend: L.filter(x => x.status === 'Pendente').length, rep: L.filter(x => x.status === 'Reprovada').length,
-        tx: dec.length ? 100 * ap.length / dec.length : 0, valor: sum(ap, x => x.valor), ent: sum(L, x => x.entrada) / L.length, prazo: sum(L, x => x.prazo) / L.length,
-        dias: sum(L, x => x.dias) / L.length };
-    },
-    trd() {
-      const L = this.g.TRD, est = L.filter(x => x.emEstoque);
-      return { L, n: L.length, ap: L.filter(x => x.status === 'Aprovado').length, av: sum(L, x => x.avaliado), neg: sum(L, x => x.negociado),
-        mg: sum(L, x => x.margem) / L.length, est: est.length, dias: est.length ? sum(est, x => x.dias) / est.length : 0, cap: sum(est, x => x.negociado) };
-    },
-    reservasHoje() { return this.E.filter(e => e.reservado && e.reservaAte === this.hoje); },
-    semAtiv() { return this.O.filter(o => o.ultAtiv > 10); },
-    aprov() { return this.O.filter(o => o.aprovPendente); },
-    aguardCond() { return this.O.filter(o => o.aguardaCond); },
-    atencao() {
+    // ---------- scorecard ----------
+    score() {
+      const a = this.A, e = this.AE, cli = CORE.grupo(this.V, g => g.cliente).map(x => x.fat).sort((x, y) => y - x);
       return [
-        { v: this.aprov.length, l: 'aprovações aguardando você', c: 'cr', go: () => this.abrirOpps('Aprovações de margem pendentes', this.aprov) },
-        { v: this.semAtiv.length, l: 'oportunidades sem atividade há mais de 10 dias', c: 'al', go: () => this.abrirOpps('Oportunidades sem atividade', this.semAtiv) },
-        { v: this.reservasHoje.length, l: 'reservas vencendo hoje', c: 'al', go: () => this.abrirEstoque('Reservas vencendo hoje', this.reservasHoje) },
-        { v: this.mg.ab.length, l: 'faturamentos abaixo da margem mínima', c: 'cr', go: () => this.abrirFat('Faturados abaixo do piso de margem', this.mg.ab) },
-        { v: this.est.n120, l: 'veículos com mais de 120 dias', c: 'al', go: () => this.abrirEstoque('Estoque com mais de 120 dias', this.E.filter(e => e.dias > 120)) },
-        { v: this.entrega.prep.length + this.entrega.pr.length, l: `entregas pendentes · ${this.entrega.atras.length} atrasadas`, c: this.entrega.atras.length ? 'cr' : 'al',
-          go: () => this.abrirFat('Faturados ainda não entregues', [...this.entrega.prep, ...this.entrega.pr]) }];
+        ['un', fmt.n(a.n), 'veículos'], ['fat', fmt.mi(a.fat), ''], ['tk', fmt.mil(a.tk), ''],
+        ['res', fmt.mi(e.res), 'venda de estoque'], ['mg', fmt.pc(e.mg), 'venda de estoque'], ['resU', fmt.mil(e.resU), 'venda de estoque'],
+        ['est', fmt.n(a.nEst), fmt.pc(a.n ? a.nEst / a.n : null, 0) + ' do volume'], ['fa', fmt.n(a.nFA), fmt.pc(a.n ? a.nFA / a.n : null, 0) + ' do volume'],
+        ['mix', fmt.pc(a.n ? a.nFA / a.n : null, 0), 'FA-Direto ÷ total'], ['dMed', fmt.n(e.dMed) + ' d', 'só estoque'], ['dMdn', fmt.n(e.dMdn) + ' d', `P90 ${fmt.n(e.p90)} d`],
+        ['le60', fmt.pc(e.le60, 0), 'das vendas de estoque'], ['gt90', fmt.pc(e.gt90, 0), `${fmt.pc(e.gt180, 0)} acima de 180 d`],
+        ['pen', fmt.pc(a.penU, 0), `${fmt.pc(a.penF, 0)} do faturamento`], ['bm', fmt.pc(a.bm, 0), `${a.nBM} de ${a.nInst} operações`],
+        ['neg', fmt.n(e.neg), `${fmt.pc(e.nR ? e.neg / e.nR : null, 0)} das vendas de estoque`], ['negV', fmt.mil(e.negV), `${fmt.pc(e.negFat / (e.fat || 1), 0)} do faturamento de estoque`],
+        ['conc', fmt.pc(cli.length ? S(cli.slice(0, 5), x => x) / S(cli, x => x) : null, 0), `top 5 · HHI ${fmt.n(hhi(cli))}`]];
     },
-    decisoes() {
-      const L = [];
-      if (this.aprov.length) L.push({ s: 'CRÍTICO', c: 't-cr', t: `${this.aprov.length} aprovações de margem`, d: `${sum(this.aprov, o => o.qtd)} un · ${mi(sum(this.aprov, o => o.valor))} em negócios`, cta: 'Decidir', go: () => this.abrirOpps('Aprovações de margem', this.aprov) });
-      if (this.aguardCond.length) L.push({ s: 'CRÍTICO', c: 't-cr', t: `${this.aguardCond.length} negociações aguardando condição da fábrica`, d: `${sum(this.aguardCond, o => o.qtd)} un em jogo`, cta: 'Solicitar condição', go: () => this.abrirOpps('Aguardando condição', this.aguardCond) });
-      if (this.reservasHoje.length) L.push({ s: 'ALTO', c: 't-al', t: `${this.reservasHoje.length} reservas vencendo hoje`, d: 'Renovar ou liberar o veículo', cta: 'Regularizar', go: () => this.abrirEstoque('Reservas vencendo hoje', this.reservasHoje) });
-      if (this.mg.ab.length) L.push({ s: 'ALTO', c: 't-al', t: `${this.mg.ab.length} faturamentos abaixo do piso`, d: `Margem sacrificada ${mil(this.mg.sacr)}`, cta: 'Revisar', go: () => this.abrirFat('Abaixo do piso', this.mg.ab) });
-      if (this.entrega.atras.length) L.push({ s: 'ALTO', c: 't-al', t: `${this.entrega.atras.length} entregas com prazo vencido`, d: 'Cliente já faturado aguardando o caminhão', cta: 'Regularizar', go: () => this.abrirFat('Entregas atrasadas', this.entrega.atras) });
-      if (this.est.n120) L.push({ s: 'NORMAL', c: 't-bl', t: `${this.est.n120} veículos com 120+ dias`, d: `Capital ${mil(sum(this.E.filter(e => e.dias > 120), e => e.custo))}`, cta: 'Abrir negócio', go: () => this.abrirEstoque('120+ dias', this.E.filter(e => e.dias > 120)) });
+    // ---------- grupos ----------
+    G() { const V = this.V, g = CORE.grupo; return { vend: g(V, x => x.vend), casa: g(V, x => x.casaVd), modelo: g(V, x => x.modelo), seg: g(V, x => x.seg),
+      mod: g(V, x => x.mod), inst: g(V.filter(x => x.inst), x => x.inst), cli: g(V, x => x.cliente), uf: g(V, x => x.uf), cid: g(V, x => x.cidade + ' · ' + x.uf),
+      origem: g(V, x => x.origem), fam: g(V, x => x.fam) }; },
+    GE() { const g = CORE.grupo, E = this.VE; return { modelo: g(E, x => x.modelo), seg: g(E, x => x.seg), casa: g(E, x => x.casaVd), vend: g(E, x => x.vend) }; },
+    quadrante() {
+      const L = CORE.grupo(this.V.filter(g => g.origem !== 'FA-DIRETO'), g => g.modelo, 3);
+      if (!L.length) return { L: [], cN: 0, cM: 0 };
+      const med = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor((s.length - 1) / 2)]; };
+      const cN = med(L.map(x => x.n)), cM = med(L.map(x => x.mg || 0));
+      L.forEach(x => x.q = (x.n >= cN ? 'Alto volume' : 'Baixo volume') + ' + ' + ((x.mg || 0) >= cM ? 'alta margem' : 'baixa margem'));
+      return { L, cN, cM };
+    },
+    faixasMg() {
+      const R = this.VE.filter(g => g.mg !== null), B = [['Negativa', -9, 0], ['0–3%', 0, .03], ['3–5%', .03, .05], ['5–8%', .05, .08], ['8–10%', .08, .10], ['10% ou mais', .10, 9]];
+      return B.map(([k, a, b]) => { const l = R.filter(g => g.mg >= a && g.mg < b); return { k, n: l.length, fat: S(l, g => g.vrVda), l }; });
+    },
+    faixasD() {
+      const E = this.VE.filter(g => g.dias !== null && g.dias >= 0), B = [['0–30', 0, 30], ['31–60', 31, 60], ['61–90', 61, 90], ['91–120', 91, 120], ['121–180', 121, 180], ['180+', 181, 99999]];
+      return B.map(([k, a, b]) => { const l = E.filter(g => g.dias >= a && g.dias <= b); return { k, n: l.length, nf: S(l, g => g.vrNf), capT: S(l, g => g.capT), l }; });
+    },
+    capTop() { return [...this.VE].filter(g => g.capT).sort((a, b) => b.capT - a.capT).slice(0, 15); },
+    inter() {
+      const L = this.V.filter(g => g.casaEm && g.casaVd), x = L.filter(g => g.casaEm !== g.casaVd), m = {};
+      x.forEach(g => { const k = g.casaEm + ' → ' + g.casaVd; m[k] = (m[k] || []); m[k].push(g); });
+      return { taxa: L.length ? x.length / L.length : null, n: x.length, fluxos: Object.entries(m).map(([k, l]) => ({ k, n: l.length, fat: S(l, g => g.vrVda), l })).sort((a, b) => b.n - a.n) };
+    },
+    clientes() {
+      const G = this.G.cli, t = S(G, x => x.fat), top = N => t ? S(G.slice(0, N), x => x.fat) / t : null;
+      const rec = G.filter(x => new Set(x.a.map(g => g.ym)).size >= 2).length;
+      return { n: G.length, t5: top(5), t10: top(10), t20: top(20), hhi: hhi(G.map(x => x.fat)), rec, unCli: G.length ? this.A.n / G.length : null,
+        interm: G.filter(x => INTERM.test(x.k)) };
+    },
+    negativos() { return this.V.filter(g => g.res !== null && g.res < 0).sort((a, b) => a.res - b.res); },
+    faDireto() { const L = this.V.filter(g => g.origem === 'FA-DIRETO' && g.res !== null); return { n: L.length, iguais: L.filter(g => Math.abs(g.mg) < .01).length }; },
+    heat() {
+      const segs = this.G.seg.map(s => s.k), vs = this.G.vend.slice(0, 14);
+      const cell = (v, s) => { const l = v.a.filter(g => g.seg === s); return { n: l.length, mg: CORE.agg(l).mg }; };
+      return { segs, rows: vs.map(v => ({ k: v.k, c: segs.map(s => cell(v, s)) })) };
+    },
+    bmBy() { const g = CORE.grupo, L = this.V.filter(x => x.inst); return { casa: g(L, x => x.casaVd), vend: g(L, x => x.vend, 3), seg: g(L, x => x.seg), modelo: g(L, x => x.modelo, 3) }; },
+    // ---------- qualidade ----------
+    dq() { return this.raw ? CORE.qualidade(this.base, this.hoje) : null; },
+    dqTipos() { if (!this.dq) return []; const m = {}; this.dq.I.forEach(i => { m[i.t] = m[i.t] || { t: i.t, sev: i.sev, l: [] }; m[i.t].l.push(i); }); return Object.values(m).sort((a, b) => b.l.length - a.l.length); },
+    // ---------- emplacamento × faturamento ----------
+    cruz() {
+      const E = this.empl; if (!E) return null;
+      const B = this.base.filter(g => g.chassi), esc = B.filter(g => !g.foraEmp), hit = esc.filter(g => g.emp);
+      const lim = E.dMax, esc2 = esc.filter(g => g.dtVda && g.dtVda <= lim);
+      const lags = hit.map(g => g.lag).filter(x => x !== null).sort((a, b) => a - b);
+      const porMes = this.meses.map(m => ({ m, fat: esc.filter(g => g.ym === m).length, emp: hit.filter(g => g.emp.d.slice(0, 7) === m).length,
+        fatEmp: hit.filter(g => g.ym === m).length }));
+      const d0 = this.meses[0] ? this.meses[0] + '-01' : '';
+      const chF = new Set(B.map(g => g.chassi)), reg = E.mb.filter(e => ['GOIANIA', 'ANAPOLIS'].includes(e.aop) && e.d >= d0), sem = reg.filter(e => !chF.has(e.ch));
+      const cc = {}; sem.forEach(e => { cc[e.conc] = (cc[e.conc] || 0) + 1; });
+      const dono = hit.filter(g => g.emp.dono && !([...tok(g.cliente)].some(w => tok(g.emp.dono).has(w))));
+      const concH = {}; hit.forEach(g => { concH[g.emp.conc] = (concH[g.emp.conc] || 0) + 1; });
+      return { dMax: lim, fora: B.filter(g => g.foraEmp).length, esc: esc.length, hit: hit.length, taxa: esc.length ? hit.length / esc.length : null,
+        taxaAte: esc2.length ? esc2.filter(g => g.emp).length / esc2.length : null, nAte: esc2.length, porMes,
+        lag: { mdn: CORE.qt(lags, .5), p25: CORE.qt(lags, .25), p75: CORE.qt(lags, .75), p90: CORE.qt(lags, .9), neg: lags.filter(x => x < 0).length, gt60: lags.filter(x => x > 60).length },
+        porOrig: CORE.ORIGENS.map(o => ({ o, n: esc.filter(g => g.origem === o).length, h: hit.filter(g => g.origem === o).length })),
+        reg: reg.length, regCom: reg.length - sem.length, sem, semConc: Object.entries(cc).sort((a, b) => b[1] - a[1]), dono,
+        concH: Object.entries(concH).sort((a, b) => b[1] - a[1]), naoEmp: esc2.filter(g => !g.emp) };
+    },
+    // ---------- alertas ----------
+    alertas() {
+      const L = [], C = this.compl, e = this.AE, q1 = (a) => { const s = a.filter(x => x != null).sort((x, y) => x - y); return s.length >= 4 ? s[Math.floor((s.length - 1) * .25)] : null; };
+      const last = C[C.length - 1];
+      if (e.neg) L.push({ s: 'Alta', t: `${e.neg} vendas de estoque com margem aparente negativa`, d: `${fmt.mil(e.negV)} de resultado aparente negativo · operações para investigação`, go: () => this.abrir('Margem aparente negativa', this.negativos) });
+      const d180 = this.VE.filter(g => g.dias > 180), d90 = this.VE.filter(g => g.dias > 90 && g.dias <= 180);
+      if (d180.length) L.push({ s: 'Alta', t: `${d180.length} veículos vendidos com mais de 180 dias de estoque`, d: `Capital × tempo ${fmt.n(S(d180, g => g.capT) / 1e6, 0)} mi R$·dia`, go: () => this.abrir('Vendidos com mais de 180 dias', d180) });
+      if (d90.length) L.push({ s: 'Média', t: `${d90.length} veículos vendidos entre 91 e 180 dias`, d: 'Aging acima de 90 dias', go: () => this.abrir('Vendidos entre 91 e 180 dias', d90) });
+      if (last && q1(C.map(x => x.fat)) != null && last.fat < q1(C.map(x => x.fat))) L.push({ s: 'Média', t: `Faturamento de ${fmt.ym(last.m)} no quartil inferior do ano`, d: `${fmt.mi(last.fat)} contra 1º quartil de ${fmt.mi(q1(C.map(x => x.fat)))}`, go: () => { this.tab = 'ceo'; } });
+      if (last && q1(C.map(x => x.mgE)) != null && last.mgE < q1(C.map(x => x.mgE))) L.push({ s: 'Média', t: `Margem aparente de estoque em ${fmt.ym(last.m)} no quartil inferior`, d: `${fmt.pc(last.mgE)} contra 1º quartil de ${fmt.pc(q1(C.map(x => x.mgE)))}`, go: () => { this.tab = 'ceo'; } });
+      if (last && q1(C.map(x => x.bm)) != null && last.bm < q1(C.map(x => x.bm))) L.push({ s: 'Média', t: `Banco Mercedes em ${fmt.ym(last.m)} no quartil inferior`, d: `${fmt.pc(last.bm, 0)} contra 1º quartil de ${fmt.pc(q1(C.map(x => x.bm)), 0)}`, go: () => { this.tab = 'fin'; } });
+      const hC = this.clientes.hhi, hV = hhi(this.G.vend.map(x => x.fat));
+      if (hC > 1500) L.push({ s: 'Média', t: 'Faturamento concentrado em poucos clientes', d: `HHI ${fmt.n(hC)} (acima de 1.500 = concentrado)`, go: () => { this.tab = 'cli'; } });
+      else if (this.G.cli[0]) L.push({ s: 'Baixa', t: `Maior cliente responde por ${fmt.pc(this.G.cli[0].fat / (this.A.fat || 1), 0)} do faturamento`, d: `HHI de clientes ${fmt.n(hC)} · abaixo de 1.500 = não concentrado`, go: () => { this.tab = 'cli'; } });
+      if (hV > 1500) L.push({ s: 'Média', t: 'Faturamento concentrado em poucos vendedores', d: `HHI ${fmt.n(hV)} · maior vendedor ${fmt.pc(this.G.vend[0].fat / (this.A.fat || 1), 0)} do faturamento`, go: () => { this.tab = 'vend'; } });
+      if (this.dq) { const c = t => this.dq.I.filter(i => i.t === t);
+        [['Data de venda ausente ou inválida', 'Data inválida'], ['Chassi duplicado', 'Chassi duplicado'], ['NF fábrica duplicada', 'NF fábrica duplicada'], ['NF de venda duplicada', 'NF de venda duplicada']]
+          .forEach(([t, r]) => { const l = c(t); if (l.length) L.push({ s: 'Dados', t: `${l.length} registros · ${r}`, d: 'Qualidade dos dados', go: () => this.abrir(r, l.map(i => i.g)) }); }); }
       return L;
     },
-    resumo() {
-      const r = this.res, fc = this.fc, alta = this.OM.filter(o => o.prob >= .75), dep = alta.filter(o => o.aprovPendente).length;
-      return { r, fc, alta: alta.length, dep, cap90: this.est.cap90 };
-    },
-    plano() {
-      const f = this.fc, OM = this.OM;
-      const alta = OM.filter(o => o.fase === 'Negociação'), finP = this.g.FIN.filter(x => x.status === 'Pendente');
-      return [
-        { t: 'Aprovar negócios próximos do faturamento', d: `${this.aprov.length} aprovações de margem e ${f.commit} pedidos para faturar no mês`, imp: `+${f.commit + f.best} un no forecast`, resp: 'Diretoria comercial', prazo: 'Hoje', cta: 'Decidir', go: () => this.abrirOpps('Aprovações e pedidos do mês', [...this.aprov, ...OM.filter(o => o.fase === 'Pedido')]) },
-        { t: 'Atacar oportunidades de alta confiança', d: `${alta.length} negociações com previsão no mês`, imp: `${sum(alta, o => o.qtd)} un · ${mi(sum(alta, o => o.valor))}`, resp: 'Gerentes de unidade', prazo: 'Até 25/09', cta: 'Abrir lista', go: () => this.abrirOpps('Negociações do mês', alta) },
-        { t: 'Destravar financiamentos', d: `${finP.length} propostas pendentes, ${n1(this.fin.dias, 0)} dias médios de análise`, imp: mi(sum(finP, x => x.valor)), resp: 'F&I', prazo: '48 horas', cta: 'Ver propostas', go: () => this.abrirFin() },
-        { t: 'Regularizar faturados ainda não entregues', d: `${this.entrega.prep.length + this.entrega.pr.length} veículos, ${this.entrega.atras.length} com prazo vencido`, imp: 'Satisfação e recebimento', resp: 'Pós-venda / preparação', prazo: 'Esta semana', cta: 'Regularizar', go: () => this.abrirFat('Não entregues', [...this.entrega.prep, ...this.entrega.pr]) },
-        { t: 'Girar estoque 120+', d: `${this.est.n120} veículos acima de 120 dias`, imp: `Custo de carregamento ${mil(sum(this.E.filter(e => e.dias > 120), e => e.custo * this.g.TAXA_CARREG / 100))}/mês`, resp: 'Gestão de estoque', prazo: '30 dias', cta: 'Criar campanha', go: () => this.abrirEstoque('Estoque 120+', this.E.filter(e => e.dias > 120)) }];
-    },
     busca() {
-      const q = this.q.trim().toLowerCase(); if (q.length < 2) return [];
-      const R = [], g = this.g, dig = q.replace(/\D/g, '');
-      g.CLIENTES.forEach(c => { if (c.nome.toLowerCase().includes(q) || (dig.length >= 3 && c.cnpj.replace(/\D/g, '').includes(dig))) R.push({ t: c.nome, s: 'Cliente · ' + c.cnpj, go: () => this.abrirCliente(c.id) }); });
-      g.VENDEDORES.forEach(v => { if (v.nome.toLowerCase().includes(q)) R.push({ t: v.nome, s: 'Vendedor', go: () => this.abrirVendedor(v.id) }); });
-      g.FAT.forEach(x => { if (x.chassi.toLowerCase().includes(q)) R.push({ t: x.chassi, s: 'Faturado · ' + g.MOD[x.modelo].nome, go: () => this.abrirVeiculo(x) }); });
-      g.EST.forEach(x => { if (x.chassi.toLowerCase().includes(q)) R.push({ t: x.chassi, s: 'Estoque · ' + g.MOD[x.modelo].nome, go: () => this.abrirVeiculo(x) }); });
-      g.MODELOS.forEach(m => { if (m.nome.toLowerCase().includes(q)) R.push({ t: m.nome, s: 'Modelo', go: () => { this.f.mod = m.fam; } }); });
-      g.OPP.forEach(o => { if (o.id.toLowerCase() === q) R.push({ t: o.id, s: 'Oportunidade · ' + g.CLI[o.cliente].nome, go: () => this.abrirOpps('Oportunidade ' + o.id, [o]) }); });
-      return R.slice(0, 14);
-    },
-    redTeam() {
-      const g = this.g, F = g.FAT, ok = (c, t) => ({ ok: !!c, t });
-      const uFat = g.UNIDADES.map(u => F.filter(x => x.unidade === u.id).length);
-      return [
-        ok(true, 'Emplacamento só é tratado como faturamento por regra do protótipo (aviso “Ambiente demonstrativo”).'),
-        ok(F.every(x => x.status_entrega), 'Venda (pedido), faturamento, preparação e entrega têm status e datas próprios.'),
-        ok(uFat[0] + uFat[1] === F.length && F.length === 24, `Faturados por unidade (${uFat.join(' + ')}) fecham em ${F.length}.`),
-        ok(sum(g.VENDEDORES, v => v.meta) === sum(g.UNIDADES, u => u.meta), 'Metas por vendedor somam a meta das unidades.'),
-        ok(sum(this.porModelo, m => m.n) === this.res.n, 'Faturados por modelo fecham com o total.'),
-        ok(this.res.mg < this.res.rec, 'Receita e margem são indicadores separados (margem ≠ receita).'),
-        ok(this.fc.forecast === this.res.n + this.fc.commit, 'Forecast = faturado + commit; pipeline fica fora do forecast.'),
-        ok(true, 'Potencial de renovação e frota de outras marcas são exibidos como potencial, nunca como venda.'),
-        ok(sum(this.est.faixas, f => f.n) === this.est.tot, 'Estoque por faixa de aging fecha com o total; estoque não entra como venda.'),
-        ok(this.decisoes.every(d => d.cta) && this.atencao.every(a => a.go), 'Todo alerta tem uma ação (CTA ou drill-down).'),
-        ok(this.entrega.ped === this.res.n + this.O.filter(o => o.fase === 'Pedido').length, 'Pedidos = faturados + pedidos aguardando faturamento.')];
+      const q = this.q.trim().toUpperCase(); if (q.length < 3) return [];
+      return this.base.filter(g => g.chassi.includes(q) || g.cliente.includes(q) || g.vend.includes(q) || g.modelo.includes(q) || g.nfVda === q || g.nfFab === q).slice(0, 60);
     }
   },
-  watch: { F() { this.charts(); }, E() { this.charts(); } },
-  mounted() { this.charts(); document.addEventListener('keydown', e => { if (e.key === 'Escape') this.drawer = null; }); },
+  watch: { tab() { this.charts(); }, V() { this.charts(); }, empl() { this.charts(); } },
+  mounted() {
+    this.lerTorre(); this.charts();
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') this.drawer = null; });
+  },
   methods: {
-    brl, mi, mil, pc, n1, dbr,
-    vd(id) { const v = this.g.VENDEDORES.find(x => x.id === id); return v ? v.nome : '—'; },
-    un(id) { const u = this.g.UNIDADES.find(x => x.id === id); return u ? u.nome : '—'; },
-    delta(v, pp) { if (v == null) return ['—', 'nt']; const s = (v > 0 ? '+' : '') + n1(v, 1) + (pp ? ' p.p.' : '%'); return [s, v > 0.05 ? 'up' : v < -0.05 ? 'dn' : 'nt']; },
-    ok(msg) { this.toast = msg; clearTimeout(this._t); this._t = setTimeout(() => this.toast = '', 2600); },
-    acao(a, x) { this.ok(`${a} registrado para ${x} · demonstração, sem gravação`); },
-    fecharBusca() { setTimeout(() => { this.qOpen = false; }, 180); },
-    irPlano() { this.showPlan = true; nextTick(() => document.getElementById('sec-plano').scrollIntoView({ behavior: 'smooth' })); },
-    limpar() { this.f = { mes: '2026-09', un: '', vend: '', mod: '', seg: '', gc: false }; },
-    // ---------- drill-downs ----------
-    abrirFat(t, L) { this.drawer = { tipo: 'fat', t, s: `${L.length} caminhões · ${mi(sum(L, x => x.valor_faturado))} · margem ${mil(sum(L, x => x.margem_reais))}`, L }; },
-    abrirOpps(t, L) { this.drawer = { tipo: 'opp', t, s: `${L.length} negócios · ${sum(L, o => o.qtd)} un · ${mi(sum(L, o => o.valor))}`, L }; },
-    abrirEstoque(t, L) { this.drawer = { tipo: 'est', t, s: `${L.length} veículos · custo ${mi(sum(L, e => e.custo))}`, L }; },
-    abrirFin() { this.drawer = { tipo: 'fin', t: 'Financiamentos', s: `${this.fin.n} propostas · aprovação ${pc(this.fin.tx, 0)}`, L: this.g.FIN }; },
-    abrirTrd() { this.drawer = { tipo: 'trd', t: 'Trade-in', s: `${this.trd.n} usados avaliados`, L: this.g.TRD }; },
-    abrirCliente(id) {
-      const c = this.g.CLI[id]; this.qOpen = false;
-      this.drawer = { tipo: 'cli', t: c.nome, s: `Cliente 360º · CNPJ fictício ${c.cnpj} · ${c.seg} · ${this.un(c.un)}`, c,
-        F: this.g.FAT.filter(x => x.cliente === id), O: this.g.OPP.filter(o => o.cliente === id), R: this.g.EST.filter(e => e.reservaCli === id) };
+    ...fmt, S,
+    lerTorre() { this.empl = CORE.emplTorre(); },
+    async importar(ev) {
+      const file = ev.target.files[0]; if (!file) return; this.erro = ''; this.msg = 'Lendo planilha...';
+      try {
+        const wb = XLSX.read(await file.arrayBuffer(), { cellDates: true });
+        const ws = wb.Sheets[wb.SheetNames[0]], aoa = XLSX.utils.sheet_to_json(ws, { header: 1, raw: true, defval: null });
+        const d = CORE.parse(aoa, file.name);
+        if (!CORE.salvar(d)) this.erro = 'A planilha foi lida, mas o navegador não permitiu guardá-la. Ela vale só para esta sessão.';
+        this.raw = d; this.msg = `${d.meta.registros} registros importados (${d.meta.vazias} linhas vazias ignoradas).`;
+      } catch (e) { this.erro = e.message; this.msg = ''; }
+      ev.target.value = '';
     },
-    abrirVendedor(id) {
-      const v = this.porVendedor.find(x => x.id === id) || this.g.VENDEDORES.find(x => x.id === id); this.qOpen = false;
-      this.drawer = { tipo: 'vend', t: v.nome, s: `Performance · ${this.un(v.un)} · meta ${v.meta} un`, v,
-        F: this.g.FAT.filter(x => x.vendedor === id), O: this.g.OPP.filter(o => o.vendedor === id) };
-    },
-    abrirVeiculo(x) { this.qOpen = false; this.drawer = { tipo: 'vei', t: `${this.g.MOD[x.modelo].nome} · ${x.chassi}`, s: x.data_faturamento ? 'Veículo faturado' : 'Veículo em estoque', x }; },
-    abrirTravado(r) { this.abrirOpps('Travados · ' + r.m, r.lista); },
-    abrirFunil(r) { if (r.k === 'Faturados') this.abrirFat('Faturados no mês', this.F); else if (r.lista) this.abrirOpps(r.k + ' (em aberto nesta fase ou além)', r.lista); },
-    // ---------- gráficos ----------
+    remover() { if (!confirm('Remover a tabela de gestão deste navegador?')) return; CORE.apagar(); this.raw = null; },
+    limpar() { this.f = { ini: '', fim: '', casa: '', origem: '', seg: '', vend: '', mod: '' }; },
+    abrir(t, L) { this.drawer = { t, L: [...L].sort((a, b) => (b.dtVda || '').localeCompare(a.dtVda || '')), a: CORE.agg(L.filter(g => g.valida)) }; },
+    abrirG(prefixo, x) { this.abrir(prefixo + ' · ' + x.k, x.a); },
+    cls(v, lo, hi) { return v == null ? '' : v < lo ? 'dn' : v >= hi ? 'up' : ''; },
+    heatBg(c) { if (!c.n) return {}; const m = c.mg == null ? 0 : c.mg; const a = Math.min(1, Math.abs(m) / .12);
+      return { background: m < 0 ? `rgba(196,43,28,${.15 + .6 * a})` : `rgba(16,124,16,${.08 + .55 * a})`, color: a > .6 ? '#fff' : '#171717' }; },
     charts() {
       nextTick(() => {
-        const mk = (id, cfg) => { const el = document.getElementById(id); if (!el) return; if (CHARTS[id]) CHARTS[id].destroy(); CHARTS[id] = new Chart(el, cfg); };
-        const base = { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#111', padding: 8 } } };
-        const tk = { color: '#666', font: { size: 11 } }, gr = { color: '#EFEFEF' };
-        const pm = this.porModelo;
-        mk('chModelo', { type: 'bar', data: { labels: pm.map(m => m.nome), datasets: [{ data: pm.map(m => m.n), backgroundColor: pm.map(m => m.fam === 'Actros' ? '#111111' : m.fam === 'Axor' ? '#0078D4' : '#8A8D91'), borderRadius: 3, barThickness: 16 }] },
-          options: { ...base, indexAxis: 'y', onClick: (e, el) => { if (el[0]) { const m = pm[el[0].index]; this.abrirFat('Faturados · ' + m.nome, this.F.filter(x => x.modelo === m.id)); } },
-            scales: { x: { ticks: { ...tk, precision: 0 }, grid: gr }, y: { ticks: tk, grid: { display: false } } } } });
-        const fam = ['Actros', 'Axor', 'Atego', 'Accelo'], seg = ['Extrapesado', 'Pesado', 'Semipesado', 'Leve'], cor = ['#111111', '#0078D4', '#8A8D91', '#C6C8CA'];
-        const tot = this.res.n || 1;
-        mk('chMix', { type: 'bar', data: { labels: ['Família', 'Segmento'], datasets: [0, 1, 2, 3].map(i => ({ label: fam[i] + ' / ' + seg[i],
-          data: [100 * (this.mix.fam[fam[i]] || 0) / tot, 100 * (this.mix.seg[seg[i]] || 0) / tot], backgroundColor: cor[i], barThickness: 26 })) },
-          options: { ...base, indexAxis: 'y', plugins: { ...base.plugins, legend: { display: false }, tooltip: { callbacks: { label: c => `${c.datasetIndex === undefined ? '' : (c.dataIndex === 0 ? fam : seg)[c.datasetIndex]}: ${n1(c.raw, 0)}%` } } },
-            scales: { x: { stacked: true, max: 100, ticks: { ...tk, callback: v => v + '%' }, grid: gr }, y: { stacked: true, ticks: tk, grid: { display: false } } } } });
-        const O = this.O.filter(o => o.fase !== 'Oportunidade'), piso = this.g.PISO_MARGEM;
-        mk('chMargem', { type: 'bubble', data: { datasets: [
-          { label: 'Negócios em aberto', data: O.map(o => ({ x: o.desconto, y: o.margem, r: 3 + Math.sqrt(o.valor / 1e5) * 1.3, o })), backgroundColor: O.map(o => o.margem < piso ? 'rgba(196,43,28,.55)' : o.desconto > 6.5 ? 'rgba(178,106,0,.5)' : 'rgba(0,120,212,.35)') },
-          { label: 'Faturados', data: this.F.map(x => ({ x: x.desconto, y: x.margem_percentual, r: 3 + Math.sqrt(x.valor_faturado / 1e5) * 1.3, x0: x })), backgroundColor: 'rgba(17,17,17,.55)' }] },
-          options: { ...base, plugins: { ...base.plugins, legend: { display: true, position: 'bottom', labels: { boxWidth: 9, font: { size: 11 } } },
-            tooltip: { callbacks: { label: c => { const d = c.raw; const it = d.o || d.x0; const cl = this.g.CLI[it.cliente].nome; return `${cl} · desc ${n1(d.x, 1)}% · margem ${n1(d.y, 1)}%`; } } } },
-            onClick: (e, el) => { if (!el[0]) return; const d = el[0].element.$context.raw; if (d.o) this.abrirOpps('Negócio', [d.o]); else this.abrirVeiculo(d.x0); },
-            scales: { x: { title: { display: true, text: 'Desconto %', color: '#666' }, ticks: tk, grid: gr }, y: { title: { display: true, text: 'Margem %', color: '#666' }, ticks: tk, grid: gr } } },
-          plugins: [{ id: 'piso', afterDraw: ch => { const y = ch.scales.y.getPixelForValue(piso), c = ch.ctx; c.save(); c.strokeStyle = '#C42B1C'; c.setLineDash([4, 4]); c.beginPath(); c.moveTo(ch.chartArea.left, y); c.lineTo(ch.chartArea.right, y); c.stroke(); c.fillStyle = '#C42B1C'; c.font = '11px Segoe UI'; c.fillText('piso de margem ' + piso + '%', ch.chartArea.left + 4, y - 4); c.restore(); } }] });
+        const mk = (id, cfg) => { const el = document.getElementById(id); if (!el) { if (CH[id]) { CH[id].destroy(); delete CH[id]; } return; } if (CH[id]) CH[id].destroy(); CH[id] = new Chart(el, cfg); };
+        const base = { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 9, font: { size: 11 } } }, tooltip: { backgroundColor: '#111' } } };
+        const tk = { color: '#666', font: { size: 11 } }, gr = { color: '#EFEFEF' }, s = this.serie, lab = s.map(x => fmt.ym(x.m) + (x.parcial ? '*' : ''));
+        const alpha = (c) => s.map(x => x.parcial ? c + '66' : c);
+        mk('cTend', { type: 'bar', data: { labels: lab, datasets: [
+          { type: 'bar', label: 'Estoque', data: s.map(x => x.nEstm), backgroundColor: alpha('#111111'), stack: 'u', yAxisID: 'y' },
+          { type: 'bar', label: 'FA-Direto', data: s.map(x => x.nFAm), backgroundColor: alpha('#8A8D91'), stack: 'u', yAxisID: 'y' },
+          { type: 'bar', label: 'Governo e imobilizado', data: s.map(x => x.n - x.nEstm - x.nFAm), backgroundColor: alpha('#C6C8CA'), stack: 'u', yAxisID: 'y' },
+          { type: 'line', label: 'Faturamento (R$ mi)', data: s.map(x => +(x.fat / 1e6).toFixed(1)), borderColor: '#0078D4', backgroundColor: '#0078D4', yAxisID: 'y1', tension: .25 }] },
+          options: { ...base, scales: { x: { stacked: true, ticks: tk, grid: { display: false } }, y: { stacked: true, ticks: tk, grid: gr, title: { display: true, text: 'unidades', color: '#666' } },
+            y1: { position: 'right', ticks: tk, grid: { display: false }, title: { display: true, text: 'R$ mi', color: '#666' } } } } });
+        mk('cMg', { type: 'line', data: { labels: lab, datasets: [
+          { label: 'Margem aparente · estoque', data: s.map(x => x.mgE == null ? null : +(100 * x.mgE).toFixed(2)), borderColor: '#111', backgroundColor: '#111', tension: .25 },
+          { label: 'Banco Mercedes', data: s.map(x => x.bm == null ? null : +(100 * x.bm).toFixed(1)), borderColor: '#0078D4', backgroundColor: '#0078D4', tension: .25, yAxisID: 'y1' }] },
+          options: { ...base, scales: { x: { ticks: tk, grid: { display: false } }, y: { min: 0, ticks: { ...tk, callback: v => v + '%' }, grid: gr, title: { display: true, text: 'margem', color: '#666' } },
+            y1: { position: 'right', min: 0, max: 100, ticks: { ...tk, callback: v => v + '%' }, grid: { display: false }, title: { display: true, text: 'Banco Mercedes', color: '#666' } } } } });
+        const vb = this.G.vend.filter(v => v.nR >= 3);
+        mk('cVend', { type: 'bubble', data: { datasets: [{ label: 'Vendedores (tamanho = faturamento)', data: vb.map(v => ({ x: v.n, y: +(100 * (v.mg || 0)).toFixed(2), r: 4 + Math.sqrt(v.fat / 1e6) * 2.2, k: v.k })),
+          backgroundColor: vb.map(v => (v.mg || 0) < 0 ? 'rgba(196,43,28,.55)' : 'rgba(0,120,212,.45)') }] },
+          options: { ...base, onClick: (e, el) => { if (el[0]) this.abrirG('Vendedor', vb[el[0].index]); },
+            plugins: { ...base.plugins, tooltip: { callbacks: { label: c => `${c.raw.k}: ${c.raw.x} un · margem ${c.raw.y}%` } } },
+            scales: { x: { title: { display: true, text: 'unidades', color: '#666' }, ticks: tk, grid: gr }, y: { title: { display: true, text: 'margem aparente (todas as origens)', color: '#666' }, ticks: { ...tk, callback: v => v + '%' }, grid: gr } } } });
+        const Q = this.quadrante;
+        mk('cQuad', { type: 'bubble', data: { datasets: [{ label: 'Modelos com 3+ vendas, sem FA-Direto (tamanho = faturamento)', data: Q.L.map(m => ({ x: m.n, y: +(100 * (m.mg || 0)).toFixed(2), r: 3 + Math.sqrt(m.fat / 1e6) * 1.8, k: m.k, d: m.dMdn })),
+          backgroundColor: Q.L.map(m => m.n >= Q.cN && (m.mg || 0) >= Q.cM ? 'rgba(16,124,16,.55)' : m.n >= Q.cN ? 'rgba(178,106,0,.55)' : (m.mg || 0) >= Q.cM ? 'rgba(0,120,212,.45)' : 'rgba(196,43,28,.45)') }] },
+          options: { ...base, onClick: (e, el) => { if (el[0]) this.abrirG('Modelo', Q.L[el[0].index]); },
+            plugins: { ...base.plugins, tooltip: { callbacks: { label: c => `${c.raw.k}: ${c.raw.x} un · margem ${c.raw.y}% · mediana ${c.raw.d ?? '—'} d` } } },
+            scales: { x: { type: 'logarithmic', title: { display: true, text: 'unidades (escala log)', color: '#666' }, ticks: tk, grid: gr }, y: { title: { display: true, text: 'margem aparente', color: '#666' }, ticks: { ...tk, callback: v => v + '%' }, grid: gr } } },
+          plugins: [{ id: 'q', afterDraw: ch => { const c = ch.ctx, x = ch.scales.x.getPixelForValue(Q.cN), y = ch.scales.y.getPixelForValue(100 * Q.cM); c.save(); c.strokeStyle = '#8A8D91'; c.setLineDash([4, 4]);
+            c.beginPath(); c.moveTo(x, ch.chartArea.top); c.lineTo(x, ch.chartArea.bottom); c.moveTo(ch.chartArea.left, y); c.lineTo(ch.chartArea.right, y); c.stroke(); c.restore(); } }] });
+        const fd = this.faixasD;
+        mk('cAging', { type: 'bar', data: { labels: fd.map(x => x.k + ' d'), datasets: [{ label: 'Veículos de estoque vendidos', data: fd.map(x => x.n), backgroundColor: ['#107C10', '#5B9F3A', '#8A8D91', '#B26A00', '#C42B1C', '#7A1A10'] }] },
+          options: { ...base, plugins: { ...base.plugins, legend: { display: false } }, onClick: (e, el) => { if (el[0]) this.abrir('Dias até venda ' + fd[el[0].index].k, fd[el[0].index].l); },
+            scales: { x: { ticks: tk, grid: { display: false } }, y: { ticks: tk, grid: gr } } } });
+        const md = this.G.mod.filter(x => x.k !== '(vazio)');
+        mk('cMod', { type: 'bar', data: { labels: md.map(x => x.k), datasets: [{ label: 'Unidades', data: md.map(x => x.n), backgroundColor: md.map(x => x.k === CORE.RP ? '#C6C8CA' : '#0078D4') }] },
+          options: { ...base, indexAxis: 'y', plugins: { ...base.plugins, legend: { display: false } }, onClick: (e, el) => { if (el[0]) this.abrirG('Modalidade', md[el[0].index]); },
+            scales: { x: { ticks: tk, grid: gr }, y: { ticks: tk, grid: { display: false } } } } });
+        const cl = this.G.cli.slice(0, 25), tot = this.A.fat || 1; let ac = 0;
+        mk('cPareto', { type: 'bar', data: { labels: cl.map(x => x.k.slice(0, 18)), datasets: [
+          { type: 'bar', label: 'Faturamento (R$ mi)', data: cl.map(x => +(x.fat / 1e6).toFixed(1)), backgroundColor: cl.map(x => INTERM.test(x.k) ? '#B26A00' : '#111'), yAxisID: 'y' },
+          { type: 'line', label: '% acumulado', data: cl.map(x => { ac += x.fat; return +(100 * ac / tot).toFixed(1); }), borderColor: '#0078D4', backgroundColor: '#0078D4', yAxisID: 'y1' }] },
+          options: { ...base, onClick: (e, el) => { if (el[0]) this.abrirG('Cliente', cl[el[0].index]); },
+            scales: { x: { ticks: { ...tk, maxRotation: 70, minRotation: 50, font: { size: 9 } }, grid: { display: false } }, y: { ticks: tk, grid: gr }, y1: { position: 'right', max: 100, ticks: { ...tk, callback: v => v + '%' }, grid: { display: false } } } } });
+        const cz = this.cruz;
+        if (cz) mk('cEmp', { type: 'bar', data: { labels: cz.porMes.map(x => fmt.ym(x.m)), datasets: [
+          { label: 'Caminhões faturados no mês', data: cz.porMes.map(x => x.fat), backgroundColor: '#C6C8CA' },
+          { label: 'Desses, já emplacados', data: cz.porMes.map(x => x.fatEmp), backgroundColor: '#111' },
+          { label: 'Emplacados no mês (chassis da base)', data: cz.porMes.map(x => x.emp), backgroundColor: '#0078D4' }] },
+          options: { ...base, scales: { x: { ticks: tk, grid: { display: false } }, y: { ticks: tk, grid: gr } } } });
       });
     }
   }
-}).mount('#app');
+});
+app.mount('#app');
 
 </script>
 </body>
