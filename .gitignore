@@ -24,3 +24,8 @@ carteira_gestor_grandes_frotas_*.html
 # Backup com CNPJ real e mapa reverso - NUNCA versionar
 EMPLACAMENTO - ANALISE PERFIL CLIENTES (ORIGINAL-CNPJ-REAL).xlsx
 cnpj-map-PRIVADO.json
+
+# Rotina ASSOBENS: arquivos originais, logs, screenshots e backups ficam fora do repositório
+storage/
+__pycache__/
+.pytest_cache/

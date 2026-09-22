@@ -1,0 +1,30 @@
+[
+ {
+  "id": "20260922-180740",
+  "started_at": "2026-09-22T18:07:40-03:00",
+  "trigger_type": "manual",
+  "executed_by": "matheus",
+  "source": "arquivo_local",
+  "finished_at": "2026-09-22T18:08:03-03:00",
+  "status": "success",
+  "file_name": "consolidado_emplacamentos_2020_2026.xlsx",
+  "file_hash": "829f8d0f3b8da79c83d453db467c627f9bc90a4547e049e9604c238e285ead90",
+  "rows_downloaded": 26092,
+  "rows_valid": 26092,
+  "rows_imported": 0,
+  "rows_updated": 0,
+  "rows_rejected": 0,
+  "prices_updated": 0,
+  "error_message": null,
+  "duration_seconds": 24.0,
+  "steps": [
+   "18:07:40 arquivo informado manualmente: consolidado_emplacamentos_2020_2026.xlsx",
+   "18:07:51 arquivo lido: aba 'Enriquecimento', 26092 linhas, 19 colunas mapeadas",
+   "18:07:52 normalização: {'validas': 26092, 'rejeitadas': 0, 'motivos': {}}",
+   "18:07:52 validação: nível ok, qualidade 100/100",
+   "18:08:03 upsert por CHASSI: 0 inseridos, 0 atualizados, 26092 iguais (matriz 26092)",
+   "18:08:03 KPIs: mercado 26092, MB 3967, share 15.2% (12m: 16.74%); Top 10 em 4 segmentos"
+  ],
+  "warnings": []
+ }
+]
