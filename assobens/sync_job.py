@@ -169,6 +169,8 @@ class AssobensSyncJob:
                 auth.login_portal(page)
                 run.step("login concluído no portal")
                 auth.open_bi(page)
+                page = auth.bi_page or page  # o SSO pode abrir o BI numa nova aba
+                b.page = page
                 run.step("BI autenticado")
             except AssobensError:
                 b.screenshot_error(page, "login")

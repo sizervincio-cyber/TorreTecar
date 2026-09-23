@@ -26,6 +26,7 @@ class AssobensAuthenticationService:
         self.creds = credentials
         self.sel = selectors
         self.browser = browser  # opcional: usado só para screenshot/aria de diagnóstico
+        self.bi_page = None     # aba onde o BI ficou autenticado (pode ser um popup do SSO)
         self.log = get_logger()
 
     def _diag(self, page, name: str) -> None:
@@ -107,11 +108,14 @@ class AssobensAuthenticationService:
             self._diag(page, "portal_sem_link_bi")
             raise InterfaceChangedError("entrada do BI não encontrada na página do portal após o login (ver portal_sem_link_bi.png/.yaml)")
         self.log.info("entrada do BI encontrada (href=%s)", (href or "clique")[:120])
+        self.bi_page = page
         if href and "bi-assobens" in href:
             page.goto(href, wait_until="domcontentloaded")
+            self._accept_cookies(page)
             session = self._wait_session(page, 40_000)
         else:
             session = self._enter_by_click(page, loc)
+        page = self.bi_page
         if session is None:
             self._diag(page, "bi_sem_sessao")
             raise AuthError("BI não autenticou: sessão (_pbiAssobens) ausente após SSO")
@@ -140,14 +144,14 @@ class AssobensAuthenticationService:
         self._accept_cookies(target)
         session = self._wait_session(target, 40_000)
         if popup is not None:
-            self.log.info("BI abriu em nova aba (%s); voltando para a aba principal", redact_url(popup.url))
+            # A aba do SSO já está em /home com o menu carregado. A raiz "/" do BI é a tela de login e as
+            # rotas diretas (/home, /dashboard) dão 404 na Netlify: por isso o trabalho continua NESTA aba.
+            self.log.info("BI abriu em nova aba (%s); ela passa a ser a aba de trabalho", redact_url(popup.url))
+            self.bi_page = popup
             try:
-                popup.close()
+                popup.set_default_timeout(45_000)
             except Exception:
                 pass
-            page.goto(config.BI_URL, wait_until="domcontentloaded")
-            self._accept_cookies(page)
-            session = self._wait_session(page, 20_000) or session
         return session
 
     def _bi_direct_login(self, page) -> None:

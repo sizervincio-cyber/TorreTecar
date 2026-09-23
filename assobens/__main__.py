@@ -43,6 +43,7 @@ def cmd_discover(a) -> int:
         b.dump_aria(b.page, "portal")
         b.screenshot_error(b.page, "discover_portal")
         auth.open_bi(b.page)
+        b.page = auth.bi_page or b.page
         dl = AssobensEmplacamentosDownloader(b, auth, sel)
         outs = dl.discover(b.page)
         try:
