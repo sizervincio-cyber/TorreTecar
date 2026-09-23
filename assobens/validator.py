@@ -35,7 +35,7 @@ class ValidationReport:
 
 
 def validate_batch(rows: list[dict], *, previous_rows_downloaded: int | None, unknown_headers: list[str],
-                   mb_reported: int | None = None, rejected: int = 0) -> ValidationReport:
+                   mb_reported: int | None = None, rejected: int = 0, total_reported: int | None = None) -> ValidationReport:
     rep = ValidationReport()
     # E) vazio
     if not rows:
@@ -64,11 +64,16 @@ def validate_batch(rows: list[dict], *, previous_rows_downloaded: int | None, un
 
     # C) MB calculado x informado (só quando o portal informou um total)
     mb_calc = por_marca.get(config.MB_BRAND, 0)
-    if mb_reported is not None:
-        if mb_calc != mb_reported:
-            rep.fail("C_mb_calc_vs_informado", f"MB calculado {mb_calc} ≠ informado {mb_reported}", LEVEL_SUSPECT)
+    for check, calc, rep_v in (("C_mb_calc_vs_informado", mb_calc, mb_reported), ("C_total_calc_vs_informado", len(rows), total_reported)):
+        if rep_v is None:
+            continue
+        if calc == rep_v:
+            rep.ok(check)
+        elif abs(calc - rep_v) <= max(1, rep_v * 0.01):   # até 1%: só aviso (exportação e painel em instantes diferentes)
+            rep.ok(check)
+            rep.messages.append(f"[{check}] calculado {calc} ≠ painel {rep_v} (diferença ≤ 1%)")
         else:
-            rep.ok("C_mb_calc_vs_informado")
+            rep.fail(check, f"calculado {calc} ≠ painel {rep_v}", LEVEL_SUSPECT)
 
     # D) negativos já são rejeitados na normalização; aqui só relata
     rep.ok("D_sem_negativos")

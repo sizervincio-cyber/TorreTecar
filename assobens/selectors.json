@@ -25,6 +25,11 @@
       {"kind": "css", "value": ".pbi-page-tab:has-text('Veículos'), .pageNavigation button:has-text('Veículos'), [class*='pageNavigation'] :text-is('Veículos')"},
       {"kind": "text", "name": "^ve[ií]culos$"}
     ],
+    "download_page_link": [
+      {"kind": "role", "value": "link", "name": "download do relat[óo]rio anal[íi]tico em Excel"},
+      {"kind": "role", "value": "button", "name": "download do relat[óo]rio anal[íi]tico em Excel"},
+      {"kind": "css", "value": "[title*='Excel' i], [aria-label*='Excel' i]"}
+    ],
     "visual_title": "Anal[íi]tico de Ve[íi]culos",
     "visual_more_options": [
       {"kind": "css", "value": "[aria-label*='Mais opções' i], [title*='Mais opções' i]"},

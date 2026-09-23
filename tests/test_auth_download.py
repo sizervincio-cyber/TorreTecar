@@ -172,7 +172,7 @@ def test_download_do_excel(tmp_path, monkeypatch):
     monkeypatch.setattr("assobens.emplacamentos_downloader.DownloadCatcher", lambda ctx, pg: MagicMock(wait=lambda t: fake_download))
     out = dl.download(page, tmp_path / "dia", "0800")
     assert out.name == "0800_emplacamentos.xlsx" and out.read_bytes() == b"xlsx-bytes"
-    assert page.present["[title*='Excel'"].clicked == 1 and page.present["role:tab:^ve[ií]culos$"].clicked == 1
+    assert page.present["[title*='Excel'"].clicked >= 1 and page.present["role:tab:^ve[ií]culos$"].clicked == 1
 
 
 def test_botao_excel_ausente_gera_screenshot_e_erro(tmp_path, monkeypatch):

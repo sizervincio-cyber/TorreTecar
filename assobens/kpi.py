@@ -109,6 +109,35 @@ class AssobensKpiService:
                 cmb[k] += 1
         return [{"periodo": k, "total_mercado": c[k], "mercedes_benz": cmb[k], "market_share_mb": _share(cmb[k], c[k])} for k in sorted(c)]
 
+    def conferencia(self, rows: list[dict], portal: dict) -> dict:
+        """ASSOBENS (painel) × Torre (matriz) no mesmo recorte de período do painel."""
+        from .normalizer import normalize_brand, parse_date
+        ini = parse_date(portal.get("periodo_inicio")) or "0000-00-00"
+        fim = parse_date(portal.get("periodo_fim")) or "9999-99-99"
+        rec = [r for r in rows if ini <= r.get("DATA EMPLACAMENTO", "") <= fim]
+        tot, mb = len(rec), sum(1 for r in rec if r.get("MARCA") == self.mb)
+        share = _share(mb, tot)
+
+        def item(nome, a, t, pct=False):
+            d = (round(t - a, 2) if (a is not None and t is not None) else None)
+            p = (round(100 * (t - a) / a, 2) if (a not in (None, 0) and t is not None) else None)
+            return {"indicador": nome, "assobens": a, "torre": t, "diferenca": d, "diferenca_pct": p}
+        ind = [item("Total Mercado", portal.get("total_mercado"), tot),
+               item("Total Mercedes-Benz", portal.get("total_mb"), mb),
+               item("Market Share MB (%)", portal.get("share_mb"), share)]
+        por_marca: dict[str, int] = {}
+        for r in rec:
+            por_marca[r.get("MARCA") or "(vazio)"] = por_marca.get(r.get("MARCA") or "(vazio)", 0) + 1
+        fabricantes = []
+        for f in portal.get("fabricantes", []):
+            marca = normalize_brand(f["fabricante"])
+            t = por_marca.get(marca) if marca != "OTHERS" else None
+            fabricantes.append({**item(f"Fabricante {f['fabricante']}", f["emplacamentos"], t), "share_assobens": f["share"],
+                                "share_torre": _share(t, tot) if t is not None else None})
+        return {"periodo": {"inicio": ini, "fim": fim}, "painel_atualizado_em": portal.get("atualizado_em"),
+                "filtros_painel": portal.get("filtros", {}), "indicadores": ind, "fabricantes": fabricantes,
+                "por_subsegmento_torre": self._dim(rec, "SUBSEGMENTO")}
+
     def ranking_modelos(self, rows: list[dict], por: str = "SUBSEGMENTO") -> dict[str, list[dict]]:
         """Ranking de modelos dentro de cada segmento: base do Top 10 (nunca hardcoded)."""
         seg: dict[str, Counter] = defaultdict(Counter)

@@ -83,8 +83,10 @@ def test_validacoes(sample_xlsx):
     assert vazio.level == LEVEL_ERROR
     mb = validate_batch(rows, previous_rows_downloaded=None, unknown_headers=[], mb_reported=2)
     assert mb.checks["C_mb_calc_vs_informado"]
-    mb_dif = validate_batch(rows, previous_rows_downloaded=None, unknown_headers=[], mb_reported=3)
+    mb_dif = validate_batch(rows, previous_rows_downloaded=None, unknown_headers=[], mb_reported=4)
     assert mb_dif.level == LEVEL_SUSPECT
+    mb_tol = validate_batch(rows, previous_rows_downloaded=None, unknown_headers=[], mb_reported=3)   # diferença de 1: só aviso
+    assert mb_tol.level == LEVEL_OK
 
 
 # ----------------------------------------------------------------- KPIs / market share

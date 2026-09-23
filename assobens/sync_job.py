@@ -53,12 +53,15 @@ class AssobensSyncJob:
         try:
             # 1) DOWNLOAD (ou arquivo já baixado)
             price_captures: list[dict] | None = None
+            portal: dict = {}
             if self.arquivo:
                 xlsx = Path(self.arquivo)
                 run.step(f"arquivo informado manualmente: {xlsx.name}")
                 run.source = "arquivo_local"
             else:
-                xlsx, price_captures = self._with_retries(run)
+                stage = self._with_retries(run)
+                xlsx, price_captures = stage[0], stage[1]
+                portal = stage[2] if len(stage) > 2 and stage[2] else {}
             # 2) VALIDAÇÃO DO ARQUIVO + STAGING (memória)
             parsed = self.parser.parse(xlsx)
             run.file_name, run.file_hash, run.rows_downloaded = parsed.file_name, parsed.file_hash, len(parsed.rows)
@@ -74,7 +77,8 @@ class AssobensSyncJob:
             # 4) CONSISTÊNCIA
             prev = self.runlog.last_success()
             report = validate_batch(batch.rows, previous_rows_downloaded=(prev or {}).get("rows_downloaded"),
-                                    unknown_headers=parsed.unknown_headers, rejected=len(batch.rejected))
+                                    unknown_headers=parsed.unknown_headers, rejected=len(batch.rejected),
+                                    mb_reported=portal.get("total_mb"), total_reported=portal.get("total_mercado"))
             run.warnings.extend(report.messages)
             run.step(f"validação: nível {report.level}, qualidade {report.quality.get('score')}/100")
             if report.level == LEVEL_ERROR:
@@ -103,6 +107,11 @@ class AssobensSyncJob:
             write_json_atomic(self.top10_path, top10)
             run.step(f"KPIs: mercado {kpis['total_mercado']}, MB {kpis['total_mercedes_benz']}, share {kpis['market_share_mb']}% "
                      f"(12m: {kpis['ultimos_12_meses']['market_share_mb']}%); Top 10 em {len(top10['segmentos'])} segmentos")
+            if portal:
+                conf = self.kpi.conferencia(rows_all, portal)
+                write_json_atomic(self.kpis_path.parent / "conferencia.json", conf)
+                run.step("conferência ASSOBENS × Torre: " + "; ".join(
+                    f"{c['indicador']} {c['assobens']}/{c['torre']} (Δ{c['diferenca']})" for c in conf["indicadores"][:3]))
             # 7) PREÇOS
             if not self.skip_precos:
                 if price_captures:
@@ -190,4 +199,4 @@ class AssobensSyncJob:
                     b.screenshot_error(page, "precos")
                     run.warnings.append(f"comparativo de preços não capturado: {redact(str(e))[:200]}")
                     self.log.warning("preços falharam: %s", redact(str(e)))
-        return xlsx, prices
+        return xlsx, prices, dl.last_kpis

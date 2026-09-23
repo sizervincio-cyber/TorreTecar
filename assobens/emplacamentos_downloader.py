@@ -19,6 +19,7 @@ from .logutil import get_logger
 class AssobensEmplacamentosDownloader:
     def __init__(self, browser, auth, selectors: dict):
         self.browser, self.auth, self.sel = browser, auth, selectors
+        self.last_kpis: dict = {}
         self.log = get_logger()
 
     # ------------------------------------------------------------- fluxo principal
@@ -95,8 +96,55 @@ class AssobensEmplacamentosDownloader:
             self.log.info("filtro %s = '%s' (não alterado; esperado Todos)", key, txt)
 
     # ------------------------------------------------------------- download
+    # ------------------------------------------------------------- KPIs do painel (só para conferência)
+    KPI_PATTERNS = {
+        "total_mercado": r"Quantidade de chassi total ([\d.]+)",
+        "total_mb": r"Total Mercedes-Benz ([\d.]+)",
+        "share_mb": r"%Share Mercedes-Benz ([\d,]+)%",
+        "atualizado_em": r"mais recente (\d{2}/\d{2}/\d{4})",
+        "periodo_inicio": r"Data de in[íi]cio[^\n]*\n\s*- /placeholder[^\n]*\n\s*- text: (\d{2}/\d{2}/\d{4})",
+        "periodo_fim": r"Data de t[ée]rmino[^\n]*\n\s*- /placeholder[^\n]*\n\s*- text: (\d{2}/\d{2}/\d{4})",
+    }
+
+    def capture_dashboard_kpis(self, frame) -> dict:
+        """Lê os totais exibidos no painel (árvore de acessibilidade) apenas para CONFERÊNCIA contra a Torre.
+        A fonte dos dados importados continua sendo o Excel analítico."""
+        try:
+            txt = frame.locator("body").aria_snapshot()
+        except Exception:
+            return {}
+        out: dict = {}
+        for k, pat in self.KPI_PATTERNS.items():
+            m = re.search(pat, txt)
+            if m:
+                out[k] = m.group(1)
+        for k in ("total_mercado", "total_mb"):
+            if k in out:
+                out[k] = int(out[k].replace(".", ""))
+        if "share_mb" in out:
+            out["share_mb"] = float(out["share_mb"].replace(",", "."))
+        out["fabricantes"] = [{"fabricante": f, "emplacamentos": int(n.replace(".", "")), "share": float(p.replace(",", "."))}
+                              for f, n, p in re.findall(r'fabricante ([^.]+?)\. Total com outros ([\d.]+) \(([\d,]+)%\)', txt)]
+        out["filtros"] = {k: v.strip() for k, v in re.findall(r'combobox "([^"]+)": ([^\n]*)', txt)}
+        self.log.info("KPIs do painel para conferência: mercado=%s MB=%s share=%s%% período=%s..%s filtros=%s",
+                      out.get("total_mercado"), out.get("total_mb"), out.get("share_mb"), out.get("periodo_inicio"),
+                      out.get("periodo_fim"), {k: out["filtros"][k] for k in ("Região MB", "Distrito", "Segmentos", "Ano Emplac.") if k in out["filtros"]})
+        return out
+
     def click_excel(self, page, frame, target: Path) -> Path:
+        self.last_kpis = self.capture_dashboard_kpis(frame)
         catcher = DownloadCatcher(page.context, page)
+        # O 'ícone de Excel' da página Veículos é um botão de navegação do Power BI que leva à página
+        # 'Download dos dados analíticos', onde fica a tabela 'Analítico de Veículos' com 'Exportar dados'.
+        nav = self._find_logged(frame, self.sel["emplacamentos"]["download_page_link"], 20_000, "link 'download do relatório analítico em Excel'")
+        if nav is not None:
+            nav.click()
+            page.wait_for_timeout(4_000)
+            try:
+                frame.get_by_text(re.compile(self.sel["emplacamentos"]["visual_title"], re.I)).first.wait_for(state="visible", timeout=60_000)
+                self.log.info("página de download aberta: tabela analítica visível")
+            except Exception:
+                self.log.warning("tabela analítica não ficou visível após a navegação")
         if not self.export_visual(page, frame, self.sel["emplacamentos"].get("visual_title")):
             btn = self._find_logged(frame, self.sel["emplacamentos"]["excel_button"], 15_000, "ícone Excel")
             if btn is None:
@@ -129,7 +177,7 @@ class AssobensEmplacamentosDownloader:
         """Fluxo documentado no próprio relatório: passar o mouse na tabela → '…' (Mais opções) →
         'Exportar dados' → 'Exportar'. Devolve True se o botão final do diálogo foi clicado."""
         s = self.sel["emplacamentos"]
-        self.browser.dump_aria(frame, "relatorio")  # árvore do relatório fica nos artefatos de toda execução
+        self.browser.dump_aria(frame, "relatorio_" + re.sub(r"[^a-z]", "", (title_rx or "x").lower())[:12])  # fica nos artefatos
         visual = None
         if title_rx:
             for css in ("visual-container", ".visualContainer", "[class*='visualContainer']", "visual-container-group"):

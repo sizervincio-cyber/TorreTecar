@@ -20,7 +20,7 @@ BRAND_ALIASES = {
     "VOLKSWAGEN": "VW", "VW/MAN": "VW", "VOLKS": "VW",
     "HYUNDAI": "HYUNDA",
     "FORD CAMINHOES": "FORD",
-    "IVECO/FIAT": "IVECO",
+    "IVECO/FIAT": "IVECO", "IVECO-FIAT": "IVECO", "IVECO FIAT": "IVECO",
     "AGRALE": "AGRAL",
 }
 # Códigos AOP presentes na matriz atual (nome da área operacional -> código). Usado só quando o ASSOBENS
