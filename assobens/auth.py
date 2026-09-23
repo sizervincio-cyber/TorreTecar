@@ -44,9 +44,14 @@ class AssobensAuthenticationService:
             raise CredentialsMissingError("ASSOBENS_USER / ASSOBENS_PASSWORD não configurados (.env ou secrets)")
         s = self.sel["portal"]
         page.goto(config.PORTAL_LOGIN_URL, wait_until="domcontentloaded")
+        self._wait_verification_page(page)
         user = first_present(page, s["user"], timeout_ms=15_000)
         pwd = first_present(page, s["password"], timeout_ms=5_000)
         if user is None or pwd is None:
+            if self._verification_page_present(page):
+                raise AuthError("portal exibiu página de verificação de solicitação ('Aguarde enquanto sua solicitação está sendo "
+                                "verificada') e não liberou o formulário de login — proteção anti-automação/limite de tentativas; "
+                                "aguardar e executar novamente mais tarde")
             raise AuthError("formulário de login do portal não encontrado (interface mudou?)")
         user.fill(self.creds.user)
         pwd.fill(self.creds.password)
@@ -67,6 +72,29 @@ class AssobensAuthenticationService:
         if first_present(page, s["logged_in"], visible=False, timeout_ms=10_000) is None:
             raise AuthError("login não confirmado: nenhum elemento da área autenticada do portal")
         self.log.info("login no portal confirmado (url=%s)", page.url)
+
+    _VERIF_RX = re.compile(r"Aguarde enquanto sua solicita", re.I)
+
+    def _verification_page_present(self, page) -> bool:
+        try:
+            return page.get_by_text(self._VERIF_RX).count() > 0
+        except Exception:
+            return False
+
+    def _wait_verification_page(self, page, timeout_ms: int = 90_000) -> None:
+        """O portal às vezes mostra uma página de verificação antes do login; espera ela liberar sozinha.
+        Nada é contornado: apenas se aguarda o carregamento normal da página."""
+        if not self._verification_page_present(page):
+            return
+        self.log.info("portal exibiu página de verificação; aguardando liberação (até %ds)", timeout_ms // 1000)
+        waited = 0
+        while waited < timeout_ms and self._verification_page_present(page):
+            page.wait_for_timeout(3_000)
+            waited += 3_000
+        try:
+            page.wait_for_load_state("domcontentloaded", timeout=15_000)
+        except Exception:
+            pass
 
     def bi_link(self, page) -> str | None:
         loc, href = self._find_bi_entry(page)
