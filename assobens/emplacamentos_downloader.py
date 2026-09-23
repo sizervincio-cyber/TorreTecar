@@ -7,6 +7,7 @@ Se o botão não existir: seletores alternativos → screenshot → InterfaceCha
 from __future__ import annotations
 
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -141,10 +142,10 @@ class AssobensEmplacamentosDownloader:
             nav.click()
             page.wait_for_timeout(4_000)
             try:
-                frame.get_by_text(re.compile(self.sel["emplacamentos"]["visual_title"], re.I)).first.wait_for(state="visible", timeout=60_000)
-                self.log.info("página de download aberta: tabela analítica visível")
+                self._wait_present(frame.get_by_role("grid"), 60_000)
+                self.log.info("página de download aberta: tabela analítica presente")
             except Exception:
-                self.log.warning("tabela analítica não ficou visível após a navegação")
+                self.log.warning("tabela analítica não apareceu após a navegação")
         if not self.export_visual(page, frame, self.sel["emplacamentos"].get("visual_title")):
             btn = self._find_logged(frame, self.sel["emplacamentos"]["excel_button"], 15_000, "ícone Excel")
             if btn is None:
@@ -168,6 +169,16 @@ class AssobensEmplacamentosDownloader:
         self.log.info("arquivo recebido: %s (%d bytes, nome original %s)", target.name, target.stat().st_size, suggested)
         return target
 
+    @staticmethod
+    def _wait_present(loc, timeout_ms: int) -> None:
+        """Espera o elemento existir no DOM (sem exigir visibilidade, que o Power BI nem sempre expõe)."""
+        waited = 0
+        while loc.count() == 0:
+            if waited >= timeout_ms:
+                raise TimeoutError("elemento não apareceu")
+            time.sleep(1)
+            waited += 1_000
+
     def _find_logged(self, scope, candidates: list[dict], timeout_ms: int, label: str):
         loc = first_present(scope, candidates, timeout_ms=timeout_ms)
         self.log.info("%s %s", label, "localizado" if loc is not None else "NÃO localizado")
@@ -178,60 +189,20 @@ class AssobensEmplacamentosDownloader:
         'Exportar dados' → 'Exportar'. Devolve True se o botão final do diálogo foi clicado."""
         s = self.sel["emplacamentos"]
         self.browser.dump_aria(frame, "relatorio_" + re.sub(r"[^a-z]", "", (title_rx or "x").lower())[:12])  # fica nos artefatos
-        visual = None
-        if title_rx:
-            for css in ("visual-container", ".visualContainer", "[class*='visualContainer']", "visual-container-group"):
-                try:
-                    loc = frame.locator(css, has_text=re.compile(title_rx, re.I))
-                    if loc.count():
-                        visual = loc.first
-                        break
-                except Exception:
-                    continue
-            if visual is None:  # título do visual em qualquer elemento: passar o mouse nele já mostra o cabeçalho do visual
-                try:
-                    t = frame.get_by_text(re.compile(title_rx, re.I)).first
-                    if t.count():
-                        anc = t.locator("xpath=ancestor::*[self::visual-container or contains(@class,'visualContainer')][1]")
-                        visual = anc.first if anc.count() else t
-                        self.log.info("visual localizado pelo texto do título")
-                except Exception:
-                    visual = None
-        if visual is None and title_rx:  # árvore real: group "Analítico de Veículos - dd-mm-aaaa" > heading + document > grid
-            try:
-                g = frame.get_by_role("group", name=re.compile(title_rx, re.I)).first
-                if g.count():
-                    visual = g
-                    self.log.info("visual localizado pelo grupo acessível do título")
-            except Exception:
-                visual = None
-        if visual is None:  # a tabela analítica é exposta como grid (role) — confirmado na árvore de acessibilidade
-            try:
-                g = frame.get_by_role("grid").first
-                if g.count():
-                    visual = g
-                    self.log.info("visual localizado pelo papel 'grid' (tabela)")
-            except Exception:
-                visual = None
-        if visual is None:
-            self.log.warning("visual '%s' não localizado no relatório", title_rx)
-            return False
-        try:
-            visual.wait_for(state="visible", timeout=60_000)
-            visual.scroll_into_view_if_needed()
-            visual.hover()
-            page.wait_for_timeout(1_000)
-        except Exception as e:
-            self.log.warning("não foi possível focar o visual: %s", e)
-            return False
-        self.log.info("visual '%s' localizado; abrindo menu do visual", title_rx)
-        more = self._find_logged(frame, s["visual_more_options"], 8_000, "botão 'Mais opções'")
+        more = None
+        for nome, loc in self._visual_candidates(frame, title_rx):
+            if self._hover_and_find_menu(page, frame, loc, nome):
+                more = first_present(frame, s["visual_more_options"], timeout_ms=0)
+                if more is not None:
+                    break
         if more is None:
             self.browser.dump_aria(frame, "apos_hover")
+            self.log.warning("botão 'Mais opções' do visual não apareceu em nenhuma estratégia")
             return False
         more.click()
         item = self._find_logged(frame, s["visual_export_menu"], 8_000, "item 'Exportar dados'")
         if item is None:
+            self.browser.dump_aria(frame, "menu_visual")
             try:
                 page.keyboard.press("Escape")
             except Exception:
@@ -240,12 +211,73 @@ class AssobensEmplacamentosDownloader:
         item.click()
         btn = self._find_logged(frame, s["visual_export_confirm"], 15_000, "botão 'Exportar' do diálogo")
         if btn is None:
+            self.browser.dump_aria(frame, "dialogo_exportar")
             return False
         self.log.info("download iniciado (Exportar dados do visual)")
         btn.click()
         return True
 
-    # ------------------------------------------------------------- descoberta
+    def _visual_candidates(self, frame, title_rx: str | None):
+        """Localizadores da tabela analítica, do mais específico ao mais genérico (árvore real:
+        group "Analítico de Veículos - dd-mm-aaaa" > heading + document > grid)."""
+        rx = re.compile(title_rx, re.I) if title_rx else None
+        fabricas = [
+            ("group pelo título", lambda: frame.get_by_role("group", name=rx).first if rx else None),
+            ("heading do título", lambda: frame.get_by_role("heading", name=rx).first if rx else None),
+            ("grid (tabela)", lambda: frame.get_by_role("grid").first),
+            ("primeira célula da tabela", lambda: frame.get_by_role("gridcell").first),
+            ("visual-container com o título", lambda: frame.locator("visual-container", has_text=rx).first if rx else None),
+        ]
+        res = []
+        for nome, fab in fabricas:
+            try:
+                loc = fab()
+                if loc is not None and loc.count():
+                    res.append((nome, loc))
+            except Exception:
+                continue
+        self.log.info("candidatos para a tabela analítica: %s", [n for n, _ in res])
+        return res
+
+    def _hover_and_find_menu(self, page, frame, loc, nome: str) -> bool:
+        """Passa o mouse sobre o elemento (hover normal, hover forçado pela caixa delimitadora e, por fim,
+        atalho Alt+Shift+F10 do Power BI que exibe o cabeçalho do visual) e verifica se 'Mais opções' apareceu."""
+        s = self.sel["emplacamentos"]
+        estrategias = []
+
+        def hover_normal():
+            loc.scroll_into_view_if_needed(timeout=5_000)
+            loc.hover(timeout=5_000)
+
+        def hover_box():
+            box = loc.bounding_box(timeout=5_000)
+            if not box:
+                raise RuntimeError("sem caixa delimitadora")
+            page.mouse.move(box["x"] + box["width"] / 2, box["y"] + min(40, box["height"] / 2))
+            page.wait_for_timeout(300)
+            page.mouse.move(box["x"] + box["width"] / 2 + 5, box["y"] + min(40, box["height"] / 2) + 5)
+
+        def hover_forcado():
+            loc.hover(timeout=5_000, force=True)
+
+        def atalho_teclado():
+            loc.click(timeout=5_000, force=True)
+            page.keyboard.press("Alt+Shift+F10")
+
+        estrategias = [("hover", hover_normal), ("mouse na caixa", hover_box), ("hover forçado", hover_forcado), ("Alt+Shift+F10", atalho_teclado)]
+        for enome, fn in estrategias:
+            try:
+                fn()
+                page.wait_for_timeout(1_200)
+            except Exception as e:
+                self.log.info("%s / %s: falhou (%s)", nome, enome, str(e).splitlines()[0][:90])
+                continue
+            if first_present(frame, s["visual_more_options"], timeout_ms=2_500) is not None:
+                self.log.info("visual focado por '%s' / %s: 'Mais opções' visível", nome, enome)
+                return True
+            self.log.info("%s / %s: sem 'Mais opções'", nome, enome)
+        return False
+
     def discover(self, page) -> list[Path]:
         """Abre o relatório e salva screenshot + árvore de acessibilidade para ajustar selectors.json."""
         self.auth.ensure_bi_session(page)
