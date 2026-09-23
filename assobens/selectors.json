@@ -1,12 +1,12 @@
 {
-  "_doc": "Localizadores semânticos, tentados em ordem. kind: role (value=nome do role, name=regex), text (regex), css, label, placeholder. Ajuste aqui, não no código. Os candidatos dentro do Power BI ficam confirmados na primeira execução autenticada (python -m assobens discover).",
+  "_doc": "Localizadores semânticos, tentados em ordem. kind: role (value=nome do role, name=regex), text (regex), css, label, placeholder. Ajuste aqui, não no código. Confirmados na primeira execução autenticada (run 35806081921): o relatório 'Veículos Novos Área Operacional' é Power BI com páginas Veículos/Implementos/Expurgos; o download é o 'Exportar dados' da tabela 'Analítico de Veículos' (passar o mouse → … → Exportar dados → Exportar).",
   "portal": {
     "user": [{"kind": "label", "name": "usu[aá]rio|e-mail"}, {"kind": "css", "value": "#user_login"}, {"kind": "css", "value": "input[name=log]"}],
     "password": [{"kind": "label", "name": "^senha$"}, {"kind": "css", "value": "#user_pass"}, {"kind": "css", "value": "input[name=pwd]"}],
     "submit": [{"kind": "role", "value": "button", "name": "acessar|entrar|log ?in"}, {"kind": "css", "value": "#wp-submit"}],
     "login_error": [{"kind": "css", "value": "#login_error"}, {"kind": "css", "value": ".login-error, .error-message"}],
-    "logged_in": [{"kind": "css", "value": "body.logged-in"}, {"kind": "css", "value": "#wpadminbar"}, {"kind": "css", "value": "a[href*='bi-assobens.com.br']"}],
-    "bi_link": [{"kind": "css", "value": "a[href*='bi-assobens.com.br']"}, {"kind": "role", "value": "link", "name": "BI ?ASSOBENS"}, {"kind": "text", "name": "BI ASSOBENS"}]
+    "logged_in": [{"kind": "css", "value": "body.logged-in"}, {"kind": "css", "value": "#wpadminbar"}, {"kind": "css", "value": "a[href*='bi-assobens.com.br']"}, {"kind": "css", "value": "a[href*='apiSSO']"}],
+    "bi_link": [{"kind": "css", "value": "a[href*='bi-assobens.com.br']"}, {"kind": "css", "value": "a[href*='apiSSO']"}, {"kind": "role", "value": "link", "name": "BI ?ASSOBENS"}, {"kind": "text", "name": "BI ASSOBENS"}]
   },
   "bi": {
     "login_email": [{"kind": "placeholder", "name": "Informe seu e-mail"}, {"kind": "css", "value": "input[type=email]"}],
@@ -14,33 +14,34 @@
     "login_submit": [{"kind": "role", "value": "button", "name": "^login$"}],
     "cookie_accept": [{"kind": "role", "value": "button", "name": "Aceitar todos"}, {"kind": "text", "name": "Aceitar todos"}],
     "menu_toggle": [{"kind": "css", "value": ".navbar-toggler, .sidebar-toggle, button[aria-label*='menu' i]"}],
-    "menu_group_comercializacao": [{"kind": "text", "name": "Comercializa[çc][ãa]o"}],
+    "menu_group_comercializacao": [{"kind": "text", "name": "BI Comercializa[çc][ãa]o"}],
     "report_iframe": [{"kind": "css", "value": "#report iframe"}, {"kind": "css", "value": ".report iframe"}, {"kind": "css", "value": "iframe[src*='powerbi']"}],
-    "report_rendered": [{"kind": "css", "value": ".visualContainer, visual-container, .visual-container, [class*='visualContainer']"}]
+    "report_rendered": [{"kind": "css", "value": "visual-container, .visualContainer, .visual-container, [class*='visualContainer']"}]
   },
   "emplacamentos": {
     "page_tab": [
       {"kind": "role", "value": "tab", "name": "^ve[ií]culos$"},
       {"kind": "role", "value": "button", "name": "^ve[ií]culos$"},
-      {"kind": "role", "value": "tab", "name": "ve[ií]culos"},
-      {"kind": "css", "value": ".pbi-page-tab:has-text('VEÍCULOS'), .pageNavigation button:has-text('VEÍCULOS')"},
+      {"kind": "css", "value": ".pbi-page-tab:has-text('Veículos'), .pageNavigation button:has-text('Veículos'), [class*='pageNavigation'] :text-is('Veículos')"},
       {"kind": "text", "name": "^ve[ií]culos$"}
     ],
+    "visual_title": "Anal[íi]tico de Ve[íi]culos",
+    "visual_more_options": [
+      {"kind": "css", "value": "[aria-label*='Mais opções' i], [title*='Mais opções' i]"},
+      {"kind": "css", "value": "[aria-label*='More options' i], [title*='More options' i]"},
+      {"kind": "css", "value": ".vcMenuBtn, button[aria-label*='opções' i], button[aria-label*='options' i]"}
+    ],
+    "visual_export_menu": [{"kind": "role", "value": "menuitem", "name": "exportar dados|export data"}, {"kind": "text", "name": "^Exportar dados$|^Export data$"}],
+    "visual_export_confirm": [{"kind": "role", "value": "button", "name": "^exportar$|^export$"}, {"kind": "css", "value": "[role=dialog] button.primary, [role=dialog] button:has-text('Exportar')"}],
     "excel_button": [
-      {"kind": "role", "value": "button", "name": "excel|exportar|download"},
       {"kind": "css", "value": "[title*='Excel' i], [aria-label*='Excel' i]"},
-      {"kind": "css", "value": "[title*='Exportar' i], [aria-label*='Exportar' i], [title*='Download' i], [aria-label*='Download' i]"},
-      {"kind": "css", "value": "img[alt*='excel' i], img[src*='excel' i]"},
-      {"kind": "css", "value": "visual-container:has-text('Excel') button, [class*='visual']:has-text('Excel') [role=button]"},
-      {"kind": "text", "name": "relat[óo]rio anal[íi]tico|excel"}
+      {"kind": "css", "value": "img[alt*='excel' i], img[src*='excel' i]"}
     ],
     "slicer_regiao_mb": [{"kind": "css", "value": "[aria-label*='Região MB' i], [title*='Região MB' i]"}],
-    "slicer_distrito": [{"kind": "css", "value": "[aria-label*='Distrito' i], [title*='Distrito' i]"}],
-    "visual_more_options": [{"kind": "css", "value": "[aria-label*='Mais opções' i], [title*='Mais opções' i], [aria-label*='More options' i]"}],
-    "visual_export_menu": [{"kind": "role", "value": "menuitem", "name": "exportar dados|export data"}, {"kind": "text", "name": "Exportar dados|Export data"}],
-    "visual_export_confirm": [{"kind": "role", "value": "button", "name": "^exportar$|^export$"}]
+    "slicer_distrito": [{"kind": "css", "value": "[aria-label*='Distrito' i], [title*='Distrito' i]"}]
   },
   "precos": {
+    "visual_title": "pre[çc]o|comparativo",
     "table_rows": [{"kind": "role", "value": "row"}, {"kind": "css", "value": "[role=grid] [role=row], table tr"}],
     "reference_date_text": [{"kind": "text", "name": "atualizad[oa].{0,30}\\d{2}/\\d{2}/\\d{4}|refer[êe]ncia.{0,30}\\d{2}/\\d{2}/\\d{4}"}],
     "col_manufacturer": "fabricante|marca|montadora",

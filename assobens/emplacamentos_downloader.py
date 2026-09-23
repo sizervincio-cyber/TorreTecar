@@ -97,16 +97,14 @@ class AssobensEmplacamentosDownloader:
     # ------------------------------------------------------------- download
     def click_excel(self, page, frame, target: Path) -> Path:
         catcher = DownloadCatcher(page.context, page)
-        btn = first_present(frame, self.sel["emplacamentos"]["excel_button"], timeout_ms=30_000)
-        if btn is None:
-            self.log.warning("ícone Excel não encontrado; tentando 'Exportar dados' do visual")
-            btn = self._export_via_visual_menu(frame)
-        if btn is None:
-            self.browser.screenshot_error(page, "botao_excel")
-            self.browser.dump_aria(frame, "botao_excel")
-            raise InterfaceChangedError("ícone de Excel não encontrado no relatório (interface do ASSOBENS mudou)")
-        self.log.info("download iniciado")
-        btn.click()
+        if not self.export_visual(page, frame, self.sel["emplacamentos"].get("visual_title")):
+            btn = self._find_logged(frame, self.sel["emplacamentos"]["excel_button"], 15_000, "ícone Excel")
+            if btn is None:
+                self.browser.screenshot_error(page, "botao_excel")
+                self.browser.dump_aria(frame, "botao_excel")
+                raise InterfaceChangedError("nem 'Exportar dados' da tabela nem ícone de Excel encontrados no relatório (interface mudou)")
+            self.log.info("download iniciado (ícone Excel)")
+            btn.click()
         dl = catcher.wait(120)
         if dl is None:
             self.browser.screenshot_error(page, "download_timeout")
@@ -122,17 +120,55 @@ class AssobensEmplacamentosDownloader:
         self.log.info("arquivo recebido: %s (%d bytes, nome original %s)", target.name, target.stat().st_size, suggested)
         return target
 
-    def _export_via_visual_menu(self, frame):
+    def _find_logged(self, scope, candidates: list[dict], timeout_ms: int, label: str):
+        loc = first_present(scope, candidates, timeout_ms=timeout_ms)
+        self.log.info("%s %s", label, "localizado" if loc is not None else "NÃO localizado")
+        return loc
+
+    def export_visual(self, page, frame, title_rx: str | None) -> bool:
+        """Fluxo documentado no próprio relatório: passar o mouse na tabela → '…' (Mais opções) →
+        'Exportar dados' → 'Exportar'. Devolve True se o botão final do diálogo foi clicado."""
         s = self.sel["emplacamentos"]
-        more = first_present(frame, s["visual_more_options"], timeout_ms=5_000)
+        visual = None
+        if title_rx:
+            for css in ("visual-container", ".visualContainer", "[class*='visualContainer']", "visual-container-group"):
+                try:
+                    loc = frame.locator(css, has_text=re.compile(title_rx, re.I))
+                    if loc.count():
+                        visual = loc.first
+                        break
+                except Exception:
+                    continue
+        if visual is None:
+            self.log.warning("visual '%s' não localizado no relatório", title_rx)
+            return False
+        try:
+            visual.wait_for(state="visible", timeout=60_000)
+            visual.scroll_into_view_if_needed()
+            visual.hover()
+            page.wait_for_timeout(1_000)
+        except Exception as e:
+            self.log.warning("não foi possível focar o visual: %s", e)
+            return False
+        self.log.info("visual '%s' localizado; abrindo menu do visual", title_rx)
+        more = self._find_logged(frame, s["visual_more_options"], 8_000, "botão 'Mais opções'")
         if more is None:
-            return None
+            return False
         more.click()
-        item = first_present(frame, s["visual_export_menu"], timeout_ms=5_000)
+        item = self._find_logged(frame, s["visual_export_menu"], 8_000, "item 'Exportar dados'")
         if item is None:
-            return None
+            try:
+                page.keyboard.press("Escape")
+            except Exception:
+                pass
+            return False
         item.click()
-        return first_present(frame, s["visual_export_confirm"], timeout_ms=10_000)
+        btn = self._find_logged(frame, s["visual_export_confirm"], 15_000, "botão 'Exportar' do diálogo")
+        if btn is None:
+            return False
+        self.log.info("download iniciado (Exportar dados do visual)")
+        btn.click()
+        return True
 
     # ------------------------------------------------------------- descoberta
     def discover(self, page) -> list[Path]:

@@ -76,11 +76,9 @@ class AssobensPriceDownloader:
 
     # ------------------------------------------------------------- estratégia 2
     def _export_and_parse(self, page, frame, out_dir: Path) -> list[dict]:
-        btn = self.nav._export_via_visual_menu(frame)
-        if btn is None:
-            return []
         catcher = DownloadCatcher(page.context, page)
-        btn.click()
+        if not self.nav.export_visual(page, frame, self.sel["precos"].get("visual_title")):
+            return []
         dl = catcher.wait(90)
         if dl is None:
             return []

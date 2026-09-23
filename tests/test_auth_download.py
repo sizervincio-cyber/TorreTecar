@@ -165,14 +165,14 @@ def _downloader(page, tmp_path, monkeypatch):
 def test_download_do_excel(tmp_path, monkeypatch):
     page = FakePage(url="https://bi-assobens.com.br/home",
                     present={"role:link:Veículos": FakeLocator(1), "#report iframe": FakeLocator(1), ".visualContainer": FakeLocator(1),
-                             "role:tab:^ve[ií]culos$": FakeLocator(1), "role:button:excel": FakeLocator(1)})
+                             "role:tab:^ve[ií]culos$": FakeLocator(1), "[title*='Excel'": FakeLocator(1)})
     dl, browser = _downloader(page, tmp_path, monkeypatch)
     fake_download = MagicMock(suggested_filename="relatorio_analitico.xlsx")
     fake_download.save_as = lambda p: Path(p).write_bytes(b"xlsx-bytes")
     monkeypatch.setattr("assobens.emplacamentos_downloader.DownloadCatcher", lambda ctx, pg: MagicMock(wait=lambda t: fake_download))
     out = dl.download(page, tmp_path / "dia", "0800")
     assert out.name == "0800_emplacamentos.xlsx" and out.read_bytes() == b"xlsx-bytes"
-    assert page.present["role:button:excel"].clicked == 1 and page.present["role:tab:^ve[ií]culos$"].clicked == 1
+    assert page.present["[title*='Excel'"].clicked == 1 and page.present["role:tab:^ve[ií]culos$"].clicked == 1
 
 
 def test_botao_excel_ausente_gera_screenshot_e_erro(tmp_path, monkeypatch):
@@ -190,7 +190,7 @@ def test_botao_excel_ausente_gera_screenshot_e_erro(tmp_path, monkeypatch):
 def test_clique_sem_download_e_erro_de_download(tmp_path, monkeypatch):
     page = FakePage(url="https://bi-assobens.com.br/home",
                     present={"role:link:Veículos": FakeLocator(1), "#report iframe": FakeLocator(1), ".visualContainer": FakeLocator(1),
-                             "role:tab:^ve[ií]culos$": FakeLocator(1), "role:button:excel": FakeLocator(1)})
+                             "role:tab:^ve[ií]culos$": FakeLocator(1), "[title*='Excel'": FakeLocator(1)})
     dl, browser = _downloader(page, tmp_path, monkeypatch)
     monkeypatch.setattr("assobens.emplacamentos_downloader.DownloadCatcher", lambda ctx, pg: MagicMock(wait=lambda t: None))
     with pytest.raises(DownloadError):
