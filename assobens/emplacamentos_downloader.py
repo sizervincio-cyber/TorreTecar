@@ -197,6 +197,22 @@ class AssobensEmplacamentosDownloader:
                         self.log.info("visual localizado pelo texto do título")
                 except Exception:
                     visual = None
+        if visual is None and title_rx:  # árvore real: group "Analítico de Veículos - dd-mm-aaaa" > heading + document > grid
+            try:
+                g = frame.get_by_role("group", name=re.compile(title_rx, re.I)).first
+                if g.count():
+                    visual = g
+                    self.log.info("visual localizado pelo grupo acessível do título")
+            except Exception:
+                visual = None
+        if visual is None:  # a tabela analítica é exposta como grid (role) — confirmado na árvore de acessibilidade
+            try:
+                g = frame.get_by_role("grid").first
+                if g.count():
+                    visual = g
+                    self.log.info("visual localizado pelo papel 'grid' (tabela)")
+            except Exception:
+                visual = None
         if visual is None:
             self.log.warning("visual '%s' não localizado no relatório", title_rx)
             return False
@@ -211,6 +227,7 @@ class AssobensEmplacamentosDownloader:
         self.log.info("visual '%s' localizado; abrindo menu do visual", title_rx)
         more = self._find_logged(frame, s["visual_more_options"], 8_000, "botão 'Mais opções'")
         if more is None:
+            self.browser.dump_aria(frame, "apos_hover")
             return False
         more.click()
         item = self._find_logged(frame, s["visual_export_menu"], 8_000, "item 'Exportar dados'")

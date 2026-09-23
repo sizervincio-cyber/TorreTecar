@@ -91,6 +91,8 @@ class AssobensImporter:
                 nv = r.get(h)
                 if nv is None or h not in r:
                     continue
+                if str(nv).strip() == "" and str(cur.get(h, "")).strip() != "":
+                    continue  # exportação sem a coluna não apaga informação já conhecida (ex.: proprietário)
                 if not _same(cur.get(h, ""), nv):
                     cur[h] = nv
                     changed = True
