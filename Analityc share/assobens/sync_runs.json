@@ -26,5 +26,42 @@
    "18:08:03 KPIs: mercado 26092, MB 3967, share 15.2% (12m: 16.74%); Top 10 em 4 segmentos"
   ],
   "warnings": []
+ },
+ {
+  "id": "20260923-011410",
+  "started_at": "2026-09-23T01:14:10-03:00",
+  "trigger_type": "manual",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-09-23T01:15:15-03:00",
+  "status": "partial",
+  "file_name": "0114_emplacamentos.xlsx",
+  "file_hash": "2ece67e7a8d8f8fadee202457f5d98bde6637109a56e360971fbf489441e0063",
+  "rows_downloaded": 2750,
+  "rows_valid": 2749,
+  "rows_imported": 351,
+  "rows_updated": 2398,
+  "rows_rejected": 1,
+  "prices_updated": 0,
+  "error_message": null,
+  "duration_seconds": 65.2,
+  "steps": [
+   "01:14:10 tentativa 1/3",
+   "01:14:25 login concluído no portal",
+   "01:14:29 BI autenticado",
+   "01:14:48 download concluído: 0114_emplacamentos.xlsx",
+   "01:15:02 arquivo lido: aba 'Export', 2750 linhas, 17 colunas mapeadas",
+   "01:15:02 normalização: {'validas': 2749, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "01:15:02 validação: nível ok, qualidade 74/100",
+   "01:15:09 upsert por CHASSI: 351 inseridos, 2398 atualizados, 0 iguais (matriz 26443)",
+   "01:15:09 qualidade da matriz resultante: 100/100",
+   "01:15:15 matriz publicada (troca atômica; backup da anterior em storage)",
+   "01:15:15 KPIs: mercado 26443, MB 4008, share 15.16% (12m: 14.98%); Top 10 em 4 segmentos",
+   "01:15:15 conferência ASSOBENS × Torre: Total Mercado 2749/2750 (Δ1); Total Mercedes-Benz 453/453 (Δ0); Market Share MB (%) 16.5/16.47 (Δ-0.03)"
+  ],
+  "warnings": [
+   "comparativo de preços não capturado: tabela do Comparativo de Preços não encontrada",
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
