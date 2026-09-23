@@ -23,6 +23,47 @@ BRAND_ALIASES = {
     "IVECO/FIAT": "IVECO",
     "AGRALE": "AGRAL",
 }
+# Códigos AOP presentes na matriz atual (nome da área operacional -> código). Usado só quando o ASSOBENS
+# manda apenas o nome (ou apenas o código) da área operacional.
+AOP_CODES = {"GOIANIA": "408", "ANAPOLIS": "406", "PALMAS": "407", "PRIMAVERA DO LESTE": "409"}
+AOP_NAMES = {v: k for k, v in AOP_CODES.items()}
+
+
+def resolve_aop(aop: Any, dealer_aop: Any, raw: Any) -> tuple[str, str]:
+    """Devolve (código AOP, nome da área operacional) a partir das colunas disponíveis."""
+    code = parse_int(aop)
+    code_s = str(code) if code is not None else clean_text(aop, accents=False)
+    name = clean_text(dealer_aop, accents=False)
+    raw_s = clean_text(raw, accents=False)
+    if raw_s:
+        if parse_int(raw_s) is not None and not code_s:
+            code_s = str(parse_int(raw_s))
+        elif parse_int(raw_s) is None and not name:
+            name = raw_s
+    if not code_s and name in AOP_CODES:
+        code_s = AOP_CODES[name]
+    if not name and code_s in AOP_NAMES:
+        name = AOP_NAMES[code_s]
+    return code_s, name
+
+
+# Rótulos de segmento/subsegmento da matriz (o Power BI manda no singular: EXTRAPESADO, CAMINHAO).
+SUBSEG_ALIASES = {"EXTRAPESADO": "EXTRAPESADOS", "EXTRA PESADO": "EXTRAPESADOS", "EXTRA PESADOS": "EXTRAPESADOS", "EXTRA-PESADOS": "EXTRAPESADOS",
+                  "SEMIPESADO": "SEMIPESADOS", "SEMI PESADO": "SEMIPESADOS", "SEMI PESADOS": "SEMIPESADOS", "SEMI-PESADOS": "SEMIPESADOS",
+                  "PESADO": "PESADOS", "MEDIO": "MEDIOS", "LEVE": "LEVES"}
+SEG_ALIASES = {"CAMINHAO": "1.0-CAMINHOES", "CAMINHOES": "1.0-CAMINHOES", "1.0 CAMINHOES": "1.0-CAMINHOES"}
+
+
+def normalize_subseg(v: Any) -> str:
+    s = clean_text(v, accents=False)
+    return SUBSEG_ALIASES.get(s, s)
+
+
+def normalize_seg(v: Any) -> str:
+    s = clean_text(v, accents=False)
+    return SEG_ALIASES.get(s, s)
+
+
 PF_DOC_MASK = "***.***.***-**"
 PF_NAME_MASK = "***"
 
@@ -200,21 +241,20 @@ class AssobensNormalizer:
             nome = clean_text(r.get("NOMEPROPRIETARIO"))  # nomes mantêm acento (como na matriz atual)
         ano_fab = parse_int(r.get("ANOFABRICACAO"))
         ano_mod = parse_int(r.get("ANOMODELO"))
-        aop = r.get("AOP")
-        aop_s = str(parse_int(aop)) if parse_int(aop) is not None else clean_text(aop, accents=False)
+        aop_s, dealer_aop = resolve_aop(r.get("AOP"), r.get("DEALER AOP"), r.get("AREA OPERACIONAL RAW"))
         row = {
             "CHASSI": chassi,
             "DATA EMPLACAMENTO": data,
             "MODELO": clean_text(r.get("MODELO")),
             "TRAÇÃO": clean_text(r.get("TRAÇÃO"), accents=False).replace(" ", ""),
             "MARCA": normalize_brand(r.get("MARCA")),
-            "SEGMENTO": clean_text(r.get("SEGMENTO"), accents=False),
-            "SUBSEGMENTO": clean_text(r.get("SUBSEGMENTO"), accents=False).replace("-", ""),
+            "SEGMENTO": normalize_seg(r.get("SEGMENTO")),
+            "SUBSEGMENTO": normalize_subseg(r.get("SUBSEGMENTO")),
             "PLACA": clean_text(r.get("PLACA"), accents=False).replace("-", ""),
             "CONCESSIONÁRIO": clean_text(r.get("CONCESSIONÁRIO")),
             "CIDADE": clean_text(r.get("CIDADE"), accents=False),
             "UF": clean_text(r.get("UF"), accents=False)[:2],
-            "DEALER AOP": clean_text(r.get("DEALER AOP"), accents=False),
+            "DEALER AOP": dealer_aop,
             "AOP": aop_s,
             "ANOFABRICACAO": str(ano_fab) if ano_fab else "",
             "ANOMODELO": str(ano_mod) if ano_mod else "",

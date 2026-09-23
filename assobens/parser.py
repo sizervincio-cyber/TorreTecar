@@ -24,17 +24,22 @@ ALIASES: dict[str, list[str]] = {
     "CONCESSIONÁRIO": ["CONCESSIONÁRIO", "CONCESSIONARIO", "DEALER", "RAZAO_SOCIAL", "RAZAO SOCIAL", "RAZÃO SOCIAL"],
     "CIDADE": ["CIDADE", "MUNICIPIO", "MUNICÍPIO", "C_NO_CIDADE"],
     "UF": ["UF", "ESTADO", "C_SG_ESTADO"],
-    "DEALER AOP": ["DEALER AOP", "AOP DEALER", "DEALER_AOP", "DESC. ÁREA OPERACIONAL", "DESC AREA OPERACIONAL", "DESC. AREA OPERACIONAL"],
-    "AOP": ["AOP", "AREA_OPERACIONAL", "ÁREA OPERACIONAL", "AREA OPERACIONAL", "COD AOP"],
+    "DEALER AOP": ["DEALER AOP", "AOP DEALER", "DEALER_AOP", "DESC. ÁREA OPERACIONAL", "DESC AREA OPERACIONAL", "DESC. AREA OPERACIONAL", "NOME AOP"],
+    "AOP": ["AOP", "COD AOP", "CODIGO AOP", "CÓDIGO AOP"],
+    # 'área operacional' vem ora como código (408) ora como nome (GOIANIA): o normalizador decide pelo valor.
+    "AREA OPERACIONAL RAW": ["AREA_OPERACIONAL", "ÁREA OPERACIONAL", "AREA OPERACIONAL"],
     "ANOFABRICACAO": ["ANOFABRICACAO", "ANO FABRICACAO", "ANO FABRICAÇÃO", "ANO_FABRICACAO", "ANO FAB"],
     "ANOMODELO": ["ANOMODELO", "ANO MODELO", "ANO_MODELO"],
     "TIPO TERRENO": ["TIPO TERRENO", "TERRENO", "TIPO_TERRENO"],
     "CPFCNPJPROPRIETARIO": ["CPFCNPJPROPRIETARIO", "CPF/CNPJ PROPRIETARIO", "CPF/CNPJ PROPRIETÁRIO", "CPF OU CNPJ DO PROPRIETÁRIO",
-                            "CPF OU CNPJ DO PROPRIETARIO", "C_CPFCNPJPROPRIETARIO", "CNPJ", "CPF/CNPJ", "DOCUMENTO", "DOCUMENTO PROPRIETARIO"],
+                            "CPF OU CNPJ DO PROPRIETARIO", "C_CPFCNPJPROPRIETARIO", "CPF/CNPJ", "CPFCNPJ", "CPF CNPJ", "CNPJ PROPRIETARIO",
+                            "CNPJ CLIENTE", "DOCUMENTO", "DOCUMENTO PROPRIETARIO"],
     "TIPOCNPJPROPRIETARIO": ["TIPOCNPJPROPRIETARIO", "TIPO CNPJ PROPRIETARIO", "TIPO CPF/CNPJ PROPRIETARIO", "TIPO PESSOA",
-                             "TIPO DE PESSOA", "C_TIPOCNPJPROPRIETARIO"],
+                             "TIPO DE PESSOA", "C_TIPOCNPJPROPRIETARIO", "TIPOPESSOA", "TIPO CLIENTE"],
     "NOMEPROPRIETARIO": ["NOMEPROPRIETARIO", "NOME PROPRIETARIO", "NOME PROPRIETÁRIO", "NOME DO PROPRIETÁRIO", "NOME DO PROPRIETARIO",
-                         "C_NOMEPROPRIETARIO", "RAZAO SOCIAL PROPRIETARIO", "CLIENTE"],
+                         "C_NOMEPROPRIETARIO", "RAZAO SOCIAL PROPRIETARIO", "PROPRIETARIO", "PROPRIETÁRIO", "CLIENTE", "NOME CLIENTE"],
+    # CNPJ ao lado da razão social do concessionário: não é o documento do proprietário.
+    "CNPJ CONCESSIONARIO": ["CNPJ", "CNPJ CONCESSIONARIO", "CNPJ CONCESSIONÁRIO", "CNPJ DEALER"],
     # Dimensões extras do ASSOBENS que, se existirem, são preservadas na matriz.
     "COMBUSTIVEL": ["COMBUSTIVEL", "COMBUSTÍVEL", "TIPO COMBUSTIVEL"],
     "GRUPO": ["GRUPO", "GRUPO ECONOMICO", "GRUPO ECONÔMICO"],
@@ -56,7 +61,7 @@ BLOCKED_HEADERS = {"C_TELEFONE1", "C_TELEFONE2", "C_TELEFONE3", "C_CELULAR1", "C
 def norm_header(s: object) -> str:
     t = unicodedata.normalize("NFD", str(s if s is not None else ""))
     t = "".join(c for c in t if unicodedata.category(c) != "Mn")
-    return " ".join(t.replace(" ", " ").strip().upper().split())
+    return " ".join(t.replace(" ", " ").replace("_", " ").strip().upper().split())
 
 
 _ALIAS_INDEX: dict[str, str] = {norm_header(a): canon for canon, als in ALIASES.items() for a in als}

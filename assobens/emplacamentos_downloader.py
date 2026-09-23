@@ -129,6 +129,7 @@ class AssobensEmplacamentosDownloader:
         """Fluxo documentado no próprio relatório: passar o mouse na tabela → '…' (Mais opções) →
         'Exportar dados' → 'Exportar'. Devolve True se o botão final do diálogo foi clicado."""
         s = self.sel["emplacamentos"]
+        self.browser.dump_aria(frame, "relatorio")  # árvore do relatório fica nos artefatos de toda execução
         visual = None
         if title_rx:
             for css in ("visual-container", ".visualContainer", "[class*='visualContainer']", "visual-container-group"):
@@ -139,6 +140,15 @@ class AssobensEmplacamentosDownloader:
                         break
                 except Exception:
                     continue
+            if visual is None:  # título do visual em qualquer elemento: passar o mouse nele já mostra o cabeçalho do visual
+                try:
+                    t = frame.get_by_text(re.compile(title_rx, re.I)).first
+                    if t.count():
+                        anc = t.locator("xpath=ancestor::*[self::visual-container or contains(@class,'visualContainer')][1]")
+                        visual = anc.first if anc.count() else t
+                        self.log.info("visual localizado pelo texto do título")
+                except Exception:
+                    visual = None
         if visual is None:
             self.log.warning("visual '%s' não localizado no relatório", title_rx)
             return False
