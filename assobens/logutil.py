@@ -44,6 +44,8 @@ def get_logger(name: str = "assobens") -> logging.Logger:
     sh.addFilter(RedactFilter())
     log.addHandler(sh)
     try:
+        if "PYTEST_CURRENT_TEST" in os.environ:  # testes não escrevem no log real
+            raise OSError
         config.LOGS_DIR.mkdir(parents=True, exist_ok=True)
         fh = logging.FileHandler(config.LOGS_DIR / f"sync-{datetime.now(config.TZ):%Y%m%d}.log", encoding="utf-8")
         fh.setFormatter(fmt)

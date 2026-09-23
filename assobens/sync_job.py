@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 from . import config
-from .errors import AssobensError, AuthError, CredentialsMissingError, ValidationError
+from .errors import AssobensError, AuthError, CredentialsMissingError, InterfaceChangedError, ValidationError
 from .importer import AssobensImporter
 from .kpi import AssobensKpiService
 from .logutil import get_logger, redact
@@ -135,8 +135,8 @@ class AssobensSyncJob:
             try:
                 run.step(f"tentativa {attempt}/{config.MAX_ATTEMPTS}")
                 return self._browser_stage(run, attempt)
-            except CredentialsMissingError:
-                raise
+            except (CredentialsMissingError, InterfaceChangedError):
+                raise  # não melhora com retry: credencial ausente ou elemento inexistente
             except AuthError as e:
                 # credencial recusada não melhora com retry; sessão expirada sim
                 if "expirada" not in str(e).lower() and "ausente" not in str(e).lower():
@@ -164,7 +164,7 @@ class AssobensSyncJob:
         day_dir = config.STORAGE_DIR / f"{now:%Y}" / f"{now:%m}" / f"{now:%d}"
         with AssobensBrowserService(headless=self.headless) as b:
             page = b.page
-            auth = AssobensAuthenticationService(self.creds, sel)
+            auth = AssobensAuthenticationService(self.creds, sel, b)
             try:
                 auth.login_portal(page)
                 run.step("login concluído no portal")

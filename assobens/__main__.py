@@ -38,8 +38,10 @@ def cmd_discover(a) -> int:
     config.ensure_dirs()
     sel = load_selectors()
     with AssobensBrowserService(headless=not a.headed) as b:
-        auth = AssobensAuthenticationService(config.get_credentials(), sel)
+        auth = AssobensAuthenticationService(config.get_credentials(), sel, b)
         auth.login_portal(b.page)
+        b.dump_aria(b.page, "portal")
+        b.screenshot_error(b.page, "discover_portal")
         auth.open_bi(b.page)
         dl = AssobensEmplacamentosDownloader(b, auth, sel)
         outs = dl.discover(b.page)
