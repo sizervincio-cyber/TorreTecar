@@ -20,9 +20,16 @@ from pathlib import Path
 
 from . import config
 from .kpi import AssobensKpiService, last_12_months
+from .normalizer import normalize_brand
 from .runlog import read_json
 
 PRICE_FIELDS = ["source", "manufacturer", "model", "segment", "price", "reference_date", "captured_at"]
+
+
+def model_tokens(model: str) -> set[str]:
+    """Códigos numéricos do modelo: 'VW/DELIVERY 11.180' -> {'11180'}; 'VOLVO/FH 540 6X4T' -> {'540'}; 'MB 1117' -> {'1117'}."""
+    s = (model or "").upper().replace(".", "")
+    return {t for t in re.findall(r"\d{3,}", s)}
 
 
 def model_key(manufacturer: str, model: str) -> str:
@@ -109,38 +116,81 @@ class AssobensPriceAnalysisService:
             out[(str(e.get("fabricante", "")).upper(), model_key(e.get("fabricante", ""), e.get("modelo", "")))] = e
         return out
 
+    # ------------------------------------------------------------- casamento modelo x preço
+    def price_index(self) -> list[dict]:
+        """Últimos preços nacionais capturados, com o grupo (modelo MB) definido pelo próprio ASSOBENS."""
+        latest: dict[tuple, dict] = {}
+        for r in self.history.read():
+            seg = r.get("segment", "")
+            if not seg.lower().startswith("nacional"):
+                continue
+            k = (r["manufacturer"].upper(), model_key(r["manufacturer"], r["model"]), seg)
+            if k not in latest or r["reference_date"] >= latest[k]["reference_date"]:
+                latest[k] = r
+        out = []
+        for r in latest.values():
+            grupo = r["segment"].split("|grupo ", 1)[1].strip() if "|grupo " in r["segment"] else None
+            out.append({**r, "grupo_mb": grupo, "tokens": model_tokens(r["model"])})
+        return out
+
+    def find_price(self, index: list[dict], fabricante: str, modelo: str) -> dict | None:
+        """Casa o modelo do ranking (ex.: 'VW/DELIVERY 11.180') com o rótulo do comparativo ('VW 11.180')
+        pelo fabricante e pelos códigos numéricos do modelo. Sem casamento inequívoco => None."""
+        fab = normalize_brand(fabricante)
+        toks = model_tokens(modelo)
+        if not toks:
+            return None
+        cands = [p for p in index if normalize_brand(p["manufacturer"]) == fab and p["tokens"] & toks]
+        if not cands:
+            return None
+        cands.sort(key=lambda p: (-len(p["tokens"] & toks), p["reference_date"]), reverse=False)
+        best = max(cands, key=lambda p: (len(p["tokens"] & toks), p["reference_date"]))
+        return best
+
     # ------------------------------------------------------------- análise
     def analyze(self, top10: dict, captured_at: str | None = None) -> dict:
-        prices = self.history.latest_by_model()
+        index = self.price_index()
         eq = self.equivalencias()
         captured_at = captured_at or datetime.now(config.TZ).isoformat(timespec="seconds")
-        out = {"gerado_em": captured_at, "janela": top10.get("janela"), "segmentos": {}}
+        out = {"gerado_em": captured_at, "janela": top10.get("janela"), "fonte_precos": "ASSOBENS Comparativo de Preços (Valor Indecx, Nacional)",
+               "segmentos": {}}
         for seg, lst in top10.get("segmentos", {}).items():
             linhas = []
             for item in lst:
                 fab, mod = item["fabricante"], item["modelo"]
-                p = prices.get((fab.upper(), model_key(fab, mod)))
-                e = eq.get((fab.upper(), model_key(fab, mod)))
-                mb_model = e.get("equivalente_mb") if e else None
-                p_mb = prices.get((self.mb, model_key(self.mb, mb_model))) if mb_model else None
+                p = self.find_price(index, fab, mod)
                 preco = float(p["price"]) if p and p.get("price") else None
+                e = eq.get((fab.upper(), model_key(fab, mod)))
+                mb_model, fonte_eq, obs = None, None, None
+                if normalize_brand(fab) == self.mb:
+                    mb_model, fonte_eq = (p["model"] if p else mod), "modelo Mercedes-Benz"
+                elif e and e.get("equivalente_mb"):
+                    mb_model, fonte_eq = e["equivalente_mb"], "equivalencias_mb.json"
+                elif p and p.get("grupo_mb"):
+                    mb_model, fonte_eq = p["grupo_mb"], "grupo do Comparativo ASSOBENS"
+                p_mb = None
+                if mb_model:
+                    p_mb = self.find_price(index, self.mb, mb_model)
+                    if p and p.get("grupo_mb"):  # prefere o preço MB do mesmo grupo/captura
+                        same = [x for x in index if x.get("grupo_mb") == p["grupo_mb"] and normalize_brand(x["manufacturer"]) == self.mb
+                                and model_tokens(x["model"]) & model_tokens(mb_model)]
+                        p_mb = same[0] if same else p_mb
                 preco_mb = float(p_mb["price"]) if p_mb and p_mb.get("price") else None
+                if normalize_brand(fab) == self.mb:
+                    preco_mb = preco
                 gap_r = round(preco_mb - preco, 2) if (preco is not None and preco_mb is not None) else None
                 gap_p = round((preco_mb / preco - 1) * 100, 2) if (preco and preco_mb is not None) else None
-                obs = None
-                if fab == self.mb:
-                    mb_model, obs = mod, "modelo Mercedes-Benz"
-                    preco_mb, gap_r, gap_p = preco, 0.0 if preco is not None else None, 0.0 if preco is not None else None
-                elif not e:
+                if mb_model is None:
                     obs = "equivalência não cadastrada"
-                elif preco_mb is None:
+                elif preco_mb is None and normalize_brand(fab) != self.mb:
                     obs = "preço MB equivalente não capturado"
                 if preco is None:
                     obs = (obs + "; " if obs else "") + "preço não identificado no comparativo"
                 linhas.append({
                     "posicao": item["posicao"], "fabricante": fab, "modelo": mod,
                     "emplacamentos": item["emplacamentos"], "market_share": item["market_share"],
-                    "preco_identificado": preco, "preco_mb_equivalente": preco_mb, "equivalente_mb": mb_model,
+                    "preco_identificado": preco, "modelo_no_comparativo": p["model"] if p else None,
+                    "preco_mb_equivalente": preco_mb, "equivalente_mb": mb_model, "fonte_equivalencia": fonte_eq,
                     "gap_preco_rs": gap_r, "gap_preco_pct": gap_p,
                     "data_captura_preco": p["captured_at"] if p else None, "observacao": obs,
                 })

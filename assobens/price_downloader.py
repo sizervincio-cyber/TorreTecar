@@ -1,49 +1,155 @@
-"""AssobensPriceDownloader: BI → "Comparativo de Preços" (relatório Power BI) → leitura da tabela de preços.
+"""AssobensPriceDownloader: BI → "Comparativo de Preços" (relatório Power BI) → capa "ACESSAR RELATÓRIO" →
+para cada modelo do filtro "MODELO MB": gráfico "Modelo × Valor Indecx" (preço nacional) e matriz por UF.
 
-Estratégias, em ordem: (1) tabela acessível (role=row/columnheader/gridcell) do relatório;
-(2) "Exportar dados" do visual → CSV/XLSX → parse. Preços nunca são inventados: sem tabela = sem captura.
+Estrutura confirmada na árvore de acessibilidade (run 35817270681): o relatório compara um modelo Mercedes-Benz
+(slicer "MODELO MB") com os concorrentes definidos pelo próprio ASSOBENS; o preço é o "Valor Indecx".
+Preços nunca são inventados: só o que está na árvore do relatório é gravado.
 """
 from __future__ import annotations
 
-import csv
 import re
 from datetime import datetime
-from pathlib import Path
 
 from . import config
-from .browser import DownloadCatcher, first_present
+from .browser import first_present
 from .errors import InterfaceChangedError
 from .logutil import get_logger
-from .normalizer import clean_text, parse_number
+from .normalizer import normalize_brand, parse_number
 
 SOURCE = "assobens_precos_comparativo"
 
 
+def parse_brl(v: str) -> float | None:
+    """'R$ 332.545' -> 332545.0 ; 'R$ 1.234,56' -> 1234.56 (formato exibido na matriz, ponto = milhar)."""
+    s = (v or "").replace("R$", "").replace(" ", "").replace(" ", "").strip()
+    if not s or s == "-":
+        return None
+    s = s.replace(".", "").replace(",", ".") if "," in s else s.replace(".", "")
+    try:
+        return float(s)
+    except ValueError:
+        return None
+
+
+def label_split(label: str) -> tuple[str, str]:
+    """'MB 1117' -> ('M.BENZ', 'MB 1117'); 'VW 11.180' -> ('VW', 'VW 11.180')."""
+    fab = label.strip().split(" ")[0] if label.strip() else ""
+    return normalize_brand(fab), label.strip()
+
+
+def parse_aria_prices(txt: str, mb_model: str, reference_date: str, captured_at: str) -> list[dict]:
+    """Extrai preços da árvore de acessibilidade do relatório para o grupo do modelo MB selecionado."""
+    out: list[dict] = []
+
+    def block(name: str) -> list[str]:
+        m = re.search(rf'listbox "{re.escape(name)}":\n((?:\s+- option "[^"]*"\n)+)', txt)
+        return re.findall(r'- option "([^"]*)"', m.group(1)) if m else []
+
+    modelos, valores = block("Modelo"), block("Valor Indecx")
+    if modelos and len(modelos) == len(valores):
+        for modelo, valor in zip(modelos, valores):
+            preco = parse_number(valor)
+            if preco is None or preco <= 0:
+                continue
+            fab, mod = label_split(modelo)
+            out.append({"source": SOURCE, "manufacturer": fab, "model": mod, "segment": f"Nacional|grupo {mb_model}",
+                        "price": round(preco, 2), "reference_date": reference_date, "captured_at": captured_at})
+    # matriz por UF: cabeçalho "MODELO" (modelos, 3 colunas cada), cabeçalho "UF" (Qtde./Valor Indecx/Var.%), linhas por UF
+    lines = txt.splitlines()
+    models: list[str] = []
+    metrics: list[str] = []
+    i = 0
+    while i < len(lines):
+        l = lines[i].strip()
+        if l.startswith('- row "MODELO'):
+            models, i = _collect(lines, i + 1, "columnheader"), i + 1
+            models = models[1:] if models and models[0] == "MODELO" else models
+            continue
+        if l.startswith('- row "UF') and models:
+            metrics, i = _collect(lines, i + 1, "columnheader"), i + 1
+            metrics = metrics[1:] if metrics and metrics[0] == "UF" else metrics
+            continue
+        m = re.match(r'- rowheader "([^"]+)"', l)
+        if m and models and metrics:
+            uf = m.group(1)
+            cells, i = _collect(lines, i + 1, "gridcell", allow_empty=True), i + 1
+            if uf.lower() != "nacional":  # Nacional já vem (com mais precisão) do gráfico
+                for j, val in enumerate(cells):
+                    if j < len(models) and j < len(metrics) and metrics[j].lower().startswith("valor") and val:
+                        preco = parse_brl(val)
+                        if preco and preco > 0:
+                            fab, mod = label_split(models[j])
+                            out.append({"source": SOURCE, "manufacturer": fab, "model": mod, "segment": f"{uf}|grupo {mb_model}",
+                                        "price": round(preco, 2), "reference_date": reference_date, "captured_at": captured_at})
+            continue
+        i += 1
+    return out
+
+
+def _collect(lines: list[str], start: int, role: str, allow_empty: bool = False) -> list[str]:
+    """Nomes dos filhos consecutivos com o papel dado (gridcell sem nome => '')."""
+    out = []
+    i = start
+    while i < len(lines):
+        l = lines[i].strip()
+        m = re.match(rf'- {role}(?: "([^"]*)")?:?$', l)
+        if m:
+            out.append(m.group(1) or "")
+            i += 1
+            # pula filhos (img/text) do gridcell
+            while i < len(lines) and (lines[i].startswith(" " * (len(lines[i]) - len(lines[i].lstrip()))) and
+                                      re.match(r"\s+- (img|text)", lines[i]) and not re.match(rf"\s+- {role}", lines[i])):
+                i += 1
+            continue
+        if l.startswith("- row") or (l.startswith("- ") and not l.startswith(f"- {role}") and not re.match(r"- (img|text)", l)):
+            break
+        i += 1
+    return out if allow_empty else [x for x in out if x]
+
+
 class AssobensPriceDownloader:
+    MAX_MODELOS = 60
+
     def __init__(self, browser, auth, selectors: dict, emplacamentos_downloader):
         self.browser, self.auth, self.sel = browser, auth, selectors
         self.nav = emplacamentos_downloader
         self.log = get_logger()
 
-    def capture(self, page, out_dir: Path | None = None) -> list[dict]:
+    def aria(self, frame) -> str:
+        try:
+            return frame.locator("body").aria_snapshot()
+        except Exception:
+            return ""
+
+    def capture(self, page, out_dir=None) -> list[dict]:
         self.auth.ensure_bi_session(page)
         self.nav.open_menu(page, config.BI_MENU_PRECOS)
         frame = self.nav.report_frame(page)
         self.enter_report(page, frame)
-        ref = self.reference_date(frame)
-        rows = self._read_accessible_table(frame)
-        if not rows:
-            rows = self._export_and_parse(page, frame, out_dir or config.STORAGE_DIR)
-        if not rows:
-            self.browser.screenshot_error(page, "precos_tabela")
-            self.browser.dump_aria(frame, "precos")
-            raise InterfaceChangedError("tabela do Comparativo de Preços não encontrada")
+        txt = self.aria(frame)
+        ref = self.reference_date(txt)
         captured_at = datetime.now(config.TZ).isoformat(timespec="seconds")
-        out = [{"source": SOURCE, "manufacturer": r["manufacturer"], "model": r["model"], "segment": r.get("segment", ""),
-                "price": r["price"], "reference_date": ref, "captured_at": captured_at} for r in rows if r.get("price") is not None]
-        self.log.info("preços capturados: %d linhas (referência %s)", len(out), ref)
+        atual = self.current_mb_model(txt)
+        modelos = self.list_mb_models(page, frame, txt)
+        self.log.info("modelos MB no filtro: %d (atual: %s)", len(modelos), atual)
+        out: list[dict] = []
+        for n, mb in enumerate(modelos[: self.MAX_MODELOS]):
+            if mb != atual and not self.select_mb_model(page, frame, mb):
+                self.log.warning("não foi possível selecionar '%s' no filtro MODELO MB", mb)
+                continue
+            t = self.aria(frame)
+            caps = parse_aria_prices(t, mb, ref, captured_at)
+            if not caps and n == 0:
+                self.browser.dump_aria(frame, "precos_sem_valores")
+            out.extend(caps)
+            atual = mb
+        if not out:
+            self.browser.screenshot_error(page, "precos_tabela")
+            raise InterfaceChangedError("nenhum preço encontrado no Comparativo de Preços (gráfico 'Valor Indecx' ausente)")
+        self.log.info("preços capturados: %d linhas em %d grupos (referência %s)", len(out), len({c['segment'].split('|')[1] for c in out}), ref)
         return out
 
+    # ------------------------------------------------------------- navegação
     def enter_report(self, page, frame) -> None:
         """O relatório abre numa capa com o botão 'ACESSAR RELATÓRIO' (navegação de página do Power BI)."""
         entry = first_present(frame, self.sel["precos"]["entry_link"], timeout_ms=15_000)
@@ -55,7 +161,7 @@ class AssobensPriceDownloader:
         waited = 0
         while waited < 60_000:
             try:
-                if frame.get_by_role("grid").count() or frame.get_by_role("columnheader").count() or frame.get_by_role("combobox").count() > 1:
+                if frame.get_by_role("combobox", name=re.compile("MODELO MB", re.I)).count() and frame.get_by_role("grid").count():
                     break
             except Exception:
                 pass
@@ -64,91 +170,77 @@ class AssobensPriceDownloader:
         page.wait_for_timeout(3_000)
         self.browser.dump_aria(frame, "precos_relatorio")
 
-    def reference_date(self, frame) -> str:
-        loc = first_present(frame, self.sel["precos"]["reference_date_text"], visible=False, timeout_ms=0)
-        if loc is not None:
-            m = re.search(r"(\d{2})/(\d{2})/(\d{4})", loc.inner_text() or "")
-            if m:
-                return f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
+    def reference_date(self, txt: str) -> str:
+        m = re.search(r"(?:mais recente|atualizad[oa])[^\d]{0,30}(\d{2})/(\d{2})/(\d{4})", txt, re.I)
+        if m:
+            return f"{m.group(3)}-{m.group(2)}-{m.group(1)}"
         return datetime.now(config.TZ).date().isoformat()
 
-    # ------------------------------------------------------------- estratégia 1
-    def _read_accessible_table(self, frame) -> list[dict]:
-        rows_loc = None
-        for c in self.sel["precos"]["table_rows"]:
+    @staticmethod
+    def current_mb_model(txt: str) -> str:
+        m = re.search(r'combobox "MODELO MB": ([^\n]+)', txt)
+        return re.sub(r"[-]", "", m.group(1)).strip() if m else ""
+
+    def list_mb_models(self, page, frame, txt_before: str) -> list[str]:
+        """Abre o filtro 'MODELO MB' e lê as opções (as que só existem com o dropdown aberto)."""
+        before = set(re.findall(r'- (?:option|checkbox) "([^"]+)"', txt_before))
+        combo = frame.get_by_role("combobox", name=re.compile("MODELO MB", re.I)).first
+        try:
+            combo.click(timeout=10_000)
+            page.wait_for_timeout(1_500)
+        except Exception as e:
+            self.log.warning("filtro MODELO MB não abriu: %s", str(e).splitlines()[0][:100])
+            return [self.current_mb_model(txt_before)] if self.current_mb_model(txt_before) else []
+        txt = self.aria(frame)
+        self.browser.dump_aria(frame, "precos_dropdown")
+        opts = []
+        for o in re.findall(r'- (?:option|checkbox) "([^"]+)"', txt):
+            o = re.sub(r"[-]", "", o).strip()
+            if o and o not in before and o.lower() not in ("todos", "selecionar tudo", "select all") and o not in opts:
+                opts.append(o)
+        try:
+            page.keyboard.press("Escape")
+            page.wait_for_timeout(500)
+        except Exception:
+            pass
+        atual = self.current_mb_model(txt_before)
+        if not opts:
+            return [atual] if atual else []
+        return opts
+
+    def select_mb_model(self, page, frame, mb: str) -> bool:
+        combo = frame.get_by_role("combobox", name=re.compile("MODELO MB", re.I)).first
+        try:
+            combo.click(timeout=10_000)
+            page.wait_for_timeout(1_000)
+        except Exception:
+            return False
+        rx = re.compile(rf"^\s*{re.escape(mb)}\s*$")
+        for role in ("option", "checkbox"):
+            loc = frame.get_by_role(role, name=rx)
             try:
-                loc = frame.get_by_role("row") if c["kind"] == "role" else frame.locator(c["value"])
-                if loc.count() >= 2:
-                    rows_loc = loc
-                    break
+                n = loc.count()
             except Exception:
-                continue
-        if rows_loc is None:
-            return []
-        table = []
-        for i in range(min(rows_loc.count(), 2000)):
-            try:
-                cells = rows_loc.nth(i).locator("[role=columnheader],[role=gridcell],[role=cell],th,td").all_inner_texts()
-            except Exception:
-                continue
-            if cells:
-                table.append([clean_text(c, upper=False) for c in cells])
-        return self.parse_table(table)
+                n = 0
+            for k in range(n - 1, -1, -1):  # o dropdown fica depois dos visuais no DOM
+                try:
+                    if not loc.nth(k).is_visible():
+                        continue
+                    loc.nth(k).click(timeout=5_000)
+                    page.wait_for_timeout(2_500)
+                    if self.current_mb_model(self.aria(frame)) == mb:
+                        return True
+                except Exception:
+                    continue
+        try:
+            page.keyboard.press("Escape")
+        except Exception:
+            pass
+        return False
 
-    # ------------------------------------------------------------- estratégia 2
-    def _export_and_parse(self, page, frame, out_dir: Path) -> list[dict]:
-        catcher = DownloadCatcher(page.context, page)
-        if not self.nav.export_visual(page, frame, self.sel["precos"].get("visual_title")):
-            return []
-        dl = catcher.wait(90)
-        if dl is None:
-            return []
-        out_dir.mkdir(parents=True, exist_ok=True)
-        target = out_dir / f"{datetime.now(config.TZ):%H%M}_precos{Path(dl.suggested_filename or '.csv').suffix or '.csv'}"
-        dl.save_as(str(target))
-        if target.suffix.lower() == ".csv":
-            text = target.read_text(encoding="utf-8-sig", errors="replace")
-            table = [row for row in csv.reader(text.splitlines(), delimiter=";" if text.count(";") > text.count(",") else ",")]
-        else:
-            import openpyxl
-            wb = openpyxl.load_workbook(target, read_only=True, data_only=True)
-            table = [["" if c is None else str(c) for c in r] for r in wb.worksheets[0].iter_rows(values_only=True)]
-            wb.close()
-        return self.parse_table(table)
-
-    # ------------------------------------------------------------- parse
-    def parse_table(self, table: list[list[str]]) -> list[dict]:
-        """Identifica as colunas pelo cabeçalho (fabricante, modelo, preço, segmento) e devolve linhas de preço."""
-        s = self.sel["precos"]
-        hdr_i, cols = -1, {}
-        for i, row in enumerate(table[:10]):
-            found = {}
-            for j, h in enumerate(row):
-                hn = clean_text(h, accents=False)
-                for key in ("col_manufacturer", "col_model", "col_price", "col_segment"):
-                    if key not in found and re.search(s[key], hn, re.I):
-                        found[key] = j
-            if "col_model" in found and "col_price" in found and len(found) > len(cols):
-                hdr_i, cols = i, found
-        if hdr_i < 0:
-            return []
-        out = []
-        for row in table[hdr_i + 1:]:
-            if len(row) <= max(cols.values()):
-                continue
-            price = parse_number(row[cols["col_price"]])
-            model = clean_text(row[cols["col_model"]], accents=False)
-            if price is None or not model:
-                continue
-            manufacturer = clean_text(row[cols["col_manufacturer"]], accents=False) if "col_manufacturer" in cols else ""
-            if not manufacturer:
-                manufacturer = model.split("/")[0] if "/" in model else ""
-            out.append({"manufacturer": manufacturer, "model": model, "price": price,
-                        "segment": clean_text(row[cols["col_segment"]], accents=False) if "col_segment" in cols else ""})
-        return out
-
-    def discover(self, page) -> list[Path]:
+    def discover(self, page):
         self.auth.ensure_bi_session(page)
         self.nav.open_menu(page, config.BI_MENU_PRECOS)
         frame = self.nav.report_frame(page)
+        self.enter_report(page, frame)
         return [p for p in (self.browser.dump_aria(frame, "precos"), self.browser.screenshot_error(page, "discover_precos")) if p]

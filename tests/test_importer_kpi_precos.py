@@ -111,9 +111,9 @@ def test_top10_e_historico_de_precos(paths, sample_xlsx):
     assert len(ext) == 4 and ext[0]["posicao"] == 1 and all(x["market_share"] == 25.0 for x in ext)
     assert top["segmentos"]["SEMIPESADOS"][0]["modelo"] == "M.BENZ/ATEGO 2426"
     # histórico: captura, idempotência e atualização do mesmo dia
-    cap = [{"source": "assobens_precos_comparativo", "manufacturer": "VW", "model": "VW/29.530", "segment": "EXTRAPESADOS",
+    cap = [{"source": "assobens_precos_comparativo", "manufacturer": "VW", "model": "VW/29.530", "segment": "Nacional",
             "price": 760000.0, "reference_date": "2026-01-20", "captured_at": "2026-01-20T08:00:00"},
-           {"source": "assobens_precos_comparativo", "manufacturer": "M.BENZ", "model": "M.BENZ/ACTROS 2653", "segment": "EXTRAPESADOS",
+           {"source": "assobens_precos_comparativo", "manufacturer": "M.BENZ", "model": "M.BENZ/ACTROS 2653", "segment": "Nacional",
             "price": 790000.0, "reference_date": "2026-01-20", "captured_at": "2026-01-20T08:00:00"}]
     assert hist.upsert(cap) == 2
     assert hist.upsert(cap) == 0                              # mesma captura: não duplica
