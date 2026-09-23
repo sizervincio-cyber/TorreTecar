@@ -93,9 +93,10 @@ class RunLog:
     def runs(self) -> list[dict]:
         return read_json(self.runs_path, [])
 
-    def last_success(self) -> dict | None:
+    def last_success(self, source: str | None = None) -> dict | None:
         for r in reversed(self.runs()):
-            if r.get("status") in (STATUS_SUCCESS, STATUS_PARTIAL) and r.get("rows_downloaded"):
+            if r.get("status") in (STATUS_SUCCESS, STATUS_PARTIAL) and r.get("rows_downloaded") \
+                    and (source is None or r.get("source") == source):
                 return r
         return None
 

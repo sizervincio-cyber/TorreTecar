@@ -14,7 +14,7 @@ from .errors import AssobensError, AuthError, CredentialsMissingError, Interface
 from .importer import AssobensImporter
 from .kpi import AssobensKpiService
 from .logutil import get_logger, redact
-from .normalizer import AssobensNormalizer
+from .normalizer import AssobensNormalizer, quality_score
 from .parser import AssobensSpreadsheetParser
 from .price_analysis import AssobensPriceAnalysisService, PriceHistory
 from .runlog import RunLog, STATUS_FAILED, STATUS_PARTIAL, STATUS_SUCCESS, SyncRun, write_json_atomic
@@ -75,7 +75,7 @@ class AssobensSyncJob:
             run.rows_valid, run.rows_rejected = len(batch.rows), len(batch.rejected)
             run.step(f"normalização: {batch.counts}")
             # 4) CONSISTÊNCIA
-            prev = self.runlog.last_success()
+            prev = self.runlog.last_success(source=run.source)  # queda de volume só é comparável com a mesma fonte
             report = validate_batch(batch.rows, previous_rows_downloaded=(prev or {}).get("rows_downloaded"),
                                     unknown_headers=parsed.unknown_headers, rejected=len(batch.rejected),
                                     mb_reported=portal.get("total_mb"), total_reported=portal.get("total_mercado"))
@@ -96,6 +96,10 @@ class AssobensSyncJob:
                 res = self.importer.upsert(batch.rows, headers, existing)
                 run.rows_imported, run.rows_updated = res.inserted, res.updated
                 run.step(f"upsert por CHASSI: {res.inserted} inseridos, {res.updated} atualizados, {res.unchanged} iguais (matriz {res.total})")
+                qm = quality_score(res.rows)  # gate da Torre vale para a MATRIZ publicada, não para o lote isolado
+                if qm["score"] < config.MIN_QUALITY_SCORE:
+                    raise ValidationError(f"matriz resultante com qualidade {qm['score']}/100 < {config.MIN_QUALITY_SCORE} (gate da Torre); publicação recusada")
+                run.step(f"qualidade da matriz resultante: {qm['score']}/100")
                 if res.inserted or res.updated:
                     self.importer.publish(res.headers, res.rows, run.id)
                     run.step("matriz publicada (troca atômica; backup da anterior em storage)")

@@ -187,6 +187,8 @@ def normalize_doc_type(v: Any, doc_digits: str) -> str:
         return "FISICA"
     if "*" in str(v or ""):
         return "FISICA"
+    if not s and not doc_digits:
+        return ""  # exportação sem dados do proprietário: não sobrescreve o tipo já conhecido na matriz
     return s or "INDETERMINADO"
 
 

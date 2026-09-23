@@ -92,11 +92,10 @@ def validate_batch(rows: list[dict], *, previous_rows_downloaded: int | None, un
     else:
         rep.ok("G_queda_registros")
 
-    # Gate de qualidade da Torre: se a matriz não passar, a Torre a ignoraria silenciosamente.
+    # Qualidade do lote (informativa): o gate da Torre (>= 75) é aplicado à matriz resultante, no job.
     q = quality_score(rows)
     rep.quality = q
     if q["score"] < config.MIN_QUALITY_SCORE:
-        rep.fail("Q_qualidade_torre", f"qualidade {q['score']}/100 < {config.MIN_QUALITY_SCORE} (gate da Torre)")
-    else:
-        rep.ok("Q_qualidade_torre")
+        rep.messages.append(f"[Q_qualidade_lote] lote com qualidade {q['score']}/100 (ex.: exportação sem documento do proprietário)")
+    rep.ok("Q_qualidade_lote")
     return rep

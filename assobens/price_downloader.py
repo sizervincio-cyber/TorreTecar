@@ -29,6 +29,7 @@ class AssobensPriceDownloader:
         self.auth.ensure_bi_session(page)
         self.nav.open_menu(page, config.BI_MENU_PRECOS)
         frame = self.nav.report_frame(page)
+        self.enter_report(page, frame)
         ref = self.reference_date(frame)
         rows = self._read_accessible_table(frame)
         if not rows:
@@ -42,6 +43,26 @@ class AssobensPriceDownloader:
                 "price": r["price"], "reference_date": ref, "captured_at": captured_at} for r in rows if r.get("price") is not None]
         self.log.info("preços capturados: %d linhas (referência %s)", len(out), ref)
         return out
+
+    def enter_report(self, page, frame) -> None:
+        """O relatório abre numa capa com o botão 'ACESSAR RELATÓRIO' (navegação de página do Power BI)."""
+        entry = first_present(frame, self.sel["precos"]["entry_link"], timeout_ms=15_000)
+        if entry is None:
+            self.log.info("capa do Comparativo de Preços não encontrada; seguindo com a página atual")
+            return
+        entry.click()
+        self.log.info("capa do Comparativo de Preços: 'ACESSAR RELATÓRIO' clicado")
+        waited = 0
+        while waited < 60_000:
+            try:
+                if frame.get_by_role("grid").count() or frame.get_by_role("columnheader").count() or frame.get_by_role("combobox").count() > 1:
+                    break
+            except Exception:
+                pass
+            page.wait_for_timeout(2_000)
+            waited += 2_000
+        page.wait_for_timeout(3_000)
+        self.browser.dump_aria(frame, "precos_relatorio")
 
     def reference_date(self, frame) -> str:
         loc = first_present(frame, self.sel["precos"]["reference_date_text"], visible=False, timeout_ms=0)

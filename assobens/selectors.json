@@ -46,6 +46,12 @@
     "slicer_distrito": [{"kind": "css", "value": "[aria-label*='Distrito' i], [title*='Distrito' i]"}]
   },
   "precos": {
+    "entry_link": [
+      {"kind": "role", "value": "link", "name": "acessar relat[óo]rio"},
+      {"kind": "role", "value": "button", "name": "acessar relat[óo]rio"},
+      {"kind": "text", "name": "ACESSAR RELAT[ÓO]RIO"},
+      {"kind": "role", "value": "link", "name": "^Navega[çc][ãa]o na p[áa]gina$"}
+    ],
     "visual_title": "pre[çc]o|comparativo",
     "table_rows": [{"kind": "role", "value": "row"}, {"kind": "css", "value": "[role=grid] [role=row], table tr"}],
     "reference_date_text": [{"kind": "text", "name": "atualizad[oa].{0,30}\\d{2}/\\d{2}/\\d{4}|refer[êe]ncia.{0,30}\\d{2}/\\d{2}/\\d{4}"}],
