@@ -1,0 +1,79 @@
+name: ASSOBENS sync
+
+on:
+  schedule:
+    # GitHub Actions cron usa UTC: 11/15/20 UTC = 08/12/17 America/Sao_Paulo
+    - cron: "0 11,15,20 * * *"
+  workflow_dispatch:
+    inputs:
+      skip_precos:
+        description: "Pular Comparativo de Preços"
+        type: boolean
+        default: false
+
+concurrency:
+  group: assobens-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  TZ: America/Sao_Paulo
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || vars.ASSOBENS_SCHEDULER_ENABLED == 'true' }}
+    timeout-minutes: 40
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements-assobens.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Testes
+        run: python -m pytest -q tests
+
+      - name: Sincronizar
+        env:
+          ASSOBENS_USER: ${{ secrets.ASSOBENS_USER }}
+          ASSOBENS_PASSWORD: ${{ secrets.ASSOBENS_PASSWORD }}
+        run: |
+          TRIGGER=scheduler
+          [ "${{ github.event_name }}" = "workflow_dispatch" ] && TRIGGER=manual
+          EXTRA=""
+          [ "${{ inputs.skip_precos }}" = "true" ] && EXTRA="--skip-precos"
+          python -m assobens sync --trigger "$TRIGGER" --executed-by "${{ github.actor }}" $EXTRA
+
+      - name: Publicar artefatos de diagnóstico
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "assobens-${{ github.run_id }}"
+          path: |
+            storage/app/assobens
+            storage/logs/assobens
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Versionar dados atualizados
+        if: success()
+        run: |
+          git config user.name "assobens-bot"
+          git config user.email "assobens-bot@users.noreply.github.com"
+          git add "Analityc share/consolidado_emplacamentos_2020_2026.xlsx" "Analityc share/assobens"
+          git diff --cached --quiet && exit 0
+          git commit -m "data: sincronização ASSOBENS $(date +'%d/%m/%Y %H:%M') [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
