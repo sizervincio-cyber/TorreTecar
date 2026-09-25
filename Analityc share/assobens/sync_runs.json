@@ -317,5 +317,41 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20260925-080545",
+  "started_at": "2026-09-25T08:05:45-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-09-25T08:07:13-03:00",
+  "status": "success",
+  "file_name": "0805_emplacamentos.xlsx",
+  "file_hash": "8abeafb2aedecec88562ca9f2acb920de5a882d355c071572bd413403bdf3a48",
+  "rows_downloaded": 2783,
+  "rows_valid": 2782,
+  "rows_imported": 0,
+  "rows_updated": 0,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "error_message": null,
+  "duration_seconds": 88.5,
+  "steps": [
+   "08:05:45 tentativa 1/3",
+   "08:06:03 login concluído no portal",
+   "08:06:07 BI autenticado",
+   "08:06:29 download concluído: 0805_emplacamentos.xlsx",
+   "08:07:06 arquivo lido: aba 'Export', 2783 linhas, 17 colunas mapeadas",
+   "08:07:06 normalização: {'validas': 2782, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "08:07:06 validação: nível ok, qualidade 74/100",
+   "08:07:13 upsert por CHASSI: 0 inseridos, 0 atualizados, 2782 iguais (matriz 26476)",
+   "08:07:13 qualidade da matriz resultante: 100/100",
+   "08:07:13 KPIs: mercado 26476, MB 4016, share 15.17% (12m: 15.06%); Top 10 em 4 segmentos",
+   "08:07:13 conferência ASSOBENS × Torre: Total Mercado 2782/2783 (Δ1); Total Mercedes-Benz 461/461 (Δ0); Market Share MB (%) 16.6/16.56 (Δ-0.04)",
+   "08:07:13 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
