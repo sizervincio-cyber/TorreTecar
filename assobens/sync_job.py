@@ -10,7 +10,11 @@ from datetime import datetime
 from pathlib import Path
 
 from . import config
+from .enriquecimento_downloader import janela_enriquecimento
 from .errors import AssobensError, AuthError, CredentialsMissingError, InterfaceChangedError, ValidationError
+
+# Campos que o relatório de enriquecimento pode completar/atualizar na matriz (nunca insere chassis).
+OWNER_FIELDS = ["CPFCNPJPROPRIETARIO", "TIPOCNPJPROPRIETARIO", "NOMEPROPRIETARIO", "TRAÇÃO", "TIPO TERRENO", "ANOMODELO", "ANOFABRICACAO"]
 from .importer import AssobensImporter
 from .kpi import AssobensKpiService
 from .logutil import get_logger, redact
@@ -54,6 +58,10 @@ class AssobensSyncJob:
             # 1) DOWNLOAD (ou arquivo já baixado)
             price_captures: list[dict] | None = None
             portal: dict = {}
+            enr_path = None
+            headers0, existing0 = self.importer.load_matrix()   # uma leitura só; reutilizada no upsert
+            self.janela_enr = janela_enriquecimento(existing0, datetime.now(config.TZ).date().isoformat())
+            self.faltam_proprietario = sum(1 for r in existing0 if not str(r.get("NOMEPROPRIETARIO", "")).strip())
             if self.arquivo:
                 xlsx = Path(self.arquivo)
                 run.step(f"arquivo informado manualmente: {xlsx.name}")
@@ -62,6 +70,7 @@ class AssobensSyncJob:
                 stage = self._with_retries(run)
                 xlsx, price_captures = stage[0], stage[1]
                 portal = stage[2] if len(stage) > 2 and stage[2] else {}
+                enr_path = stage[3] if len(stage) > 3 else None
             # 2) VALIDAÇÃO DO ARQUIVO + STAGING (memória)
             parsed = self.parser.parse(xlsx)
             run.file_name, run.file_hash, run.rows_downloaded = parsed.file_name, parsed.file_hash, len(parsed.rows)
@@ -84,26 +93,41 @@ class AssobensSyncJob:
             if report.level == LEVEL_ERROR:
                 raise ValidationError("; ".join(report.messages))
             # 5) UPSERT + PUBLICAÇÃO ATÔMICA
+            mudou = False
             if report.level == LEVEL_SUSPECT:
                 status = STATUS_PARTIAL
                 run.step("publicação BLOQUEADA (dados suspeitos); base anterior mantida")
-                headers, rows_all = self.importer.load_matrix()
+                headers, rows_all = headers0, existing0
             elif prev and prev.get("file_hash") == parsed.file_hash and prev.get("status") == STATUS_SUCCESS:
                 run.step("mesmo arquivo da última execução (hash igual): nada a importar")
-                headers, rows_all = self.importer.load_matrix()
+                headers, rows_all = headers0, existing0
             else:
-                headers, existing = self.importer.load_matrix()
-                res = self.importer.upsert(batch.rows, headers, existing)
+                res = self.importer.upsert(batch.rows, headers0, existing0)
                 run.rows_imported, run.rows_updated = res.inserted, res.updated
                 run.step(f"upsert por CHASSI: {res.inserted} inseridos, {res.updated} atualizados, {res.unchanged} iguais (matriz {res.total})")
-                qm = quality_score(res.rows)  # gate da Torre vale para a MATRIZ publicada, não para o lote isolado
+                headers, rows_all = res.headers, res.rows
+                mudou = bool(res.inserted or res.updated)
+            # 5b) ENRIQUECIMENTO: só completa proprietário/tração de chassis que JÁ estão na matriz (nunca insere)
+            if enr_path and report.level != LEVEL_SUSPECT:
+                try:
+                    pe = self.parser.parse(enr_path)
+                    be = self.normalizer.normalize(pe.rows)
+                    r2 = self.importer.upsert(be.rows, headers, rows_all, update_only=True, only_fields=OWNER_FIELDS)
+                    run.rows_enriched = r2.updated
+                    headers, rows_all = r2.headers, r2.rows
+                    mudou = mudou or r2.updated > 0
+                    run.step(f"enriquecimento: {len(be.rows)} chassis no relatório · {r2.updated} proprietários preenchidos/atualizados · "
+                             f"{r2.ignored} fora da matriz (ignorados, relatório não vale para contagem)")
+                except Exception as e:
+                    status = STATUS_PARTIAL
+                    run.warnings.append(f"enriquecimento não aplicado: {redact(str(e))[:200]}")
+            if mudou:
+                qm = quality_score(rows_all)  # gate da Torre vale para a MATRIZ publicada, não para o lote isolado
                 if qm["score"] < config.MIN_QUALITY_SCORE:
                     raise ValidationError(f"matriz resultante com qualidade {qm['score']}/100 < {config.MIN_QUALITY_SCORE} (gate da Torre); publicação recusada")
                 run.step(f"qualidade da matriz resultante: {qm['score']}/100")
-                if res.inserted or res.updated:
-                    self.importer.publish(res.headers, res.rows, run.id)
-                    run.step("matriz publicada (troca atômica; backup da anterior em storage)")
-                headers, rows_all = res.headers, res.rows
+                self.importer.publish(headers, rows_all, run.id)
+                run.step("matriz publicada (troca atômica; backup da anterior em storage)")
             # 6) REFRESH KPIs + Top 10 (sempre a partir da matriz vigente)
             kpis = self.kpi.compute(rows_all)
             write_json_atomic(self.kpis_path, kpis)
@@ -170,6 +194,7 @@ class AssobensSyncJob:
         from .auth import AssobensAuthenticationService
         from .browser import AssobensBrowserService, load_selectors
         from .emplacamentos_downloader import AssobensEmplacamentosDownloader
+        from .enriquecimento_downloader import AssobensEnriquecimentoDownloader
         from .price_downloader import AssobensPriceDownloader
 
         sel = load_selectors()
@@ -203,4 +228,17 @@ class AssobensSyncJob:
                     b.screenshot_error(page, "precos")
                     run.warnings.append(f"comparativo de preços não capturado: {redact(str(e))[:200]}")
                     self.log.warning("preços falharam: %s", redact(str(e)))
-        return xlsx, prices, dl.last_kpis
+            enr = None
+            if self.faltam_proprietario:
+                ini, fim = self.janela_enr
+                run.step(f"enriquecimento: {self.faltam_proprietario} chassis sem proprietário · janela {ini} → {fim}")
+                try:
+                    enr = AssobensEnriquecimentoDownloader(b, auth, sel, dl).download(page, day_dir, now.strftime("%H%M"), ini, fim)
+                    run.step(f"download de enriquecimento concluído: {enr.name}")
+                except Exception as e:  # também não derruba os emplacamentos
+                    b.screenshot_error(page, "enriquecimento")
+                    run.warnings.append(f"enriquecimento não baixado: {redact(str(e))[:200]}")
+                    self.log.warning("enriquecimento falhou: %s", redact(str(e)))
+            else:
+                run.step("enriquecimento: nenhum chassi sem proprietário na matriz")
+        return xlsx, prices, dl.last_kpis, enr

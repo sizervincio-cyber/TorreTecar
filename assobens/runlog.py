@@ -73,6 +73,7 @@ class SyncRun:
     rows_updated: int = 0
     rows_rejected: int = 0
     prices_updated: int = 0
+    rows_enriched: int = 0
     error_message: str | None = None
     duration_seconds: float | None = None
     steps: list[str] = field(default_factory=list)
@@ -155,6 +156,7 @@ class RunLog:
             "registros_atualizados": run.rows_updated,
             "registros_rejeitados": run.rows_rejected,
             "precos_atualizados": run.prices_updated,
+            "proprietarios_enriquecidos": run.rows_enriched,
             "base_valida": base_ok,
             "avisos": run.warnings,
         }

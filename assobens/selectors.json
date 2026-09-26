@@ -45,6 +45,19 @@
     "slicer_regiao_mb": [{"kind": "css", "value": "[aria-label*='Região MB' i], [title*='Região MB' i]"}],
     "slicer_distrito": [{"kind": "css", "value": "[aria-label*='Distrito' i], [title*='Distrito' i]"}]
   },
+  "enriquecimento": {
+    "menu": "Baixar Dados",
+    "date_from": "#dateFrom",
+    "date_to": "#dateTo",
+    "segmento": "#segmento",
+    "area_oper": "#areaOper",
+    "excel_clientes": [
+      {"kind": "css", "value": "li:has(.fa-file-excel):has-text('Clientes')"},
+      {"kind": "css", "value": "li:has-text('Clientes') .fa-file-excel"},
+      {"kind": "role", "value": "listitem", "name": "^Clientes$"}
+    ],
+    "erro_associacao": "não possui associação"
+  },
   "precos": {
     "entry_link": [
       {"kind": "role", "value": "link", "name": "acessar relat[óo]rio"},

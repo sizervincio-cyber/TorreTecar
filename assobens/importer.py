@@ -26,6 +26,7 @@ class UpsertResult:
     inserted: int = 0
     updated: int = 0
     unchanged: int = 0
+    ignored: int = 0      # chassis desconhecidos numa carga update_only
     headers: list[str] = field(default_factory=list)
     rows: list[dict] = field(default_factory=list)   # matriz completa após o upsert
 
@@ -61,17 +62,21 @@ class AssobensImporter:
 
     # ------------------------------------------------------------ upsert
     def upsert(self, new_rows: list[dict], existing_headers: list[str] | None = None,
-               existing_rows: list[dict] | None = None) -> UpsertResult:
+               existing_rows: list[dict] | None = None, update_only: bool = False,
+               only_fields: list[str] | None = None) -> UpsertResult:
+        """update_only: nunca insere chassis novos (fonte que não vale para contagem, ex.: enriquecimento).
+        only_fields: restringe os campos que podem ser atualizados."""
         if existing_headers is None or existing_rows is None:
             existing_headers, existing_rows = self.load_matrix()
         headers = list(existing_headers) or list(config.CANONICAL_COLUMNS)
         for c in config.CANONICAL_COLUMNS:
             if c not in headers:
                 headers.append(c)
-        for r in new_rows:
-            for c in r:
-                if c not in headers:
-                    headers.append(c)  # dimensão nova preservada
+        if not update_only:
+            for r in new_rows:
+                for c in r:
+                    if c not in headers:
+                        headers.append(c)  # dimensão nova preservada
         index = {r[KEY]: i for i, r in enumerate(existing_rows)}
         merged = [dict(r) for r in existing_rows]
         res = UpsertResult(headers=headers)
@@ -81,6 +86,9 @@ class AssobensImporter:
                 continue
             i = index.get(key)
             if i is None:
+                if update_only:
+                    res.ignored += 1
+                    continue
                 merged.append({h: r.get(h, "") for h in headers})
                 index[key] = len(merged) - 1
                 res.inserted += 1
@@ -88,6 +96,8 @@ class AssobensImporter:
             cur = merged[i]
             changed = False
             for h in headers:
+                if only_fields and h not in only_fields:
+                    continue
                 nv = r.get(h)
                 if nv is None or h not in r:
                     continue
