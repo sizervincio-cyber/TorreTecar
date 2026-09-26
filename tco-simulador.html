@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCO Engine · Mercedes-Benz Trucks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Archivo+Narrow:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{
+  --bg:#0c0d0f; --panel:#141619; --panel-2:#1a1d21; --panel-3:#22262b;
+  --line:#2a2e34; --line-soft:#1e2226;
+  --txt:#e8eaec; --txt-2:#9aa1a9; --txt-3:#5f666e;
+  --accent:#4da3ff; --silver:#c9ced4;
+  --good:#3ddc84; --good-dim:rgba(61,220,132,.12);
+  --bad:#ff6b6b; --bad-dim:rgba(255,107,107,.12);
+  --warn:#ffb454; --radius:10px;
+  --font:'Archivo',system-ui,sans-serif;
+  --font-n:'Archivo Narrow',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --c-aq:#8a93a0; --c-ju:#c9764a; --c-di:#4da3ff; --c-ar:#3f7fc4; --c-ma:#b04a5a;
+  --c-ip:#7a6ac9; --c-se:#5aa9a0; --c-pa:#c9a84a; --c-pn:#d68a3a; --c-ad:#8f9aa8; --c-te:#5bb3d9;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--txt);font-family:var(--font);font-size:14px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:var(--mono);font-size:13px;color:var(--txt);background:var(--panel-3);
+  border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--accent)}
+input.dirty{border-color:var(--warn)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#2c3138;border-radius:5px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------- shell ---------- */
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:10px 20px;
+  background:var(--panel);border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo .star{width:26px;height:26px;border:1.5px solid var(--silver);border-radius:50%;display:grid;place-items:center;font-size:13px;color:var(--silver)}
+.logo b{font-family:var(--font-n);font-weight:700;letter-spacing:.12em;font-size:15px}
+.logo span{color:var(--txt-3);font-size:11px;letter-spacing:.08em}
+.mock-badge{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--warn);border:1px dashed rgba(255,180,84,.45);
+  padding:4px 10px;border-radius:20px;letter-spacing:.05em}
+.hbtn{font-family:var(--font-n);font-weight:600;font-size:12.5px;letter-spacing:.06em;padding:8px 14px;border-radius:7px;
+  border:1px solid var(--line);color:var(--txt-2);transition:.15s;white-space:nowrap}
+.hbtn:hover{color:var(--txt);border-color:var(--accent)}
+.hbtn.primary{background:var(--accent);color:#08131f;border-color:var(--accent);font-weight:700}
+.hbtn.primary:hover{filter:brightness(1.1)}
+.hbtn.ghost-good{border-color:rgba(61,220,132,.4);color:var(--good)}
+.hbtn:disabled{opacity:.35;cursor:not-allowed}
+
+#catalog{padding:18px 20px 80px;max-width:1500px;margin:0 auto}
+.sect-head{display:flex;align-items:baseline;gap:10px;margin:14px 0 10px}
+.sect-head h2{font-family:var(--font-n);font-size:13px;font-weight:700;letter-spacing:.14em;color:var(--txt-2)}
+.sect-head .hint{font-size:11px;color:var(--txt-3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.card{position:relative;background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);
+  padding:12px 14px;text-align:left;transition:border-color .15s,transform .12s,opacity .2s;display:block;width:100%}
+.card:hover{border-color:#3a4048;transform:translateY(-1px)}
+.card.selected-m{border-color:var(--silver);box-shadow:0 0 0 1px var(--silver)}
+.card.selected-c{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.card.dim{opacity:.32;pointer-events:none}
+.card .brand{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--txt-3)}
+.card .brand.mb{color:var(--silver)}
+.card h3{font-family:var(--font-n);font-size:16px;font-weight:700;margin:3px 0 7px;letter-spacing:.02em}
+.card .spec{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px}
+.card .spec span{font-family:var(--mono);font-size:10px;color:var(--txt-2);background:var(--panel-3);padding:2px 7px;border-radius:4px}
+.card .kv{display:flex;justify-content:space-between;font-size:12px;padding:2.5px 0;border-top:1px dashed var(--line-soft)}
+.card .kv b{font-family:var(--mono);font-weight:600;font-size:12px}
+.card .fin-line{font-family:var(--mono);font-size:9.5px;color:var(--txt-3);margin-top:7px;letter-spacing:.03em}
+.card .edited-dot{position:absolute;top:11px;right:12px;width:7px;height:7px;border-radius:50%;background:var(--warn);display:none}
+.card.edited .edited-dot{display:block}
+.card .tag{position:absolute;top:-8px;left:12px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;
+  padding:2px 8px;border-radius:4px;display:none}
+.card.selected-m .tag{display:block;background:var(--silver);color:#111}
+.card.selected-c .tag{display:block;background:var(--accent);color:#08131f}
+.card.add-card{border-style:dashed;border-color:var(--line);display:grid;place-items:center;min-height:150px;color:var(--txt-3)}
+.card.add-card:hover{color:var(--accent);border-color:var(--accent)}
+.card.add-card .plus{font-size:26px;line-height:1}
+.card.add-card .lbl{font-family:var(--font-n);font-size:12px;letter-spacing:.08em;margin-top:6px}
+.card .del-v{position:absolute;bottom:10px;right:12px;font-size:10px;color:var(--txt-3);border:1px solid var(--line);
+  border-radius:5px;padding:2px 7px;font-family:var(--mono)}
+.card .del-v:hover{color:var(--bad);border-color:var(--bad)}
+
+#compareBar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:25;display:none;
+  align-items:center;gap:14px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;
+  padding:10px 16px;box-shadow:0 12px 40px rgba(0,0,0,.55)}
+#compareBar.show{display:flex}
+#compareBar .pair{font-family:var(--font-n);font-weight:700;font-size:14px}
+#compareBar .pair em{font-style:normal;color:var(--txt-3);font-weight:400;padding:0 7px}
+
+/* ---------- TCO tela cheia ---------- */
+#tcoView{position:fixed;inset:0;z-index:30;background:var(--bg);display:none;flex-direction:column}
+#tcoView.open{display:flex}
+.tv-head{display:flex;align-items:center;gap:12px;padding:10px 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+.tv-head .duel{font-family:var(--font-n);font-weight:800;font-size:17px;letter-spacing:.02em}
+.tv-head .duel em{font-style:normal;color:var(--txt-3);font-weight:400;padding:0 8px;font-size:13px}
+.tv-head .meta{font-family:var(--mono);font-size:10.5px;color:var(--txt-3);letter-spacing:.05em}
+.tv-actions{margin-left:auto;display:flex;gap:8px}
+.tv-body{flex:1;overflow-y:auto;padding:18px 22px 40px}
+.tv-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;max-width:1560px;margin:0 auto}
+.panel{background:var(--panel);border:1px solid var(--line-soft);border-radius:var(--radius);padding:14px 16px}
+.panel h4{font-family:var(--font-n);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--txt-2);margin-bottom:10px}
+
+.verdict{border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;border:1px solid var(--line);
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.verdict.win-m{background:linear-gradient(135deg,#1e2126,#141619);border-color:#4a5058}
+.verdict .who{font-family:var(--font-n);font-size:24px;font-weight:800;letter-spacing:.02em}
+.verdict .eco{font-family:var(--mono);font-size:13px;color:var(--txt-2)}
+.verdict .eco b{font-size:17px;color:var(--good)}
+.verdict.win-c .eco b{color:var(--bad)}
+.verdict.tie .eco b{color:var(--txt-2)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.kpi{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:8px;padding:9px 11px}
+.kpi .l{font-size:10px;letter-spacing:.08em;color:var(--txt-3);text-transform:uppercase}
+.kpi .v{font-family:var(--mono);font-size:14.5px;font-weight:700;margin-top:2px}
+
+.chart-svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.legend span{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9.5px;color:var(--txt-2)}
+.legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
+
+.comp-head{display:grid;grid-template-columns:1fr 88px 88px 74px;gap:6px;font-family:var(--mono);font-size:9.5px;
+  letter-spacing:.08em;color:var(--txt-3);padding:0 2px 6px;border-bottom:1px solid var(--line)}
+.comp-head span:not(:first-child){text-align:right}
+.crow{display:grid;grid-template-columns:1fr 88px 88px 74px;gap:6px;align-items:center;padding:5px 2px;
+  border-bottom:1px solid var(--line-soft);font-size:12px}
+.crow .n{color:var(--txt-2)}
+.crow .a,.crow .b,.crow .d{font-family:var(--mono);font-size:11.5px;text-align:right}
+.crow .d{font-weight:700;border-radius:4px;padding:2px 5px}
+.crow .d.g{color:var(--good);background:var(--good-dim)}
+.crow .d.r{color:var(--bad);background:var(--bad-dim)}
+.crow .d.n0{color:var(--txt-3)}
+.crow.total{border-top:2px solid var(--line);border-bottom:none;padding-top:9px}
+.crow.total .n{color:var(--txt);font-weight:700;font-family:var(--font-n);letter-spacing:.05em}
+.crow.total .a,.crow.total .b{font-weight:700;font-size:12.5px}
+.insight{margin-top:14px;background:var(--panel-2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+  padding:11px 13px;font-size:12.5px;line-height:1.55;color:var(--txt-2)}
+.insight b{color:var(--txt)}
+
+/* ---------- drawers ---------- */
+#overlay{position:fixed;inset:0;background:rgba(5,6,8,.55);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+#overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:430px;max-width:94vw;background:var(--panel);
+  border-left:1px solid var(--line);z-index:50;transform:translateX(105%);transition:transform .25s cubic-bezier(.2,.8,.25,1);
+  display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.d-head{position:relative;padding:16px 20px 12px;border-bottom:1px solid var(--line)}
+.d-head .brand{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--txt-3)}
+.d-head h3{font-family:var(--font-n);font-size:21px;font-weight:800;letter-spacing:.02em;margin-top:2px}
+.d-head .sub{font-size:11.5px;color:var(--txt-3);margin-top:3px}
+.d-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:7px;border:1px solid var(--line);
+  color:var(--txt-2);font-size:15px;display:grid;place-items:center}
+.d-close:hover{color:var(--txt);border-color:var(--accent)}
+.d-body{flex:1;overflow-y:auto;padding:14px 20px 20px}
+.f-sect{font-family:var(--font-n);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent);
+  margin:16px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--line-soft)}
+.f-sect:first-child{margin-top:2px}
+.frow{display:grid;grid-template-columns:1fr 132px;gap:10px;align-items:center;margin-bottom:8px}
+.frow label{font-size:12.5px;color:var(--txt-2);line-height:1.3}
+.frow label small{display:block;font-size:10px;color:var(--txt-3)}
+.frow .unit{position:relative}
+.frow .unit em{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-style:normal;
+  font-family:var(--mono);font-size:10px;color:var(--txt-3);pointer-events:none}
+.frow .unit input{padding-right:42px;text-align:right}
+.frow input[type=text]{font-family:var(--font);text-align:left}
+.fin-echo{font-family:var(--mono);font-size:10.5px;line-height:1.7;color:var(--txt-3);
+  background:var(--panel-2);border:1px solid var(--line-soft);border-radius:7px;padding:9px 11px;margin:2px 0 10px}
+.fin-echo b{color:var(--accent);font-weight:600}
+.d-foot{padding:12px 20px;border-top:1px solid var(--line);display:flex;gap:10px}
+.d-foot .hbtn{flex:1;text-align:center;padding:10px}
+
+@media(max-width:1100px){
+  .tv-grid{grid-template-columns:1fr}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ---------- impressão (condensada: 1 folha garantida) ---------- */
+@media print{
+  html,body{height:auto;background:#fff}
+  header,#catalog,#compareBar,#multiView,.drawer,#overlay,#toast,.tv-actions,.no-print{display:none !important}
+  #tcoView{position:static;display:flex !important;background:#fff;height:auto}
+  #tcoView *{color:#111 !important;border-color:#c9cdd2 !important}
+  .tv-head{background:#fff;border-bottom:2px solid #111 !important;padding:2px 0 4px}
+  .tv-head .duel{font-size:14px}
+  .tv-head .duel em{font-size:11px}
+  .tv-head .meta{font-size:8px}
+  .tv-body{overflow:visible;padding:3mm 0 0}
+  .tv-grid{max-width:none;gap:4mm}
+  .panel,.kpi,.verdict,.insight{background:#fff !important;box-shadow:none}
+  .panel{padding:7px 10px;margin-bottom:7px !important}
+  .panel h4{font-size:8.5px;margin-bottom:4px}
+  .verdict{padding:7px 12px;margin-bottom:7px;gap:10px}
+  .verdict .who{font-size:16px}
+  .verdict .eco{font-size:10.5px}
+  .verdict .eco b{font-size:12px;color:#0a7d43 !important}
+  .verdict.win-c .eco b{color:#b3261e !important}
+  .kpis{gap:5px;margin-bottom:7px}
+  .kpi{padding:4px 8px}
+  .kpi .l{font-size:7.5px}
+  .kpi .v{font-size:11px}
+  .comp-head{font-size:7.5px;padding-bottom:3px}
+  .crow{padding:1.5px 2px;font-size:9.5px}
+  .crow .a,.crow .b,.crow .d{font-size:9px}
+  .crow .d{padding:1px 4px}
+  .crow .d.g{color:#0a7d43 !important;background:#e7f4ec !important}
+  .crow .d.r{color:#b3261e !important;background:#fbeaea !important}
+  .crow.total{padding-top:4px}
+  .crow.total .a,.crow.total .b{font-size:10px}
+  .insight{font-size:9.5px;line-height:1.45;padding:6px 9px;margin-top:7px;border-left-color:#111 !important;background:#f4f5f6 !important}
+  .legend{gap:6px;margin-top:3px}
+  .legend span{font-size:7.5px}
+  .legend i{width:7px;height:7px}
+  .chart-svg text{fill:#333 !important}
+  .chart-svg .axis-line{stroke:#c9cdd2 !important}
+  .chart-svg{width:auto;max-width:100%;margin:0 auto;display:block}
+  /* alturas fixas dos gráficos → altura total conhecida → 1 página */
+  .ch-cum .chart-svg{height:32mm}
+  .ch-stack .chart-svg{height:16mm}
+  .ch-tor .chart-svg{height:27mm}
+  html.p169 .tv-grid{grid-template-columns:1.1fr .9fr}
+  html.p169 body{zoom:.93}
+  html.p916 .tv-grid{grid-template-columns:1fr}
+  html.p916 .kpis{grid-template-columns:repeat(4,1fr)}
+  html.p916 .ch-cum .chart-svg{height:42mm}
+  html.p916 .ch-tor .chart-svg{height:34mm}
+}
+
+.frow.chk{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;cursor:pointer;padding:7px 0}
+.frow.chk span{font-size:12px;color:var(--txt-2);line-height:1.3}
+.frow.chk span small{display:block;font-size:10px;color:var(--txt-3);margin-top:2px}
+.frow.chk input[type=checkbox]{width:16px;min-width:16px;height:16px;margin:1px 0 0;accent-color:var(--accent);cursor:pointer;flex:0 0 16px}
+.f-note{font-size:10.5px;color:var(--txt-3);line-height:1.45;margin:-2px 0 8px}
+.comp-off{background:#2a2413;border-left:2px solid var(--warn);border-radius:0 5px 5px 0;padding:6px 9px;margin:0 0 7px;font-size:10.5px;line-height:1.4;color:var(--warn)}
+.comp-off b{color:var(--warn)}
+
+
+/* ---------- importação XLSX + comparação múltipla ---------- */
+.header-sep{width:1px;height:24px;background:var(--line);margin:0 2px}
+#xlsInput{display:none}
+.import-status{font-family:var(--mono);font-size:10px;color:var(--txt-3);max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#toast{position:fixed;right:22px;bottom:22px;z-index:90;max-width:430px;background:var(--panel-3);border:1px solid var(--line);border-radius:10px;
+  padding:11px 14px;font-size:12px;line-height:1.45;box-shadow:0 12px 40px rgba(0,0,0,.5);opacity:0;transform:translateY(8px);pointer-events:none;transition:.18s}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.good{border-color:rgba(61,220,132,.5)} #toast.bad{border-color:rgba(255,107,107,.5)}
+#multiView{position:fixed;inset:0;z-index:35;background:var(--bg);display:none;flex-direction:column}
+#multiView.open{display:flex}
+.mv-head{display:flex;align-items:center;gap:12px;padding:10px 22px;border-bottom:1px solid var(--line);background:var(--panel)}
+.mv-head h2{font-family:var(--font-n);font-size:17px;letter-spacing:.03em}
+.mv-head .meta{font-family:var(--mono);font-size:10.5px;color:var(--txt-3);margin-top:2px}
+.mv-actions{margin-left:auto;display:flex;gap:8px}
+.mv-body{flex:1;overflow:auto;padding:18px 22px 42px}
+.mv-wrap{max-width:1560px;margin:0 auto}
+.multi-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin:10px 0 16px}
+.pick-card{position:relative;text-align:left;background:var(--panel);border:1px solid var(--line-soft);border-radius:9px;padding:10px 12px;transition:.15s}
+.pick-card:hover{border-color:#3a4048}.pick-card.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.pick-card.lock{opacity:.35}.pick-card .mk{font-family:var(--mono);font-size:9px;color:var(--txt-3);letter-spacing:.12em}
+.pick-card b{display:block;font-family:var(--font-n);font-size:15px;margin:2px 0 5px}.pick-card small{color:var(--txt-2);font-family:var(--mono);font-size:10px}
+.pick-card .check{position:absolute;right:10px;top:10px;width:18px;height:18px;border:1px solid var(--line);border-radius:5px;display:grid;place-items:center;font-size:11px;color:transparent}
+.pick-card.on .check{color:#08131f;background:var(--accent);border-color:var(--accent)}
+.multi-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.multi-chart{margin:0 0 14px}
+.multi-bars{display:grid;gap:9px;margin-top:8px}.mb-row{display:grid;grid-template-columns:180px 1fr 110px;gap:10px;align-items:center}
+.mb-row .name{font-family:var(--font-n);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right;color:var(--txt-2)}
+.mb-track{height:18px;background:var(--panel-3);border-radius:4px;overflow:hidden}.mb-fill{height:100%;background:linear-gradient(90deg,var(--accent),#86c2ff);border-radius:4px;min-width:2px}
+.mb-val{font-family:var(--mono);font-size:11px;color:var(--txt-2)}
+.multi-table-wrap{overflow:auto;border:1px solid var(--line-soft);border-radius:8px}.multi-table{width:100%;min-width:840px;border-collapse:collapse}
+.multi-table th,.multi-table td{padding:8px 10px;border-bottom:1px solid var(--line-soft);text-align:right;font-family:var(--mono);font-size:11px;white-space:nowrap}
+.multi-table th{position:sticky;top:0;background:var(--panel-2);z-index:2;color:var(--txt-2);font-size:9.5px;letter-spacing:.04em}
+.multi-table th:first-child,.multi-table td:first-child{position:sticky;left:0;text-align:left;background:var(--panel);z-index:1;font-family:var(--font);color:var(--txt-2)}
+.multi-table th:first-child{z-index:3;background:var(--panel-2)}.multi-table tr.total td{font-weight:700;color:var(--txt);border-top:2px solid var(--line)}
+.multi-table td.best{color:var(--good);background:var(--good-dim)}
+.import-note{margin-top:10px;border:1px dashed var(--line);border-radius:8px;padding:9px 11px;color:var(--txt-3);font-size:11px;line-height:1.45}
+.source-chip{font-family:var(--mono);font-size:9px;color:var(--good);border:1px solid rgba(61,220,132,.32);padding:2px 6px;border-radius:4px;margin-left:5px}
+@media(max-width:900px){.multi-summary{grid-template-columns:repeat(2,1fr)}.mb-row{grid-template-columns:110px 1fr 85px}}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <div class="star">✦</div>
+    <div><b>TCO ENGINE</b><br><span>MERCEDES-BENZ TRUCKS · TECAR</span></div>
+  </div>
+  <div class="mock-badge" id="dataBadge">DADOS DE DEMONSTRAÇÃO — PREENCHA SUAS PREMISSAS</div>
+  <span class="import-status" id="importStatus"></span>
+  <div class="header-sep"></div>
+  <input type="file" id="xlsInput" accept=".xlsx,.xls,.xlsm">
+  <button class="hbtn" id="btnImport">⇩ Importar TCO XLSX</button>
+  <button class="hbtn" id="btnMulti">▦ Comparação múltipla <span id="multiCount">0/5</span></button>
+  <button class="hbtn" id="btnReset" title="Restaura todos os valores de demonstração">↺ Restaurar padrão</button>
+  <button class="hbtn primary" id="btnGlobals">⚙ Premissas da operação</button>
+</header>
+
+<div id="catalog">
+  <div class="sect-head">
+    <h2>1 · MERCEDES-BENZ</h2>
+    <span class="hint">clique para selecionar · clique de novo para editar as premissas do veículo</span>
+  </div>
+  <div class="grid" id="gridMbb"></div>
+  <div class="sect-head">
+    <h2>2 · CONCORRENTES</h2>
+    <span class="hint" id="hintConc"></span>
+  </div>
+  <div class="grid" id="gridConc"></div>
+</div>
+
+<div id="compareBar">
+  <span class="pair" id="cbPair"></span>
+  <button class="hbtn primary" id="btnOpenTco">Abrir TCO ▸</button>
+</div>
+
+<!-- ============ TCO TELA CHEIA ============ -->
+<section id="tcoView" aria-label="Resultado TCO">
+  <div class="tv-head">
+    <button class="hbtn" id="btnBack">◂ Catálogo</button>
+    <div>
+      <div class="duel" id="tvDuel"></div>
+      <div class="meta" id="tvMeta"></div>
+    </div>
+    <div class="tv-actions">
+      <button class="hbtn" id="btnEditM">✎ M.Benz</button>
+      <button class="hbtn" id="btnEditC">✎ Concorrente</button>
+      <button class="hbtn" id="btnEditG">⚙ Operação</button>
+      <button class="hbtn ghost-good" id="btnPrint169">⎙ Imprimir 16:9</button>
+      <button class="hbtn ghost-good" id="btnPrint916">⎙ Imprimir 9:16</button>
+    </div>
+  </div>
+  <div class="tv-body"><div class="tv-grid" id="tvGrid"></div></div>
+</section>
+
+
+
+<!-- ============ COMPARAÇÃO MÚLTIPLA ============ -->
+<section id="multiView" aria-label="Comparação múltipla de TCO">
+  <div class="mv-head">
+    <button class="hbtn" id="btnMultiBack">◂ Catálogo</button>
+    <div><h2>Comparação múltipla</h2><div class="meta">Selecione de 2 a 5 veículos · mesmas premissas operacionais · componentes do TCO respeitados</div></div>
+    <div class="mv-actions"><button class="hbtn" id="btnMultiG">⚙ Operação</button></div>
+  </div>
+  <div class="mv-body"><div class="mv-wrap">
+    <div class="sect-head"><h2>VEÍCULOS</h2><span class="hint" id="multiHint">selecione até 5 modelos</span></div>
+    <div class="multi-picker" id="multiPicker"></div>
+    <div id="multiResults"></div>
+  </div></div>
+</section>
+
+<div id="overlay"></div>
+<div id="toast"></div>
+
+<aside class="drawer" id="dVehicle">
+  <div class="d-head">
+    <div class="brand" id="dvBrand"></div>
+    <h3 id="dvModel"></h3>
+    <div class="sub" id="dvSub"></div>
+    <button class="d-close" data-close>✕</button>
+  </div>
+  <div class="d-body" id="dvBody"></div>
+  <div class="d-foot">
+    <button class="hbtn" id="dvReset">Restaurar veículo</button>
+    <button class="hbtn primary" data-close>Aplicar e fechar</button>
+  </div>
+</aside>
+
+<aside class="drawer" id="dGlobals">
+  <div class="d-head">
+    <div class="brand">PREMISSAS DA OPERAÇÃO</div>
+    <h3>Sua operação</h3>
+    <div class="sub">Valem para todos os veículos comparados. Financiamento e custos específicos são editados no card de cada modelo.</div>
+    <button class="d-close" data-close>✕</button>
+  </div>
+  <div class="d-body" id="dgBody"></div>
+  <div class="d-foot">
+    <button class="hbtn primary" data-close>Aplicar e fechar</button>
+  </div>
+</aside>
+
+<script>
+'use strict';
+/* ============ DADOS-BASE (DEMONSTRAÇÃO) ============ */
+/* Componentes do TCO que o usuário pode incluir ou excluir. A ordem dos
+   componentes de custo espelha COMP_COLORS; 're' e 'li' entram depois porque abatem. */
+const COMP_DEFS=[
+ {k:'aq',l:'Preço de aquisição',s:'e a amortização do financiamento'},
+ {k:'ju',l:'Juros do financiamento'},
+ {k:'di',l:'Combustível'},
+ {k:'ar',l:'ARLA 32'},
+ {k:'ma',l:'Manutenção'},
+ {k:'pn',l:'Pneus',s:'trocas e recapagens calculadas pela vida útil'},
+ {k:'ad',l:'Administrativo',s:'custo administrativo mensal por veículo'},
+ {k:'te',l:'Telemetria',s:'rastreador / telemetria mensal'},
+ {k:'ip',l:'IPVA'},
+ {k:'se',l:'Seguro'},
+ {k:'pa',l:'Custo de parada',s:'receita perdida por indisponibilidade'},
+ {k:'re',l:'Valor residual',s:'abate o TCO'},
+ {k:'li',l:'Liquidez e aplicação',s:'ganho financeiro comparativo'},
+];
+const PART_KEYS=['aq','ju','di','ar','ma','pn','ad','te','ip','se','pa'];
+const COMP_ALL=COMP_DEFS.reduce((o,c)=>(o[c.k]=1,o),{});
+const FIN_DEF = {pag:'fin', entrada:20, prazo:60, taxa:14, taxaUnit:'aa', carencia:0, carTipo:'cap'};
+const VEHICLES = [
+ {id:'a2651', mb:1, marca:'M.BENZ', modelo:'ACTROS 2651S', trac:'6x4', pot:510, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1150000, kml:2.05, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'a2653', mb:1, marca:'M.BENZ', modelo:'ACTROS 2653S', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1190000, kml:2.00, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'a2548', mb:1, marca:'M.BENZ', modelo:'ACTROS 2548S', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:1020000, kml:2.30, arla:5.5, manut:0.25, deprec:9, disp:96, diasVenda:40, segPct:3.1, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'ax2545', mb:1, marca:'M.BENZ', modelo:'AXOR 2545 S', trac:'6x2', pot:450, seg:'Extrapesado', aplic:'Carreta LS', preco:890000, kml:2.25, arla:5.5, manut:0.26, deprec:10, disp:95, diasVenda:45, segPct:3.1, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'at3033', mb:1, marca:'M.BENZ', modelo:'ATEGO 3033CE', trac:'8x2', pot:330, seg:'Semipesado', aplic:'Rígido 8x2', preco:640000, kml:2.90, arla:5, manut:0.21, deprec:10, disp:95, diasVenda:45, segPct:3.0, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'fh540', marca:'VOLVO', modelo:'FH 540 6X4T', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1180000, kml:2.00, arla:6, manut:0.30, deprec:9, disp:95, diasVenda:45, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'fh460', marca:'VOLVO', modelo:'FH 460 6X2T', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1040000, kml:2.25, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'fh500', marca:'VOLVO', modelo:'FH 500 6X2T', trac:'6x2', pot:500, seg:'Extrapesado', aplic:'Carreta LS', preco:1090000, kml:2.18, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'r560', marca:'SCANIA', modelo:'R560 A6X4', trac:'6x4', pot:560, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1230000, kml:1.95, arla:6.5, manut:0.30, deprec:9, disp:96, diasVenda:30, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'r540', marca:'SCANIA', modelo:'R540 A6X4', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1180000, kml:2.00, arla:6.5, manut:0.30, deprec:9, disp:95, diasVenda:40, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'r500', marca:'SCANIA', modelo:'R500 A6X4', trac:'6x4', pot:500, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1130000, kml:2.05, arla:6.5, manut:0.30, deprec:9, disp:95, diasVenda:45, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'r450', marca:'SCANIA', modelo:'R450 A6X2', trac:'6x2', pot:450, seg:'Extrapesado', aplic:'Carreta LS', preco:1050000, kml:2.20, arla:6, manut:0.28, deprec:9, disp:95, diasVenda:45, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'r460', marca:'SCANIA', modelo:'R460 A6X2', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1080000, kml:2.22, arla:6, manut:0.28, deprec:9, disp:95, diasVenda:45, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'g370', marca:'SCANIA', modelo:'G370 A6X2', trac:'6x2', pot:370, seg:'Extrapesado', aplic:'Carreta LS', preco:920000, kml:2.35, arla:5.5, manut:0.26, deprec:10, disp:94, diasVenda:55, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'xf530', marca:'DAF', modelo:'XF FTT 530', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1120000, kml:2.02, arla:6, manut:0.30, deprec:10, disp:94, diasVenda:60, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'xf480', marca:'DAF', modelo:'XF FTS 480', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:1010000, kml:2.22, arla:6, manut:0.28, deprec:10, disp:94, diasVenda:65, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'vw29530', marca:'VW', modelo:'29.530 MTM 6X4', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:980000, kml:1.95, arla:6.5, manut:0.32, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'vw28480', marca:'VW', modelo:'28.480 MTM 6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:900000, kml:2.15, arla:6, manut:0.30, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'vw25480', marca:'VW', modelo:'25.480 CTM 6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:870000, kml:2.18, arla:6, manut:0.30, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'sw540', marca:'IVECO', modelo:'S-WAY 540-6X4', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1060000, kml:1.98, arla:6.5, manut:0.30, deprec:11, disp:93, diasVenda:75, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'sw480', marca:'IVECO', modelo:'S-WAY 480-6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:970000, kml:2.18, arla:6, manut:0.28, deprec:11, disp:93, diasVenda:75, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'vw30320', marca:'VW', modelo:'30.320 CRM 8X2', trac:'8x2', pot:320, seg:'Semipesado', aplic:'Rígido 8x2', preco:620000, kml:2.80, arla:5, manut:0.23, deprec:11, disp:93, diasVenda:60, segPct:3.1, ipva:1.5, ...FIN_DEF},
+ {id:'p320', marca:'SCANIA', modelo:'P320 B8X2', trac:'8x2', pot:320, seg:'Semipesado', aplic:'Rígido 8x2', preco:660000, kml:2.75, arla:5, manut:0.23, deprec:10, disp:94, diasVenda:55, segPct:3.1, ipva:1.5, ...FIN_DEF},
+ {id:'vm360', marca:'VOLVO', modelo:'VM 360 8X2 R', trac:'8x2', pot:360, seg:'Semipesado', aplic:'Rígido 8x2', preco:650000, kml:2.85, arla:5, manut:0.23, deprec:10, disp:94, diasVenda:55, segPct:3.1, ipva:1.5, ...FIN_DEF},
+ {id:'cf310', marca:'DAF', modelo:'CF FAC 310', trac:'8x2', pot:310, seg:'Semipesado', aplic:'Rígido 8x2', preco:630000, kml:2.82, arla:5, manut:0.23, deprec:10, disp:93, diasVenda:65, segPct:3.1, ipva:1.5, ...FIN_DEF},
+];
+const MATRIX = {
+ a2651:['fh540','r560','r540','r500','xf530','vw29530','sw540'],
+ a2653:['fh540','r560','r540','r500','xf530','vw29530','sw540'],
+ a2548:['fh460','fh500','r450','r460','sw480','xf480','vw28480'],
+ ax2545:['fh460','r450','vw28480','g370','vw25480'],
+ at3033:['vw30320','p320','vm360','cf310'],
+};
+const GLOBAL_DEFAULTS = {
+ km:10000, horiz:60, diasOper:25, diesel:6.20, infDiesel:5, arlaPreco:3.50,
+ taxaAplic:10.5, receita:85000, margem:35, desagio:5, custoVenda:3, empate:1,
+};
+const VEHICLE_EXTRA_DEFAULTS = {
+ pneuQtd:0, pneuPreco:0, pneuVida:0, recapQtd:0, recapCusto:0,
+ adminMensal:0, telemMensal:0, segModo:'pct', segAnual:0,
+ ipvaBase:'mercado', residualModo:'deprec', residualManual:0,
+ fonteArquivo:'', importadoEm:''
+};
+const VFIELDS = [
+ {sect:'AQUISIÇÃO'},
+ {k:'preco', l:'Preço de aquisição', s:'valor de nota fiscal', u:'R$', step:5000},
+ {sect:'FINANCIAMENTO — condição desta marca'},
+ {k:'pag', l:'Forma de pagamento', type:'select', opts:[['fin','Financiado'],['vista','À vista']]},
+ {k:'entrada', l:'Entrada', u:'%', step:5},
+ {k:'prazo', l:'Prazo (parcelas após a carência)', u:'meses', step:6, min:1, max:120},
+ {k:'taxaUnit', l:'Unidade da taxa', type:'select', opts:[['aa','% ao ano'],['am','% ao mês']]},
+ {k:'taxa', l:'Taxa de juros do banco da marca', s:'na unidade escolhida acima', u:'%', step:0.05},
+ {k:'carencia', l:'Carência', s:'meses sem amortizar principal', u:'meses', step:1, min:0, max:36},
+ {k:'carTipo', l:'Tipo de carência', type:'select',
+  opts:[['cap','Capitalizada — juros vão ao saldo'],['jur','Paga só os juros na carência']]},
+ {echo:1},
+ {sect:'OPERAÇÃO'},
+ {k:'kml', l:'Consumo estimado', s:'medido com carga e rota reais', u:'km/L', step:0.01},
+ {k:'arla', l:'Consumo de ARLA 32', s:'% sobre o diesel', u:'%', step:0.5},
+ {k:'manut', l:'Manutenção média', s:'preventiva + corretiva', u:'R$/km', step:0.01},
+ {k:'disp', l:'Disponibilidade mecânica', s:'% de dias aptos a operar', u:'%', step:0.5},
+ {sect:'PNEUS — tratados separadamente da manutenção'},
+ {k:'pneuQtd', l:'Quantidade de pneus', s:'inclua estepe se fizer parte da premissa', u:'unid.', step:1, min:0},
+ {k:'pneuPreco', l:'Preço do pneu novo', u:'R$/pneu', step:100},
+ {k:'pneuVida', l:'Vida útil por ciclo', u:'km', step:1000},
+ {k:'recapQtd', l:'Recapagens por carcaça', u:'ciclos', step:1, min:0},
+ {k:'recapCusto', l:'Custo por recapagem', u:'R$/pneu', step:50},
+ {sect:'ADMINISTRATIVO & TELEMETRIA — separados do custo mecânico'},
+ {k:'adminMensal', l:'Administrativo', s:'custo mensal alocado ao veículo', u:'R$/mês', step:50},
+ {k:'telemMensal', l:'Rastreador / telemetria', u:'R$/mês', step:10},
+ {sect:'VALOR NO TEMPO'},
+ {k:'deprec', l:'Depreciação anual', s:'composta, sobre valor de mercado', u:'%a.a.', step:0.5},
+ {k:'residualModo', l:'Cálculo do residual', type:'select', opts:[['deprec','Por depreciação'],['manual','Valor informado']]},
+ {k:'residualManual', l:'Residual informado', s:'usado quando o modo for Valor informado', u:'R$', step:5000},
+ {k:'diasVenda', l:'Dias para vender o usado', s:'liquidez na revenda', u:'dias', step:5},
+ {sect:'IMPOSTOS & SEGURO'},
+ {k:'ipva', l:'IPVA', s:'percentual anual', u:'%', step:0.1},
+ {k:'ipvaBase', l:'Base do IPVA', type:'select', opts:[['mercado','Valor de mercado do ano'],['aquisicao','Valor de aquisição']]},
+ {k:'segModo', l:'Seguro anual', type:'select', opts:[['pct','% sobre valor de mercado'],['fixo','Valor anual fixo']]},
+ {k:'segPct', l:'Seguro anual — percentual', u:'%', step:0.1},
+ {k:'segAnual', l:'Seguro anual — valor fixo', u:'R$/ano', step:500},
+];
+const NEWFIELDS = [
+ {sect:'IDENTIFICAÇÃO'},
+ {k:'marca', l:'Marca', type:'text'},
+ {k:'modelo', l:'Modelo', type:'text'},
+ {k:'trac', l:'Tração', type:'select', opts:[['4x2','4x2'],['6x2','6x2'],['6x4','6x4'],['8x2','8x2'],['8x4','8x4']]},
+ {k:'pot', l:'Potência', u:'cv', step:10},
+ {k:'seg', l:'Segmento', type:'select', opts:[['Extrapesado','Extrapesado'],['Semipesado','Semipesado'],['Pesado','Pesado'],['Leve','Leve']]},
+];
+const GFIELDS = [
+ {sect:'OPERAÇÃO'},
+ {k:'km', l:'Km planejado por mês', s:'km efetivo = planejado × disponibilidade mecânica', u:'km', step:500},
+ {k:'diasOper', l:'Dias operacionais por mês', u:'dias', step:1},
+ {k:'horiz', l:'Horizonte de análise', s:'12 a 120 meses', u:'meses', step:6, min:12, max:120},
+ {sect:'COMBUSTÍVEL'},
+ {k:'diesel', l:'Preço do diesel hoje', u:'R$/L', step:0.05},
+ {k:'infDiesel', l:'Inflação esperada do diesel', u:'%a.a.', step:0.5},
+ {k:'arlaPreco', l:'Preço do ARLA 32', u:'R$/L', step:0.05},
+ {sect:'CAPITAL'},
+ {k:'taxaAplic', l:'Custo de oportunidade', s:'aplicação do capital livre', u:'%a.a.', step:0.5},
+ {sect:'RECEITA (custo de parada)'},
+ {k:'receita', l:'Receita potencial por mês', u:'R$', step:5000},
+ {k:'margem', l:'Margem de contribuição', u:'%', step:1},
+ {sect:'REVENDA'},
+ {k:'desagio', l:'Deságio na venda do usado', u:'%', step:0.5},
+ {k:'custoVenda', l:'Custos de venda', s:'comissão + preparação', u:'%', step:0.5},
+ {k:'empate', l:'Limite de empate técnico', u:'%', step:0.5},
+ {sect:'COMPONENTES DO TCO'},
+ {note:'Desmarque o que não deve entrar. O item sai do cálculo, da tabela e dos gráficos.'},
+ ...COMP_DEFS.map(c=>({k:c.k, l:c.l, s:c.s, type:'check', comp:true})),
+];
+
+/* ============ ESTADO ============ */
+const LS='tco-engine-v2';
+let state = load() || {g:{...GLOBAL_DEFAULTS}, v:{}, custom:[], selM:null, selC:null, multi:[]};
+if(!state.custom) state.custom=[];
+if(!state.multi) state.multi=[];
+state.custom.forEach(v=>{ if(!v.taxaUnit)v.taxaUnit='aa'; if(v.carencia==null)v.carencia=0; if(!v.carTipo)v.carTipo='cap'; });
+function load(){ try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;} }
+function save(){ try{localStorage.setItem(LS, JSON.stringify(state));}catch(e){} }
+function allVehicles(){ return VEHICLES.concat(state.custom); }
+function baseOf(id){ return allVehicles().find(v=>v.id===id); }
+function vdata(id){ const b=baseOf(id); return b ? {...VEHICLE_EXTRA_DEFAULTS, ...b, ...(state.v[id]||{})} : null; }
+function isCustom(id){ return state.custom.some(v=>v.id===id); }
+function isEdited(id){ return !!state.v[id] && Object.keys(state.v[id]).length>0; }
+function compatible(mId, cId){
+ if(!mId) return true;
+ if(isCustom(mId) || isCustom(cId)) return true;   // veículos cadastrados pelo usuário: sempre habilitados
+ return (MATRIX[mId]||[]).includes(cId);
+}
+
+/* ============ MOTOR (mensal) — financiamento POR VEÍCULO ============ */
+function finParams(v){
+ const unit=v.taxaUnit||'aa';
+ const iM = unit==='am' ? (+v.taxa||0)/100 : Math.pow(1+(+v.taxa||0)/100,1/12)-1;
+ const iAA = Math.pow(1+iM,12)-1;
+ const car = Math.max(0, Math.min(36, Math.round(+v.carencia||0)));
+ const carTipo = v.carTipo||'cap';
+ const fin = v.pag==='fin';
+ const entrada = fin ? v.preco*(v.entrada/100) : v.preco;
+ const pv = fin ? v.preco-entrada : 0;
+ const prazo = Math.max(1,+v.prazo||1);
+ // saldo no fim da carência: capitalizada → juros incorporados; paga-juros → saldo intacto
+ const saldoPosCar = carTipo==='cap' ? pv*Math.pow(1+iM,car) : pv;
+ const pmt = pv<=0 ? 0 : (iM===0 ? saldoPosCar/prazo : saldoPosCar*iM/(1-Math.pow(1+iM,-prazo)));
+ return {iM,iAA,car,carTipo,fin,entrada,pv,prazo,saldoPosCar,pmt};
+}
+function simulate(v, g){
+ const H=Math.min(120,Math.max(1,+g.horiz||60));
+ const disp=Math.max(0,Math.min(1,(+v.disp||0)/100));
+ const infM=Math.pow(1+(+g.infDiesel||0)/100,1/12)-1, depM=1-Math.pow(1-(+v.deprec||0)/100,1/12);
+ const {iM,car,carTipo,fin,entrada,pv,prazo,pmt}=finParams(v);
+ const kmEf=(+g.km||0)*disp, recDia=(+g.receita||0)/Math.max(1,+g.diasOper||1);
+ const F=compFlags();
+ let saldo=pv, vm=+v.preco||0, baseAno=+v.preco||0;
+ let juros=0,dieselC=0,arlaC=0,manutC=0,pneusC=0,recapC=0,adminC=0,telemC=0,ipvaC=0,segC=0,indispC=0;
+ const e0=entrada*F.aq;
+ const cum=[e0], mensal=[];
+ let acc=e0, kmAc=0, tireEvents=0;
+ for(let m=1;m<=H;m++){
+   if(m>1&&(m-1)%12===0) baseAno=vm;
+   const pD=(+g.diesel||0)*Math.pow(1+infM,m-1);
+   const litros=(+v.kml||0)>0? kmEf/(+v.kml):0;
+   const cd=litros*pD, ca=litros*((+v.arla||0)/100)*(+g.arlaPreco||0)*Math.pow(1+infM,m-1);
+   const cm=kmEf*(+v.manut||0);
+   const ci=((v.ipvaBase||'mercado')==='aquisicao'?(+v.preco||0):baseAno)*((+v.ipva||0)/100)/12;
+   const cs=(v.segModo==='fixo' && (+v.segAnual||0)>0) ? (+v.segAnual||0)/12 : baseAno*((+v.segPct||0)/100)/12;
+   const cp=(+g.diasOper||0)*(1-disp)*recDia*((+g.margem||0)/100);
+   const cad=+v.adminMensal||0, cte=+v.telemMensal||0;
+
+   /* Pneus: custo separado da manutenção. A troca ocorre quando a quilometragem
+      acumulada cruza a vida útil informada. Com recapagem, alterna recapagens
+      antes de comprar um novo jogo de pneus. */
+   let cpn=0, crc=0;
+   const vida=+v.pneuVida||0, qtd=+v.pneuQtd||0, nRec=Math.max(0,Math.round(+v.recapQtd||0));
+   const kmAntes=kmAc; kmAc+=kmEf;
+   if(vida>0 && qtd>0){
+     const before=Math.floor((kmAntes+1e-9)/vida), after=Math.floor((kmAc+1e-9)/vida);
+     for(let ev=before+1;ev<=after;ev++){
+       tireEvents++;
+       const pos=(tireEvents-1)%(nRec+1);
+       if(nRec>0 && pos<nRec) crc+=qtd*(+v.recapCusto||0);
+       else cpn+=qtd*(+v.pneuPreco||0);
+     }
+   }
+
+   dieselC+=cd*F.di; arlaC+=ca*F.ar; manutC+=cm*F.ma;
+   pneusC+=(cpn+crc)*F.pn; recapC+=crc*F.pn; adminC+=cad*F.ad; telemC+=cte*F.te;
+   ipvaC+=ci*F.ip; segC+=cs*F.se; indispC+=cp*F.pa;
+   let jMes=0, amort=0, pagoJ=0, pagoA=0;
+   if(fin){
+     if(m<=car){
+       jMes=saldo*iM;
+       if(carTipo==='jur'){ pagoJ=jMes; } else { saldo+=jMes; }
+     } else if(m<=car+prazo){
+       jMes=saldo*iM; amort=pmt-jMes;
+       saldo=Math.max(0,saldo-amort); pagoJ=jMes; pagoA=amort;
+     }
+   }
+   juros+=jMes*F.ju;
+   vm*=(1-depM);
+   const out=cd*F.di+ca*F.ar+cm*F.ma+(cpn+crc)*F.pn+cad*F.ad+cte*F.te+ci*F.ip+cs*F.se+cp*F.pa+pagoJ*F.ju+pagoA*F.aq;
+   acc+=out; cum.push(acc); mensal.push(out);
+ }
+ const residualBase=(v.residualModo==='manual' && (+v.residualManual||0)>0) ? (+v.residualManual||0) : vm;
+ const residual=residualBase*(v.residualModo==='manual'?1:(1-((+g.desagio||0)+(+g.custoVenda||0))/100))*F.re;
+ const opex=dieselC+arlaC+manutC+pneusC+adminC+telemC+ipvaC+segC+indispC;
+ const tco=(+v.preco||0)*F.aq+juros+opex-residual;
+ const kmTot=kmEf*H;
+ return {H,entrada,pmt,juros,saldoFinal:saldo,dieselC,arlaC,manutC,pneusC,recapC,adminC,telemC,ipvaC,segC,indispC,opex,vm,residual,tco,
+         kmTot,tcoKm:kmTot>0?tco/kmTot:0,tcoMes:tco/H,cum,mensal};
+}
+function compare(){
+ if(!state.selM||!state.selC) return null;
+ const g=state.g, M=vdata(state.selM), C=vdata(state.selC);
+ if(!M||!C) return null;
+ const rm=simulate(M,g), rc=simulate(C,g);
+ const rd=Math.pow(1+g.taxaAplic/100,1/365)-1;
+ const fLi=compFlags().li;
+ rm.liquidez=fLi&&C.diasVenda>M.diasVenda? rm.residual*(Math.pow(1+rd,C.diasVenda-M.diasVenda)-1):0;
+ rc.liquidez=fLi&&M.diasVenda>C.diasVenda? rc.residual*(Math.pow(1+rd,M.diasVenda-C.diasVenda)-1):0;
+ const rMm=Math.pow(1+g.taxaAplic/100,1/12)-1;
+ rm.aplic=(fLi&&M.pag==='vista'&&C.pag==='vista'&&M.preco<C.preco)?(C.preco-M.preco)*(Math.pow(1+rMm,rm.H)-1):0;
+ rc.aplic=(fLi&&M.pag==='vista'&&C.pag==='vista'&&C.preco<M.preco)?(M.preco-C.preco)*(Math.pow(1+rMm,rc.H)-1):0;
+ rm.tcoFinal=rm.tco-rm.liquidez-rm.aplic;
+ rc.tcoFinal=rc.tco-rc.liquidez-rc.aplic;
+ rm.tcoKm=rm.kmTot>0?rm.tcoFinal/rm.kmTot:0; rc.tcoKm=rc.kmTot>0?rc.tcoFinal/rc.kmTot:0;
+ rm.tcoMes=rm.tcoFinal/rm.H; rc.tcoMes=rc.tcoFinal/rc.H;
+ return {M,C,rm,rc,delta:rm.tcoFinal-rc.tcoFinal,
+         deltaPct: rc.tcoFinal!==0?(rm.tcoFinal-rc.tcoFinal)/Math.abs(rc.tcoFinal):0};
+}
+
+/* ============ FORMAT ============ */
+const fBRL=n=>'R$ '+Math.round(n).toLocaleString('pt-BR');
+const fK=n=>Math.round(n)===0?'R$ 0':(Math.abs(n)>=1e6?('R$ '+(n/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})+' mi'):('R$ '+Math.round(n/1000)+' mil'));
+const fBRL2=n=>'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fPct=n=>(n*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ============ CATÁLOGO ============ */
+function cardHTML(v){
+ const d=vdata(v.id);
+ const u=d.taxaUnit==='am'?'a.m.':'a.a.';
+ const fin = d.pag==='fin'
+   ? `Financ. ${d.entrada}% ent · ${d.prazo}m · ${(+d.taxa).toLocaleString('pt-BR')}% ${u}`+((+d.carencia||0)>0?` · car. ${d.carencia}m`:'')
+   : 'À vista';
+ return `<button class="card ${isEdited(v.id)?'edited':''}" data-id="${v.id}">
+   <span class="tag">${v.mb?'SELECIONADO':'COMPARANDO'}</span>
+   <span class="edited-dot" title="premissas editadas"></span>
+   <div class="brand ${v.mb?'mb':''}">${esc(v.marca)}${isCustom(v.id)?' · CADASTRADO':''}${d.fonteArquivo?'<span class="source-chip">XLSX</span>':''}</div>
+   <h3>${esc(v.modelo)}</h3>
+   <div class="spec"><span>${esc(v.trac)}</span><span>${v.pot} cv</span><span>${esc(v.seg)}</span></div>
+   <div class="kv"><span>Preço</span><b>${fBRL(d.preco)}</b></div>
+   <div class="kv"><span>Consumo</span><b>${(+d.kml).toLocaleString('pt-BR',{minimumFractionDigits:2})} km/L</b></div>
+   <div class="kv"><span>Disponib. · venda</span><b>${d.disp}% · ${d.diasVenda}d</b></div>
+   <div class="fin-line">🏦 ${fin}</div>
+   ${isCustom(v.id)?'<span class="del-v" data-del="'+v.id+'">excluir</span>':''}
+ </button>`;
+}
+function addCardHTML(kind){
+ return `<button class="card add-card" data-add="${kind}">
+   <span><span class="plus">＋</span><br><span class="lbl">CADASTRAR VEÍCULO</span></span></button>`;
+}
+function renderCatalog(){
+ const all=allVehicles();
+ const mbb=all.filter(v=>v.mb), conc=all.filter(v=>!v.mb);
+ document.getElementById('gridMbb').innerHTML = mbb.map(cardHTML).join('')+addCardHTML('mbb');
+ document.getElementById('gridConc').innerHTML = conc.map(cardHTML).join('')+addCardHTML('conc');
+ document.querySelectorAll('#gridConc .card[data-id]').forEach(c=>{
+   const id=c.dataset.id;
+   if(state.selM && !compatible(state.selM,id)) c.classList.add('dim');
+   if(id===state.selC) c.classList.add('selected-c');
+ });
+ document.querySelectorAll('#gridMbb .card[data-id]').forEach(c=>{
+   if(c.dataset.id===state.selM) c.classList.add('selected-m');
+ });
+ document.getElementById('hintConc').textContent = state.selM
+   ? `pares compatíveis com o ${vdata(state.selM).modelo} — clientes reais que compraram os dois modelos`
+   : 'selecione um Mercedes-Benz para habilitar os pares compatíveis (grafo real de competição)';
+ const bar=document.getElementById('compareBar');
+ if(state.selM&&state.selC){
+   document.getElementById('cbPair').innerHTML =
+     esc(vdata(state.selM).modelo)+'<em>×</em>'+esc(vdata(state.selC).modelo);
+   bar.classList.add('show');
+ } else bar.classList.remove('show');
+}
+
+/* ============ GRÁFICOS SVG (instantâneos) ============ */
+const COMP_COLORS=[['Aquisição−residual','var(--c-aq)'],['Juros','var(--c-ju)'],['Diesel','var(--c-di)'],
+ ['ARLA','var(--c-ar)'],['Manutenção','var(--c-ma)'],['Pneus','var(--c-pn)'],['Administrativo','var(--c-ad)'],['Telemetria','var(--c-te)'],['IPVA','var(--c-ip)'],['Seguro','var(--c-se)'],['Parada','var(--c-pa)']];
+if(!state.comp) state.comp={...COMP_ALL};
+for(const d of COMP_DEFS) if(state.comp[d.k]==null) state.comp[d.k]=1;
+
+function compFlags(){
+ const c=state.comp||{};
+ const o={}; for(const d of COMP_DEFS) o[d.k]=(c[d.k]==null?1:(c[d.k]?1:0));
+ return o;
+}
+function compOn(k){ return compFlags()[k]===1; }
+function compOff(){ return COMP_DEFS.filter(d=>!compOn(d.k)); }
+function parts(r, v){
+ const F=compFlags();
+ return [v.preco*F.aq-r.residual, r.juros, r.dieselC, r.arlaC, r.manutC, r.pneusC, r.adminC, r.telemC, r.ipvaC, r.segC, r.indispC];
+}
+
+function chartStack(r){
+ const pm=parts(r.rm,r.M), pc=parts(r.rc,r.C);
+ const max=Math.max(r.rm.tcoFinal+r.rm.liquidez+r.rm.aplic, r.rc.tcoFinal+r.rc.liquidez+r.rc.aplic,
+                    pm.reduce((a,b)=>a+b,0), pc.reduce((a,b)=>a+b,0));
+ const W=560,BH=34,GAP=46,L=110;
+ const bar=(p,y,name,total)=>{
+   let x=L, cells='';
+   p.forEach((val,i)=>{ const w=val/max*(W-L-70); if(w>0.5){cells+=`<rect x="${x}" y="${y}" width="${w}" height="${BH}" fill="${COMP_COLORS[i][1]}" rx="1"/>`;} x+=Math.max(0,w); });
+   return cells+
+    `<text x="${L-8}" y="${y+BH/2+4}" text-anchor="end" font-size="11" font-weight="700" fill="var(--txt)" font-family="var(--font-n)">${esc(name)}</text>`+
+    `<text x="${x+6}" y="${y+BH/2+4}" font-size="10" fill="var(--txt-2)" font-family="var(--mono)">${fK(total)}</text>`;
+ };
+ return `<svg class="chart-svg" viewBox="0 0 ${W} ${BH*2+GAP+14}" role="img" aria-label="Composição do TCO">
+   ${bar(pm,4,r.M.modelo.split(' ').slice(0,2).join(' '),r.rm.tcoFinal)}
+   ${bar(pc,4+BH+GAP-24,r.C.modelo.split(' ').slice(0,2).join(' '),r.rc.tcoFinal)}
+ </svg>
+ <div class="legend">${COMP_COLORS.map(([n,c],i)=>compOn(PART_KEYS[i])?`<span><i style="background:${c}"></i>${n}</span>`:'').join('')}</div>`;
+}
+function chartCumulative(r){
+ const a=r.rm.cum, b=r.rc.cum, H=a.length-1;
+ const W=560,Hh=210,P={l:56,r:14,t:12,b:26};
+ const max=Math.max(a[H],b[H]);
+ const X=i=>P.l+i/H*(W-P.l-P.r), Y=v=>P.t+(1-v/max)*(Hh-P.t-P.b);
+ const path=arr=>arr.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+ let cross='';
+ for(let i=1;i<=H;i++){
+   if((a[i]-b[i])*(a[i-1]-b[i-1])<0){
+     cross=`<line x1="${X(i)}" y1="${P.t}" x2="${X(i)}" y2="${Hh-P.b}" stroke="var(--warn)" stroke-dasharray="3 3" stroke-width="1"/>
+      <text x="${X(i)+4}" y="${P.t+10}" font-size="9.5" fill="var(--warn)" font-family="var(--mono)">virada · mês ${i}</text>`;
+     break;
+   }
+ }
+ const ticks=[0,.25,.5,.75,1].map(f=>{
+   const v=max*f;
+   return `<line class="axis-line" x1="${P.l}" y1="${Y(v)}" x2="${W-P.r}" y2="${Y(v)}" stroke="var(--line-soft)" stroke-width="1"/>
+     <text x="${P.l-6}" y="${Y(v)+3}" text-anchor="end" font-size="9" fill="var(--txt-3)" font-family="var(--mono)">${fK(v)}</text>`;
+ }).join('');
+ const xt=[0,.25,.5,.75,1].map(f=>{const m=Math.round(H*f);
+   return `<text x="${X(m)}" y="${Hh-8}" text-anchor="middle" font-size="9" fill="var(--txt-3)" font-family="var(--mono)">${m}m</text>`;}).join('');
+ return `<svg class="chart-svg" viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Custo acumulado">
+   ${ticks}${xt}${cross}
+   <path d="${path(a)}" fill="none" stroke="var(--silver)" stroke-width="2.2"/>
+   <path d="${path(b)}" fill="none" stroke="var(--accent)" stroke-width="2.2"/>
+ </svg>
+ <div class="legend"><span><i style="background:var(--silver)"></i>${esc(r.M.modelo)}</span>
+ <span><i style="background:var(--accent)"></i>${esc(r.C.modelo)}</span>
+ <span style="color:var(--txt-3)">desembolso acumulado (entrada + parcelas + operação)</span></div>`;
+}
+function chartTornado(r){
+ const F=compFlags();
+ /* o rotulo do grupo se refaz com as partes ativas: sem IPVA a barra deixa de
+    se chamar "IPVA+Seguro" e passa a se chamar "Seguro" */
+ const rot=(partes,sep)=>partes.filter(([,k])=>compOn(k)).map(([n])=>n).join(sep||'+');
+ const rows=[
+  [[['Preço','aq'],['residual','re']],'−', (r.C.preco*F.aq-r.rc.residual)-(r.M.preco*F.aq-r.rm.residual)],
+  [[['Juros','ju']],'+', r.rc.juros-r.rm.juros],
+  [[['Diesel','di'],['ARLA','ar']],'+', (r.rc.dieselC+r.rc.arlaC)-(r.rm.dieselC+r.rm.arlaC)],
+  [[['Manutenção','ma']],'+', r.rc.manutC-r.rm.manutC],
+  [[['Pneus','pn']],'+', r.rc.pneusC-r.rm.pneusC],
+  [[['Administrativo','ad'],['Telemetria','te']],'+', (r.rc.adminC+r.rc.telemC)-(r.rm.adminC+r.rm.telemC)],
+  [[['IPVA','ip'],['Seguro','se']],'+', (r.rc.ipvaC+r.rc.segC)-(r.rm.ipvaC+r.rm.segC)],
+  [[['Custo de parada','pa']],'+', r.rc.indispC-r.rm.indispC],
+  [[['Liquidez+aplic.','li']],'+', (r.rm.liquidez+r.rm.aplic)-(r.rc.liquidez+r.rc.aplic)],
+ ].filter(x=>x[0].some(([,k])=>compOn(k)))
+  .map(x=>[rot(x[0],x[1]), x[2]]);
+ const max=Math.max(...rows.map(x=>Math.abs(x[1])),1);
+ const W=560,RH=24,mid=330;
+ const bars=rows.map(([n,v],i)=>{
+   const y=i*RH+4, w=Math.abs(v)/max*150;
+   const good=v>0;
+   return `<text x="${mid-190}" y="${y+RH/2+3}" text-anchor="end" font-size="10.5" fill="var(--txt-2)" font-family="var(--font)">${n}</text>
+     <rect x="${good?mid:mid-w}" y="${y+4}" width="${Math.max(w,1)}" height="${RH-11}" rx="2" fill="${good?'var(--good)':'var(--bad)'}" opacity=".85"/>
+     <text x="${good?mid+w+5:mid-w-5}" y="${y+RH/2+3}" text-anchor="${good?'start':'end'}" font-size="9.5" fill="${good?'var(--good)':'var(--bad)'}" font-family="var(--mono)">${fK(Math.abs(v))}</text>`;
+ }).join('');
+ return `<svg class="chart-svg" viewBox="0 0 ${W} ${rows.length*RH+18}" role="img" aria-label="Vantagem por componente">
+   <line x1="${mid}" y1="0" x2="${mid}" y2="${rows.length*RH+8}" stroke="var(--line)" stroke-width="1"/>
+   ${bars}
+   <text x="${mid+6}" y="${rows.length*RH+16}" font-size="9" fill="var(--good)" font-family="var(--mono)">→ vantagem M.BENZ</text>
+   <text x="${mid-6}" y="${rows.length*RH+16}" text-anchor="end" font-size="9" fill="var(--bad)" font-family="var(--mono)">vantagem concorrente ←</text>`+
+ `</svg>`;
+}
+
+/* ============ TCO TELA CHEIA ============ */
+/* Um TCO com componentes desligados nao pode ser lido como TCO cheio.
+   O aviso acompanha a tabela e tambem a impressao. */
+function compAviso(){
+ const off=compOff();
+ if(!off.length) return '';
+ return `<div class="comp-off"><b>TCO parcial</b> — fora do cálculo: `+
+   off.map(d=>esc(d.l)).join(' · ')+`</div>`;
+}
+function compRow(n,a,b,kind,fmt){
+ fmt=fmt||fBRL;
+ const d=a-b, tol=Math.max(Math.abs(b)*state.g.empate/100,0.5);
+ let cls='n0', txt='=';
+ if(kind!=='neutral'&&Math.abs(d)>tol){
+   const mbbWins=kind==='cost'? d<0 : d>0;
+   cls=mbbWins?'g':'r';
+   txt=(mbbWins?'MBB ':'CONC ')+(Math.abs(b)>0.001?fPct(Math.abs(d)/Math.abs(b)):'—');
+ }
+ return `<div class="crow"><span class="n">${n}</span><span class="a">${fmt(a)}</span><span class="b">${fmt(b)}</span><span class="d ${cls}">${txt}</span></div>`;
+}
+function insight(r,tie,mbbWins){
+ const {M,C,rm,rc,delta}=r;
+ if(tie) return `<b>Empate técnico.</b> A diferença de ${fBRL(Math.abs(delta))} está dentro do limite configurado (${state.g.empate}%). A decisão deve considerar fatores qualitativos: rede de atendimento, plano de manutenção, valor de marca e relacionamento.`;
+ const comps=[
+  {n:'aquisição − residual', d:(rc.tco-rc.opex-rc.juros)-(rm.tco-rm.opex-rm.juros)},
+  {n:'combustível', d:rc.dieselC-rm.dieselC},{n:'manutenção', d:rc.manutC-rm.manutC},
+  {n:'pneus', d:rc.pneusC-rm.pneusC},{n:'administrativo', d:rc.adminC-rm.adminC},
+  {n:'custo de parada', d:rc.indispC-rm.indispC},{n:'juros do financiamento', d:rc.juros-rm.juros},
+  {n:'liquidez do usado', d:rm.liquidez-rc.liquidez},
+ ].sort((a,b)=>mbbWins? b.d-a.d : a.d-b.d);
+ const top=comps[0], w=mbbWins?M:C, l=mbbWins?C:M;
+ return `O <b>${esc(w.modelo)}</b> entrega TCO <b>${fBRL(Math.abs(delta))} menor</b> que o ${esc(l.modelo)} em ${rm.H} meses. `+
+        `Maior fator: <b>${top.n}</b> (${fBRL(Math.abs(top.d))}). `+
+        `Custo por km: ${fBRL2(mbbWins?rm.tcoKm:rc.tcoKm)} contra ${fBRL2(mbbWins?rc.tcoKm:rm.tcoKm)}.`;
+}
+function renderTco(){
+ const r=compare(); if(!r) return;
+ const {M,C,rm,rc,delta,deltaPct}=r;
+ const tie=Math.abs(deltaPct)<=state.g.empate/100, mbbWins=delta<0;
+ document.getElementById('tvDuel').innerHTML = esc(M.modelo)+'<em>×</em>'+esc(C.modelo);
+ document.getElementById('tvMeta').textContent =
+   `${rm.H} MESES · ${state.g.km.toLocaleString('pt-BR')} KM/MÊS · DIESEL R$ ${state.g.diesel.toLocaleString('pt-BR',{minimumFractionDigits:2})} · GERADO EM ${new Date().toLocaleDateString('pt-BR')} · DADOS DE DEMONSTRAÇÃO — EDITÁVEIS`;
+ const finTxt=v=>{
+   if(v.pag!=='fin') return 'à vista';
+   const u=v.taxaUnit==='am'?'a.m.':'a.a.';
+   const car=(+v.carencia||0)>0?` · carência ${v.carencia}m (${(v.carTipo||'cap')==='cap'?'capitalizada':'paga juros'})`:'';
+   return `financiado ${v.entrada}% ent · ${v.prazo}m · ${(+v.taxa).toLocaleString('pt-BR')}% ${u}${car}`;
+ };
+ document.getElementById('tvGrid').innerHTML = `
+  <div>
+    <div class="verdict ${tie?'tie':(mbbWins?'win-m':'win-c')}">
+      <div>
+        <div class="who">${tie?'EMPATE TÉCNICO':esc((mbbWins?M:C).modelo)}</div>
+        <div class="eco">${tie
+          ?`diferença de <b>${fBRL(Math.abs(delta))}</b> (${fPct(Math.abs(deltaPct))}) — abaixo do limite de ${state.g.empate}%`
+          :`economia de <b>${fBRL(Math.abs(delta))}</b> · ${fPct(Math.abs(deltaPct))} no TCO de ${rm.H} meses`}</div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="l">TCO ${esc(M.modelo.split(' ')[0])}</div><div class="v">${fBRL(rm.tcoFinal)}</div></div>
+      <div class="kpi"><div class="l">TCO ${esc(C.modelo)}</div><div class="v">${fBRL(rc.tcoFinal)}</div></div>
+      <div class="kpi"><div class="l">TCO/km · MBB</div><div class="v">${fBRL2(rm.tcoKm)}</div></div>
+      <div class="kpi"><div class="l">TCO/km · Conc.</div><div class="v">${fBRL2(rc.tcoKm)}</div></div>
+    </div>
+    <div class="panel ch-cum" style="margin-bottom:14px">
+      <h4>CUSTO ACUMULADO — QUEM FICA MAIS BARATO AO LONGO DO TEMPO</h4>
+      ${chartCumulative(r)}
+    </div>
+    <div class="panel ch-stack" style="margin-bottom:14px">
+      <h4>COMPOSIÇÃO DO TCO</h4>
+      ${chartStack(r)}
+    </div>
+    <div class="panel ch-tor">
+      <h4>ONDE CADA UM GANHA</h4>
+      ${chartTornado(r)}
+    </div>
+  </div>
+  <div>
+    <div class="panel">
+      <h4>DETALHAMENTO COMPONENTE A COMPONENTE</h4>
+      <div class="comp-head"><span>COMPONENTE</span><span>M.BENZ</span><span>CONCOR.</span><span>Δ</span></div>
+      ${compAviso()}
+      ${compOn('aq')?compRow('Preço de aquisição',M.preco,C.preco,'cost'):''}
+      ${(compOn('aq')||compOn('ju'))?`<div class="crow"><span class="n" style="font-size:10.5px">🏦 ${finTxt(M)}</span><span></span><span class="n" style="font-size:10.5px;text-align:right;grid-column:3/5">${finTxt(C)}</span></div>`:''}
+      ${compOn('aq')?compRow('Entrada',rm.entrada,rc.entrada,'neutral'):''}
+      ${(compOn('aq')||compOn('ju'))?compRow('Parcela mensal',rm.pmt,rc.pmt,'neutral'):''}
+      ${compOn('ju')?compRow('Juros no horizonte',rm.juros,rc.juros,'cost'):''}
+      ${compOn('di')?compRow('Combustível',rm.dieselC,rc.dieselC,'cost'):''}
+      ${compOn('ar')?compRow('ARLA 32',rm.arlaC,rc.arlaC,'cost'):''}
+      ${compOn('ma')?compRow('Manutenção',rm.manutC,rc.manutC,'cost'):''}
+      ${compOn('pn')?compRow('Pneus + recapagens',rm.pneusC,rc.pneusC,'cost'):''}
+      ${compOn('ad')?compRow('Administrativo',rm.adminC,rc.adminC,'cost'):''}
+      ${compOn('te')?compRow('Telemetria',rm.telemC,rc.telemC,'cost'):''}
+      ${compOn('ip')?compRow('IPVA',rm.ipvaC,rc.ipvaC,'cost'):''}
+      ${compOn('se')?compRow('Seguro',rm.segC,rc.segC,'cost'):''}
+      ${compOn('pa')?compRow('Custo de parada',rm.indispC,rc.indispC,'cost'):''}
+      ${compOn('re')?compRow('(−) Residual líquido',rm.residual,rc.residual,'benefit'):''}
+      ${compOn('li')?compRow('(−) Liquidez do usado',rm.liquidez,rc.liquidez,'benefit'):''}
+      ${(compOn('li')&&(rm.aplic||rc.aplic))?compRow('(−) Ganho de aplicação',rm.aplic,rc.aplic,'benefit'):''}
+      <div class="crow total"><span class="n">TCO TOTAL</span><span class="a">${fBRL(rm.tcoFinal)}</span><span class="b">${fBRL(rc.tcoFinal)}</span>
+        <span class="d ${tie?'n0':(mbbWins?'g':'r')}">${tie?'=':fPct(Math.abs(deltaPct))}</span></div>
+      <div class="crow"><span class="n">TCO / mês</span><span class="a">${fBRL(rm.tcoMes)}</span><span class="b">${fBRL(rc.tcoMes)}</span><span class="d n0"></span></div>
+      <div class="insight">${insight(r,tie,mbbWins)}</div>
+    </div>
+  </div>`;
+}
+function openTco(){ if(!compare()) return; renderTco(); document.getElementById('tcoView').classList.add('open'); }
+function closeTco(){ document.getElementById('tcoView').classList.remove('open'); }
+
+
+/* ============ COMPARAÇÃO MÚLTIPLA (2–5 veículos) ============ */
+function multiCompare(){
+ const ids=(state.multi||[]).filter(id=>!!vdata(id)).slice(0,5);
+ if(ids.length<2) return [];
+ const rows=ids.map(id=>{ const v=vdata(id), r=simulate(v,state.g); return {id,v,r}; });
+ const F=compFlags(), rd=Math.pow(1+(+state.g.taxaAplic||0)/100,1/365)-1, rm=Math.pow(1+(+state.g.taxaAplic||0)/100,1/12)-1;
+ const maxDias=Math.max(...rows.map(x=>+x.v.diasVenda||0));
+ const allVista=rows.every(x=>x.v.pag==='vista'), maxPreco=Math.max(...rows.map(x=>+x.v.preco||0));
+ rows.forEach(x=>{
+   x.r.liquidez=F.li && maxDias>(+x.v.diasVenda||0) ? x.r.residual*(Math.pow(1+rd,maxDias-(+x.v.diasVenda||0))-1):0;
+   x.r.aplic=F.li && allVista && maxPreco>(+x.v.preco||0) ? (maxPreco-(+x.v.preco||0))*(Math.pow(1+rm,x.r.H)-1):0;
+   x.r.tcoFinal=x.r.tco-x.r.liquidez-x.r.aplic;
+   x.r.tcoKm=x.r.kmTot>0?x.r.tcoFinal/x.r.kmTot:0; x.r.tcoMes=x.r.tcoFinal/x.r.H;
+ });
+ return rows;
+}
+function toggleMulti(id){
+ if(!state.multi) state.multi=[];
+ const i=state.multi.indexOf(id);
+ if(i>=0) state.multi.splice(i,1);
+ else if(state.multi.length<5) state.multi.push(id);
+ else return toast('Limite de 5 veículos por comparação.','bad');
+ save(); renderMulti(); renderCatalog();
+}
+function renderMulti(){
+ const all=allVehicles(), n=(state.multi||[]).length;
+ document.getElementById('multiCount').textContent=n+'/5';
+ document.getElementById('multiHint').textContent=n<2?`selecione mais ${2-n} veículo${2-n===1?'':'s'} para comparar`:`${n} selecionados · máximo 5`;
+ document.getElementById('multiPicker').innerHTML=all.map(v=>{
+   const d=vdata(v.id), on=state.multi.includes(v.id), lock=!on&&n>=5;
+   return `<button class="pick-card ${on?'on':''} ${lock?'lock':''}" data-mid="${v.id}" ${lock?'disabled':''}>
+     <span class="check">✓</span><span class="mk">${esc(d.marca)} · ${esc(d.trac)}</span><b>${esc(d.modelo)}</b>
+     <small>${fBRL(d.preco)} · ${(+d.kml||0).toLocaleString('pt-BR',{minimumFractionDigits:2})} km/L · disp. ${d.disp}%</small></button>`;
+ }).join('');
+ const rows=multiCompare(), box=document.getElementById('multiResults');
+ if(rows.length<2){ box.innerHTML='<div class="panel"><div class="import-note">Selecione pelo menos 2 veículos. Você pode misturar Mercedes-Benz, concorrentes e modelos importados por XLSX.</div></div>'; return; }
+ const minT=Math.min(...rows.map(x=>x.r.tcoFinal)), maxT=Math.max(...rows.map(x=>x.r.tcoFinal)), minKm=Math.min(...rows.map(x=>x.r.tcoKm));
+ const best=rows.find(x=>x.r.tcoFinal===minT), bestKm=rows.find(x=>x.r.tcoKm===minKm);
+ const metrics=[
+  ['Preço de aquisição',x=>x.v.preco,'cost'],['Disponibilidade',x=>x.v.disp+'%','text'],['Consumo diesel',x=>(+x.v.kml).toLocaleString('pt-BR',{minimumFractionDigits:2})+' km/L','text'],
+  ['Juros',x=>x.r.juros,'cost'],['Diesel',x=>x.r.dieselC,'cost'],['ARLA 32',x=>x.r.arlaC,'cost'],['Manutenção',x=>x.r.manutC,'cost'],
+  ['Pneus + recapagens',x=>x.r.pneusC,'cost'],['Administrativo',x=>x.r.adminC,'cost'],['Telemetria',x=>x.r.telemC,'cost'],['IPVA',x=>x.r.ipvaC,'cost'],['Seguro',x=>x.r.segC,'cost'],['Custo de parada',x=>x.r.indispC,'cost'],
+  ['(−) Residual líquido',x=>x.r.residual,'benefit'],['(−) Liquidez/aplicação',x=>x.r.liquidez+x.r.aplic,'benefit'],['TCO / mês',x=>x.r.tcoMes,'cost'],['TCO / km',x=>x.r.tcoKm,'cost']
+ ].filter(([name])=>!({'Juros':'ju','Diesel':'di','ARLA 32':'ar','Manutenção':'ma','Pneus + recapagens':'pn','Administrativo':'ad','Telemetria':'te','IPVA':'ip','Seguro':'se','Custo de parada':'pa','(−) Residual líquido':'re','(−) Liquidez/aplicação':'li'}[name] && !compOn({'Juros':'ju','Diesel':'di','ARLA 32':'ar','Manutenção':'ma','Pneus + recapagens':'pn','Administrativo':'ad','Telemetria':'te','IPVA':'ip','Seguro':'se','Custo de parada':'pa','(−) Residual líquido':'re','(−) Liquidez/aplicação':'li'}[name])));
+ const bars=rows.map(x=>`<div class="mb-row"><div class="name">${esc(x.v.modelo)}</div><div class="mb-track"><div class="mb-fill" style="width:${maxT>0?Math.max(2,x.r.tcoFinal/maxT*100):0}%"></div></div><div class="mb-val">${fK(x.r.tcoFinal)}</div></div>`).join('');
+ const header=rows.map(x=>`<th>${esc(x.v.modelo)}</th>`).join('');
+ const body=metrics.map(([name,fn,type])=>{
+   const vals=rows.map(fn), numeric=type!=='text', target=numeric?(type==='benefit'?Math.max(...vals):Math.min(...vals)):null;
+   return `<tr><td>${name}</td>`+rows.map((x,i)=>{
+      const val=vals[i], cls=numeric&&Math.abs(val-target)<1e-9?'best':'';
+      const out=type==='text'?val:(name==='TCO / km'?fBRL2(val):fBRL(val)); return `<td class="${cls}">${out}</td>`;
+   }).join('')+`</tr>`;
+ }).join('');
+ const total=`<tr class="total"><td>TCO TOTAL</td>`+rows.map(x=>`<td class="${x.r.tcoFinal===minT?'best':''}">${fBRL(x.r.tcoFinal)}</td>`).join('')+`</tr>`;
+ box.innerHTML=`
+   ${compAviso()}
+   <div class="multi-summary">
+    <div class="kpi"><div class="l">MENOR TCO</div><div class="v">${esc(best.v.modelo)}</div></div>
+    <div class="kpi"><div class="l">TCO</div><div class="v">${fBRL(minT)}</div></div>
+    <div class="kpi"><div class="l">MENOR TCO/KM</div><div class="v">${esc(bestKm.v.modelo)} · ${fBRL2(minKm)}</div></div>
+    <div class="kpi"><div class="l">AMPLITUDE ENTRE MODELOS</div><div class="v">${fBRL(maxT-minT)}</div></div>
+   </div>
+   <div class="panel multi-chart"><h4>TCO TOTAL — ${state.g.horiz} MESES</h4><div class="multi-bars">${bars}</div></div>
+   <div class="panel"><h4>COMPARAÇÃO DETALHADA</h4><div class="multi-table-wrap"><table class="multi-table"><thead><tr><th>Indicador</th>${header}</tr></thead><tbody>${total}${body}</tbody></table></div>
+    <div class="import-note">Pneus, administrativo e telemetria são componentes independentes. Disponibilidade continua afetando a quilometragem efetiva e o custo de parada. Liquidez usa como referência o maior prazo de venda entre os modelos selecionados.</div></div>`;
+}
+function openMulti(){
+ if((state.multi||[]).length===0){ state.multi=[state.selM,state.selC].filter(Boolean).slice(0,5); save(); }
+ renderMulti(); document.getElementById('multiView').classList.add('open');
+}
+function closeMulti(){document.getElementById('multiView').classList.remove('open');}
+
+/* ============ IMPORTADOR XLSX ============ */
+function toast(msg,type){ const el=document.getElementById('toast'); el.textContent=msg; el.className='show '+(type||'good'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.className='',4200); }
+const norm=s=>String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+function pctVal(v){ v=+v||0; return Math.abs(v)<=1 ? v*100 : v; }
+function sheetRows(wb,name){ const ws=wb.Sheets[name]; return ws?XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:null}):[]; }
+function rowMap(rows){
+ const m={}; rows.forEach(r=>{ if(r&&r[1]!=null){ const k=norm(r[1]); if(k)m[k]=r[2]; } }); return m;
+}
+function findPrem(m,terms){ for(const t of terms){ const nt=norm(t); const key=Object.keys(m).find(k=>k===nt||k.includes(nt)); if(key) return m[key]; } return null; }
+function extractModel(wb){
+ const fr=sheetRows(wb,'Fontes e Notas');
+ for(const r of fr){ if(norm(r&&r[0])==='modelo' && r[1]) return String(r[1]).trim(); }
+ const pr=sheetRows(wb,'Premissas'), title=String((pr[0]&&pr[0][0])||'');
+ const x=title.replace(/^TCO\s*[—-]\s*/i,'').replace(/\|.*$/,'').trim(); return x||'MODELO IMPORTADO';
+}
+function detectIdentity(model){
+ const up=model.toUpperCase();
+ let marca=up.includes('SCANIA')?'SCANIA':up.includes('VOLVO')?'VOLVO':up.includes('MERCEDES')||up.includes('M.BENZ')?'M.BENZ':up.includes('DAF')?'DAF':up.includes('IVECO')?'IVECO':up.includes('VW')||up.includes('VOLKSWAGEN')?'VW':'OUTRA MARCA';
+ const tr=(up.match(/\b(4X2|6X2|6X4|8X2|8X4)\b/)||[])[1]||'6x4';
+ let pot=+(up.match(/\b(?:R|G|FH|XF|S-WAY\s*)?(\d{3})(?:\s|$|X)/i)||[])[1]||500;
+ const code=(up.match(/\b(R\s?\d{3}|G\s?\d{3}|FH\s?\d{3}|XF\s?(?:FTT|FTS)?\s?\d{3}|ACTROS\s?\d{4}|AXOR\s?\d{4}|ATEGO\s?\d{4}|S-WAY\s?\d{3}|\d{2}\.\d{3})\b/i)||[])[1]||'';
+ return {marca,trac:tr.toLowerCase().replace('x','x'),pot,code:norm(code),mb:marca==='M.BENZ'?1:0};
+}
+function matchVehicle(model,idn){
+ const code=idn.code, tr=idn.trac.toLowerCase();
+ let cand=allVehicles().filter(v=>norm(v.marca)===norm(idn.marca) && String(v.trac).toLowerCase()===tr);
+ if(code){ const c=cand.find(v=>norm(v.modelo).includes(code)); if(c)return c; }
+ const digits=String(idn.pot||''); return cand.find(v=>norm(v.modelo).includes(digits))||null;
+}
+function importWorkbook(file,wb){
+ if(!wb.Sheets['Premissas']) throw new Error('A planilha precisa conter a aba “Premissas”.');
+ const rows=sheetRows(wb,'Premissas'), m=rowMap(rows), model=extractModel(wb), idn=detectIdentity(model);
+ const get=(...t)=>findPrem(m,t);
+ const mapped={};
+ const set=(k,v)=>{ if(v!=null && v!=='' && Number.isFinite(+v)) mapped[k]=+v; };
+ set('preco',get('Valor de aquisição','Valor de aquisicao'));
+ set('kml',get('Consumo diesel')); set('manut',get('Plano Complete','Manutenção média','Manutencao media'));
+ let arla=get('Consumo ARLA sobre diesel'); if(arla!=null) mapped.arla=pctVal(arla);
+ set('pneuQtd',get('Quantidade')); set('pneuPreco',get('Preço pneu novo','Preco pneu novo')); set('pneuVida',get('Vida útil por ciclo','Vida util por ciclo'));
+ set('recapQtd',get('Nº de recapagens por pneu','No de recapagens por pneu','recapagens por pneu')); set('recapCusto',get('Custo recapagem'));
+ let ent=get('Entrada'); if(ent!=null) mapped.entrada=pctVal(ent);
+ let taxa=get('Taxa de juros mensal'); if(taxa!=null){ mapped.taxa=pctVal(taxa); mapped.taxaUnit='am'; }
+ const totalPrazo=+get('Prazo total')||0, car=+get('Carência','Carencia')||0; if(car>=0)mapped.carencia=car; if(totalPrazo>0)mapped.prazo=Math.max(1,totalPrazo-car);
+ const seg=get('Seguro anual'); if(seg!=null){ mapped.segModo='fixo'; mapped.segAnual=+seg; }
+ const ip=get('IPVA/licenciamento','IPVA'); if(ip!=null){ mapped.ipva=pctVal(ip); mapped.ipvaBase='aquisicao'; }
+ set('telemMensal',get('Rastreador/telemetria')); set('adminMensal',get('Administrativos','Administrativo'));
+ const res=get('Valor de revenda no mês 60','Valor de revenda no mes 60'); if(res!=null){mapped.residualModo='manual';mapped.residualManual=+res;}
+ mapped.fonteArquivo=file.name; mapped.importadoEm=new Date().toISOString(); mapped.pag='fin';
+ const matched=matchVehicle(model,idn); let id;
+ if(matched){ id=matched.id; state.v[id]={...(state.v[id]||{}),...mapped}; }
+ else{
+   id='imp'+Date.now().toString(36);
+   state.custom.push({...VEHICLE_EXTRA_DEFAULTS,...FIN_DEF,id,mb:idn.mb,marca:idn.marca,modelo:model.replace(new RegExp('^'+idn.marca+'\\s*','i'),''),trac:idn.trac,pot:idn.pot,seg:'Extrapesado',aplic:'Importado de planilha',
+     preco:1000000,kml:2,arla:6,manut:.28,deprec:10,disp:95,diasVenda:60,segPct:3.2,ipva:1.5,...mapped});
+ }
+ const km=get('Quilometragem mensal'), horiz=get('Período','Periodo'), diesel=get('Preço diesel','Preco diesel'), arlaPreco=get('Preço ARLA','Preco ARLA'), fatKm=get('Faturamento por km');
+ const wantsGlobals=confirm(`Modelo detectado: ${model}.\n\nImportar também as premissas operacionais da planilha (km/mês, horizonte, diesel, ARLA e receita)?\n\nCancelar = importar apenas os dados do veículo.`);
+ if(wantsGlobals){ if(km!=null)state.g.km=+km; if(horiz!=null)state.g.horiz=+horiz; if(diesel!=null)state.g.diesel=+diesel; if(arlaPreco!=null)state.g.arlaPreco=+arlaPreco; if(fatKm!=null&&km!=null)state.g.receita=(+fatKm)*(+km); }
+ if(idn.mb) state.selM=id; else state.selC=id;
+ if(!state.multi.includes(id) && state.multi.length<5) state.multi.push(id);
+ save(); refresh();
+ document.getElementById('importStatus').textContent='XLSX: '+file.name;
+ toast(`${matched?'Modelo atualizado':'Modelo cadastrado'}: ${vdata(id).modelo}. Pneus e administrativo importados separadamente.`,'good');
+}
+async function handleXlsx(file){
+ if(typeof XLSX==='undefined') return toast('Biblioteca XLSX não carregou. Verifique a conexão e tente novamente.','bad');
+ try{ const buf=await file.arrayBuffer(), wb=XLSX.read(buf,{type:'array'}); importWorkbook(file,wb); }
+ catch(err){ console.error(err); toast('Falha ao importar: '+(err.message||err),'bad'); }
+ finally{ document.getElementById('xlsInput').value=''; }
+}
+
+/* ============ IMPRESSÃO 16:9 / 9:16 ============ */
+function printAs(ratio){
+ const st=document.getElementById('pageStyle')||document.head.appendChild(Object.assign(document.createElement('style'),{id:'pageStyle'}));
+ document.documentElement.classList.remove('p169','p916');
+ if(ratio==='169'){ st.textContent='@page{size:320mm 180mm;margin:8mm}'; document.documentElement.classList.add('p169'); }
+ else { st.textContent='@page{size:180mm 320mm;margin:8mm}'; document.documentElement.classList.add('p916'); }
+ window.print();
+}
+
+/* ============ DRAWERS ============ */
+const overlay=document.getElementById('overlay');
+function openDrawer(id){ document.getElementById(id).classList.add('open'); overlay.classList.add('open'); }
+function closeDrawers(){ document.querySelectorAll('.drawer').forEach(d=>d.classList.remove('open')); overlay.classList.remove('open'); refresh(); }
+overlay.addEventListener('click',closeDrawers);
+document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeDrawers));
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawers(); });
+
+function fieldHTML(f,val,scope){
+ if(f.sect) return `<div class="f-sect">${f.sect}</div>`;
+ if(f.echo) return `<div class="fin-echo" id="finEcho"></div>`;
+ if(f.note) return `<div class="f-note">${f.note}</div>`;
+ if(f.type==='check'){
+   return `<label class="frow chk"><span>${f.l}${f.s?`<small>${f.s}</small>`:''}</span>
+     <input type="checkbox" data-scope="${scope}" data-k="${f.k}" data-type="check" ${val?'checked':''}></label>`;
+ }
+ if(f.type==='select'){
+   const opts=f.opts.map(([v,l])=>`<option value="${v}" ${v===val?'selected':''}>${l}</option>`).join('');
+   return `<div class="frow"><label>${f.l}${f.s?`<small>${f.s}</small>`:''}</label>
+     <select data-scope="${scope}" data-k="${f.k}">${opts}</select></div>`;
+ }
+ if(f.type==='text'){
+   return `<div class="frow"><label>${f.l}</label>
+     <input type="text" data-scope="${scope}" data-k="${f.k}" data-type="text" value="${esc(val==null?'':val)}"></div>`;
+ }
+ return `<div class="frow"><label>${f.l}${f.s?`<small>${f.s}</small>`:''}</label>
+   <span class="unit"><input type="number" inputmode="decimal" data-scope="${scope}" data-k="${f.k}"
+     value="${val}" step="${f.step||1}" ${f.min!=null?`min="${f.min}"`:''} ${f.max!=null?`max="${f.max}"`:''}><em>${f.u||''}</em></span></div>`;
+}
+let editingId=null;
+function openVehicle(id){
+ editingId=id;
+ const base=baseOf(id), d=vdata(id);
+ document.getElementById('dvBrand').textContent=base.marca+' · '+base.trac+' · '+base.pot+' cv'+(isCustom(id)?' · CADASTRADO POR VOCÊ':'');
+ document.getElementById('dvModel').textContent=base.modelo;
+ document.getElementById('dvSub').textContent=base.seg+' · '+(base.aplic||'')+' — preencha com os SEUS números';
+ const idFields = isCustom(id)? NEWFIELDS.map(f=>fieldHTML(f, f.k?d[f.k]:null,'v')).join('') : '';
+ document.getElementById('dvBody').innerHTML = idFields + VFIELDS.map(f=>fieldHTML(f, f.k?d[f.k]:null,'v')).join('');
+ markDirty(); updateFinEcho(); openDrawer('dVehicle');
+}
+function updateFinEcho(){
+ const el=document.getElementById('finEcho');
+ if(!el||!editingId) return;
+ const d=vdata(editingId);
+ if(d.pag!=='fin'){ el.innerHTML='Compra à vista — desembolso integral no mês 0, sem juros.'; return; }
+ const f=finParams(d);
+ const fim=f.car+f.prazo;
+ el.innerHTML =
+  `Taxa equivalente: <b>${(f.iM*100).toLocaleString('pt-BR',{maximumFractionDigits:3})}% a.m.</b> ≡ `+
+  `<b>${(f.iAA*100).toLocaleString('pt-BR',{maximumFractionDigits:2})}% a.a.</b><br>`+
+  (f.car>0
+    ? `Carência de <b>${f.car}m</b> (${f.carTipo==='cap'?'juros capitalizados: saldo vai a '+fK(f.saldoPosCar):'pagando ~'+fBRL(f.pv*f.iM)+'/mês de juros'})<br>`
+    : '')+
+  `Parcela Price: <b>${fBRL(f.pmt)}</b> · 1ª no mês <b>${f.car+1}</b> · última no mês <b>${fim}</b>`+
+  (fim>state.g.horiz?` · ⚠ ${fim-state.g.horiz}m além do horizonte`:'');
+}
+function openGlobals(){
+ document.getElementById('dgBody').innerHTML = GFIELDS.map(f=>{
+   const sc=f.comp?'c':'g';
+   const val=f.k?(f.comp?compFlags()[f.k]:state.g[f.k]):null;
+   return fieldHTML(f,val,sc);
+ }).join('');
+ openDrawer('dGlobals');
+}
+function markDirty(){
+ if(!editingId||isCustom(editingId)) return;
+ const base={...VEHICLE_EXTRA_DEFAULTS,...baseOf(editingId)};
+ document.querySelectorAll('#dvBody [data-k]').forEach(inp=>{
+   const cur=inp.dataset.type==='text'||inp.tagName==='SELECT'? inp.value : +inp.value;
+   inp.classList.toggle('dirty', String(cur)!==String(base[inp.dataset.k]));
+ });
+}
+document.addEventListener('input',e=>{
+ const t=e.target; if(!t.dataset||!t.dataset.k) return;
+ const k=t.dataset.k;
+ if(t.dataset.scope==='c'){                      // componente do TCO
+   if(!state.comp) state.comp={...COMP_ALL};
+   state.comp[k]=t.checked?1:0;
+   save(); refresh();
+   if(document.getElementById('tcoView').classList.contains('open')) renderTco();
+   return;
+ }
+ const val = (t.tagName==='SELECT'||t.dataset.type==='text')? t.value : (+t.value||0);
+ if(t.dataset.scope==='g'){ state.g[k]=val; }
+ else if(editingId){
+   if(isCustom(editingId)){
+     const cv=state.custom.find(v=>v.id===editingId); if(cv) cv[k]=val;
+   } else {
+     const base={...VEHICLE_EXTRA_DEFAULTS,...baseOf(editingId)};
+     if(!state.v[editingId]) state.v[editingId]={};
+     if(val===base[k]) delete state.v[editingId][k]; else state.v[editingId][k]=val;
+     markDirty();
+   }
+ }
+ save(); updateFinEcho();
+ if(document.getElementById('tcoView').classList.contains('open')) renderTco();
+});
+
+/* ============ CADASTRO DE VEÍCULO ============ */
+function addVehicle(kind){
+ const id='u'+Date.now().toString(36);
+ const nv={id, mb:kind==='mbb'?1:0, marca:kind==='mbb'?'M.BENZ':'OUTRA MARCA', modelo:'NOVO MODELO',
+   trac:'6x4', pot:500, seg:'Extrapesado', aplic:'—',
+   preco:1000000, kml:2.00, arla:6, manut:0.28, deprec:10, disp:95, diasVenda:60, segPct:3.2, ipva:1.5, ...VEHICLE_EXTRA_DEFAULTS, ...FIN_DEF};
+ state.custom.push(nv); save(); renderCatalog(); openVehicle(id);
+}
+
+/* ============ EVENTOS ============ */
+document.getElementById('catalog').addEventListener('click',e=>{
+ const del=e.target.closest('[data-del]');
+ if(del){
+   e.stopPropagation();
+   const id=del.dataset.del;
+   if(confirm('Excluir este veículo cadastrado?')){
+     state.custom=state.custom.filter(v=>v.id!==id);
+     delete state.v[id];
+     if(state.selM===id) state.selM=null;
+     if(state.selC===id) state.selC=null;
+     state.multi=(state.multi||[]).filter(x=>x!==id);
+     save(); refresh();
+   }
+   return;
+ }
+ const add=e.target.closest('[data-add]');
+ if(add){ addVehicle(add.dataset.add); return; }
+ const card=e.target.closest('.card[data-id]'); if(!card) return;
+ const id=card.dataset.id, v=baseOf(id);
+ if(v.mb){
+   if(state.selM===id){ openVehicle(id); return; }
+   state.selM=id;
+   if(state.selC && !compatible(id,state.selC)) state.selC=null;
+ } else {
+   if(state.selM && !compatible(state.selM,id)) return;
+   if(state.selC===id){ openVehicle(id); return; }
+   state.selC=id;
+ }
+ save(); refresh();
+ if(state.selM&&state.selC) openTco();   // abre o TCO em tela cheia automaticamente
+});
+document.getElementById('btnOpenTco').addEventListener('click',openTco);
+document.getElementById('btnImport').addEventListener('click',()=>document.getElementById('xlsInput').click());
+document.getElementById('xlsInput').addEventListener('change',e=>e.target.files&&e.target.files[0]&&handleXlsx(e.target.files[0]));
+document.getElementById('btnMulti').addEventListener('click',openMulti);
+document.getElementById('btnMultiBack').addEventListener('click',closeMulti);
+document.getElementById('btnMultiG').addEventListener('click',openGlobals);
+document.getElementById('multiPicker').addEventListener('click',e=>{const b=e.target.closest('[data-mid]');if(b)toggleMulti(b.dataset.mid);});
+document.getElementById('btnBack').addEventListener('click',closeTco);
+document.getElementById('btnGlobals').addEventListener('click',openGlobals);
+document.getElementById('btnEditG').addEventListener('click',openGlobals);
+document.getElementById('btnEditM').addEventListener('click',()=>state.selM&&openVehicle(state.selM));
+document.getElementById('btnEditC').addEventListener('click',()=>state.selC&&openVehicle(state.selC));
+document.getElementById('btnPrint169').addEventListener('click',()=>printAs('169'));
+document.getElementById('btnPrint916').addEventListener('click',()=>printAs('916'));
+document.getElementById('btnReset').addEventListener('click',()=>{
+ if(!confirm('Restaurar TODOS os valores de demonstração? Suas edições e veículos cadastrados serão perdidos.')) return;
+ state={g:{...GLOBAL_DEFAULTS}, comp:{...COMP_ALL}, v:{}, custom:[], multi:[], selM:state.selM&&!isCustom(state.selM)?state.selM:null,
+        selC:state.selC&&!isCustom(state.selC)?state.selC:null};
+ save(); refresh(); closeDrawers(); closeMulti(); document.getElementById('importStatus').textContent='';
+});
+document.getElementById('dvReset').addEventListener('click',()=>{
+ if(editingId&&!isCustom(editingId)){ delete state.v[editingId]; save(); openVehicle(editingId); }
+});
+
+function refresh(){
+ renderCatalog();
+ document.getElementById('multiCount').textContent=(state.multi||[]).length+'/5';
+ const hasImport=allVehicles().some(v=>vdata(v.id).fonteArquivo);
+ document.getElementById('dataBadge').textContent=hasImport?'DADOS IMPORTADOS + PREMISSAS EDITÁVEIS':'DADOS DE DEMONSTRAÇÃO — PREENCHA SUAS PREMISSAS';
+ if(document.getElementById('multiView').classList.contains('open')) renderMulti();
+ if(document.getElementById('tcoView').classList.contains('open')){
+   if(compare()) renderTco(); else closeTco();
+ }
+}
+refresh();
+</script>
+</body>
+</html>
