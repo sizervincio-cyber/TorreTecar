@@ -105,3 +105,20 @@ def test_parse_date(v, esperado):
 @pytest.mark.parametrize("v,esperado", [("Mercedes-Benz", "M.BENZ"), ("M.BENZ", "M.BENZ"), (" VOLKSWAGEN ", "VW"), ("Scania", "SCANIA"), ("hyundai", "HYUNDA")])
 def test_normalize_brand(v, esperado):
     assert normalize_brand(v) == esperado
+
+
+@pytest.mark.parametrize("v,esperado", [("1.3-CAM. SEMIPESADOS", "SEMIPESADOS"), ("1.5-CAM. EXTRAPESADOS", "EXTRAPESADOS"), ("1.1-CAM. LEVES", "LEVES"),
+                                        ("1.2-CAM. MEDIOS", "MEDIOS"), ("EXTRAPESADO", "EXTRAPESADOS"), ("SEMIPESADOS", "SEMIPESADOS")])
+def test_normalize_subseg(v, esperado):
+    from assobens.normalizer import normalize_subseg
+    assert normalize_subseg(v) == esperado
+
+
+def test_nao_informado_vira_vazio_e_nao_sobrescreve():
+    from assobens.importer import AssobensImporter
+    rows = AssobensNormalizer().normalize([{"CHASSI": "9BM958267PB000001", "DATA EMPLACAMENTO": "01/02/2026", "MARCA": "VW",
+                                            "TIPO TERRENO": "NAO INFORMADO", "TRAÇÃO": "Não informado"}]).rows
+    assert rows[0]["TIPO TERRENO"] == "" and rows[0]["TRAÇÃO"] == ""
+    existente = [{"CHASSI": "9BM958267PB000001", "DATA EMPLACAMENTO": "2026-02-01", "MARCA": "VW", "TIPO TERRENO": "ON ROAD", "TRAÇÃO": "6X2"}]
+    res = AssobensImporter().upsert(rows, ["CHASSI", "DATA EMPLACAMENTO", "MARCA", "TIPO TERRENO", "TRAÇÃO"], existente)
+    assert res.updated == 0 and res.rows[0]["TIPO TERRENO"] == "ON ROAD"

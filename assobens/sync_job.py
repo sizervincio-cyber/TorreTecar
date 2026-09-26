@@ -15,6 +15,8 @@ from .errors import AssobensError, AuthError, CredentialsMissingError, Interface
 
 # Campos que o relatório de enriquecimento pode completar/atualizar na matriz (nunca insere chassis).
 OWNER_FIELDS = ["CPFCNPJPROPRIETARIO", "TIPOCNPJPROPRIETARIO", "NOMEPROPRIETARIO", "TRAÇÃO", "TIPO TERRENO", "ANOMODELO", "ANOFABRICACAO"]
+# Colunas que só o export do Power BI traz (atualizáveis por ele em chassis já existentes).
+PBI_ONLY_FIELDS = ["COMBUSTIVEL"]
 from .importer import AssobensImporter
 from .kpi import AssobensKpiService
 from .logutil import get_logger, redact
@@ -102,7 +104,9 @@ class AssobensSyncJob:
                 run.step("mesmo arquivo da última execução (hash igual): nada a importar")
                 headers, rows_all = headers0, existing0
             else:
-                res = self.importer.upsert(batch.rows, headers0, existing0)
+                # O export do Power BI insere chassis novos; em chassis já existentes só atualiza as colunas que
+                # apenas ele traz (o enriquecimento é a fonte principal e prevalece nas demais).
+                res = self.importer.upsert(batch.rows, headers0, existing0, only_fields=PBI_ONLY_FIELDS)
                 run.rows_imported, run.rows_updated = res.inserted, res.updated
                 run.step(f"upsert por CHASSI: {res.inserted} inseridos, {res.updated} atualizados, {res.unchanged} iguais (matriz {res.total})")
                 headers, rows_all = res.headers, res.rows

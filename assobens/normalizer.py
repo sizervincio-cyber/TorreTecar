@@ -54,9 +54,18 @@ SUBSEG_ALIASES = {"EXTRAPESADO": "EXTRAPESADOS", "EXTRA PESADO": "EXTRAPESADOS",
 SEG_ALIASES = {"CAMINHAO": "1.0-CAMINHOES", "CAMINHOES": "1.0-CAMINHOES", "1.0 CAMINHOES": "1.0-CAMINHOES"}
 
 
+NAO_INFORMADO = {"NAO INFORMADO", "NÃO INFORMADO", "N/I", "NI", "N.I.", "NAO INF", "-", "NULL", "NONE"}
+
+
 def normalize_subseg(v: Any) -> str:
     s = clean_text(v, accents=False)
+    s = re.sub(r"^\d+(\.\d+)?\s*-?\s*CAM\.?\s*", "", s).strip()   # '1.3-CAM. SEMIPESADOS' -> 'SEMIPESADOS'
     return SUBSEG_ALIASES.get(s, s)
+
+
+def informado(s: str) -> str:
+    """'NAO INFORMADO' e afins viram vazio: não sobrescrevem informação já conhecida na matriz."""
+    return "" if s.strip().upper() in NAO_INFORMADO else s
 
 
 def normalize_seg(v: Any) -> str:
@@ -248,7 +257,7 @@ class AssobensNormalizer:
             "CHASSI": chassi,
             "DATA EMPLACAMENTO": data,
             "MODELO": clean_text(r.get("MODELO")),
-            "TRAÇÃO": clean_text(r.get("TRAÇÃO"), accents=False).replace(" ", ""),
+            "TRAÇÃO": informado(clean_text(r.get("TRAÇÃO"), accents=False)).replace(" ", ""),
             "MARCA": normalize_brand(r.get("MARCA")),
             "SEGMENTO": normalize_seg(r.get("SEGMENTO")),
             "SUBSEGMENTO": normalize_subseg(r.get("SUBSEGMENTO")),
@@ -260,7 +269,7 @@ class AssobensNormalizer:
             "AOP": aop_s,
             "ANOFABRICACAO": str(ano_fab) if ano_fab else "",
             "ANOMODELO": str(ano_mod) if ano_mod else "",
-            "TIPO TERRENO": clean_text(r.get("TIPO TERRENO"), accents=False),
+            "TIPO TERRENO": informado(clean_text(r.get("TIPO TERRENO"), accents=False)),
             "CPFCNPJPROPRIETARIO": doc,
             "TIPOCNPJPROPRIETARIO": tipo,
             "NOMEPROPRIETARIO": nome,
