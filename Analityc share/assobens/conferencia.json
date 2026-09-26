@@ -91,60 +91,32 @@
  ],
  "por_subsegmento_torre": [
   {
-   "chave": "1.3-CAM. SEMIPESADOS",
-   "emplacamentos": 1166,
-   "share": 41.81,
-   "mercedes_benz": 200,
-   "share_mb_na_chave": 17.15
-  },
-  {
-   "chave": "1.5-CAM. EXTRAPESADOS",
-   "emplacamentos": 1074,
-   "share": 38.51,
-   "mercedes_benz": 106,
-   "share_mb_na_chave": 9.87
-  },
-  {
-   "chave": "1.2-CAM. MEDIOS",
-   "emplacamentos": 314,
-   "share": 11.26,
-   "mercedes_benz": 80,
-   "share_mb_na_chave": 25.48
-  },
-  {
-   "chave": "1.1-CAM. LEVES",
-   "emplacamentos": 148,
-   "share": 5.31,
-   "mercedes_benz": 61,
-   "share_mb_na_chave": 41.22
-  },
-  {
    "chave": "SEMIPESADOS",
-   "emplacamentos": 62,
-   "share": 2.22,
-   "mercedes_benz": 9,
-   "share_mb_na_chave": 14.52
+   "emplacamentos": 1228,
+   "share": 44.03,
+   "mercedes_benz": 209,
+   "share_mb_na_chave": 17.02
   },
   {
    "chave": "EXTRAPESADOS",
-   "emplacamentos": 19,
-   "share": 0.68,
-   "mercedes_benz": 3,
-   "share_mb_na_chave": 15.79
+   "emplacamentos": 1093,
+   "share": 39.19,
+   "mercedes_benz": 109,
+   "share_mb_na_chave": 9.97
   },
   {
    "chave": "MEDIOS",
-   "emplacamentos": 4,
-   "share": 0.14,
-   "mercedes_benz": 2,
-   "share_mb_na_chave": 50.0
+   "emplacamentos": 318,
+   "share": 11.4,
+   "mercedes_benz": 82,
+   "share_mb_na_chave": 25.79
   },
   {
    "chave": "LEVES",
-   "emplacamentos": 2,
-   "share": 0.07,
-   "mercedes_benz": 1,
-   "share_mb_na_chave": 50.0
+   "emplacamentos": 150,
+   "share": 5.38,
+   "mercedes_benz": 62,
+   "share_mb_na_chave": 41.33
   }
  ]
 }
