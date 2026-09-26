@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import re
 import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -70,6 +71,13 @@ def norm_header(s: object) -> str:
 
 _ALIAS_INDEX: dict[str, str] = {norm_header(a): canon for canon, als in ALIASES.items() for a in als}
 _BLOCKED_NORM = {norm_header(h) for h in BLOCKED_HEADERS}
+# Padrões do relatório de enriquecimento: endereço, telefones, e-mail, sócios, RG, nascimento etc. Nunca publicados.
+_BLOCKED_RX = re.compile(r"^(NO |NU |TP |SG |DDD|TEL|CEL|EMAIL|CPF|RG|DT NASC|ESTADO CIVIL|SIGNO|IDADE|CONTATO|SITE|AGENTEFINANCEIRO|"
+                         r"NOME FANTASIA|NATUREZA JURIDICA|ATIVIDADE ECONOMICA|CO |SITUACAO|DT ABERTURA|CARGO|NOME SOCIO)|SOCIO|CONTATO", re.I)
+
+
+def is_blocked_header(norm: str) -> bool:
+    return norm in _BLOCKED_NORM or bool(_BLOCKED_RX.search(norm))
 
 
 def file_sha256(path: Path) -> str:
@@ -166,8 +174,8 @@ class AssobensSpreadsheetParser:
         if len(best_map) < self.MIN_HEADER_MATCHES:
             return None
         norm_hdr = [norm_header(h) for h in best_hdr]
-        unknown = [h for h, n in zip(best_hdr, norm_hdr) if n and n not in _ALIAS_INDEX and n not in _BLOCKED_NORM]
-        blocked = [h for h, n in zip(best_hdr, norm_hdr) if n in _BLOCKED_NORM]
+        unknown = [h for h, n in zip(best_hdr, norm_hdr) if n and n not in _ALIAS_INDEX and not is_blocked_header(n)]
+        blocked = [h for h, n in zip(best_hdr, norm_hdr) if n and n not in _ALIAS_INDEX and is_blocked_header(n)]
         rows = []
         for r in aoa[best_i + 1:]:
             if r is None or not any(str(c).strip() for c in r if c is not None):

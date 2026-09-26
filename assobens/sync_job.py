@@ -107,17 +107,26 @@ class AssobensSyncJob:
                 run.step(f"upsert por CHASSI: {res.inserted} inseridos, {res.updated} atualizados, {res.unchanged} iguais (matriz {res.total})")
                 headers, rows_all = res.headers, res.rows
                 mudou = bool(res.inserted or res.updated)
-            # 5b) ENRIQUECIMENTO: só completa proprietário/tração de chassis que JÁ estão na matriz (nunca insere)
+            # 5b) ENRIQUECIMENTO ("Baixar Dados"): fonte principal do ano corrente — traz proprietário, tipo de pessoa,
+            # nome, ano modelo e terreno. Aplicado por último para prevalecer sobre o export do Power BI (que só
+            # acrescenta colunas próprias, ex.: combustível). Só entram linhas do segmento caminhões.
             if enr_path and report.level != LEVEL_SUSPECT:
                 try:
                     pe = self.parser.parse(enr_path)
                     be = self.normalizer.normalize(pe.rows)
-                    r2 = self.importer.upsert(be.rows, headers, rows_all, update_only=True, only_fields=OWNER_FIELDS)
+                    cam = [r for r in be.rows if r.get("SEGMENTO") == "1.0-CAMINHOES"]
+                    if not cam:
+                        raise ValidationError(f"relatório de enriquecimento sem linhas de caminhões (segmentos: "
+                                              f"{sorted({r.get('SEGMENTO') for r in be.rows})[:4]}) — filtro de segmento errado")
+                    r2 = self.importer.upsert(cam, headers, rows_all, update_only=config.ENRIQUECIMENTO_SOMENTE_ATUALIZA,
+                                              only_fields=OWNER_FIELDS if config.ENRIQUECIMENTO_SOMENTE_ATUALIZA else None)
                     run.rows_enriched = r2.updated
+                    run.rows_imported += r2.inserted
+                    run.rows_updated += r2.updated
                     headers, rows_all = r2.headers, r2.rows
-                    mudou = mudou or r2.updated > 0
-                    run.step(f"enriquecimento: {len(be.rows)} chassis no relatório · {r2.updated} proprietários preenchidos/atualizados · "
-                             f"{r2.ignored} fora da matriz (ignorados, relatório não vale para contagem)")
+                    mudou = mudou or r2.updated > 0 or r2.inserted > 0
+                    run.step(f"enriquecimento: {len(cam)} chassis de caminhões no relatório ({len(be.rows) - len(cam)} de outros segmentos ignorados) · "
+                             f"{r2.inserted} inseridos · {r2.updated} atualizados/com proprietário · {r2.unchanged} iguais · {r2.ignored} ignorados")
                 except Exception as e:
                     status = STATUS_PARTIAL
                     run.warnings.append(f"enriquecimento não aplicado: {redact(str(e))[:200]}")

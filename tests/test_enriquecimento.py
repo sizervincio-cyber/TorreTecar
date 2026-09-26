@@ -23,8 +23,8 @@ ROWS_ENR = [["9BM958267PB000777", "05/02/2026", "M.BENZ/ATEGO 2426", "M.BENZ", "
 
 def test_janela_enriquecimento():
     rows = [{"DATA EMPLACAMENTO": "2026-01-05", "NOMEPROPRIETARIO": ""}, {"DATA EMPLACAMENTO": "2026-08-01", "NOMEPROPRIETARIO": "X"}]
-    assert janela_enriquecimento(rows, "2026-09-25") == ("2026-01-05", "2026-09-25")          # cobre o chassi sem dono
-    assert janela_enriquecimento([{"DATA EMPLACAMENTO": "2026-09-01", "NOMEPROPRIETARIO": "X"}], "2026-09-25") == ("2026-05-28", "2026-09-25")  # mínimo 120 dias
+    assert janela_enriquecimento(rows, "2026-09-25") == ("2026-01-01", "2026-09-25")          # ano corrente inteiro
+    assert janela_enriquecimento([{"DATA EMPLACAMENTO": "2026-09-01", "NOMEPROPRIETARIO": "X"}], "2026-01-20") == ("2025-09-22", "2026-01-20")  # mínimo 120 dias
     assert janela_enriquecimento([{"DATA EMPLACAMENTO": "2020-01-01", "NOMEPROPRIETARIO": ""}], "2026-09-25")[0] == "2025-08-21"  # teto 400 dias
 
 
@@ -50,8 +50,37 @@ def test_job_aplica_enriquecimento(paths, tmp_path):
                           price_history=PriceHistory(paths.PRECOS_HIST_PATH), equivalencias_path=paths.EQUIVALENCIAS_PATH,
                           browser_stage=lambda run, attempt: (pbi, [], {}, enr))
     run = job.run()
-    assert run.status == "success" and run.rows_imported == 2 and run.rows_enriched == 2
+    # export do Power BI insere 2; enriquecimento (fonte principal) atualiza os 2 com proprietário e insere o 3º chassi
+    assert run.status == "success" and run.rows_imported == 3 and run.rows_enriched == 2
     _, rows = AssobensImporter(paths.MATRIZ_PATH, paths.BACKUP_DIR).load_matrix()
-    assert len(rows) == 2 and all(r["NOMEPROPRIETARIO"] for r in rows)
+    assert len(rows) == 3 and all(r["NOMEPROPRIETARIO"] for r in rows)
+    assert all(r["SEGMENTO"] == "1.0-CAMINHOES" for r in rows)
+    hdr = AssobensImporter(paths.MATRIZ_PATH, paths.BACKUP_DIR).load_matrix()[0]
+    assert not any("TELEFONE" in h or "EMAIL" in h for h in hdr)           # dado pessoal nunca publicado
     st = json.loads(paths.STATUS_PATH.read_text(encoding="utf-8"))
     assert st["proprietarios_enriquecidos"] == 2
+
+
+def test_enriquecimento_de_outro_segmento_e_ignorado(paths, tmp_path):
+    pbi = write_xlsx(tmp_path / "pbi.xlsx", headers=HDR_PBI, rows=ROWS_PBI)
+    vans = [list(r) for r in ROWS_ENR]
+    for r in vans:
+        r[4], r[5] = "3.0-LARGE VANS", "FURGAO"
+    enr = write_xlsx(tmp_path / "enr.xlsx", headers=HDR_ENR, rows=vans)
+    job = AssobensSyncJob(trigger="manual", executed_by="t", credentials=config.Credentials("u", "p"), sleep=lambda s: None,
+                          runlog=RunLog(paths.SYNC_RUNS_PATH, paths.STATUS_PATH), importer=AssobensImporter(paths.MATRIZ_PATH, paths.BACKUP_DIR),
+                          kpis_path=paths.KPIS_PATH, top10_path=paths.TOP10_PATH, precos_top10_path=paths.PRECOS_TOP10_PATH,
+                          price_history=PriceHistory(paths.PRECOS_HIST_PATH), equivalencias_path=paths.EQUIVALENCIAS_PATH,
+                          browser_stage=lambda run, attempt: (pbi, [], {}, enr))
+    run = job.run()
+    assert run.status == "partial" and run.rows_imported == 2 and run.rows_enriched == 0
+    assert any("segmento errado" in w for w in run.warnings)
+
+
+def test_parser_bloqueia_colunas_pessoais_do_enriquecimento(tmp_path):
+    hdr = HDR_ENR + ["NO_LOGR", "NU_CEP", "DDD_CELULAR1", "CELULAR1", "NOME_SOCIO_DIRETOR1", "NU_CPF_CNPJ1", "DT_NASC", "SG_SEXO", "SITE"]
+    rows = [r + ["RUA X", "74000000", "62", "999990000", "FULANO", "12345678900", "01/01/1980", "M", "x.com"] for r in ROWS_ENR]
+    ps = AssobensSpreadsheetParser().parse(write_xlsx(tmp_path / "e.xlsx", headers=hdr, rows=rows))
+    assert ps.unknown_headers == []
+    assert set(ps.blocked_headers) >= {"NO_LOGR", "NU_CEP", "DDD_CELULAR1", "CELULAR1", "NOME_SOCIO_DIRETOR1", "NU_CPF_CNPJ1", "DT_NASC", "SG_SEXO", "SITE", "Telefone1"}
+    assert not any(k in ps.rows[0] for k in ("NO_LOGR", "CELULAR1", "NOME_SOCIO_DIRETOR1"))

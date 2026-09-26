@@ -35,7 +35,8 @@ class AssobensEnriquecimentoDownloader:
         self._fill_date(page, s["date_from"], date_from)
         self._fill_date(page, s["date_to"], date_to)
         self._ensure_todos(page, s["area_oper"])
-        self.log.info("filtros aplicados: %s → %s · área operacional = Todas · segmento e marca da associação do usuário", date_from, date_to)
+        seg = self._select_caminhoes(page, s["segmento"])
+        self.log.info("filtros aplicados: %s → %s · área operacional = Todas · segmento = %s · marcas da associação do usuário", date_from, date_to, seg)
         catcher = DownloadCatcher(page.context, page)
         btn = first_present(page, s["excel_clientes"], timeout_ms=15_000)
         if btn is None:
@@ -51,6 +52,8 @@ class AssobensEnriquecimentoDownloader:
                 raise DownloadError("BI recusou: usuário sem associação de Segmento, Área Operacional ou Marca")
             raise DownloadError("Excel de enriquecimento não foi gerado em 240s")
         ext = Path(dl.suggested_filename or "").suffix.lower() or ".xlsx"
+        # O relatório traz contatos, endereço e sócios dos clientes: fica em pasta privada, fora dos artefatos do CI.
+        out_dir = out_dir / "privado"
         out_dir.mkdir(parents=True, exist_ok=True)
         target = out_dir / f"{stamp}_enriquecimento{ext}"
         dl.save_as(str(target))
@@ -67,6 +70,24 @@ class AssobensEnriquecimentoDownloader:
         except Exception:
             pass
 
+    def _select_caminhoes(self, page, css: str) -> str:
+        """O filtro de segmento abre no primeiro item da associação (ex.: vans). Seleciona o de caminhões."""
+        loc = page.locator(css).first
+        try:
+            opts = loc.evaluate("el => [...el.options].map(o => ({value: o.value, text: o.text}))")
+        except Exception as e:
+            raise InterfaceChangedError(f"filtro de segmento não encontrado na página de enriquecimento ({str(e).splitlines()[0][:80]})")
+        alvo = next((o for o in opts if re.search(r"CAMINH", o["text"], re.I)), None) or next((o for o in opts if str(o["value"]) == "1"), None)
+        if alvo is None:
+            raise InterfaceChangedError("segmento CAMINHÕES não está entre as opções do filtro: " + ", ".join(o["text"] for o in opts)[:200])
+        loc.select_option(str(alvo["value"]))
+        try:
+            loc.dispatch_event("change")
+        except Exception:
+            pass
+        page.wait_for_timeout(500)
+        return alvo["text"].strip()
+
     def _ensure_todos(self, page, css: str) -> None:
         loc = page.locator(css).first
         try:
@@ -81,11 +102,12 @@ class AssobensEnriquecimentoDownloader:
 
 
 def janela_enriquecimento(rows: list[dict], hoje: str, min_dias: int = 120, max_dias: int = 400) -> tuple[str, str]:
-    """Janela de datas: cobre todos os chassis da matriz sem proprietário (limitada a max_dias) e pelo menos min_dias."""
+    """Janela de datas: o ano corrente inteiro (o relatório é a fonte principal do ano), estendida até o chassi
+    mais antigo sem proprietário, limitada a max_dias e nunca menor que min_dias."""
     from datetime import date, timedelta
     h = date.fromisoformat(hoje)
     faltando = [r["DATA EMPLACAMENTO"] for r in rows if not str(r.get("NOMEPROPRIETARIO", "")).strip() and r.get("DATA EMPLACAMENTO")]
-    ini = h - timedelta(days=min_dias)
+    ini = min(h - timedelta(days=min_dias), date(h.year, 1, 1))
     if faltando:
         ini = min(ini, date.fromisoformat(min(faltando)))
     ini = max(ini, h - timedelta(days=max_dias))

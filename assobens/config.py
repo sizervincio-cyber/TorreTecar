@@ -54,6 +54,9 @@ MAX_ATTEMPTS = 3
 DROP_ALERT_RATIO = 0.5                # queda > 50% de linhas vs. execução anterior = suspeito
 MIN_QUALITY_SCORE = 75                # mesmo gate da Torre (computeQuality >= 75)
 SYNC_RUNS_KEEP = 300
+# Relatório "Baixar Dados" (enriquecimento) como fonte principal do ano: insere e atualiza chassis de caminhões.
+# True = modo conservador (só completa proprietário de chassis já existentes na matriz).
+ENRIQUECIMENTO_SOMENTE_ATUALIZA = False
 
 # Colunas publicadas na matriz (ordem fixa, igual à matriz atual).
 CANONICAL_COLUMNS = [

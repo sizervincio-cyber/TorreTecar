@@ -64,6 +64,7 @@ jobs:
           name: "assobens-${{ github.run_id }}"
           path: |
             storage/app/assobens
+            !storage/app/assobens/**/privado/**
             storage/logs/assobens
           if-no-files-found: ignore
           retention-days: 30
