@@ -776,45 +776,38 @@
  "por_tracao": [
   {
    "chave": "6X4",
-   "emplacamentos": 9389,
-   "share": 35.45,
-   "mercedes_benz": 973,
-   "share_mb_na_chave": 10.36
+   "emplacamentos": 9461,
+   "share": 35.72,
+   "mercedes_benz": 975,
+   "share_mb_na_chave": 10.31
   },
   {
    "chave": "4X2",
-   "emplacamentos": 8715,
-   "share": 32.9,
-   "mercedes_benz": 1650,
-   "share_mb_na_chave": 18.93
+   "emplacamentos": 8881,
+   "share": 33.53,
+   "mercedes_benz": 1669,
+   "share_mb_na_chave": 18.79
   },
   {
    "chave": "6X2",
-   "emplacamentos": 6468,
-   "share": 24.42,
-   "mercedes_benz": 1091,
-   "share_mb_na_chave": 16.87
+   "emplacamentos": 6605,
+   "share": 24.94,
+   "mercedes_benz": 1119,
+   "share_mb_na_chave": 16.94
   },
   {
    "chave": "8X2",
-   "emplacamentos": 1334,
-   "share": 5.04,
+   "emplacamentos": 1349,
+   "share": 5.09,
    "mercedes_benz": 237,
-   "share_mb_na_chave": 17.77
-  },
-  {
-   "chave": "(vazio)",
-   "emplacamentos": 396,
-   "share": 1.5,
-   "mercedes_benz": 50,
-   "share_mb_na_chave": 12.63
+   "share_mb_na_chave": 17.57
   },
   {
    "chave": "8X4",
-   "emplacamentos": 119,
-   "share": 0.45,
+   "emplacamentos": 121,
+   "share": 0.46,
    "mercedes_benz": 15,
-   "share_mb_na_chave": 12.61
+   "share_mb_na_chave": 12.4
   },
   {
    "chave": "4X4",
@@ -822,6 +815,13 @@
    "share": 0.25,
    "mercedes_benz": 1,
    "share_mb_na_chave": 1.49
+  },
+  {
+   "chave": "(vazio)",
+   "emplacamentos": 4,
+   "share": 0.02,
+   "mercedes_benz": 1,
+   "share_mb_na_chave": 25.0
   }
  ],
  "por_area_operacional": [

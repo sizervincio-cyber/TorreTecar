@@ -20,7 +20,7 @@ PBI_ONLY_FIELDS = ["COMBUSTIVEL"]
 from .importer import AssobensImporter
 from .kpi import AssobensKpiService
 from .logutil import get_logger, redact
-from .normalizer import AssobensNormalizer, quality_score
+from .normalizer import AssobensNormalizer, preencher_tracao, quality_score
 from .parser import AssobensSpreadsheetParser
 from .price_analysis import AssobensPriceAnalysisService, PriceHistory
 from .runlog import RunLog, STATUS_FAILED, STATUS_PARTIAL, STATUS_SUCCESS, SyncRun, write_json_atomic
@@ -134,6 +134,13 @@ class AssobensSyncJob:
                 except Exception as e:
                     status = STATUS_PARTIAL
                     run.warnings.append(f"enriquecimento não aplicado: {redact(str(e))[:200]}")
+            # 5c) TRAÇÃO: nenhuma das duas fontes do ASSOBENS traz a coluna; completa pelo modelo / histórico do modelo
+            if report.level != LEVEL_SUSPECT:
+                tr = preencher_tracao(rows_all)
+                if tr["pelo_modelo"] or tr["pelo_historico"]:
+                    mudou = True
+                    run.step(f"tração inferida: {tr['pelo_modelo']} pelo texto do modelo · {tr['pelo_historico']} pelo histórico do mesmo modelo · "
+                             f"{tr['sem_tracao']} sem tração")
             if mudou:
                 qm = quality_score(rows_all)  # gate da Torre vale para a MATRIZ publicada, não para o lote isolado
                 if qm["score"] < config.MIN_QUALITY_SCORE:

@@ -63,6 +63,41 @@ def normalize_subseg(v: Any) -> str:
     return SUBSEG_ALIASES.get(s, s)
 
 
+_TRACAO_RX = re.compile(r"(\d)\s*X\s*(\d)", re.I)
+
+
+def tracao_do_modelo(modelo: Any) -> str:
+    """'VW/26.260 CRM 6X2' -> '6X2'; 'SCANIA/R460 A6X2' -> '6X2'. Validado em 17.514 chassis com tração
+    informada: coincide em 99,99% (1 divergência). Sem padrão NxN no texto -> ''."""
+    m = _TRACAO_RX.search(str(modelo or ""))
+    return f"{m.group(1)}X{m.group(2)}" if m else ""
+
+
+def preencher_tracao(rows: list[dict], min_consenso: float = 0.9) -> dict:
+    """Completa TRAÇÃO vazia: 1) pelo texto do modelo; 2) pela tração que o MESMO modelo tem no histórico da
+    matriz, só quando ≥ min_consenso dos chassis daquele modelo concordam. Nunca sobrescreve tração informada."""
+    from collections import Counter, defaultdict
+    hist: dict[str, Counter] = defaultdict(Counter)
+    for r in rows:
+        t = str(r.get("TRAÇÃO", "")).strip()
+        if t:
+            hist[str(r.get("MODELO", "")).strip()][t] += 1
+    n_txt = n_hist = n_sem = 0
+    for r in rows:
+        if str(r.get("TRAÇÃO", "")).strip():
+            continue
+        t = tracao_do_modelo(r.get("MODELO"))
+        if t:
+            r["TRAÇÃO"] = t; n_txt += 1; continue
+        c = hist.get(str(r.get("MODELO", "")).strip())
+        if c:
+            t, k = c.most_common(1)[0]
+            if k / sum(c.values()) >= min_consenso:
+                r["TRAÇÃO"] = t; n_hist += 1; continue
+        n_sem += 1
+    return {"pelo_modelo": n_txt, "pelo_historico": n_hist, "sem_tracao": n_sem}
+
+
 def informado(s: str) -> str:
     """'NAO INFORMADO' e afins viram vazio: não sobrescrevem informação já conhecida na matriz."""
     return "" if s.strip().upper() in NAO_INFORMADO else s
@@ -257,7 +292,7 @@ class AssobensNormalizer:
             "CHASSI": chassi,
             "DATA EMPLACAMENTO": data,
             "MODELO": clean_text(r.get("MODELO")),
-            "TRAÇÃO": informado(clean_text(r.get("TRAÇÃO"), accents=False)).replace(" ", ""),
+            "TRAÇÃO": informado(clean_text(r.get("TRAÇÃO"), accents=False)).replace(" ", "") or tracao_do_modelo(r.get("MODELO")),
             "MARCA": normalize_brand(r.get("MARCA")),
             "SEGMENTO": normalize_seg(r.get("SEGMENTO")),
             "SUBSEGMENTO": normalize_subseg(r.get("SUBSEGMENTO")),

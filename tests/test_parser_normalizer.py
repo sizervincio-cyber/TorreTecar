@@ -114,6 +114,26 @@ def test_normalize_subseg(v, esperado):
     assert normalize_subseg(v) == esperado
 
 
+@pytest.mark.parametrize("modelo,esperado", [("VW/26.260 CRM 6X2", "6X2"), ("SCANIA/R460 A6X2", "6X2"), ("VOLVO/FH 540 6X4T", "6X4"),
+                                             ("VW/29.530 MTM 6x4", "6X4"), ("M.BENZ/ATEGO 1419 CL", ""), ("VW/DELIVERY 11.180", "")])
+def test_tracao_do_modelo(modelo, esperado):
+    from assobens.normalizer import tracao_do_modelo
+    assert tracao_do_modelo(modelo) == esperado
+
+
+def test_preencher_tracao_pelo_modelo_e_historico():
+    from assobens.normalizer import preencher_tracao
+    rows = [{"MODELO": "IVECO/TECTOR 17-210", "TRAÇÃO": "4X2"}] * 9 + [{"MODELO": "IVECO/TECTOR 17-210", "TRAÇÃO": "6X2"}]
+    rows = [dict(r) for r in rows] + [{"MODELO": "IVECO/TECTOR 17-210", "TRAÇÃO": ""}, {"MODELO": "VW/26.260 CRM 6X2", "TRAÇÃO": ""},
+                                      {"MODELO": "MODELO NOVO", "TRAÇÃO": ""}, {"MODELO": "M.BENZ/ATEGO 1726 4X4", "TRAÇÃO": "4X2"}]
+    out = preencher_tracao(rows)
+    assert out == {"pelo_modelo": 1, "pelo_historico": 1, "sem_tracao": 1}
+    assert rows[10]["TRAÇÃO"] == "4X2" and rows[11]["TRAÇÃO"] == "6X2" and rows[12]["TRAÇÃO"] == ""
+    assert rows[13]["TRAÇÃO"] == "4X2"                      # tração informada nunca é sobrescrita
+    ambiguo = [{"MODELO": "X", "TRAÇÃO": "4X2"}, {"MODELO": "X", "TRAÇÃO": "6X2"}, {"MODELO": "X", "TRAÇÃO": ""}]
+    assert preencher_tracao(ambiguo)["sem_tracao"] == 1      # sem consenso ≥ 90%: não chuta
+
+
 def test_nao_informado_vira_vazio_e_nao_sobrescreve():
     from assobens.importer import AssobensImporter
     rows = AssobensNormalizer().normalize([{"CHASSI": "9BM958267PB000001", "DATA EMPLACAMENTO": "01/02/2026", "MARCA": "VW",
