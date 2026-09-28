@@ -73,29 +73,43 @@ def tracao_do_modelo(modelo: Any) -> str:
     return f"{m.group(1)}X{m.group(2)}" if m else ""
 
 
-def preencher_tracao(rows: list[dict], min_consenso: float = 0.9) -> dict:
-    """Completa TRAÇÃO vazia: 1) pelo texto do modelo; 2) pela tração que o MESMO modelo tem no histórico da
-    matriz, só quando ≥ min_consenso dos chassis daquele modelo concordam. Nunca sobrescreve tração informada."""
+def tracao_manual() -> dict:
+    """Tabela Analityc share/assobens/tracao_modelos.json (modelo -> tração), mantida pelo usuário."""
+    import json
+    try:
+        return {str(k).strip().upper(): str(v).strip().upper()
+                for k, v in json.loads(config.TRACAO_MODELOS_PATH.read_text(encoding="utf-8")).get("modelos", {}).items()}
+    except (OSError, ValueError):
+        return {}
+
+
+def preencher_tracao(rows: list[dict], min_consenso: float = 0.9, manual: dict | None = None) -> dict:
+    """Completa TRAÇÃO vazia: 1) pelo texto do modelo; 2) pela tabela manual tracao_modelos.json; 3) pela tração que
+    o MESMO modelo tem no histórico da matriz, só com ≥ min_consenso de concordância. Nunca sobrescreve tração informada."""
     from collections import Counter, defaultdict
+    manual = tracao_manual() if manual is None else manual
     hist: dict[str, Counter] = defaultdict(Counter)
     for r in rows:
         t = str(r.get("TRAÇÃO", "")).strip()
         if t:
             hist[str(r.get("MODELO", "")).strip()][t] += 1
-    n_txt = n_hist = n_sem = 0
+    n_txt = n_man = n_hist = n_sem = 0
     for r in rows:
         if str(r.get("TRAÇÃO", "")).strip():
             continue
         t = tracao_do_modelo(r.get("MODELO"))
         if t:
             r["TRAÇÃO"] = t; n_txt += 1; continue
+        t = manual.get(str(r.get("MODELO", "")).strip().upper())
+        if t:
+            r["TRAÇÃO"] = t; n_man += 1; continue
         c = hist.get(str(r.get("MODELO", "")).strip())
         if c:
             t, k = c.most_common(1)[0]
             if k / sum(c.values()) >= min_consenso:
                 r["TRAÇÃO"] = t; n_hist += 1; continue
         n_sem += 1
-    return {"pelo_modelo": n_txt, "pelo_historico": n_hist, "sem_tracao": n_sem}
+    return {"pelo_modelo": n_txt, "manual": n_man, "pelo_historico": n_hist, "sem_tracao": n_sem}
 
 
 def informado(s: str) -> str:

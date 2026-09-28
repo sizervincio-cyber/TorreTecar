@@ -137,10 +137,10 @@ class AssobensSyncJob:
             # 5c) TRAÇÃO: nenhuma das duas fontes do ASSOBENS traz a coluna; completa pelo modelo / histórico do modelo
             if report.level != LEVEL_SUSPECT:
                 tr = preencher_tracao(rows_all)
-                if tr["pelo_modelo"] or tr["pelo_historico"]:
+                if tr["pelo_modelo"] or tr["manual"] or tr["pelo_historico"]:
                     mudou = True
-                    run.step(f"tração inferida: {tr['pelo_modelo']} pelo texto do modelo · {tr['pelo_historico']} pelo histórico do mesmo modelo · "
-                             f"{tr['sem_tracao']} sem tração")
+                    run.step(f"tração inferida: {tr['pelo_modelo']} pelo texto do modelo · {tr['manual']} pela tabela manual · "
+                             f"{tr['pelo_historico']} pelo histórico do mesmo modelo · {tr['sem_tracao']} sem tração")
             if mudou:
                 qm = quality_score(rows_all)  # gate da Torre vale para a MATRIZ publicada, não para o lote isolado
                 if qm["score"] < config.MIN_QUALITY_SCORE:

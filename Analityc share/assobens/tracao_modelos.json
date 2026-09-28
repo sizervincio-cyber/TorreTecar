@@ -1,0 +1,7 @@
+{
+ "_doc": "Tração informada manualmente para modelos que não trazem NxN no nome nem têm histórico na base. Usada pelo robô ASSOBENS antes do histórico; nunca sobrescreve tração vinda da fonte.",
+ "modelos": {
+  "VW/18.260 MITREN B": "4X2",
+  "M.BENZ/AROCS 3351S": "6X4"
+ }
+}

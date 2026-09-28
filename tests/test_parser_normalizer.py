@@ -126,12 +126,14 @@ def test_preencher_tracao_pelo_modelo_e_historico():
     rows = [{"MODELO": "IVECO/TECTOR 17-210", "TRAÇÃO": "4X2"}] * 9 + [{"MODELO": "IVECO/TECTOR 17-210", "TRAÇÃO": "6X2"}]
     rows = [dict(r) for r in rows] + [{"MODELO": "IVECO/TECTOR 17-210", "TRAÇÃO": ""}, {"MODELO": "VW/26.260 CRM 6X2", "TRAÇÃO": ""},
                                       {"MODELO": "MODELO NOVO", "TRAÇÃO": ""}, {"MODELO": "M.BENZ/ATEGO 1726 4X4", "TRAÇÃO": "4X2"}]
-    out = preencher_tracao(rows)
-    assert out == {"pelo_modelo": 1, "pelo_historico": 1, "sem_tracao": 1}
+    rows.append({"MODELO": "M.BENZ/AROCS 3351S", "TRAÇÃO": ""})
+    out = preencher_tracao(rows, manual={"M.BENZ/AROCS 3351S": "6X4"})
+    assert out == {"pelo_modelo": 1, "manual": 1, "pelo_historico": 1, "sem_tracao": 1}
     assert rows[10]["TRAÇÃO"] == "4X2" and rows[11]["TRAÇÃO"] == "6X2" and rows[12]["TRAÇÃO"] == ""
     assert rows[13]["TRAÇÃO"] == "4X2"                      # tração informada nunca é sobrescrita
+    assert rows[14]["TRAÇÃO"] == "6X4"                      # tabela manual
     ambiguo = [{"MODELO": "X", "TRAÇÃO": "4X2"}, {"MODELO": "X", "TRAÇÃO": "6X2"}, {"MODELO": "X", "TRAÇÃO": ""}]
-    assert preencher_tracao(ambiguo)["sem_tracao"] == 1      # sem consenso ≥ 90%: não chuta
+    assert preencher_tracao(ambiguo, manual={})["sem_tracao"] == 1      # sem consenso ≥ 90%: não chuta
 
 
 def test_nao_informado_vira_vazio_e_nao_sobrescreve():

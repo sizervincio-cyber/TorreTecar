@@ -27,6 +27,7 @@ TOP10_PATH = ASSOBENS_DATA_DIR / "top10_segmentos.json"
 PRECOS_HIST_PATH = ASSOBENS_DATA_DIR / "precos_historico.csv"
 PRECOS_TOP10_PATH = ASSOBENS_DATA_DIR / "precos_top10.json"
 EQUIVALENCIAS_PATH = ASSOBENS_DATA_DIR / "equivalencias_mb.json"
+TRACAO_MODELOS_PATH = ASSOBENS_DATA_DIR / "tracao_modelos.json"
 
 # Armazenamento local (gitignored): arquivos originais, logs e screenshots.
 STORAGE_DIR = REPO_ROOT / "storage" / "app" / "assobens"
