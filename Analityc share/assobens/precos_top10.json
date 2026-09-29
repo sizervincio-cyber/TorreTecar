@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-09-29T12:08:14-03:00",
+ "gerado_em": "2026-09-29T17:07:50-03:00",
  "janela": [
   "2025-10",
   "2025-11",
@@ -208,7 +208,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -1042.03,
     "gap_preco_pct": -0.24,
-    "data_captura_preco": "2026-09-28T08:06:53-03:00",
+    "data_captura_preco": "2026-09-29T17:07:04-03:00",
     "observacao": null
    },
    {
@@ -224,7 +224,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -66134.78,
     "gap_preco_pct": -13.1,
-    "data_captura_preco": "2026-09-28T08:06:53-03:00",
+    "data_captura_preco": "2026-09-29T17:07:04-03:00",
     "observacao": null
    },
    {
@@ -320,7 +320,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-09-29T12:07:24-03:00",
+    "data_captura_preco": "2026-09-29T17:07:04-03:00",
     "observacao": null
    },
    {
