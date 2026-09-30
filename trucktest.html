@@ -78,15 +78,16 @@ td input:focus,td select:focus{border-color:var(--acc);outline:none}
    <button class="btn" onclick="app.duplicar()">Duplicar</button>
    <button class="btn" onclick="app.exportar()">Exportar JSON</button>
    <button class="btn danger" onclick="app.excluir()">Excluir</button>
-   <button class="btn acc" onclick="app.gerar()">Gerar apresentação ↗</button>
+   <button class="btn" onclick="app.gerar('full')" title="Versão completa: capa + 20 páginas + anexos">Completa (20 pág.)</button>
+   <button class="btn acc" onclick="app.gerar('compact')" title="Capa + 10 páginas + anexos">Gerar apresentação ↗</button>
   </div>
   <div class="tabs" id="tabs"></div>
   <div class="body"><div id="main"></div><div class="side"><div class="card" id="sidecard"></div></div></div>
  </main>
 </div>
 <div class="toast" id="toast"></div>
-<script src="trucktest-engine.js?v=3"></script>
-<script src="trucktest-report.js?v=3"></script>
+<script src="trucktest-engine.js?v=4"></script>
+<script src="trucktest-report.js?v=4"></script>
 <script>
 'use strict';
 const LS = 'trucktest-v1', EXEMPLO_ID = 'ttexemplo2653';
@@ -223,7 +224,7 @@ const app = (() => {
   exportar() { const t = T(); if (!t) return; dl(new Blob([JSON.stringify(t, null, 1)], { type: 'application/json' }), slug(t) + '.json'); },
   importar() { const inp = document.getElementById('impFile'); inp.onchange = () => { const f = inp.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { try { let txt = rd.result; if (/<html/i.test(txt)) { const m = txt.match(/<script type="application\/json" id="trucktest-data">([\s\S]*?)<\/script>/); if (!m) throw new Error('HTML sem dados'); txt = m[1].replace(/<\\\/script/g, '</script'); } const t = Object.assign(TT.NEW(), JSON.parse(txt)); if (S.tests.some(x => x.id === t.id)) t.id = TT.uid(); S.tests.unshift(t); S.cur = t.id; save(); renderTests(); main(); toast('Teste importado.'); } catch (e) { toast('Arquivo inválido: ' + e.message); } }; rd.readAsText(f); inp.value = ''; }; inp.click(); },
   exemplo(forcar) { if (!forcar && S.exemploRemovido) return; fetch('trucktest-exemplo.json', { cache: 'no-store' }).then(r => r.ok ? r.json() : null).then(t => { if (!t) return; const i = S.tests.findIndex(x => x.id === t.id); if (i >= 0 && !forcar) return; if (i >= 0) S.tests.splice(i, 1); S.tests.push(t); S.exemploRemovido = false; if (forcar || !S.cur) { S.cur = t.id; tab = 0; } save(); renderTests(); main(); if (forcar) toast('Exemplo carregado: Transportadora Modelo · Actros 2653/S.'); }).catch(() => { if (forcar) toast('Não foi possível carregar trucktest-exemplo.json.'); }); },
-  gerar() { const t = T(); if (!t) return; R = TT.calc(t); const html = TTREPORT.build(t, R); const blob = new Blob([html], { type: 'text/html' }); const url = URL.createObjectURL(blob); const w = window.open(url, '_blank'); dl(blob, slug(t) + ' - Truck Test 2.0.html'); toast(w ? 'Apresentação aberta em nova aba e salva como HTML.' : 'Pop-up bloqueado: o arquivo HTML foi baixado.'); }
+  gerar(mode) { const t = T(); if (!t) return; R = TT.calc(t); const html = TTREPORT.build(t, R, mode || 'compact'); const blob = new Blob([html], { type: 'text/html' }); const url = URL.createObjectURL(blob); const w = window.open(url, '_blank'); dl(blob, slug(t) + (mode === 'full' ? ' - Truck Test 2.0 (completa).html' : ' - Truck Test 2.0.html')); toast(w ? 'Apresentação aberta em nova aba e salva como HTML.' : 'Pop-up bloqueado: o arquivo HTML foi baixado.'); }
  };
  const slug = t => (t.cli.empresa || t.nome || 'trucktest').replace(/[^\w\- ]+/g, '').trim();
  const dl = (blob, name) => { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); };
