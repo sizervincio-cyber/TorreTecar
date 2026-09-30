@@ -159,7 +159,7 @@ function calc(T) {
    sens('Manutenção MB +30%', m => ({ ...m, manut: m.manut * 1.3 }))
   ];
   R.baseDelta = base;
-  const n = [1, 5, 10, N(T.cli.frotaElegivel) || 0].filter((x, i, a) => x > 0 && a.indexOf(x) === i);
+  const n = [1, 5, 10, N(T.cli.frotaElegivel) || 0].filter((x, i, a) => x > 0 && a.indexOf(x) === i).sort((a, b) => a - b);
   R.escala = n.map(k => ({ n: k, ano: R.econAno.conservador * k, cinco: R.econAno.conservador * k * 5, anoR: R.econAno.realista * k }));
  } else {
   if (!(M0.preco > 0)) gap('P0', 'Preço do Mercedes-Benz (TCO)', 'sem preço não há TCO');
