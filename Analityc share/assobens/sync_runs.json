@@ -1056,5 +1056,47 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20260930-121057",
+  "started_at": "2026-09-30T12:10:57-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-09-30T12:12:57-03:00",
+  "status": "success",
+  "file_name": "1211_emplacamentos.xlsx",
+  "file_hash": "4655f0292d3f38230f5f09e7531e2efd4670385ba304fb90e29219ffb107d9a8",
+  "rows_downloaded": 2814,
+  "rows_valid": 2813,
+  "rows_imported": 13,
+  "rows_updated": 33,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "rows_enriched": 33,
+  "error_message": null,
+  "duration_seconds": 120.0,
+  "steps": [
+   "12:11:04 tentativa 1/3",
+   "12:11:28 login concluído no portal",
+   "12:11:32 BI autenticado",
+   "12:11:53 download concluído: 1211_emplacamentos.xlsx",
+   "12:12:32 enriquecimento: 51 chassis sem proprietário · janela 2026-01-01 → 2026-09-30",
+   "12:12:49 download de enriquecimento concluído: 1211_enriquecimento.xlsx",
+   "12:12:50 arquivo lido: aba 'Export', 2814 linhas, 17 colunas mapeadas",
+   "12:12:50 normalização: {'validas': 2813, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "12:12:50 validação: nível ok, qualidade 74/100",
+   "12:12:50 upsert por CHASSI: 13 inseridos, 0 atualizados, 2800 iguais (matriz 26507)",
+   "12:12:51 enriquecimento: 2783 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 33 atualizados/com proprietário · 2750 iguais · 0 ignorados",
+   "12:12:51 tração inferida: 0 pelo texto do modelo · 0 pela tabela manual · 8 pelo histórico do mesmo modelo · 2 sem tração",
+   "12:12:51 qualidade da matriz resultante: 100/100",
+   "12:12:56 matriz publicada (troca atômica; backup da anterior em storage)",
+   "12:12:56 KPIs: mercado 26507, MB 4020, share 15.17% (12m: 15.04%); Top 10 em 4 segmentos",
+   "12:12:56 conferência ASSOBENS × Torre: Total Mercado 2813/2814 (Δ1); Total Mercedes-Benz 465/465 (Δ0); Market Share MB (%) 16.5/16.52 (Δ0.02)",
+   "12:12:57 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
