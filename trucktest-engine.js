@@ -99,7 +99,7 @@ function calc(T) {
  R.fonteKml = R.kmlPond > 0 ? 'trechos (Fleetboard, ponderado pelo mix)' : (R.kmlBomba > 0 ? 'bomba (tanque cheio a tanque cheio)' : '');
  R.difMetodos = (R.kmlBomba > 0 && R.kmlFb > 0) ? (R.kmlFb - R.kmlBomba) / R.kmlBomba : NaN;
  // RDI
- const rdi = (alt, par, urb, vel) => { const a = N(alt), p = N(par), u = N(urb), v = N(vel); if (!(a || p || u || v)) return NaN; return +(0.35 * (a / 500) + 0.25 * (p / 5) + 0.25 * (u / 100) + 0.15 * (v > 0 ? 50 / v : 1)).toFixed(3); };
+ const rdi = (alt, par, urb, vel) => { const a = N(alt), p = N(par), u = N(urb), v = N(vel); if (!(a || p)) return NaN; /* sem altitude nem paradas o índice não caracteriza a rota */ return +(0.35 * (a / 500) + 0.25 * (p / 5) + 0.25 * (u / 100) + 0.15 * (v > 0 ? 50 / v : 1)).toFixed(3); };
  const kmT = R.kmTrechos || 1;
  const altT = tr.reduce((s, t) => s + N(t.ganhoAlt), 0) / kmT * 100, parT = tr.reduce((s, t) => s + N(t.paradas), 0) / kmT * 100;
  const urbT = tr.reduce((s, t) => s + N(t.urbano) * N(t.km), 0) / kmT, velT = tr.filter(t => N(t.velMedia) > 0);
