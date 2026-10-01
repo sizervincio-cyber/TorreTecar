@@ -1,28 +1,28 @@
 {
  "fonte": "ASSOBENS",
- "ultima_execucao": "2026-10-01T08:08:03-03:00",
+ "ultima_execucao": "2026-10-01T17:02:40-03:00",
  "status": "success",
  "status_label": "Atualizado",
  "mensagem": "",
  "erro": null,
- "proxima_execucao": "2026-10-01T12:00-03:00",
+ "proxima_execucao": "2026-10-02T08:00-03:00",
  "agenda_local": "0 8,12,17 * * *",
  "timezone": "America/Sao_Paulo",
  "trigger_type": "scheduler",
  "executed_by": "sizervincio-cyber",
- "registros_processados": 2814,
- "registros_importados": 0,
+ "registros_processados": 2829,
+ "registros_importados": 15,
  "registros_atualizados": 0,
  "registros_rejeitados": 1,
- "precos_atualizados": 60,
+ "precos_atualizados": 4,
  "proprietarios_enriquecidos": 0,
  "base_valida": {
-  "atualizado_em": "2026-10-01T08:08:03-03:00",
-  "registros_processados": 2814,
-  "importados": 0,
+  "atualizado_em": "2026-10-01T17:02:40-03:00",
+  "registros_processados": 2829,
+  "importados": 15,
   "atualizados": 0,
-  "precos_atualizados": 60,
-  "run_id": "20261001-080619"
+  "precos_atualizados": 4,
+  "run_id": "20261001-170054"
  },
  "avisos": [
   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
