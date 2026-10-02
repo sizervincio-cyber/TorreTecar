@@ -1302,5 +1302,46 @@
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)",
    "enriquecimento não aplicado: Cabeçalho não reconhecido: nenhuma aba tem as colunas esperadas (estrutura do Excel mudou?)"
   ]
+ },
+ {
+  "id": "20261002-202632",
+  "started_at": "2026-10-02T20:26:32-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-10-02T20:28:28-03:00",
+  "status": "success",
+  "file_name": "2026_emplacamentos.xlsx",
+  "file_hash": "1049becf1480ea10783d3a9d0b19cf2d0cc76700fd7dc583856926eab34df6cd",
+  "rows_downloaded": 2839,
+  "rows_valid": 2838,
+  "rows_imported": 0,
+  "rows_updated": 12,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "rows_enriched": 12,
+  "error_message": null,
+  "duration_seconds": 116.3,
+  "steps": [
+   "20:26:38 tentativa 1/3",
+   "20:26:56 login concluído no portal",
+   "20:27:00 BI autenticado",
+   "20:27:23 download concluído: 2026_emplacamentos.xlsx",
+   "20:28:00 enriquecimento: 56 chassis sem proprietário · janela 2026-01-01 → 2026-10-02",
+   "20:28:21 download de enriquecimento concluído: 2026_enriquecimento.xlsx",
+   "20:28:21 arquivo lido: aba 'Export', 2839 linhas, 17 colunas mapeadas",
+   "20:28:22 normalização: {'validas': 2838, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "20:28:22 validação: nível ok, qualidade 74/100",
+   "20:28:22 upsert por CHASSI: 0 inseridos, 0 atualizados, 2838 iguais (matriz 26532)",
+   "20:28:23 enriquecimento: 2795 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 12 atualizados/com proprietário · 2783 iguais · 0 ignorados",
+   "20:28:23 qualidade da matriz resultante: 100/100",
+   "20:28:28 matriz publicada (troca atômica; backup da anterior em storage)",
+   "20:28:28 KPIs: mercado 26532, MB 4021, share 15.16% (12m: 15.78%); Top 10 em 4 segmentos",
+   "20:28:28 conferência ASSOBENS × Torre: Total Mercado None/26532 (ΔNone); Total Mercedes-Benz None/4021 (ΔNone); Market Share MB (%) None/15.16 (ΔNone)",
+   "20:28:28 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
