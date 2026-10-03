@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-10-02T20:28:28-03:00",
+ "gerado_em": "2026-10-03T12:03:41-03:00",
  "janela": [
   "2025-11",
   "2025-12",
@@ -23,14 +23,14 @@
     "modelo": "VW/26.260 CRM 6X2",
     "emplacamentos": 193,
     "market_share": 13.68,
-    "preco_identificado": 512434.69,
+    "preco_identificado": 513538.96,
     "modelo_no_comparativo": "VW 26.260",
     "preco_mb_equivalente": 503979.73,
     "equivalente_mb": "MB 2429",
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
-    "gap_preco_rs": -8454.96,
-    "gap_preco_pct": -1.65,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "gap_preco_rs": -9559.23,
+    "gap_preco_pct": -1.86,
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -39,14 +39,14 @@
     "modelo": "VW/17.210 CRM 4X2",
     "emplacamentos": 159,
     "market_share": 11.27,
-    "preco_identificado": 439723.87,
+    "preco_identificado": 439202.93,
     "modelo_no_comparativo": "VW 17.210",
-    "preco_mb_equivalente": 438681.84,
+    "preco_mb_equivalente": 437874.3,
     "equivalente_mb": "MB 1719",
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
-    "gap_preco_rs": -1042.03,
-    "gap_preco_pct": -0.24,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "gap_preco_rs": -1328.63,
+    "gap_preco_pct": -0.3,
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -55,14 +55,14 @@
     "modelo": "VW/18.260 CRM 4X2 4P",
     "emplacamentos": 97,
     "market_share": 6.87,
-    "preco_identificado": 504816.62,
+    "preco_identificado": 509403.28,
     "modelo_no_comparativo": "VW 18.260",
-    "preco_mb_equivalente": 438681.84,
+    "preco_mb_equivalente": 437874.3,
     "equivalente_mb": "MB 1719",
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
-    "gap_preco_rs": -66134.78,
-    "gap_preco_pct": -13.1,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "gap_preco_rs": -71528.98,
+    "gap_preco_pct": -14.04,
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -87,14 +87,14 @@
     "modelo": "IVECO/TECTOR 24-280",
     "emplacamentos": 81,
     "market_share": 5.74,
-    "preco_identificado": 515364.98,
+    "preco_identificado": 515172.26,
     "modelo_no_comparativo": "IVECO 24-280",
     "preco_mb_equivalente": 503979.73,
     "equivalente_mb": "MB 2429",
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
-    "gap_preco_rs": -11385.25,
-    "gap_preco_pct": -2.21,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "gap_preco_rs": -11192.53,
+    "gap_preco_pct": -2.17,
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -119,14 +119,14 @@
     "modelo": "VOLVO/VM 290 6X4 R",
     "emplacamentos": 69,
     "market_share": 4.89,
-    "preco_identificado": 539856.67,
+    "preco_identificado": 538047.08,
     "modelo_no_comparativo": "VOLVO VM 290 6X2",
     "preco_mb_equivalente": 503979.73,
     "equivalente_mb": "MB 2429",
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
-    "gap_preco_rs": -35876.94,
-    "gap_preco_pct": -6.65,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "gap_preco_rs": -34067.35,
+    "gap_preco_pct": -6.33,
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -135,14 +135,14 @@
     "modelo": "VOLVO/VM 290 6X2 R",
     "emplacamentos": 69,
     "market_share": 4.89,
-    "preco_identificado": 539856.67,
+    "preco_identificado": 538047.08,
     "modelo_no_comparativo": "VOLVO VM 290 6X2",
     "preco_mb_equivalente": 503979.73,
     "equivalente_mb": "MB 2429",
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
-    "gap_preco_rs": -35876.94,
-    "gap_preco_pct": -6.65,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "gap_preco_rs": -34067.35,
+    "gap_preco_pct": -6.33,
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -158,7 +158,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-10-02T20:27:34-03:00",
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -174,7 +174,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-10-02T20:27:34-03:00",
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    }
   ],
@@ -386,7 +386,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -69948.1,
     "gap_preco_pct": -15.16,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -411,14 +411,14 @@
     "modelo": "M.BENZ/ATEGO 1419 CL",
     "emplacamentos": 32,
     "market_share": 7.73,
-    "preco_identificado": 427875.71,
+    "preco_identificado": 428050.69,
     "modelo_no_comparativo": "MB 1419",
-    "preco_mb_equivalente": 427875.71,
+    "preco_mb_equivalente": 428050.69,
     "equivalente_mb": "MB 1419",
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
@@ -482,7 +482,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -6493.53,
     "gap_preco_pct": -1.63,
-    "data_captura_preco": "2026-10-02T13:29:59-03:00",
+    "data_captura_preco": "2026-10-03T12:02:51-03:00",
     "observacao": null
    },
    {
