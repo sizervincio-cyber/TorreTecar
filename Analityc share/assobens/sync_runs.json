@@ -1382,5 +1382,44 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20261003-153510",
+  "started_at": "2026-10-03T15:35:10-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-10-03T15:36:55-03:00",
+  "status": "success",
+  "file_name": "1535_emplacamentos.xlsx",
+  "file_hash": "5f08cfbb151350f294cd83cbdb0aa9269ded3ddd2ba9d105fdd47a4ce09607af",
+  "rows_downloaded": 2839,
+  "rows_valid": 2838,
+  "rows_imported": 0,
+  "rows_updated": 0,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "rows_enriched": 0,
+  "error_message": null,
+  "duration_seconds": 105.2,
+  "steps": [
+   "15:35:17 tentativa 1/3",
+   "15:35:32 login concluído no portal",
+   "15:35:35 BI autenticado",
+   "15:35:57 download concluído: 1535_emplacamentos.xlsx",
+   "15:36:35 enriquecimento: 44 chassis sem proprietário · janela 2026-01-01 → 2026-10-03",
+   "15:36:52 download de enriquecimento concluído: 1535_enriquecimento.xlsx",
+   "15:36:53 arquivo lido: aba 'Export', 2839 linhas, 17 colunas mapeadas",
+   "15:36:53 normalização: {'validas': 2838, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "15:36:53 validação: nível ok, qualidade 74/100",
+   "15:36:53 upsert por CHASSI: 0 inseridos, 0 atualizados, 2838 iguais (matriz 26532)",
+   "15:36:55 enriquecimento: 2795 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 0 atualizados/com proprietário · 2795 iguais · 0 ignorados",
+   "15:36:55 KPIs: mercado 26532, MB 4021, share 15.16% (12m: 15.78%); Top 10 em 4 segmentos",
+   "15:36:55 conferência ASSOBENS × Torre: Total Mercado 2838/2839 (Δ1); Total Mercedes-Benz 466/466 (Δ0); Market Share MB (%) 16.4/16.41 (Δ0.01)",
+   "15:36:55 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]

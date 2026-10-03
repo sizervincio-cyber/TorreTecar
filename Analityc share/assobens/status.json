@@ -1,6 +1,6 @@
 {
  "fonte": "ASSOBENS",
- "ultima_execucao": "2026-10-03T12:03:41-03:00",
+ "ultima_execucao": "2026-10-03T15:36:55-03:00",
  "status": "success",
  "status_label": "Atualizado",
  "mensagem": "",
@@ -14,15 +14,15 @@
  "registros_importados": 0,
  "registros_atualizados": 0,
  "registros_rejeitados": 1,
- "precos_atualizados": 60,
+ "precos_atualizados": 4,
  "proprietarios_enriquecidos": 0,
  "base_valida": {
-  "atualizado_em": "2026-10-03T12:03:41-03:00",
+  "atualizado_em": "2026-10-03T15:36:55-03:00",
   "registros_processados": 2839,
   "importados": 0,
   "atualizados": 0,
-  "precos_atualizados": 60,
-  "run_id": "20261003-120156"
+  "precos_atualizados": 4,
+  "run_id": "20261003-153510"
  },
  "avisos": [
   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
