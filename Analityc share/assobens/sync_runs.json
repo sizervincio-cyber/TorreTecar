@@ -1661,5 +1661,47 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20261007-143824",
+  "started_at": "2026-10-07T14:38:24-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-10-07T14:40:08-03:00",
+  "status": "success",
+  "file_name": "1438_emplacamentos.xlsx",
+  "file_hash": "543e32ec189a71a403a0c7ce056a2cff27563149c4d0e947d4778df321189354",
+  "rows_downloaded": 2877,
+  "rows_valid": 2876,
+  "rows_imported": 11,
+  "rows_updated": 25,
+  "rows_rejected": 1,
+  "prices_updated": 60,
+  "rows_enriched": 25,
+  "error_message": null,
+  "duration_seconds": 104.3,
+  "steps": [
+   "14:38:28 tentativa 1/3",
+   "14:38:42 login concluído no portal",
+   "14:38:46 BI autenticado",
+   "14:39:05 download concluído: 1438_emplacamentos.xlsx",
+   "14:39:40 enriquecimento: 52 chassis sem proprietário · janela 2026-01-01 → 2026-10-07",
+   "14:40:03 download de enriquecimento concluído: 1438_enriquecimento.xlsx",
+   "14:40:03 arquivo lido: aba 'Export', 2877 linhas, 17 colunas mapeadas",
+   "14:40:04 normalização: {'validas': 2876, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "14:40:04 validação: nível ok, qualidade 74/100",
+   "14:40:04 upsert por CHASSI: 11 inseridos, 0 atualizados, 2865 iguais (matriz 26570)",
+   "14:40:04 enriquecimento: 2839 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 25 atualizados/com proprietário · 2814 iguais · 0 ignorados",
+   "14:40:04 tração inferida: 0 pelo texto do modelo · 0 pela tabela manual · 7 pelo histórico do mesmo modelo · 3 sem tração",
+   "14:40:05 qualidade da matriz resultante: 100/100",
+   "14:40:08 matriz publicada (troca atômica; backup da anterior em storage)",
+   "14:40:08 KPIs: mercado 26570, MB 4029, share 15.16% (12m: 15.84%); Top 10 em 5 segmentos",
+   "14:40:08 conferência ASSOBENS × Torre: Total Mercado 2876/2877 (Δ1); Total Mercedes-Benz 474/474 (Δ0); Market Share MB (%) 16.5/16.48 (Δ-0.02)",
+   "14:40:08 histórico de preços: 60 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
