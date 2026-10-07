@@ -1703,5 +1703,44 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20261007-205759",
+  "started_at": "2026-10-07T20:57:59-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-10-07T20:59:42-03:00",
+  "status": "success",
+  "file_name": "2058_emplacamentos.xlsx",
+  "file_hash": "bfd2c6358b4ce70f9e0fe8c89cb2be28cc37c03b0bcf62889d8645c5ad35b1c6",
+  "rows_downloaded": 2877,
+  "rows_valid": 2876,
+  "rows_imported": 0,
+  "rows_updated": 0,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "rows_enriched": 0,
+  "error_message": null,
+  "duration_seconds": 103.5,
+  "steps": [
+   "20:58:05 tentativa 1/3",
+   "20:58:23 login concluído no portal",
+   "20:58:27 BI autenticado",
+   "20:58:48 download concluído: 2058_emplacamentos.xlsx",
+   "20:59:25 enriquecimento: 38 chassis sem proprietário · janela 2026-01-01 → 2026-10-07",
+   "20:59:40 download de enriquecimento concluído: 2058_enriquecimento.xlsx",
+   "20:59:40 arquivo lido: aba 'Export', 2877 linhas, 17 colunas mapeadas",
+   "20:59:41 normalização: {'validas': 2876, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "20:59:41 validação: nível ok, qualidade 74/100",
+   "20:59:41 upsert por CHASSI: 0 inseridos, 0 atualizados, 2876 iguais (matriz 26570)",
+   "20:59:42 enriquecimento: 2839 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 0 atualizados/com proprietário · 2839 iguais · 0 ignorados",
+   "20:59:42 KPIs: mercado 26570, MB 4029, share 15.16% (12m: 15.84%); Top 10 em 5 segmentos",
+   "20:59:42 conferência ASSOBENS × Torre: Total Mercado None/26570 (ΔNone); Total Mercedes-Benz None/4029 (ΔNone); Market Share MB (%) None/15.16 (ΔNone)",
+   "20:59:42 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
