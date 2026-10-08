@@ -400,27 +400,31 @@ const COMP_DEFS=[
 const PART_KEYS=['aq','ju','di','ar','ma','pn','ad','te','ip','se','pa'];
 const COMP_ALL=COMP_DEFS.reduce((o,c)=>(o[c.k]=1,o),{});
 const FIN_DEF = {pag:'fin', entrada:20, prazo:60, taxa:14, taxaUnit:'aa', carencia:0, carTipo:'cap'};
+/* Consumo (km/L) do catálogo parametrizado em 08/10/2026 com as médias do comparativo mensal informado pela gestão:
+   6x2 — Scania Super 460 2,67 · Volvo FH 500 2,56 · FH 460 2,53 · Actros 2553 2,44 | 6x4 — Scania Super 560 2,48 · FH 540 2,39 · Actros 2653 2,25 · S-Way 540 2,22 · XF 530 2,17 · Meteor 29.530 2,12.
+   São valores padrão: qualquer alteração feita na tela continua valendo (state.v) e sobrepõe estes números. */
 const VEHICLES = [
  {id:'a2651', mb:1, marca:'M.BENZ', modelo:'ACTROS 2651S', trac:'6x4', pot:510, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1150000, kml:2.05, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
- {id:'a2653', mb:1, marca:'M.BENZ', modelo:'ACTROS 2653S', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1190000, kml:2.00, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'a2653', mb:1, marca:'M.BENZ', modelo:'ACTROS 2653S', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1190000, kml:2.25, arla:6, manut:0.28, deprec:9, disp:96, diasVenda:35, segPct:3.2, ipva:1.5, ...FIN_DEF, taxa:12.5},
  {id:'a2548', mb:1, marca:'M.BENZ', modelo:'ACTROS 2548S', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:1020000, kml:2.30, arla:5.5, manut:0.25, deprec:9, disp:96, diasVenda:40, segPct:3.1, ipva:1.5, ...FIN_DEF, taxa:12.5},
+ {id:'a2553', mb:1, marca:'M.BENZ', modelo:'ACTROS 2553S', trac:'6x2', pot:530, seg:'Extrapesado', aplic:'Carreta LS', preco:1080000, kml:2.44, arla:5.5, manut:0.25, deprec:9, disp:96, diasVenda:40, segPct:3.1, ipva:1.5, ...FIN_DEF, taxa:12.5},
  {id:'ax2545', mb:1, marca:'M.BENZ', modelo:'AXOR 2545 S', trac:'6x2', pot:450, seg:'Extrapesado', aplic:'Carreta LS', preco:890000, kml:2.25, arla:5.5, manut:0.26, deprec:10, disp:95, diasVenda:45, segPct:3.1, ipva:1.5, ...FIN_DEF, taxa:12.5},
  {id:'at3033', mb:1, marca:'M.BENZ', modelo:'ATEGO 3033CE', trac:'8x2', pot:330, seg:'Semipesado', aplic:'Rígido 8x2', preco:640000, kml:2.90, arla:5, manut:0.21, deprec:10, disp:95, diasVenda:45, segPct:3.0, ipva:1.5, ...FIN_DEF, taxa:12.5},
- {id:'fh540', marca:'VOLVO', modelo:'FH 540 6X4T', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1180000, kml:2.00, arla:6, manut:0.30, deprec:9, disp:95, diasVenda:45, segPct:3.3, ipva:1.5, ...FIN_DEF},
- {id:'fh460', marca:'VOLVO', modelo:'FH 460 6X2T', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1040000, kml:2.25, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
- {id:'fh500', marca:'VOLVO', modelo:'FH 500 6X2T', trac:'6x2', pot:500, seg:'Extrapesado', aplic:'Carreta LS', preco:1090000, kml:2.18, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
- {id:'r560', marca:'SCANIA', modelo:'R560 A6X4', trac:'6x4', pot:560, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1230000, kml:1.95, arla:6.5, manut:0.30, deprec:9, disp:96, diasVenda:30, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'fh540', marca:'VOLVO', modelo:'FH 540 6X4T', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1180000, kml:2.39, arla:6, manut:0.30, deprec:9, disp:95, diasVenda:45, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'fh460', marca:'VOLVO', modelo:'FH 460 6X2T', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1040000, kml:2.53, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'fh500', marca:'VOLVO', modelo:'FH 500 6X2T', trac:'6x2', pot:500, seg:'Extrapesado', aplic:'Carreta LS', preco:1090000, kml:2.56, arla:5.5, manut:0.27, deprec:9, disp:95, diasVenda:50, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'r560', marca:'SCANIA', modelo:'R560 A6X4', trac:'6x4', pot:560, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1230000, kml:2.48, arla:6.5, manut:0.30, deprec:9, disp:96, diasVenda:30, segPct:3.3, ipva:1.5, ...FIN_DEF},
  {id:'r540', marca:'SCANIA', modelo:'R540 A6X4', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1180000, kml:2.00, arla:6.5, manut:0.30, deprec:9, disp:95, diasVenda:40, segPct:3.3, ipva:1.5, ...FIN_DEF},
  {id:'r500', marca:'SCANIA', modelo:'R500 A6X4', trac:'6x4', pot:500, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1130000, kml:2.05, arla:6.5, manut:0.30, deprec:9, disp:95, diasVenda:45, segPct:3.3, ipva:1.5, ...FIN_DEF},
  {id:'r450', marca:'SCANIA', modelo:'R450 A6X2', trac:'6x2', pot:450, seg:'Extrapesado', aplic:'Carreta LS', preco:1050000, kml:2.20, arla:6, manut:0.28, deprec:9, disp:95, diasVenda:45, segPct:3.2, ipva:1.5, ...FIN_DEF},
- {id:'r460', marca:'SCANIA', modelo:'R460 A6X2', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1080000, kml:2.22, arla:6, manut:0.28, deprec:9, disp:95, diasVenda:45, segPct:3.2, ipva:1.5, ...FIN_DEF},
+ {id:'r460', marca:'SCANIA', modelo:'R460 A6X2', trac:'6x2', pot:460, seg:'Extrapesado', aplic:'Carreta LS', preco:1080000, kml:2.67, arla:6, manut:0.28, deprec:9, disp:95, diasVenda:45, segPct:3.2, ipva:1.5, ...FIN_DEF},
  {id:'g370', marca:'SCANIA', modelo:'G370 A6X2', trac:'6x2', pot:370, seg:'Extrapesado', aplic:'Carreta LS', preco:920000, kml:2.35, arla:5.5, manut:0.26, deprec:10, disp:94, diasVenda:55, segPct:3.2, ipva:1.5, ...FIN_DEF},
- {id:'xf530', marca:'DAF', modelo:'XF FTT 530', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1120000, kml:2.02, arla:6, manut:0.30, deprec:10, disp:94, diasVenda:60, segPct:3.3, ipva:1.5, ...FIN_DEF},
+ {id:'xf530', marca:'DAF', modelo:'XF FTT 530', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1120000, kml:2.17, arla:6, manut:0.30, deprec:10, disp:94, diasVenda:60, segPct:3.3, ipva:1.5, ...FIN_DEF},
  {id:'xf480', marca:'DAF', modelo:'XF FTS 480', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:1010000, kml:2.22, arla:6, manut:0.28, deprec:10, disp:94, diasVenda:65, segPct:3.3, ipva:1.5, ...FIN_DEF},
- {id:'vw29530', marca:'VW', modelo:'29.530 MTM 6X4', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:980000, kml:1.95, arla:6.5, manut:0.32, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'vw29530', marca:'VW', modelo:'29.530 MTM 6X4', trac:'6x4', pot:530, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:980000, kml:2.12, arla:6.5, manut:0.32, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
  {id:'vw28480', marca:'VW', modelo:'28.480 MTM 6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:900000, kml:2.15, arla:6, manut:0.30, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
  {id:'vw25480', marca:'VW', modelo:'25.480 CTM 6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:870000, kml:2.18, arla:6, manut:0.30, deprec:11, disp:93, diasVenda:70, segPct:3.4, ipva:1.5, ...FIN_DEF},
- {id:'sw540', marca:'IVECO', modelo:'S-WAY 540-6X4', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1060000, kml:1.98, arla:6.5, manut:0.30, deprec:11, disp:93, diasVenda:75, segPct:3.4, ipva:1.5, ...FIN_DEF},
+ {id:'sw540', marca:'IVECO', modelo:'S-WAY 540-6X4', trac:'6x4', pot:540, seg:'Extrapesado', aplic:'Rodotrem/Bitrem', preco:1060000, kml:2.22, arla:6.5, manut:0.30, deprec:11, disp:93, diasVenda:75, segPct:3.4, ipva:1.5, ...FIN_DEF},
  {id:'sw480', marca:'IVECO', modelo:'S-WAY 480-6X2', trac:'6x2', pot:480, seg:'Extrapesado', aplic:'Carreta LS', preco:970000, kml:2.18, arla:6, manut:0.28, deprec:11, disp:93, diasVenda:75, segPct:3.4, ipva:1.5, ...FIN_DEF},
  {id:'vw30320', marca:'VW', modelo:'30.320 CRM 8X2', trac:'8x2', pot:320, seg:'Semipesado', aplic:'Rígido 8x2', preco:620000, kml:2.80, arla:5, manut:0.23, deprec:11, disp:93, diasVenda:60, segPct:3.1, ipva:1.5, ...FIN_DEF},
  {id:'p320', marca:'SCANIA', modelo:'P320 B8X2', trac:'8x2', pot:320, seg:'Semipesado', aplic:'Rígido 8x2', preco:660000, kml:2.75, arla:5, manut:0.23, deprec:10, disp:94, diasVenda:55, segPct:3.1, ipva:1.5, ...FIN_DEF},
@@ -431,6 +435,7 @@ const MATRIX = {
  a2651:['fh540','r560','r540','r500','xf530','vw29530','sw540'],
  a2653:['fh540','r560','r540','r500','xf530','vw29530','sw540'],
  a2548:['fh460','fh500','r450','r460','sw480','xf480','vw28480'],
+ a2553:['fh460','fh500','r450','r460','sw480','xf480','vw28480'],
  ax2545:['fh460','r450','vw28480','g370','vw25480'],
  at3033:['vw30320','p320','vm360','cf310'],
 };
