@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Simulador de TCO · Tecar Caminhões</title>
+<meta name="description" content="Compare o custo total de propriedade do seu próximo caminhão Mercedes-Benz com o concorrente que você usa hoje. Simulação transparente, com as mesmas premissas para os dois.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="ASSETS/grupo-tecar-squarelogo-1553565271092.webp">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d10;--panel:#14171c;--panel2:#1b1f25;--line:#2a2f36;--txt:#eef0f2;--txt2:#b4bcc6;--txt3:#79838e;--silver:#c3cbd4;--acc:#ffffff;--good:#39c08f;--warn:#e0b04a;--bad:#e06a55;--mb:#ffffff}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font:16px/1.5 Inter,'Segoe UI',system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;min-height:100%}
+a{color:var(--silver)}
+.wrap{max-width:720px;margin:0 auto;padding:0 18px 60px}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px}
+.brand .star{width:30px;height:30px}
+.brand b{font-size:14px;letter-spacing:.04em}.brand small{display:block;font-size:11px;color:var(--txt3);font-weight:500;letter-spacing:.02em}
+.hero{padding:34px 0 22px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--txt3)}
+h1{font-size:clamp(28px,7vw,40px);font-weight:800;letter-spacing:-.02em;line-height:1.08;margin-top:12px}
+h1 em{font-style:normal;color:var(--silver)}
+.lead{color:var(--txt2);margin-top:14px;font-size:16px;max-width:52ch}
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:22px;padding:17px 22px;border-radius:12px;border:0;background:linear-gradient(180deg,#fff,#d9dee4);color:#0b0d10;font:800 16px Inter,sans-serif;letter-spacing:.02em;cursor:pointer;text-decoration:none}
+.cta:active{transform:translateY(1px)}
+.cta.sec{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.cta.wa{background:#25D366;color:#06281a}
+.cta[disabled]{opacity:.45;cursor:not-allowed}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}
+.trust div{border:1px solid var(--line);border-radius:10px;padding:10px;font-size:11.5px;color:var(--txt2);line-height:1.3}
+.trust b{display:block;color:var(--txt);font-size:13px;margin-bottom:2px}
+.hero-img{margin-top:22px;border-radius:14px;overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3;background:#000 url('ASSETS/hero-actros.jpg') center/cover}
+.steps{display:flex;gap:6px;margin:26px 0 10px}
+.steps i{flex:1;height:4px;border-radius:2px;background:var(--line)}.steps i.on{background:var(--silver)}
+.stepl{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--txt3);display:flex;justify-content:space-between}
+section.step{display:none;padding-top:8px}section.step.on{display:block}
+h2{font-size:24px;font-weight:800;letter-spacing:-.015em;line-height:1.15;margin-top:8px}
+.sub{color:var(--txt2);margin-top:8px;font-size:15px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-top:16px}
+.f{margin-top:14px}.f label{display:block;font-size:12.5px;font-weight:700;color:var(--txt2);margin-bottom:6px}
+.f label small{font-weight:500;color:var(--txt3)}
+.f input,.f select,.f textarea{width:100%;font:inherit;font-size:16px;padding:13px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--txt);outline:none}
+.f input:focus,.f select:focus{border-color:var(--silver)}
+.f .u{position:relative}.f .u input{padding-right:64px}.f .u span{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--txt3);font-weight:600}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:420px){.row{grid-template-columns:1fr}}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--txt2);margin-top:12px;line-height:1.4}
+.chk input{width:20px;height:20px;min-width:20px;margin-top:2px;accent-color:#fff}
+.chk b{color:var(--txt)}
+.err{color:var(--bad);font-size:13px;margin-top:8px;min-height:1em}
+.models{display:grid;gap:10px;margin-top:14px}
+.mcard{text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;color:var(--txt);font:inherit;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center}
+.mcard.on{border-color:#fff;box-shadow:0 0 0 1px #fff}
+.mcard .nm{font-size:17px;font-weight:800}.mcard .tg{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3)}
+.mcard .sp{grid-column:1/-1;font-size:12.5px;color:var(--txt2);line-height:1.4}
+.mcard .pr{font-size:14px;font-weight:700;text-align:right;white-space:nowrap}
+.mcard .pr small{display:block;font-size:11px;color:var(--txt3);font-weight:500}
+.tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:4px;border:1px solid var(--line);color:var(--txt2);vertical-align:middle}
+.tag.you{border-color:#5aa9ff;color:#8cc3ff}.tag.ref{border-color:var(--silver);color:var(--silver)}.tag.est{border-color:var(--warn);color:var(--warn)}
+.nav{display:flex;gap:10px;margin-top:18px}.nav .cta{margin-top:0}
+details{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:0 14px}
+summary{cursor:pointer;padding:13px 0;font-weight:700;font-size:14px;color:var(--txt2);list-style:none;display:flex;justify-content:space-between}
+summary:after{content:'+';color:var(--txt3)}details[open] summary:after{content:'–'}
+details .in{padding-bottom:14px}
+.note{font-size:12.5px;color:var(--txt3);line-height:1.45;margin-top:10px}
+/* resultado */
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.kp{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:13px 14px}
+.kp .l{font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3)}
+.kp .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:4px;line-height:1.1}
+.kp .v small{font-size:12px;color:var(--txt3);font-weight:600;letter-spacing:0}
+.kp .d{font-size:12px;color:var(--txt2);margin-top:4px}
+.kp.hi{border-color:var(--good);background:linear-gradient(180deg,rgba(57,192,143,.12),transparent)}.kp.hi .v{color:var(--good)}
+.kp.neg{border-color:var(--warn)}.kp.neg .v{color:var(--warn)}
+.kp.full{grid-column:1/-1}
+.verdict{margin-top:16px;border-radius:14px;padding:16px;border:1px solid var(--line);background:var(--panel);font-size:15px;line-height:1.5}
+.verdict b{color:#fff}
+svg text{font-family:Inter,sans-serif}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+th{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--txt3);text-align:right;padding:8px 6px;border-bottom:1px solid var(--line)}
+td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;color:var(--txt2)}
+th:first-child,td:first-child{text-align:left}td.b{color:var(--txt);font-weight:700}
+tr.tot td{border-top:2px solid var(--silver);color:var(--txt);font-weight:800}
+.prem{list-style:none;margin-top:8px}.prem li{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;color:var(--txt2)}
+.prem li span:last-child{text-align:right;color:var(--txt);white-space:nowrap}
+.final{margin-top:26px;border-radius:16px;padding:22px 18px;background:linear-gradient(180deg,#1b1f25,#0f1216);border:1px solid var(--line)}
+.final h3{font-size:21px;font-weight:800;letter-spacing:-.015em;line-height:1.2}
+.final p{color:var(--txt2);margin-top:8px;font-size:14.5px}
+.final .cta{margin-top:14px}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#fff;color:#0b0d10;padding:11px 16px;border-radius:10px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.2s;z-index:50;max-width:92vw;text-align:center}
+.toast.on{opacity:1}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--txt3);line-height:1.5}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;z-index:60;padding:0}
+.modal.on{display:flex}.modal .box{background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0;padding:20px 18px 28px;max-width:720px;width:100%;max-height:80vh;overflow:auto;font-size:14px;color:var(--txt2)}
+.modal h3{color:var(--txt);font-size:17px;margin-bottom:8px}.modal p{margin-top:8px}
+@media(min-width:640px){.modal{align-items:center;padding:20px}.modal .box{border-radius:16px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top">
+  <div class="brand"><svg class="star" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45" fill="none" stroke="#c3cbd4" stroke-width="4"/><path d="M50 50 L50 8 M50 50 L13.6 71 M50 50 L86.4 71" stroke="#c3cbd4" stroke-width="7" stroke-linecap="round"/></svg><div><b>TECAR CAMINHÕES</b><small>Concessionária Mercedes-Benz · Goiás e Tocantins</small></div></div>
+  <span class="tag ref">Simulador TCO</span>
+ </header>
+
+ <!-- ===== 0 · CTA ===== -->
+ <section class="step on" id="s0">
+  <div class="hero">
+   <div class="eyebrow">Custo total de propriedade · 60 meses</div>
+   <h1>Quanto seu próximo caminhão pode economizar? <em>Compare o TCO agora.</em></h1>
+   <p class="lead">Em 3 minutos você compara um Mercedes-Benz com o caminhão que usa hoje: combustível, manutenção, financiamento, depreciação e custo por quilômetro, com as mesmas premissas para os dois.</p>
+   <button class="cta" onclick="go(1)">Começar a simulação →</button>
+   <div class="trust"><div><b>Transparente</b>mesmos critérios para os dois veículos</div><div><b>Auditável</b>cada premissa identificada: sua, da Tecar ou estimada</div><div><b>Sem compromisso</b>você recebe o estudo por WhatsApp ou e-mail</div></div>
+   <div class="hero-img" role="img" aria-label="Caminhão Mercedes-Benz Actros"></div>
+  </div>
+ </section>
+
+ <div id="prog" hidden>
+  <div class="steps"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="stepl"><span id="stepName">Cadastro</span><span id="stepN">1 / 5</span></div>
+ </div>
+
+ <!-- ===== 1 · CADASTRO ===== -->
+ <section class="step" id="s1">
+  <h2>Para quem enviamos o estudo?</h2>
+  <p class="sub">Usamos seus dados só para gerar e entregar a simulação. Nada de spam.</p>
+  <div class="card">
+   <div class="f"><label for="nome">Nome</label><input id="nome" autocomplete="name" placeholder="Seu nome"></div>
+   <div class="f"><label for="fone">Telefone / WhatsApp</label><input id="fone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(62) 9 9999-9999"></div>
+   <div class="f"><label for="email">E-mail</label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="voce@empresa.com.br"></div>
+   <div class="f"><label for="empresa">Empresa <small>· opcional</small></label><input id="empresa" autocomplete="organization" placeholder="Transportadora, frota ou autônomo"></div>
+   <label class="chk"><input type="checkbox" id="lgpd"><span><b>Autorizo o tratamento dos meus dados</b> para gerar e enviar esta simulação, conforme a <a href="#" onclick="openModal();return false">política de privacidade</a> (LGPD). Posso pedir a exclusão a qualquer momento.</span></label>
+   <label class="chk"><input type="checkbox" id="contato"><span><b>Autorizo contato comercial</b> da Tecar Caminhões por WhatsApp, telefone ou e-mail sobre esta simulação e ofertas relacionadas. <small>(opcional)</small></span></label>
+   <div class="err" id="err1"></div>
+  </div>
+  <div class="nav"><button class="cta sec" onclick="go(0)">Voltar</button><button class="cta" onclick="validar1()">Escolher o Mercedes-Benz →</button></div>
+ </section>
+
+ <!-- ===== 2 · MERCEDES-BENZ ===== -->
+ <section class="step" id="s2">
+  <h2>Qual Mercedes-Benz você quer comparar?</h2>
+  <p class="sub">Parâmetros técnicos da ficha oficial do modelo. Preço, consumo e manutenção são <span class="tag ref">referência Tecar</span> de outubro de 2026 e podem ser ajustados na proposta.</p>
+  <div class="models" id="models"></div>
+  <details><summary>Ajustar preço, consumo e manutenção do Mercedes-Benz</summary><div class="in">
+   <div class="row"><div class="f"><label>Preço de aquisição</label><div class="u"><input id="mbPreco" inputmode="decimal"><span>R$</span></div></div><div class="f"><label>Consumo</label><div class="u"><input id="mbKml" inputmode="decimal"><span>km/L</span></div></div></div>
+   <div class="row"><div class="f"><label>Manutenção</label><div class="u"><input id="mbManut" inputmode="decimal"><span>R$/km</span></div></div><div class="f"><label>Taxa de financiamento <small>Banco MB</small></label><div class="u"><input id="mbTaxa" inputmode="decimal"><span>% a.m.</span></div></div></div>
+   <p class="note">Se alterar, o valor passa a contar como <span class="tag you">informado por você</span>.</p>
+  </div></details>
+  <div class="err" id="err2"></div>
+  <div class="nav"><button class="cta sec" onclick="go(1)">Voltar</button><button class="cta" onclick="validar2()">Informar o concorrente →</button></div>
+ </section>
+
+ <!-- ===== 3 · CONCORRENTE ===== -->
+ <section class="step" id="s3">
+  <h2>Com qual caminhão comparar?</h2>
+  <p class="sub">O que você usa hoje ou o que está cotando. Preço e consumo são seus; o resto segue as mesmas premissas do Mercedes-Benz, salvo se você ajustar.</p>
+  <div class="card">
+   <div class="row"><div class="f"><label for="cMarca">Marca</label><select id="cMarca"><option value="">Selecione</option><option>Volvo</option><option>Scania</option><option>DAF</option><option>Iveco</option><option>Volkswagen</option><option>Foton</option><option>Outra</option></select></div><div class="f"><label for="cModelo">Modelo</label><input id="cModelo" placeholder="ex.: FH 540 6x4"></div></div>
+   <div class="row"><div class="f"><label for="cPreco">Preço de aquisição</label><div class="u"><input id="cPreco" inputmode="decimal" placeholder="1.180.000"><span>R$</span></div></div><div class="f"><label for="cKml">Consumo médio</label><div class="u"><input id="cKml" inputmode="decimal" placeholder="2,39"><span>km/L</span></div></div></div>
+  </div>
+  <details><summary>Ajustes avançados do concorrente</summary><div class="in">
+   <div class="row"><div class="f"><label>Manutenção <small>vazio = igual ao MB</small></label><div class="u"><input id="cManut" inputmode="decimal"><span>R$/km</span></div></div><div class="f"><label>Taxa de financiamento <small>vazio = igual ao MB</small></label><div class="u"><input id="cTaxa" inputmode="decimal"><span>% a.m.</span></div></div></div>
+   <div class="row"><div class="f"><label>Depreciação <small>vazio = igual ao MB</small></label><div class="u"><input id="cDeprec" inputmode="decimal"><span>% a.a.</span></div></div><div class="f"><label>ARLA 32 <small>vazio = igual ao MB</small></label><div class="u"><input id="cArla" inputmode="decimal"><span>% do diesel</span></div></div></div>
+  </div></details>
+  <div class="err" id="err3"></div>
+  <div class="nav"><button class="cta sec" onclick="go(2)">Voltar</button><button class="cta" onclick="validar3()">Dados da operação →</button></div>
+ </section>
+
+ <!-- ===== 4 · OPERAÇÃO ===== -->
+ <section class="step" id="s4">
+  <h2>Como é a sua operação?</h2>
+  <p class="sub">Esses números valem para os dois caminhões.</p>
+  <div class="card">
+   <div class="row"><div class="f"><label for="km">Quilometragem</label><div class="u"><input id="km" inputmode="numeric" value="10000"><span>km/mês</span></div></div><div class="f"><label for="diesel">Diesel S10</label><div class="u"><input id="diesel" inputmode="decimal" value="6,45"><span>R$/L</span></div></div></div>
+   <div class="row"><div class="f"><label for="horiz">Tempo de uso</label><select id="horiz"><option value="36">36 meses</option><option value="48">48 meses</option><option value="60" selected>60 meses</option><option value="72">72 meses</option></select></div><div class="f"><label for="pag">Compra</label><select id="pag"><option value="fin" selected>Financiada</option><option value="vista">À vista</option></select></div></div>
+   <div id="finBox"><div class="row"><div class="f"><label for="entrada">Entrada</label><div class="u"><input id="entrada" inputmode="numeric" value="0"><span>%</span></div></div><div class="f"><label for="prazo">Prazo</label><div class="u"><input id="prazo" inputmode="numeric" value="60"><span>meses</span></div></div></div>
+   <p class="note">A taxa do Mercedes-Benz vem da referência do modelo (ajustável no passo 2); a do concorrente é igual, salvo se você informou outra.</p></div>
+  </div>
+  <details><summary>Premissas estimadas (pode ajustar)</summary><div class="in">
+   <div class="row"><div class="f"><label>ARLA 32</label><div class="u"><input id="arlaPreco" inputmode="decimal" value="3,50"><span>R$/L</span></div></div><div class="f"><label>Inflação do diesel</label><div class="u"><input id="infDiesel" inputmode="decimal" value="5"><span>% a.a.</span></div></div></div>
+   <div class="row"><div class="f"><label>IPVA</label><div class="u"><input id="ipva" inputmode="decimal" value="1,5"><span>% a.a.</span></div></div><div class="f"><label>Seguro</label><div class="u"><input id="seg" inputmode="decimal" value="3,2"><span>% a.a.</span></div></div></div>
+   <p class="note">Marcadas como <span class="tag est">estimativa</span> no relatório. Pneus, custo de parada e impostos além do IPVA ficam fora desta simulação.</p>
+  </div></details>
+  <div class="err" id="err4"></div>
+  <div class="nav"><button class="cta sec" onclick="go(3)">Voltar</button><button class="cta" onclick="validar4()">Ver o resultado →</button></div>
+ </section>
+
+ <!-- ===== 5 · RESULTADO ===== -->
+ <section class="step" id="s5">
+  <div id="res"></div>
+  <div class="final">
+   <h3>Receba seu estudo personalizado e descubra o impacto na rentabilidade da sua frota.</h3>
+   <p>Um consultor da Tecar revisa as premissas com você, inclui pneus, custo de parada e a condição real de financiamento, e devolve o estudo completo.</p>
+   <a class="cta wa" id="btnWa" href="#" target="_blank" rel="noopener">Receber por WhatsApp</a>
+   <a class="cta sec" id="btnMail" href="#">Receber por e-mail</a>
+   <button class="cta sec" onclick="copiarLink()">Copiar link desta simulação</button>
+   <p class="note" id="leadNote"></p>
+  </div>
+  <div class="nav"><button class="cta sec" onclick="go(4)">Ajustar premissas</button><button class="cta sec" onclick="reiniciar()">Nova simulação</button></div>
+ </section>
+
+ <footer>Tecar Caminhões · concessionária Mercedes-Benz. Simulação de custo total de propriedade com base nas premissas informadas e em valores de referência de outubro de 2026; não constitui proposta comercial. Cada premissa aparece no relatório identificada como informada por você, referência Tecar ou estimativa. <a href="#" onclick="openModal();return false">Política de privacidade</a>.</footer>
+</div>
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="box"><h3>Privacidade e LGPD</h3><p>Os dados informados (nome, telefone, e-mail, empresa) e os parâmetros da simulação são usados pela Tecar Caminhões para gerar o estudo de TCO e, se você autorizar, para contato comercial sobre ele.</p><p>Base legal: consentimento (art. 7º, I, da LGPD). Você pode revogar o consentimento, pedir acesso, correção ou exclusão dos dados pelo mesmo canal em que recebeu o estudo. Os dados não são vendidos nem compartilhados com terceiros fora da rede Tecar / Mercedes-Benz necessária ao atendimento.</p><p>Os valores de referência de preço, consumo e manutenção são da Tecar (outubro de 2026); os demais são estimativas identificadas na simulação.</p><button class="cta" onclick="closeModal()">Entendi</button></div></div>
+
+<script>
+'use strict';
+/* ===================== CONFIGURAÇÃO (edite aqui) ===================== */
+const CONFIG = {
+ WHATSAPP: '5562999999999',            // número da Tecar que recebe os pedidos de estudo (DDI+DDD+número, só dígitos)
+ EMAIL: 'comercial@tecar.com.br',      // e-mail que recebe os pedidos de estudo
+ LEAD_ENDPOINT: '',                     // URL de webhook (Google Apps Script, Make, CRM) que recebe o lead em JSON; vazio = só WhatsApp/e-mail
+ REF_DATA: 'outubro de 2026'
+};
+/* Catálogo Mercedes-Benz: ficha técnica oficial (dossiê Tecar) + referências comerciais do simulador de TCO da Tecar. */
+const MB = [
+ {id:'a2653', nome:'Actros 2653 S', trac:'6x4', seg:'Extrapesado', aplic:'Bitrem, rodotrem e composições pesadas', motor:'OM 471 · 530 cv · 2.600 Nm', cambio:'PowerShift 3 Advanced', preco:1190000, kml:2.25, arla:6, manut:0.28, deprec:9, disp:96, taxa:1.35},
+ {id:'a2651', nome:'Actros 2651 S', trac:'6x4', seg:'Extrapesado', aplic:'Bitrem e rodotrem', motor:'OM 460 · 495 cv · 2.400 Nm', cambio:'PowerShift 3 Advanced', preco:1150000, kml:2.05, arla:6, manut:0.28, deprec:9, disp:96, taxa:1.35},
+ {id:'a2553', nome:'Actros 2553 S', trac:'6x2', seg:'Extrapesado', aplic:'Carreta LS e rodoviário longo', motor:'OM 471 · 530 cv · 2.600 Nm', cambio:'PowerShift 3 Advanced', preco:1080000, kml:2.44, arla:5.5, manut:0.25, deprec:9, disp:96, taxa:1.35},
+ {id:'a2548', nome:'Actros 2548 S', trac:'6x2', seg:'Extrapesado', aplic:'Carreta LS', motor:'OM 460 · 476 cv · 2.300 Nm', cambio:'PowerShift 3 Advanced', preco:1020000, kml:2.30, arla:5.5, manut:0.25, deprec:9, disp:96, taxa:1.35},
+ {id:'ax2545', nome:'Axor 2545 S', trac:'6x2', seg:'Extrapesado', aplic:'Carreta LS e graneleiro', motor:'OM 460 · 449 cv · 2.200 Nm', cambio:'PowerShift 3 Advanced', preco:890000, kml:2.25, arla:5.5, manut:0.26, deprec:10, disp:95, taxa:1.35},
+ {id:'at3033', nome:'Atego 3033 CE', trac:'8x2', seg:'Semipesado', aplic:'Rígido 8x2, distribuição e construção', motor:'OM 926 · 321 cv · 1.250 Nm', cambio:'PowerShift 3 Advanced', preco:640000, kml:2.90, arla:5, manut:0.21, deprec:10, disp:95, taxa:1.35},
+];
+const S = { lead:{}, mb:null, mbEd:{}, c:{}, op:{} };
+const $ = id => document.getElementById(id);
+const num = v => { const n = parseFloat(String(v ?? '').trim().replace(/\./g, '').replace(',', '.')); return isFinite(n) ? n : NaN; };
+const numd = v => { const n = parseFloat(String(v ?? '').trim().replace(',', '.')); return isFinite(n) ? n : NaN; };
+const brl = v => 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+const brl2 = v => 'R$ ' + v.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+const pct = (v, d=1) => (v*100).toLocaleString('pt-BR', {minimumFractionDigits:d, maximumFractionDigits:d}) + '%';
+const n1 = (v, d=2) => v.toLocaleString('pt-BR', {minimumFractionDigits:d, maximumFractionDigits:d});
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('on'); setTimeout(()=>t.classList.remove('on'), 2600); }
+function openModal(){ $('modal').classList.add('on'); } function closeModal(){ $('modal').classList.remove('on'); }
+const NAMES = ['', 'Cadastro', 'Mercedes-Benz', 'Concorrente', 'Operação', 'Resultado'];
+function go(n){
+ document.querySelectorAll('section.step').forEach((s,i)=>s.classList.toggle('on', i===n));
+ $('prog').hidden = n===0;
+ document.querySelectorAll('.steps i').forEach((i,k)=>i.classList.toggle('on', k<n));
+ $('stepName').textContent = NAMES[n] || ''; $('stepN').textContent = n + ' / 5';
+ window.scrollTo({top:0, behavior:'smooth'});
+ try{ localStorage.setItem('tecar-tco-draft', JSON.stringify({S, n})); }catch(e){}
+}
+/* ---------- passo 1 ---------- */
+function validar1(){
+ const nome=$('nome').value.trim(), fone=$('fone').value.replace(/\D/g,''), email=$('email').value.trim();
+ const e=$('err1');
+ if(nome.length<3) return e.textContent='Informe seu nome.';
+ if(fone.length<10) return e.textContent='Informe um telefone com DDD.';
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return e.textContent='Informe um e-mail válido.';
+ if(!$('lgpd').checked) return e.textContent='Precisamos do seu consentimento para gerar e enviar a simulação.';
+ e.textContent=''; S.lead={nome, fone, email, empresa:$('empresa').value.trim(), lgpd:true, contato:$('contato').checked, quando:new Date().toISOString()};
+ go(2);
+}
+/* ---------- passo 2 ---------- */
+function renderModels(){
+ $('models').innerHTML = MB.map(m => `<button class="mcard ${S.mb===m.id?'on':''}" onclick="pickMB('${m.id}')"><span class="tg">${m.seg} · ${m.trac}</span><span class="pr">${brl(m.preco)}<small>referência</small></span><span class="nm">${m.nome}</span><span class="pr">${n1(m.kml)} km/L<small>referência</small></span><span class="sp">${m.motor} · ${m.cambio}<br>${m.aplic}</span></button>`).join('');
+}
+function pickMB(id){ S.mb=id; S.mbEd={}; const m=MB.find(x=>x.id===id); $('mbPreco').value=m.preco.toLocaleString('pt-BR'); $('mbKml').value=n1(m.kml); $('mbManut').value=n1(m.manut); $('mbTaxa').value=n1(m.taxa); renderModels(); }
+function validar2(){
+ const e=$('err2'); if(!S.mb) return e.textContent='Escolha um modelo Mercedes-Benz.';
+ const m=MB.find(x=>x.id===S.mb); const ed={};
+ const p=num($('mbPreco').value), k=numd($('mbKml').value), ma=numd($('mbManut').value), t=numd($('mbTaxa').value);
+ if(!(p>0)||!(k>0)||!(ma>=0)||!(t>=0)) return e.textContent='Preço, consumo, manutenção e taxa precisam ser números válidos.';
+ if(Math.round(p)!==m.preco) ed.preco=p; if(Math.abs(k-m.kml)>1e-9) ed.kml=k; if(Math.abs(ma-m.manut)>1e-9) ed.manut=ma; if(Math.abs(t-m.taxa)>1e-9) ed.taxa=t;
+ S.mbEd=ed; e.textContent=''; go(3);
+}
+/* ---------- passo 3 ---------- */
+function validar3(){
+ const e=$('err3'); const marca=$('cMarca').value, modelo=$('cModelo').value.trim(), preco=num($('cPreco').value), kml=numd($('cKml').value);
+ if(!marca) return e.textContent='Selecione a marca do concorrente.';
+ if(modelo.length<2) return e.textContent='Informe o modelo.';
+ if(!(preco>100000)) return e.textContent='Informe o preço de aquisição em reais (ex.: 1.180.000).';
+ if(!(kml>0.5 && kml<10)) return e.textContent='Informe o consumo em km por litro (ex.: 2,39).';
+ S.c={marca, modelo, preco, kml, manut:numd($('cManut').value), taxa:numd($('cTaxa').value), deprec:numd($('cDeprec').value), arla:numd($('cArla').value)};
+ e.textContent=''; go(4);
+}
+/* ---------- passo 4 ---------- */
+$('pag').addEventListener('change', ()=>{ $('finBox').style.display = $('pag').value==='fin' ? '' : 'none'; });
+function validar4(){
+ const e=$('err4'); const km=num($('km').value), diesel=numd($('diesel').value);
+ if(!(km>=500 && km<=40000)) return e.textContent='Informe a quilometragem mensal (entre 500 e 40.000 km).';
+ if(!(diesel>2 && diesel<15)) return e.textContent='Informe o preço do diesel por litro.';
+ S.op={km, diesel, horiz:+$('horiz').value, pag:$('pag').value, entrada:numd($('entrada').value)||0, prazo:Math.max(1, Math.round(numd($('prazo').value)||60)), arlaPreco:numd($('arlaPreco').value)||3.5, infDiesel:numd($('infDiesel').value)||0, ipva:numd($('ipva').value)||0, seg:numd($('seg').value)||0};
+ e.textContent=''; calcular(); go(5); enviarLead();
+}
+/* ---------- motor (mesma metodologia do simulador de TCO da Tecar: mês a mês, financiamento por veículo, depreciação composta) ---------- */
+function simulate(v, g){
+ const H=g.horiz, infM=Math.pow(1+g.infDiesel/100,1/12)-1, depM=1-Math.pow(1-v.deprec/100,1/12);
+ const fin=g.pag==='fin', iM=v.taxa/100, entrada=fin? v.preco*g.entrada/100 : v.preco, pv=fin? v.preco-entrada : 0, prazo=g.prazo;
+ const pmt= pv<=0?0 : (iM===0? pv/prazo : pv*iM/(1-Math.pow(1+iM,-prazo)));
+ let saldo=pv, vm=v.preco, baseAno=v.preco, juros=0, comb=0, arla=0, manut=0, ipva=0, seg=0, acc=entrada; const cum=[entrada];
+ for(let m=1;m<=H;m++){
+  if(m>1&&(m-1)%12===0) baseAno=vm;
+  const pD=g.diesel*Math.pow(1+infM,m-1), litros=g.km/v.kml;
+  const cd=litros*pD, ca=litros*(v.arla/100)*g.arlaPreco*Math.pow(1+infM,m-1), cm=g.km*v.manut, ci=baseAno*(g.ipva/100)/12, cs=baseAno*(g.seg/100)/12;
+  comb+=cd; arla+=ca; manut+=cm; ipva+=ci; seg+=cs;
+  let pj=0, pa=0; if(fin && m<=prazo){ const j=saldo*iM; pa=Math.min(saldo, pmt-j); saldo=Math.max(0,saldo-pa); pj=j; juros+=j; }
+  vm*=(1-depM); acc+=cd+ca+cm+ci+cs+pj+pa; cum.push(acc);
+ }
+ const residual=vm, deprec=v.preco-residual, kmTot=g.km*H, tco=v.preco+juros+comb+arla+manut+ipva+seg-residual;
+ return {H, entrada, pmt, juros, comb, arla, manut, ipva, seg, deprec, residual, tco, kmTot, tcoKm:tco/kmTot, tcoMes:tco/H, cum};
+}
+function premissas(){
+ const m=MB.find(x=>x.id===S.mb), ed=S.mbEd, c=S.c, g=S.op;
+ const M={nome:'Mercedes-Benz '+m.nome, preco:ed.preco??m.preco, kml:ed.kml??m.kml, manut:ed.manut??m.manut, taxa:g.pag==='fin'?(ed.taxa??m.taxa):0, arla:m.arla, deprec:m.deprec};
+ const C={nome:c.marca+' '+c.modelo, preco:c.preco, kml:c.kml, manut:isFinite(c.manut)?c.manut:M.manut, taxa:g.pag==='fin'?(isFinite(c.taxa)?c.taxa:M.taxa):0, arla:isFinite(c.arla)?c.arla:M.arla, deprec:isFinite(c.deprec)?c.deprec:M.deprec};
+ return {M, C, m, g};
+}
+let R=null;
+function calcular(){
+ const {M, C, m, g}=premissas(); const rm=simulate(M,g), rc=simulate(C,g);
+ R={M, C, m, g, rm, rc, delta:rc.tco-rm.tco, deltaPct:(rc.tco-rm.tco)/rc.tco};
+ renderResultado();
+}
+/* ---------- gráficos SVG ---------- */
+function cw(){ return Math.max(300, Math.min(640, (document.querySelector('.wrap').clientWidth||640) - 36)); }
+function stackSvg(rows){
+ const W=cw(), L=W<440?82:120, Rr=W<440?56:70, bh=38, gap=18, h=rows.length*(bh+gap)+8, max=Math.max(...rows.map(r=>r.parts.reduce((s,p)=>s+p.v,0)));
+ let s=`<svg viewBox="0 0 ${W} ${h}" width="100%" style="display:block">`;
+ rows.forEach((r,i)=>{ let x=L; const y=4+i*(bh+gap); s+=`<text x="${L-8}" y="${y+bh/2+4}" text-anchor="end" font-size="11" font-weight="700" fill="#eef0f2">${esc(r.l)}</text>`;
+  r.parts.forEach(p=>{ const w=Math.max(0,p.v)/max*(W-L-Rr); if(w>0){ s+=`<rect x="${x}" y="${y}" width="${Math.max(0,w-1.5)}" height="${bh}" fill="${p.c}" rx="2"/>`; if(w>44) s+=`<text x="${x+w/2}" y="${y+bh/2+4}" text-anchor="middle" font-size="10" font-weight="700" fill="#0b0d10">${Math.round(p.v/1000)}</text>`; x+=w; } });
+  s+=`<text x="${x+8}" y="${y+bh/2+4}" font-size="11.5" font-weight="800" fill="#eef0f2">${(r.tot/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})} mi</text>`; });
+ return s+'</svg>';
+}
+function linesSvg(a, b, names){
+ const W=cw(), H=220, L=58, B=26, T=14, n=a.length-1, max=Math.max(...a, ...b);
+ const X=i=>L+i/n*(W-L-12), Y=v=>T+(1-v/max)*(H-T-B);
+ let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">`;
+ [0,.25,.5,.75,1].forEach(f=>{ const y=Y(max*f); s+=`<line x1="${L}" y1="${y}" x2="${W-12}" y2="${y}" stroke="#2a2f36"/><text x="${L-6}" y="${y+3}" text-anchor="end" font-size="9.5" fill="#79838e">${Math.round(max*f/1000).toLocaleString('pt-BR')} mil</text>`; });
+ [0,.5,1].forEach(f=>{ const i=Math.round(n*f); s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="9.5" fill="#79838e">mês ${i}</text>`; });
+ const path=arr=>arr.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
+ s+=`<path d="${path(b)}" fill="none" stroke="#79838e" stroke-width="2.5"/><path d="${path(a)}" fill="none" stroke="#ffffff" stroke-width="2.5"/>`;
+ s+=`<rect x="${L}" y="2" width="9" height="9" fill="#fff" rx="2"/><text x="${L+13}" y="10" font-size="10" fill="#b4bcc6">${esc(names[0])}</text><rect x="${L+150}" y="2" width="9" height="9" fill="#79838e" rx="2"/><text x="${L+163}" y="10" font-size="10" fill="#b4bcc6">${esc(names[1])}</text>`;
+ return s+'</svg>';
+}
+/* ---------- resultado ---------- */
+function renderResultado(){
+ const {M, C, m, g, rm, rc, delta, deltaPct}=R, win=delta>0, empate=Math.abs(deltaPct)<=0.01;
+ const tag=(k)=>({you:'<span class="tag you">você</span>', ref:'<span class="tag ref">referência Tecar</span>', est:'<span class="tag est">estimativa</span>'})[k];
+ const parts=(r)=>[{v:r.deprec,c:'#c3cbd4'},{v:r.juros,c:'#8a94a0'},{v:r.comb,c:'#5aa9ff'},{v:r.arla,c:'#3b7fd1'},{v:r.manut,c:'#39c08f'},{v:r.ipva+r.seg,c:'#e0b04a'}];
+ const compRows=[['Depreciação (preço − residual)','deprec'],['Juros do financiamento','juros'],['Combustível','comb'],['ARLA 32','arla'],['Manutenção','manut'],['IPVA + seguro (estimados)','ipvaseg']];
+ const val=(r,k)=>k==='ipvaseg'?r.ipva+r.seg:r[k];
+ const hdr = empate ? `Empate técnico: a diferença é de ${pct(Math.abs(deltaPct))}, dentro da margem de 1%.` : (win ? `O ${esc(M.nome)} custa <b>${brl(delta)} a menos</b> em ${g.horiz} meses (${pct(deltaPct)}): ${brl2(rc.tcoKm-rm.tcoKm)} por quilômetro.` : `Com as premissas informadas, o ${esc(C.nome)} fica <b>${brl(-delta)} abaixo</b> (${pct(-deltaPct)}). Veja em que bloco e revise as premissas com um consultor.`);
+ $('res').innerHTML = `
+  <h2>${win&&!empate ? 'Seu Mercedes-Benz roda mais barato' : (empate ? 'Os dois custam praticamente o mesmo' : 'Resultado da comparação')}</h2>
+  <p class="sub">${esc(M.nome)} × ${esc(C.nome)} · ${g.km.toLocaleString('pt-BR')} km/mês · ${g.horiz} meses · ${g.pag==='fin'?'financiado':'à vista'}</p>
+  <div class="verdict">${hdr}</div>
+  <div class="kpis">
+   <div class="kp ${win&&!empate?'hi':(empate?'':'neg')} full"><div class="l">${win?'Economia potencial':'Diferença'} em ${g.horiz} meses</div><div class="v">${brl(Math.abs(delta))}<small> · ${pct(Math.abs(deltaPct))}</small></div><div class="d">${brl(Math.abs(delta)/g.horiz)} por mês · ${brl2(Math.abs(rc.tcoKm-rm.tcoKm))} por km${win?' a favor do Mercedes-Benz':' a favor do concorrente'}</div></div>
+   <div class="kp"><div class="l">${esc(m.nome)}</div><div class="v">${brl2(rm.tcoKm)}<small>/km</small></div><div class="d">${brl(rm.tco)} em ${g.horiz} m · ${brl(rm.tcoMes)}/mês</div></div>
+   <div class="kp"><div class="l">${esc(C.nome)}</div><div class="v">${brl2(rc.tcoKm)}<small>/km</small></div><div class="d">${brl(rc.tco)} em ${g.horiz} m · ${brl(rc.tcoMes)}/mês</div></div>
+  </div>
+  <div class="card"><div class="kp" style="border:0;padding:0;background:none"><div class="l">Composição do custo em ${g.horiz} meses</div></div>
+   ${stackSvg([{l:m.nome, parts:parts(rm), tot:rm.tco},{l:C.marca? C.marca+' '+C.modelo.split(' ')[0] : C.nome, parts:parts(rc), tot:rc.tco}].map(r=>({...r, l:r.l.length>14? r.l.slice(0,14)+'…': r.l})))}
+   <p class="note">Valores em R$ mil. <i style="display:inline-block;width:9px;height:9px;background:#c3cbd4;border-radius:2px"></i> depreciação · <i style="display:inline-block;width:9px;height:9px;background:#8a94a0;border-radius:2px"></i> juros · <i style="display:inline-block;width:9px;height:9px;background:#5aa9ff;border-radius:2px"></i> combustível · <i style="display:inline-block;width:9px;height:9px;background:#3b7fd1;border-radius:2px"></i> ARLA · <i style="display:inline-block;width:9px;height:9px;background:#39c08f;border-radius:2px"></i> manutenção · <i style="display:inline-block;width:9px;height:9px;background:#e0b04a;border-radius:2px"></i> IPVA + seguro</p></div>
+  <div class="card"><div class="kp" style="border:0;padding:0;background:none"><div class="l">Custo acumulado, mês a mês</div></div>${linesSvg(rm.cum, rc.cum, [m.nome, C.nome])}<p class="note">Entrada + parcelas + operação; o valor residual (${brl(rm.residual)} × ${brl(rc.residual)}) é abatido no custo total.</p></div>
+  <div class="card"><div class="kp" style="border:0;padding:0;background:none"><div class="l">Componente a componente</div></div>
+   <table><thead><tr><th>Componente</th><th>${esc(m.nome)}</th><th>${esc(C.marca)}</th><th>Δ</th></tr></thead><tbody>
+   ${compRows.map(([l,k])=>{const a=val(rm,k), b=val(rc,k), d=b-a; return `<tr><td>${l}</td><td class="b">${brl(a)}</td><td>${brl(b)}</td><td style="color:${d>0?'var(--good)':d<0?'var(--bad)':'inherit'}">${d>0?'−':d<0?'+':''}${brl(Math.abs(d))}</td></tr>`;}).join('')}
+   <tr class="tot"><td>Custo total (TCO)</td><td>${brl(rm.tco)}</td><td>${brl(rc.tco)}</td><td style="color:${win?'var(--good)':'var(--bad)'}">${win?'−':'+'}${brl(Math.abs(delta))}</td></tr></tbody></table>
+   <p class="note">Δ = quanto o Mercedes-Benz gasta a menos (−) ou a mais (+) em cada componente.</p></div>
+  <div class="card"><div class="kp" style="border:0;padding:0;background:none"><div class="l">Premissas desta simulação</div></div><ul class="prem">
+   <li><span>Preço ${esc(m.nome)} ${tag(S.mbEd.preco!=null?'you':'ref')}</span><span>${brl(M.preco)}</span></li>
+   <li><span>Consumo ${esc(m.nome)} ${tag(S.mbEd.kml!=null?'you':'ref')}</span><span>${n1(M.kml)} km/L</span></li>
+   <li><span>Manutenção ${esc(m.nome)} ${tag(S.mbEd.manut!=null?'you':'ref')}</span><span>${brl2(M.manut)}/km</span></li>
+   <li><span>Preço ${esc(C.nome)} ${tag('you')}</span><span>${brl(C.preco)}</span></li>
+   <li><span>Consumo ${esc(C.nome)} ${tag('you')}</span><span>${n1(C.kml)} km/L</span></li>
+   <li><span>Manutenção ${esc(C.nome)} ${tag(isFinite(S.c.manut)?'you':'est')}</span><span>${brl2(C.manut)}/km${isFinite(S.c.manut)?'':' (igual ao MB)'}</span></li>
+   <li><span>Depreciação ${tag(isFinite(S.c.deprec)?'you':'ref')}</span><span>${n1(M.deprec,0)}% × ${n1(C.deprec,0)}% a.a.</span></li>
+   <li><span>ARLA 32 ${tag('est')}</span><span>${n1(M.arla,1)}% × ${n1(C.arla,1)}% do diesel · ${brl2(g.arlaPreco)}/L</span></li>
+   ${g.pag==='fin'?`<li><span>Financiamento ${tag(S.mbEd.taxa!=null||isFinite(S.c.taxa)?'you':'ref')}</span><span>${n1(g.entrada,0)}% entrada · ${g.prazo} m · ${n1(M.taxa)}% × ${n1(C.taxa)}% a.m.</span></li>`:'<li><span>Compra</span><span>à vista</span></li>'}
+   <li><span>Operação ${tag('you')}</span><span>${g.km.toLocaleString('pt-BR')} km/mês · ${g.horiz} meses · diesel ${brl2(g.diesel)}/L</span></li>
+   <li><span>Inflação do diesel · IPVA · seguro ${tag('est')}</span><span>${n1(g.infDiesel,1)}% a.a. · ${n1(g.ipva,1)}% · ${n1(g.seg,1)}%</span></li>
+  </ul><p class="note">Fora desta simulação: pneus, custo de parada, impostos além do IPVA e diferenças de disponibilidade. O estudo completo da Tecar inclui esses itens com os dados da sua frota. Referências Tecar de ${CONFIG.REF_DATA}.</p></div>`;
+ const resumo = resumoTexto();
+ $('btnWa').href = 'https://wa.me/' + CONFIG.WHATSAPP + '?text=' + encodeURIComponent(resumo);
+ $('btnMail').href = 'mailto:' + CONFIG.EMAIL + '?subject=' + encodeURIComponent('Estudo de TCO · ' + S.lead.nome) + '&body=' + encodeURIComponent(resumo);
+ history.replaceState(null, '', '#r=' + btoa(unescape(encodeURIComponent(JSON.stringify({mb:S.mb, ed:S.mbEd, c:S.c, op:S.op})))));
+}
+function resumoTexto(){
+ const {M, C, g, rm, rc, delta, deltaPct}=R;
+ return `Olá, Tecar! Quero receber meu estudo de TCO personalizado.\n\nNome: ${S.lead.nome}${S.lead.empresa?' · '+S.lead.empresa:''}\nComparação: ${M.nome} × ${C.nome}\nOperação: ${g.km.toLocaleString('pt-BR')} km/mês · ${g.horiz} meses · diesel R$ ${n1(g.diesel)} · ${g.pag==='fin'?g.entrada+'% entrada, '+g.prazo+' meses':'à vista'}\nResultado: ${M.nome} R$ ${n1(rm.tcoKm)}/km × ${C.nome} R$ ${n1(rc.tcoKm)}/km → ${delta>=0?'economia':'diferença'} de ${brl(Math.abs(delta))} (${pct(Math.abs(deltaPct))}) em ${g.horiz} meses\n\nLink da simulação: ${location.href}`;
+}
+function copiarLink(){ const u=location.href; (navigator.clipboard? navigator.clipboard.writeText(u) : Promise.reject()).then(()=>toast('Link copiado.')).catch(()=>prompt('Copie o link:', u)); }
+/* ---------- lead ---------- */
+function leadPayload(){ const {M,C,g,rm,rc,delta,deltaPct}=R; return {origem:'simule.html', quando:S.lead.quando, nome:S.lead.nome, telefone:S.lead.fone, email:S.lead.email, empresa:S.lead.empresa, lgpd:S.lead.lgpd, autoriza_contato:S.lead.contato, mb:M.nome, concorrente:C.nome, premissas:{M, C, operacao:g, mb_editado:S.mbEd}, resultado:{tco_mb:Math.round(rm.tco), tco_conc:Math.round(rc.tco), km_mb:+rm.tcoKm.toFixed(2), km_conc:+rc.tcoKm.toFixed(2), economia:Math.round(delta), economia_pct:+(deltaPct*100).toFixed(1)}, link:location.href, ua:navigator.userAgent}; }
+function enviarLead(){
+ const p=leadPayload(); try{ const all=JSON.parse(localStorage.getItem('tecar-tco-leads')||'[]'); all.push(p); localStorage.setItem('tecar-tco-leads', JSON.stringify(all.slice(-50))); }catch(e){}
+ if(!CONFIG.LEAD_ENDPOINT){ $('leadNote').textContent='Ao tocar em WhatsApp ou e-mail, sua simulação vai para a equipe da Tecar com as premissas acima.'; return; }
+ fetch(CONFIG.LEAD_ENDPOINT, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(p)})
+  .then(()=>{ $('leadNote').textContent='Simulação registrada. Um consultor da Tecar entra em contato se você autorizou.'; })
+  .catch(()=>{ $('leadNote').textContent='Não foi possível registrar automaticamente; use o WhatsApp ou o e-mail acima.'; });
+}
+function reiniciar(){ try{localStorage.removeItem('tecar-tco-draft')}catch(e){} history.replaceState(null,'',location.pathname); location.reload(); }
+/* ---------- boot ---------- */
+renderModels(); pickMB('a2653');
+(function(){
+ const h=location.hash.match(/^#r=(.+)$/);
+ if(h){ try{ const d=JSON.parse(decodeURIComponent(escape(atob(h[1])))); if(d.mb&&MB.some(x=>x.id===d.mb)){ pickMB(d.mb); S.mbEd=d.ed||{}; if(S.mbEd.preco) $('mbPreco').value=S.mbEd.preco.toLocaleString('pt-BR'); if(S.mbEd.kml) $('mbKml').value=n1(S.mbEd.kml); S.c=d.c||{}; $('cMarca').value=S.c.marca||''; $('cModelo').value=S.c.modelo||''; $('cPreco').value=S.c.preco?S.c.preco.toLocaleString('pt-BR'):''; $('cKml').value=S.c.kml?n1(S.c.kml):''; S.op=d.op||{}; if(S.op.km){ $('km').value=S.op.km; $('diesel').value=n1(S.op.diesel); $('horiz').value=S.op.horiz; $('pag').value=S.op.pag; $('entrada').value=S.op.entrada; $('prazo').value=S.op.prazo; } toast('Simulação carregada pelo link. Confirme seus dados para ver o resultado.'); } }catch(e){} }
+})();
+</script>
+</body>
+</html>
