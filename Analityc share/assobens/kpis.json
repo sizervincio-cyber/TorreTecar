@@ -1,7 +1,7 @@
 {
- "gerado_em": "2026-10-12",
- "data_maxima": "2026-10-08",
- "total_mercado": 26596,
+ "gerado_em": "2026-10-13",
+ "data_maxima": "2026-10-09",
+ "total_mercado": 26600,
  "total_mercedes_benz": 4034,
  "market_share_mb": 15.17,
  "ultimos_12_meses": {
@@ -19,56 +19,56 @@
    "2026-09",
    "2026-10"
   ],
-  "total_mercado": 3461,
+  "total_mercado": 3465,
   "total_mercedes_benz": 549,
-  "market_share_mb": 15.86,
+  "market_share_mb": 15.84,
   "por_marca": [
    {
     "chave": "VW",
-    "emplacamentos": 1229,
-    "share": 35.51,
+    "emplacamentos": 1232,
+    "share": 35.56,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "VOLVO",
     "emplacamentos": 672,
-    "share": 19.42,
+    "share": 19.39,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "M.BENZ",
     "emplacamentos": 549,
-    "share": 15.86,
+    "share": 15.84,
     "mercedes_benz": 549,
     "share_mb_na_chave": 100.0
    },
    {
     "chave": "IVECO",
-    "emplacamentos": 466,
-    "share": 13.46,
+    "emplacamentos": 467,
+    "share": 13.48,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "SCANIA",
     "emplacamentos": 273,
-    "share": 7.89,
+    "share": 7.88,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "FOTON",
     "emplacamentos": 140,
-    "share": 4.05,
+    "share": 4.04,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "DAF",
     "emplacamentos": 121,
-    "share": 3.5,
+    "share": 3.49,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
@@ -98,28 +98,28 @@
    {
     "chave": "SEMIPESADOS",
     "emplacamentos": 1434,
-    "share": 41.43,
+    "share": 41.39,
     "mercedes_benz": 231,
     "share_mb_na_chave": 16.11
    },
    {
     "chave": "EXTRAPESADOS",
     "emplacamentos": 1408,
-    "share": 40.68,
+    "share": 40.63,
     "mercedes_benz": 127,
     "share_mb_na_chave": 9.02
    },
    {
     "chave": "MEDIOS",
-    "emplacamentos": 426,
-    "share": 12.31,
+    "emplacamentos": 430,
+    "share": 12.41,
     "mercedes_benz": 112,
-    "share_mb_na_chave": 26.29
+    "share_mb_na_chave": 26.05
    },
    {
     "chave": "LEVES",
     "emplacamentos": 183,
-    "share": 5.29,
+    "share": 5.28,
     "mercedes_benz": 79,
     "share_mb_na_chave": 43.17
    },
@@ -171,9 +171,9 @@
   },
   {
    "periodo": "2026",
-   "total_mercado": 2903,
+   "total_mercado": 2907,
    "mercedes_benz": 479,
-   "market_share_mb": 16.5
+   "market_share_mb": 16.48
   }
  ],
  "por_mes": [
@@ -665,23 +665,23 @@
   },
   {
    "periodo": "2026-10",
-   "total_mercado": 74,
+   "total_mercado": 78,
    "mercedes_benz": 13,
-   "market_share_mb": 17.57
+   "market_share_mb": 16.67
   }
  ],
  "por_marca": [
   {
    "chave": "VW",
-   "emplacamentos": 9509,
-   "share": 35.75,
+   "emplacamentos": 9512,
+   "share": 35.76,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
   },
   {
    "chave": "VOLVO",
    "emplacamentos": 5451,
-   "share": 20.5,
+   "share": 20.49,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
   },
@@ -694,7 +694,7 @@
   },
   {
    "chave": "IVECO",
-   "emplacamentos": 2782,
+   "emplacamentos": 2783,
    "share": 10.46,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
@@ -773,10 +773,10 @@
   },
   {
    "chave": "MEDIOS",
-   "emplacamentos": 3050,
-   "share": 11.47,
+   "emplacamentos": 3054,
+   "share": 11.48,
    "mercedes_benz": 572,
-   "share_mb_na_chave": 18.75
+   "share_mb_na_chave": 18.73
   },
   {
    "chave": "LEVES",
@@ -803,10 +803,10 @@
   },
   {
    "chave": "4X2",
-   "emplacamentos": 8926,
-   "share": 33.56,
+   "emplacamentos": 8930,
+   "share": 33.57,
    "mercedes_benz": 1680,
-   "share_mb_na_chave": 18.82
+   "share_mb_na_chave": 18.81
   },
   {
    "chave": "6X2",
@@ -847,21 +847,21 @@
  "por_area_operacional": [
   {
    "chave": "GOIANIA",
-   "emplacamentos": 14002,
+   "emplacamentos": 14004,
    "share": 52.65,
    "mercedes_benz": 2158,
    "share_mb_na_chave": 15.41
   },
   {
    "chave": "PALMAS",
-   "emplacamentos": 5580,
+   "emplacamentos": 5581,
    "share": 20.98,
    "mercedes_benz": 660,
    "share_mb_na_chave": 11.83
   },
   {
    "chave": "ANAPOLIS",
-   "emplacamentos": 4632,
+   "emplacamentos": 4633,
    "share": 17.42,
    "mercedes_benz": 862,
    "share_mb_na_chave": 18.61
@@ -884,14 +884,14 @@
  "por_uf": [
   {
    "chave": "GO",
-   "emplacamentos": 18636,
+   "emplacamentos": 18639,
    "share": 70.07,
    "mercedes_benz": 3021,
    "share_mb_na_chave": 16.21
   },
   {
    "chave": "TO",
-   "emplacamentos": 5596,
+   "emplacamentos": 5597,
    "share": 21.04,
    "mercedes_benz": 663,
    "share_mb_na_chave": 11.85
@@ -908,7 +908,7 @@
   {
    "chave": "ON ROAD",
    "emplacamentos": 24864,
-   "share": 93.49,
+   "share": 93.47,
    "mercedes_benz": 3529,
    "share_mb_na_chave": 14.19
   },
@@ -921,16 +921,16 @@
   },
   {
    "chave": "(vazio)",
-   "emplacamentos": 293,
-   "share": 1.1,
+   "emplacamentos": 297,
+   "share": 1.12,
    "mercedes_benz": 62,
-   "share_mb_na_chave": 21.16
+   "share_mb_na_chave": 20.88
   }
  ],
  "top_municipios": [
   {
    "chave": "GOIANIA|GO",
-   "emplacamentos": 6168,
+   "emplacamentos": 6169,
    "share": 23.19,
    "mercedes_benz": 1095,
    "share_mb_na_chave": 17.75
@@ -1021,10 +1021,10 @@
   },
   {
    "chave": "TRINDADE|GO",
-   "emplacamentos": 280,
-   "share": 1.05,
+   "emplacamentos": 281,
+   "share": 1.06,
    "mercedes_benz": 132,
-   "share_mb_na_chave": 47.14
+   "share_mb_na_chave": 46.98
   },
   {
    "chave": "AGUA BOA|MT",
@@ -1035,10 +1035,10 @@
   },
   {
    "chave": "GOIANESIA|GO",
-   "emplacamentos": 256,
-   "share": 0.96,
+   "emplacamentos": 257,
+   "share": 0.97,
    "mercedes_benz": 35,
-   "share_mb_na_chave": 13.67
+   "share_mb_na_chave": 13.62
   },
   {
    "chave": "ITABERAI|GO",
@@ -1991,105 +1991,105 @@
     "posicao": 1,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 11.180",
-    "emplacamentos": 145,
-    "market_share": 34.04,
-    "total_segmento": 426
+    "emplacamentos": 148,
+    "market_share": 34.42,
+    "total_segmento": 430
    },
    {
     "posicao": 2,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 11-190",
-    "emplacamentos": 42,
-    "market_share": 9.86,
-    "total_segmento": 426
+    "emplacamentos": 43,
+    "market_share": 10.0,
+    "total_segmento": 430
    },
    {
     "posicao": 3,
     "fabricante": "VW",
     "modelo": "VW/14.210 CRM 4X2",
     "emplacamentos": 39,
-    "market_share": 9.15,
-    "total_segmento": 426
+    "market_share": 9.07,
+    "total_segmento": 430
    },
    {
     "posicao": 4,
     "fabricante": "FOTON",
     "modelo": "FOTON/AUMARK S 1217A",
     "emplacamentos": 36,
-    "market_share": 8.45,
-    "total_segmento": 426
+    "market_share": 8.37,
+    "total_segmento": 430
    },
    {
     "posicao": 5,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 1419 CL",
     "emplacamentos": 32,
-    "market_share": 7.51,
-    "total_segmento": 426
+    "market_share": 7.44,
+    "total_segmento": 430
    },
    {
     "posicao": 6,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117",
     "emplacamentos": 32,
-    "market_share": 7.51,
-    "total_segmento": 426
+    "market_share": 7.44,
+    "total_segmento": 430
    },
    {
     "posicao": 7,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117CE",
     "emplacamentos": 30,
-    "market_share": 7.04,
-    "total_segmento": 426
+    "market_share": 6.98,
+    "total_segmento": 430
    },
    {
     "posicao": 8,
     "fabricante": "FOTON",
     "modelo": "I/FOTON AUMARK S 1217A",
     "emplacamentos": 17,
-    "market_share": 3.99,
-    "total_segmento": 426
+    "market_share": 3.95,
+    "total_segmento": 430
    },
    {
     "posicao": 9,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 13.180",
     "emplacamentos": 15,
-    "market_share": 3.52,
-    "total_segmento": 426
+    "market_share": 3.49,
+    "total_segmento": 430
    },
    {
     "posicao": 10,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY MTR 11.180 B",
     "emplacamentos": 12,
-    "market_share": 2.82,
-    "total_segmento": 426
+    "market_share": 2.79,
+    "total_segmento": 430
    },
    {
     "posicao": 11,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117 CE",
     "emplacamentos": 11,
-    "market_share": 2.58,
-    "total_segmento": 426
+    "market_share": 2.56,
+    "total_segmento": 430
    },
    {
     "posicao": 12,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 11.180 4X4",
     "emplacamentos": 6,
-    "market_share": 1.41,
-    "total_segmento": 426
+    "market_share": 1.4,
+    "total_segmento": 430
    },
    {
     "posicao": 13,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1417 CE",
     "emplacamentos": 4,
-    "market_share": 0.94,
-    "total_segmento": 426
+    "market_share": 0.93,
+    "total_segmento": 430
    },
    {
     "posicao": 14,
@@ -2097,7 +2097,7 @@
     "modelo": "M.BENZ/ACCELO 1417CE",
     "emplacamentos": 2,
     "market_share": 0.47,
-    "total_segmento": 426
+    "total_segmento": 430
    },
    {
     "posicao": 15,
@@ -2105,7 +2105,7 @@
     "modelo": "VW/DELIVERY DPCE 11.180",
     "emplacamentos": 2,
     "market_share": 0.47,
-    "total_segmento": 426
+    "total_segmento": 430
    },
    {
     "posicao": 16,
@@ -2113,7 +2113,7 @@
     "modelo": "M.BENZ/ACCELO 1417",
     "emplacamentos": 1,
     "market_share": 0.23,
-    "total_segmento": 426
+    "total_segmento": 430
    }
   ],
   "LEVES": [

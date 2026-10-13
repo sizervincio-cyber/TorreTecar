@@ -13,7 +13,7 @@
   "2026-09",
   "2026-10"
  ],
- "base": 3461,
+ "base": 3465,
  "segmentos": {
   "SEMIPESADOS": [
    {
@@ -184,81 +184,81 @@
     "posicao": 1,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 11.180",
-    "emplacamentos": 145,
-    "market_share": 34.04,
-    "total_segmento": 426
+    "emplacamentos": 148,
+    "market_share": 34.42,
+    "total_segmento": 430
    },
    {
     "posicao": 2,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 11-190",
-    "emplacamentos": 42,
-    "market_share": 9.86,
-    "total_segmento": 426
+    "emplacamentos": 43,
+    "market_share": 10.0,
+    "total_segmento": 430
    },
    {
     "posicao": 3,
     "fabricante": "VW",
     "modelo": "VW/14.210 CRM 4X2",
     "emplacamentos": 39,
-    "market_share": 9.15,
-    "total_segmento": 426
+    "market_share": 9.07,
+    "total_segmento": 430
    },
    {
     "posicao": 4,
     "fabricante": "FOTON",
     "modelo": "FOTON/AUMARK S 1217A",
     "emplacamentos": 36,
-    "market_share": 8.45,
-    "total_segmento": 426
+    "market_share": 8.37,
+    "total_segmento": 430
    },
    {
     "posicao": 5,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 1419 CL",
     "emplacamentos": 32,
-    "market_share": 7.51,
-    "total_segmento": 426
+    "market_share": 7.44,
+    "total_segmento": 430
    },
    {
     "posicao": 6,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117",
     "emplacamentos": 32,
-    "market_share": 7.51,
-    "total_segmento": 426
+    "market_share": 7.44,
+    "total_segmento": 430
    },
    {
     "posicao": 7,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117CE",
     "emplacamentos": 30,
-    "market_share": 7.04,
-    "total_segmento": 426
+    "market_share": 6.98,
+    "total_segmento": 430
    },
    {
     "posicao": 8,
     "fabricante": "FOTON",
     "modelo": "I/FOTON AUMARK S 1217A",
     "emplacamentos": 17,
-    "market_share": 3.99,
-    "total_segmento": 426
+    "market_share": 3.95,
+    "total_segmento": 430
    },
    {
     "posicao": 9,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 13.180",
     "emplacamentos": 15,
-    "market_share": 3.52,
-    "total_segmento": 426
+    "market_share": 3.49,
+    "total_segmento": 430
    },
    {
     "posicao": 10,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY MTR 11.180 B",
     "emplacamentos": 12,
-    "market_share": 2.82,
-    "total_segmento": 426
+    "market_share": 2.79,
+    "total_segmento": 430
    }
   ],
   "LEVES": [
