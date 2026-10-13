@@ -190,8 +190,8 @@ footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-si
   <div class="final">
    <h3>Receba seu estudo personalizado e descubra o impacto na rentabilidade da sua frota.</h3>
    <p id="finalTxt"></p>
-   <a class="cta wa" id="btnWa" href="#" target="_blank" rel="noopener">Confirmar meu WhatsApp</a>
-   <a class="cta sec" id="btnMail" href="#">Prefiro receber por e-mail</a>
+   <a class="cta wa" id="btnWa" href="#" target="_blank" rel="noopener">Falar com a Tecar agora pelo WhatsApp</a>
+   <a class="cta sec" id="btnMail" href="#">Enviar por e-mail também</a>
    <p class="note" id="leadNote"></p>
   </div>
   <div class="nav"><button class="cta sec" onclick="go(4)">Revisar dados</button><button class="cta sec" onclick="reiniciar()">Nova simulação</button></div>
@@ -206,9 +206,9 @@ footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-si
 'use strict';
 /* ===================== CONFIGURAÇÃO (edite aqui) ===================== */
 const CONFIG = {
- WHATSAPP: '5562999999999',            // número da Tecar que recebe os pedidos de estudo (DDI+DDD+número, só dígitos)
+ WHATSAPP: '5562998621007',            // WhatsApp da Tecar (Matheus) que recebe os pedidos de estudo (DDI+DDD+número, só dígitos)
  EMAIL: 'comercial@tecar.com.br',      // e-mail que recebe os pedidos de estudo
- LEAD_ENDPOINT: '',                     // URL de webhook (Google Apps Script, Make, CRM) que recebe o lead em JSON; vazio = só WhatsApp/e-mail
+ LEAD_ENDPOINT: '',                     // URL do Web App (Google Apps Script, docs/leads-apps-script.gs) que grava o lead; vazio = fica só no navegador
  REF_DATA: 'outubro de 2026'
 };
 /* Catálogo Mercedes-Benz: ficha técnica oficial (dossiê Tecar) + referências comerciais do simulador de TCO da Tecar. */
@@ -347,7 +347,7 @@ function renderResultado(){
    </ul>
    <p class="note">Cada premissa vem identificada no estudo: informada por você, referência Tecar ou estimativa. Os dois veículos são comparados com os mesmos critérios.</p>
   </div>`;
- $('finalTxt').textContent = 'Toque abaixo para confirmar seu número e abrir a conversa com a Tecar; o consultor envia o estudo por lá. Se preferir, peça por e-mail.';
+ $('finalTxt').textContent = 'Seus dados já foram registrados: não precisa fazer mais nada. Se quiser adiantar a conversa, toque abaixo e fale com o consultor agora.';
  const resumo = resumoTexto();
  $('btnWa').href = 'https://wa.me/' + CONFIG.WHATSAPP + '?text=' + encodeURIComponent(resumo);
  $('btnMail').href = 'mailto:' + CONFIG.EMAIL + '?subject=' + encodeURIComponent('Estudo de TCO · ' + S.lead.nome) + '&body=' + encodeURIComponent(resumo);
@@ -361,10 +361,10 @@ function codigo(){ return 'TCO-' + new Date(S.lead.quando).toISOString().slice(2
 function leadPayload(){ const {M,C,g,rm,rc,delta,deltaPct}=R; return {origem:'simule.html', codigo:codigo(), quando:S.lead.quando, nome:S.lead.nome, telefone:S.lead.fone, email:S.lead.email, empresa:S.lead.empresa, lgpd:S.lead.lgpd, autoriza_contato:S.lead.contato, mb:M.nome, concorrente:C.nome, premissas:{M, C, operacao:g, mb_editado:S.mbEd}, resultado:{tco_mb:Math.round(rm.tco), tco_conc:Math.round(rc.tco), km_mb:+rm.tcoKm.toFixed(2), km_conc:+rc.tcoKm.toFixed(2), economia:Math.round(delta), economia_pct:+(deltaPct*100).toFixed(1), componentes_mb:{juros:Math.round(rm.juros),combustivel:Math.round(rm.comb),arla:Math.round(rm.arla),manutencao:Math.round(rm.manut),ipva_seguro:Math.round(rm.ipva+rm.seg),depreciacao:Math.round(rm.deprec)}, componentes_conc:{juros:Math.round(rc.juros),combustivel:Math.round(rc.comb),arla:Math.round(rc.arla),manutencao:Math.round(rc.manut),ipva_seguro:Math.round(rc.ipva+rc.seg),depreciacao:Math.round(rc.deprec)}}, ua:navigator.userAgent}; }
 function enviarLead(){
  const p=leadPayload(); try{ const all=JSON.parse(localStorage.getItem('tecar-tco-leads')||'[]'); all.push(p); localStorage.setItem('tecar-tco-leads', JSON.stringify(all.slice(-50))); }catch(e){}
- if(!CONFIG.LEAD_ENDPOINT){ $('leadNote').textContent='A confirmação pelo WhatsApp (ou e-mail) é o que envia sua simulação para a equipe da Tecar.'; return; }
+ if(!CONFIG.LEAD_ENDPOINT){ $('leadNote').textContent='Simulação registrada. O consultor da Tecar envia o estudo no WhatsApp informado.'; return; }
  fetch(CONFIG.LEAD_ENDPOINT, {method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify(p)})
-  .then(()=>{ $('leadNote').textContent='Simulação registrada. Um consultor da Tecar entra em contato se você autorizou.'; })
-  .catch(()=>{ $('leadNote').textContent='Não foi possível registrar automaticamente; use o WhatsApp ou o e-mail acima.'; });
+  .then(()=>{ $('leadNote').textContent='Simulação registrada. O consultor da Tecar envia o estudo no WhatsApp informado.'; })
+  .catch(()=>{ $('leadNote').textContent='Não conseguimos registrar automaticamente: toque no botão do WhatsApp para garantir o envio.'; });
 }
 function reiniciar(){ try{localStorage.removeItem('tecar-tco-draft')}catch(e){} location.reload(); }
 /* ---------- boot ---------- */
