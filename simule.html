@@ -321,9 +321,9 @@ function calcular(){
 /* ---------- gráficos SVG ---------- */
 function cw(){ return Math.max(300, Math.min(640, (document.querySelector('.wrap').clientWidth||640) - 36)); }
 function stackSvg(rows){
- const W=cw(), L=W<440?82:120, Rr=W<440?56:70, bh=38, gap=18, h=rows.length*(bh+gap)+8, max=Math.max(...rows.map(r=>r.parts.reduce((s,p)=>s+p.v,0)));
+ const W=cw(), nar=W<440, L=nar?0:120, Rr=nar?56:70, bh=38, gap=nar?34:18, top=nar?22:4, h=rows.length*(bh+gap)+top+4, max=Math.max(...rows.map(r=>r.parts.reduce((s,p)=>s+p.v,0)));
  let s=`<svg viewBox="0 0 ${W} ${h}" width="100%" style="display:block">`;
- rows.forEach((r,i)=>{ let x=L; const y=4+i*(bh+gap); s+=`<text x="${L-8}" y="${y+bh/2+4}" text-anchor="end" font-size="11" font-weight="700" fill="#eef0f2">${esc(r.l)}</text>`;
+ rows.forEach((r,i)=>{ let x=L; const y=top+i*(bh+gap); s+= nar ? `<text x="0" y="${y-7}" font-size="11.5" font-weight="700" fill="#eef0f2">${esc(r.l)}</text>` : `<text x="${L-8}" y="${y+bh/2+4}" text-anchor="end" font-size="11" font-weight="700" fill="#eef0f2">${esc(r.l)}</text>`;
   r.parts.forEach(p=>{ const w=Math.max(0,p.v)/max*(W-L-Rr); if(w>0){ s+=`<rect x="${x}" y="${y}" width="${Math.max(0,w-1.5)}" height="${bh}" fill="${p.c}" rx="2"/>`; if(w>44) s+=`<text x="${x+w/2}" y="${y+bh/2+4}" text-anchor="middle" font-size="10" font-weight="700" fill="#0b0d10">${Math.round(p.v/1000)}</text>`; x+=w; } });
   s+=`<text x="${x+8}" y="${y+bh/2+4}" font-size="11.5" font-weight="800" fill="#eef0f2">${(r.tot/1e6).toLocaleString('pt-BR',{maximumFractionDigits:2})} mi</text>`; });
  return s+'</svg>';
@@ -357,7 +357,7 @@ function renderResultado(){
    <div class="kp"><div class="l">${esc(C.nome)}</div><div class="v">${brl2(rc.tcoKm)}<small>/km</small></div><div class="d">${brl(rc.tco)} em ${g.horiz} m · ${brl(rc.tcoMes)}/mês</div></div>
   </div>
   <div class="card"><div class="kp" style="border:0;padding:0;background:none"><div class="l">Composição do custo em ${g.horiz} meses</div></div>
-   ${stackSvg([{l:m.nome, parts:parts(rm), tot:rm.tco},{l:C.marca? C.marca+' '+C.modelo.split(' ')[0] : C.nome, parts:parts(rc), tot:rc.tco}].map(r=>({...r, l:r.l.length>14? r.l.slice(0,14)+'…': r.l})))}
+   ${stackSvg([{l:'Mercedes-Benz '+m.nome, parts:parts(rm), tot:rm.tco},{l:C.nome, parts:parts(rc), tot:rc.tco}].map(r=>({...r, l:(cw()<440? r.l : (r.l.length>14? r.l.slice(0,14)+'…': r.l))})))}
    <p class="note">Valores em R$ mil. <i style="display:inline-block;width:9px;height:9px;background:#c3cbd4;border-radius:2px"></i> depreciação · <i style="display:inline-block;width:9px;height:9px;background:#8a94a0;border-radius:2px"></i> juros · <i style="display:inline-block;width:9px;height:9px;background:#5aa9ff;border-radius:2px"></i> combustível · <i style="display:inline-block;width:9px;height:9px;background:#3b7fd1;border-radius:2px"></i> ARLA · <i style="display:inline-block;width:9px;height:9px;background:#39c08f;border-radius:2px"></i> manutenção · <i style="display:inline-block;width:9px;height:9px;background:#e0b04a;border-radius:2px"></i> IPVA + seguro</p></div>
   <div class="card"><div class="kp" style="border:0;padding:0;background:none"><div class="l">Custo acumulado, mês a mês</div></div>${linesSvg(rm.cum, rc.cum, [m.nome, C.nome])}<p class="note">Entrada + parcelas + operação; o valor residual (${brl(rm.residual)} × ${brl(rc.residual)}) é abatido no custo total.</p></div>
   <div class="card"><div class="kp" style="border:0;padding:0;background:none"><div class="l">Componente a componente</div></div>
