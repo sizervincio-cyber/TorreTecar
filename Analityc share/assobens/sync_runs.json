@@ -2222,5 +2222,44 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20261014-195019",
+  "started_at": "2026-10-14T19:50:19-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-10-14T19:52:00-03:00",
+  "status": "success",
+  "file_name": "1950_emplacamentos.xlsx",
+  "file_hash": "04a35509db517fe7a847f1ce95bb89097bf188d150b30499ca25f20a8fddde06",
+  "rows_downloaded": 2925,
+  "rows_valid": 2924,
+  "rows_imported": 0,
+  "rows_updated": 0,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "rows_enriched": 0,
+  "error_message": null,
+  "duration_seconds": 101.5,
+  "steps": [
+   "19:50:25 tentativa 1/3",
+   "19:50:39 login concluído no portal",
+   "19:50:43 BI autenticado",
+   "19:51:03 download concluído: 1950_emplacamentos.xlsx",
+   "19:51:40 enriquecimento: 54 chassis sem proprietário · janela 2026-01-01 → 2026-10-14",
+   "19:51:58 download de enriquecimento concluído: 1950_enriquecimento.xlsx",
+   "19:51:58 arquivo lido: aba 'Export', 2925 linhas, 17 colunas mapeadas",
+   "19:51:59 normalização: {'validas': 2924, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "19:51:59 validação: nível ok, qualidade 74/100",
+   "19:51:59 upsert por CHASSI: 0 inseridos, 0 atualizados, 2924 iguais (matriz 26618)",
+   "19:52:00 enriquecimento: 2871 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 0 atualizados/com proprietário · 2871 iguais · 0 ignorados",
+   "19:52:00 KPIs: mercado 26618, MB 4043, share 15.19% (12m: 16.02%); Top 10 em 5 segmentos",
+   "19:52:00 conferência ASSOBENS × Torre: Total Mercado 2924/2925 (Δ1); Total Mercedes-Benz 488/488 (Δ0); Market Share MB (%) 16.7/16.68 (Δ-0.02)",
+   "19:52:00 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
