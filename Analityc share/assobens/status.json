@@ -1,30 +1,31 @@
 {
  "fonte": "ASSOBENS",
- "ultima_execucao": "2026-10-14T19:52:00-03:00",
- "status": "success",
- "status_label": "Atualizado",
+ "ultima_execucao": "2026-10-15T12:28:49-03:00",
+ "status": "partial",
+ "status_label": "Atualizado parcialmente",
  "mensagem": "",
  "erro": null,
- "proxima_execucao": "2026-10-15T08:00-03:00",
+ "proxima_execucao": "2026-10-15T17:00-03:00",
  "agenda_local": "0 8,12,17 * * *",
  "timezone": "America/Sao_Paulo",
  "trigger_type": "scheduler",
  "executed_by": "sizervincio-cyber",
- "registros_processados": 2925,
- "registros_importados": 0,
+ "registros_processados": 2933,
+ "registros_importados": 8,
  "registros_atualizados": 0,
  "registros_rejeitados": 1,
- "precos_atualizados": 4,
+ "precos_atualizados": 0,
  "proprietarios_enriquecidos": 0,
  "base_valida": {
-  "atualizado_em": "2026-10-14T19:52:00-03:00",
-  "registros_processados": 2925,
-  "importados": 0,
+  "atualizado_em": "2026-10-15T12:28:49-03:00",
+  "registros_processados": 2933,
+  "importados": 8,
   "atualizados": 0,
-  "precos_atualizados": 4,
-  "run_id": "20261014-195019"
+  "precos_atualizados": 0,
+  "run_id": "20261015-122647"
  },
  "avisos": [
+  "comparativo de preços não capturado: nenhum preço encontrado no Comparativo de Preços (gráfico 'Valor Indecx' ausente)",
   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
  ]
 }

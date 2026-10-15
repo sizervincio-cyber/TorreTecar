@@ -1,8 +1,8 @@
 {
- "gerado_em": "2026-10-14",
- "data_maxima": "2026-10-13",
- "total_mercado": 26618,
- "total_mercedes_benz": 4043,
+ "gerado_em": "2026-10-15",
+ "data_maxima": "2026-10-14",
+ "total_mercado": 26626,
+ "total_mercedes_benz": 4045,
  "market_share_mb": 15.19,
  "ultimos_12_meses": {
   "meses": [
@@ -19,49 +19,49 @@
    "2026-09",
    "2026-10"
   ],
-  "total_mercado": 3483,
-  "total_mercedes_benz": 558,
-  "market_share_mb": 16.02,
+  "total_mercado": 3491,
+  "total_mercedes_benz": 560,
+  "market_share_mb": 16.04,
   "por_marca": [
    {
     "chave": "VW",
-    "emplacamentos": 1235,
-    "share": 35.46,
+    "emplacamentos": 1240,
+    "share": 35.52,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "VOLVO",
     "emplacamentos": 677,
-    "share": 19.44,
+    "share": 19.39,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "M.BENZ",
-    "emplacamentos": 558,
-    "share": 16.02,
-    "mercedes_benz": 558,
+    "emplacamentos": 560,
+    "share": 16.04,
+    "mercedes_benz": 560,
     "share_mb_na_chave": 100.0
    },
    {
     "chave": "IVECO",
-    "emplacamentos": 468,
-    "share": 13.44,
+    "emplacamentos": 469,
+    "share": 13.43,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "SCANIA",
     "emplacamentos": 273,
-    "share": 7.84,
+    "share": 7.82,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
    {
     "chave": "FOTON",
     "emplacamentos": 140,
-    "share": 4.02,
+    "share": 4.01,
     "mercedes_benz": 0,
     "share_mb_na_chave": 0.0
    },
@@ -97,31 +97,31 @@
   "por_subsegmento": [
    {
     "chave": "SEMIPESADOS",
-    "emplacamentos": 1443,
-    "share": 41.43,
+    "emplacamentos": 1446,
+    "share": 41.42,
     "mercedes_benz": 237,
-    "share_mb_na_chave": 16.42
+    "share_mb_na_chave": 16.39
    },
    {
     "chave": "EXTRAPESADOS",
     "emplacamentos": 1414,
-    "share": 40.6,
+    "share": 40.5,
     "mercedes_benz": 128,
     "share_mb_na_chave": 9.05
    },
    {
     "chave": "MEDIOS",
-    "emplacamentos": 433,
-    "share": 12.43,
+    "emplacamentos": 435,
+    "share": 12.46,
     "mercedes_benz": 114,
-    "share_mb_na_chave": 26.33
+    "share_mb_na_chave": 26.21
    },
    {
     "chave": "LEVES",
-    "emplacamentos": 183,
-    "share": 5.25,
-    "mercedes_benz": 79,
-    "share_mb_na_chave": 43.17
+    "emplacamentos": 186,
+    "share": 5.33,
+    "mercedes_benz": 81,
+    "share_mb_na_chave": 43.55
    },
    {
     "chave": "PESADOS",
@@ -171,9 +171,9 @@
   },
   {
    "periodo": "2026",
-   "total_mercado": 2925,
-   "mercedes_benz": 488,
-   "market_share_mb": 16.68
+   "total_mercado": 2933,
+   "mercedes_benz": 490,
+   "market_share_mb": 16.71
   }
  ],
  "por_mes": [
@@ -665,15 +665,15 @@
   },
   {
    "periodo": "2026-10",
-   "total_mercado": 96,
-   "mercedes_benz": 22,
-   "market_share_mb": 22.92
+   "total_mercado": 104,
+   "mercedes_benz": 24,
+   "market_share_mb": 23.08
   }
  ],
  "por_marca": [
   {
    "chave": "VW",
-   "emplacamentos": 9515,
+   "emplacamentos": 9520,
    "share": 35.75,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
@@ -681,20 +681,20 @@
   {
    "chave": "VOLVO",
    "emplacamentos": 5456,
-   "share": 20.5,
+   "share": 20.49,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
   },
   {
    "chave": "M.BENZ",
-   "emplacamentos": 4043,
+   "emplacamentos": 4045,
    "share": 15.19,
-   "mercedes_benz": 4043,
+   "mercedes_benz": 4045,
    "share_mb_na_chave": 100.0
   },
   {
    "chave": "IVECO",
-   "emplacamentos": 2784,
+   "emplacamentos": 2785,
    "share": 10.46,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
@@ -760,30 +760,30 @@
   {
    "chave": "EXTRAPESADOS",
    "emplacamentos": 12677,
-   "share": 47.63,
+   "share": 47.61,
    "mercedes_benz": 1301,
    "share_mb_na_chave": 10.26
   },
   {
    "chave": "SEMIPESADOS",
-   "emplacamentos": 8882,
+   "emplacamentos": 8885,
    "share": 33.37,
    "mercedes_benz": 1388,
-   "share_mb_na_chave": 15.63
+   "share_mb_na_chave": 15.62
   },
   {
    "chave": "MEDIOS",
-   "emplacamentos": 3057,
-   "share": 11.48,
+   "emplacamentos": 3059,
+   "share": 11.49,
    "mercedes_benz": 574,
-   "share_mb_na_chave": 18.78
+   "share_mb_na_chave": 18.76
   },
   {
    "chave": "LEVES",
-   "emplacamentos": 1992,
-   "share": 7.48,
-   "mercedes_benz": 780,
-   "share_mb_na_chave": 39.16
+   "emplacamentos": 1995,
+   "share": 7.49,
+   "mercedes_benz": 782,
+   "share_mb_na_chave": 39.2
   },
   {
    "chave": "PESADOS",
@@ -797,23 +797,23 @@
   {
    "chave": "6X4",
    "emplacamentos": 9495,
-   "share": 35.67,
+   "share": 35.66,
    "mercedes_benz": 977,
    "share_mb_na_chave": 10.29
   },
   {
    "chave": "4X2",
-   "emplacamentos": 8934,
-   "share": 33.56,
-   "mercedes_benz": 1682,
-   "share_mb_na_chave": 18.83
+   "emplacamentos": 8939,
+   "share": 33.57,
+   "mercedes_benz": 1684,
+   "share_mb_na_chave": 18.84
   },
   {
    "chave": "6X2",
-   "emplacamentos": 6637,
-   "share": 24.93,
+   "emplacamentos": 6640,
+   "share": 24.94,
    "mercedes_benz": 1129,
-   "share_mb_na_chave": 17.01
+   "share_mb_na_chave": 17.0
   },
   {
    "chave": "8X2",
@@ -847,24 +847,24 @@
  "por_area_operacional": [
   {
    "chave": "GOIANIA",
-   "emplacamentos": 14018,
+   "emplacamentos": 14022,
    "share": 52.66,
    "mercedes_benz": 2164,
-   "share_mb_na_chave": 15.44
+   "share_mb_na_chave": 15.43
   },
   {
    "chave": "PALMAS",
    "emplacamentos": 5582,
-   "share": 20.97,
+   "share": 20.96,
    "mercedes_benz": 660,
    "share_mb_na_chave": 11.82
   },
   {
    "chave": "ANAPOLIS",
-   "emplacamentos": 4634,
-   "share": 17.41,
-   "mercedes_benz": 863,
-   "share_mb_na_chave": 18.62
+   "emplacamentos": 4638,
+   "share": 17.42,
+   "mercedes_benz": 865,
+   "share_mb_na_chave": 18.65
   },
   {
    "chave": "PRIMAVERA DO LESTE",
@@ -884,15 +884,15 @@
  "por_uf": [
   {
    "chave": "GO",
-   "emplacamentos": 18654,
-   "share": 70.08,
-   "mercedes_benz": 3028,
-   "share_mb_na_chave": 16.23
+   "emplacamentos": 18662,
+   "share": 70.09,
+   "mercedes_benz": 3030,
+   "share_mb_na_chave": 16.24
   },
   {
    "chave": "TO",
    "emplacamentos": 5598,
-   "share": 21.03,
+   "share": 21.02,
    "mercedes_benz": 663,
    "share_mb_na_chave": 11.84
   },
@@ -908,7 +908,7 @@
   {
    "chave": "ON ROAD",
    "emplacamentos": 24875,
-   "share": 93.45,
+   "share": 93.42,
    "mercedes_benz": 3529,
    "share_mb_na_chave": 14.19
   },
@@ -921,33 +921,33 @@
   },
   {
    "chave": "(vazio)",
-   "emplacamentos": 303,
-   "share": 1.14,
-   "mercedes_benz": 70,
-   "share_mb_na_chave": 23.1
+   "emplacamentos": 311,
+   "share": 1.17,
+   "mercedes_benz": 72,
+   "share_mb_na_chave": 23.15
   }
  ],
  "top_municipios": [
   {
    "chave": "GOIANIA|GO",
-   "emplacamentos": 6175,
+   "emplacamentos": 6177,
    "share": 23.2,
    "mercedes_benz": 1100,
    "share_mb_na_chave": 17.81
   },
   {
    "chave": "APARECIDA DE GOIANIA|GO",
-   "emplacamentos": 2937,
+   "emplacamentos": 2938,
    "share": 11.03,
    "mercedes_benz": 352,
-   "share_mb_na_chave": 11.99
+   "share_mb_na_chave": 11.98
   },
   {
    "chave": "ANAPOLIS|GO",
-   "emplacamentos": 2394,
-   "share": 8.99,
+   "emplacamentos": 2396,
+   "share": 9.0,
    "mercedes_benz": 331,
-   "share_mb_na_chave": 13.83
+   "share_mb_na_chave": 13.81
   },
   {
    "chave": "PALMAS|TO",
@@ -1075,105 +1075,105 @@
     "posicao": 1,
     "fabricante": "VW",
     "modelo": "VW/26.260 CRM 6X2",
-    "emplacamentos": 197,
-    "market_share": 13.65,
-    "total_segmento": 1443
+    "emplacamentos": 198,
+    "market_share": 13.69,
+    "total_segmento": 1446
    },
    {
     "posicao": 2,
     "fabricante": "VW",
     "modelo": "VW/17.210 CRM 4X2",
     "emplacamentos": 160,
-    "market_share": 11.09,
-    "total_segmento": 1443
+    "market_share": 11.07,
+    "total_segmento": 1446
    },
    {
     "posicao": 3,
     "fabricante": "VW",
     "modelo": "VW/18.260 CRM 4X2 4P",
     "emplacamentos": 97,
-    "market_share": 6.72,
-    "total_segmento": 1443
+    "market_share": 6.71,
+    "total_segmento": 1446
    },
    {
     "posicao": 4,
     "fabricante": "VW",
     "modelo": "VW/30.320 CRM 8X2",
     "emplacamentos": 92,
-    "market_share": 6.38,
-    "total_segmento": 1443
+    "market_share": 6.36,
+    "total_segmento": 1446
    },
    {
     "posicao": 5,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 24-280",
     "emplacamentos": 81,
-    "market_share": 5.61,
-    "total_segmento": 1443
+    "market_share": 5.6,
+    "total_segmento": 1446
    },
    {
     "posicao": 6,
     "fabricante": "VW",
     "modelo": "VW/26.320 CRM 6X2",
     "emplacamentos": 79,
-    "market_share": 5.47,
-    "total_segmento": 1443
+    "market_share": 5.46,
+    "total_segmento": 1446
    },
    {
     "posicao": 7,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 2429",
     "emplacamentos": 72,
-    "market_share": 4.99,
-    "total_segmento": 1443
+    "market_share": 4.98,
+    "total_segmento": 1446
    },
    {
     "posicao": 8,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/VM 290 6X2 R",
     "emplacamentos": 70,
-    "market_share": 4.85,
-    "total_segmento": 1443
+    "market_share": 4.84,
+    "total_segmento": 1446
    },
    {
     "posicao": 9,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/VM 290 6X4 R",
     "emplacamentos": 69,
-    "market_share": 4.78,
-    "total_segmento": 1443
+    "market_share": 4.77,
+    "total_segmento": 1446
    },
    {
     "posicao": 10,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 2429CL",
     "emplacamentos": 57,
-    "market_share": 3.95,
-    "total_segmento": 1443
+    "market_share": 3.94,
+    "total_segmento": 1446
    },
    {
     "posicao": 11,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 15-210",
     "emplacamentos": 54,
-    "market_share": 3.74,
-    "total_segmento": 1443
+    "market_share": 3.73,
+    "total_segmento": 1446
    },
    {
     "posicao": 12,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/VM 290 4X2 R",
     "emplacamentos": 46,
-    "market_share": 3.19,
-    "total_segmento": 1443
+    "market_share": 3.18,
+    "total_segmento": 1446
    },
    {
     "posicao": 13,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 14.180",
-    "emplacamentos": 41,
-    "market_share": 2.84,
-    "total_segmento": 1443
+    "emplacamentos": 42,
+    "market_share": 2.9,
+    "total_segmento": 1446
    },
    {
     "posicao": 14,
@@ -1181,7 +1181,7 @@
     "modelo": "M.BENZ/ATEGO 1719 CL",
     "emplacamentos": 37,
     "market_share": 2.56,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 15,
@@ -1189,7 +1189,7 @@
     "modelo": "IVECO/TECTOR 17-210",
     "emplacamentos": 36,
     "market_share": 2.49,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 16,
@@ -1197,7 +1197,7 @@
     "modelo": "FOTON/AUMAN D 1722B",
     "emplacamentos": 29,
     "market_share": 2.01,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 17,
@@ -1205,7 +1205,7 @@
     "modelo": "I/FOTON AUMAN D 1722B",
     "emplacamentos": 28,
     "market_share": 1.94,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 18,
@@ -1213,7 +1213,7 @@
     "modelo": "M.BENZ/ATEGO 2429CE",
     "emplacamentos": 24,
     "market_share": 1.66,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 19,
@@ -1221,15 +1221,15 @@
     "modelo": "M.BENZ/ATEGO 3033CE",
     "emplacamentos": 24,
     "market_share": 1.66,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 20,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 24-320-CL",
-    "emplacamentos": 16,
-    "market_share": 1.11,
-    "total_segmento": 1443
+    "emplacamentos": 17,
+    "market_share": 1.18,
+    "total_segmento": 1446
    },
    {
     "posicao": 21,
@@ -1237,7 +1237,7 @@
     "modelo": "VW/18.210 CRM 4X2",
     "emplacamentos": 16,
     "market_share": 1.11,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 22,
@@ -1245,7 +1245,7 @@
     "modelo": "VW/18.260 CRM 4X2",
     "emplacamentos": 16,
     "market_share": 1.11,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 23,
@@ -1253,7 +1253,7 @@
     "modelo": "VW/18.320 CRM 4X2",
     "emplacamentos": 12,
     "market_share": 0.83,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 24,
@@ -1261,7 +1261,7 @@
     "modelo": "IVECO/TECTOR 17-280",
     "emplacamentos": 12,
     "market_share": 0.83,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 25,
@@ -1269,39 +1269,39 @@
     "modelo": "DAF/CF FAC 310",
     "emplacamentos": 11,
     "market_share": 0.76,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 26,
     "fabricante": "VW",
     "modelo": "VW/26.260 CRM 6X2 4P",
     "emplacamentos": 7,
-    "market_share": 0.49,
-    "total_segmento": 1443
+    "market_share": 0.48,
+    "total_segmento": 1446
    },
    {
     "posicao": 27,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 1726 CL",
     "emplacamentos": 7,
-    "market_share": 0.49,
-    "total_segmento": 1443
+    "market_share": 0.48,
+    "total_segmento": 1446
    },
    {
     "posicao": 28,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 1733TRIEL B",
     "emplacamentos": 6,
-    "market_share": 0.42,
-    "total_segmento": 1443
+    "market_share": 0.41,
+    "total_segmento": 1446
    },
    {
     "posicao": 29,
     "fabricante": "AGRAL",
     "modelo": "AGRALE/A15000 P8",
     "emplacamentos": 6,
-    "market_share": 0.42,
-    "total_segmento": 1443
+    "market_share": 0.41,
+    "total_segmento": 1446
    },
    {
     "posicao": 30,
@@ -1309,7 +1309,7 @@
     "modelo": "SCANIA/P280 B6X2",
     "emplacamentos": 5,
     "market_share": 0.35,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 31,
@@ -1317,7 +1317,7 @@
     "modelo": "IVECO/TECTOR 17-320C",
     "emplacamentos": 4,
     "market_share": 0.28,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 32,
@@ -1325,7 +1325,7 @@
     "modelo": "IVECO/TECTOR 31-320-CL",
     "emplacamentos": 3,
     "market_share": 0.21,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 33,
@@ -1333,7 +1333,7 @@
     "modelo": "M.BENZ/ATEGO 2433CE",
     "emplacamentos": 3,
     "market_share": 0.21,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 34,
@@ -1341,7 +1341,7 @@
     "modelo": "FOTON/AUMAN D 1722A",
     "emplacamentos": 3,
     "market_share": 0.21,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 35,
@@ -1349,7 +1349,7 @@
     "modelo": "VOLVO/VM 290 8X4 R",
     "emplacamentos": 2,
     "market_share": 0.14,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 36,
@@ -1357,7 +1357,7 @@
     "modelo": "IVECO/TECTOR 17-280-CL",
     "emplacamentos": 2,
     "market_share": 0.14,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 37,
@@ -1365,7 +1365,7 @@
     "modelo": "M.BENZ/ATEGO 1726 CE",
     "emplacamentos": 2,
     "market_share": 0.14,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 38,
@@ -1373,7 +1373,7 @@
     "modelo": "DAF/CF FAS 310",
     "emplacamentos": 2,
     "market_share": 0.14,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 39,
@@ -1381,7 +1381,7 @@
     "modelo": "IVECO/TECTOR 17-320",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 40,
@@ -1389,7 +1389,7 @@
     "modelo": "M.BENZ/ATEGO 1730CE",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 41,
@@ -1397,7 +1397,7 @@
     "modelo": "M.BENZ/ATEGO 1726CE",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 42,
@@ -1405,7 +1405,7 @@
     "modelo": "I/FOTON AUMAN D 1722A",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 43,
@@ -1413,7 +1413,7 @@
     "modelo": "M.BENZ/LK 1414",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 44,
@@ -1421,7 +1421,7 @@
     "modelo": "IVECO/TECTOR 24-320",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 45,
@@ -1429,7 +1429,7 @@
     "modelo": "M.BENZ/ATEGO 2433",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 46,
@@ -1437,7 +1437,7 @@
     "modelo": "M.BENZ/ATEGO 1719 CE",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 47,
@@ -1445,7 +1445,7 @@
     "modelo": "SCANIA/P280 B6X4D9 XT CS",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 48,
@@ -1453,7 +1453,7 @@
     "modelo": "IVECO/TECTOR 17-320-CL",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 49,
@@ -1461,7 +1461,7 @@
     "modelo": "SCANIA/P280 B6X4 XT CS",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 50,
@@ -1469,7 +1469,7 @@
     "modelo": "VW/18.260 MITREN B",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 51,
@@ -1477,7 +1477,7 @@
     "modelo": "IVECO/TECTOR 24-280-CL",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 52,
@@ -1485,7 +1485,7 @@
     "modelo": "AGRALE/A18000 P8",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    },
    {
     "posicao": 53,
@@ -1493,7 +1493,7 @@
     "modelo": "VW/31.320 CRM 6X4",
     "emplacamentos": 1,
     "market_share": 0.07,
-    "total_segmento": 1443
+    "total_segmento": 1446
    }
   ],
   "EXTRAPESADOS": [
@@ -1999,97 +1999,97 @@
     "posicao": 1,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 11.180",
-    "emplacamentos": 149,
-    "market_share": 34.41,
-    "total_segmento": 433
+    "emplacamentos": 151,
+    "market_share": 34.71,
+    "total_segmento": 435
    },
    {
     "posicao": 2,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 11-190",
     "emplacamentos": 43,
-    "market_share": 9.93,
-    "total_segmento": 433
+    "market_share": 9.89,
+    "total_segmento": 435
    },
    {
     "posicao": 3,
     "fabricante": "VW",
     "modelo": "VW/14.210 CRM 4X2",
     "emplacamentos": 39,
-    "market_share": 9.01,
-    "total_segmento": 433
+    "market_share": 8.97,
+    "total_segmento": 435
    },
    {
     "posicao": 4,
     "fabricante": "FOTON",
     "modelo": "FOTON/AUMARK S 1217A",
     "emplacamentos": 36,
-    "market_share": 8.31,
-    "total_segmento": 433
+    "market_share": 8.28,
+    "total_segmento": 435
    },
    {
     "posicao": 5,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 1419 CL",
     "emplacamentos": 33,
-    "market_share": 7.62,
-    "total_segmento": 433
+    "market_share": 7.59,
+    "total_segmento": 435
    },
    {
     "posicao": 6,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117",
     "emplacamentos": 32,
-    "market_share": 7.39,
-    "total_segmento": 433
+    "market_share": 7.36,
+    "total_segmento": 435
    },
    {
     "posicao": 7,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117CE",
     "emplacamentos": 31,
-    "market_share": 7.16,
-    "total_segmento": 433
+    "market_share": 7.13,
+    "total_segmento": 435
    },
    {
     "posicao": 8,
     "fabricante": "FOTON",
     "modelo": "I/FOTON AUMARK S 1217A",
     "emplacamentos": 17,
-    "market_share": 3.93,
-    "total_segmento": 433
+    "market_share": 3.91,
+    "total_segmento": 435
    },
    {
     "posicao": 9,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 13.180",
     "emplacamentos": 15,
-    "market_share": 3.46,
-    "total_segmento": 433
+    "market_share": 3.45,
+    "total_segmento": 435
    },
    {
     "posicao": 10,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY MTR 11.180 B",
     "emplacamentos": 12,
-    "market_share": 2.77,
-    "total_segmento": 433
+    "market_share": 2.76,
+    "total_segmento": 435
    },
    {
     "posicao": 11,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1117 CE",
     "emplacamentos": 11,
-    "market_share": 2.54,
-    "total_segmento": 433
+    "market_share": 2.53,
+    "total_segmento": 435
    },
    {
     "posicao": 12,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 11.180 4X4",
     "emplacamentos": 6,
-    "market_share": 1.39,
-    "total_segmento": 433
+    "market_share": 1.38,
+    "total_segmento": 435
    },
    {
     "posicao": 13,
@@ -2097,7 +2097,7 @@
     "modelo": "M.BENZ/ACCELO 1417 CE",
     "emplacamentos": 4,
     "market_share": 0.92,
-    "total_segmento": 433
+    "total_segmento": 435
    },
    {
     "posicao": 14,
@@ -2105,7 +2105,7 @@
     "modelo": "M.BENZ/ACCELO 1417CE",
     "emplacamentos": 2,
     "market_share": 0.46,
-    "total_segmento": 433
+    "total_segmento": 435
    },
    {
     "posicao": 15,
@@ -2113,7 +2113,7 @@
     "modelo": "VW/DELIVERY DPCE 11.180",
     "emplacamentos": 2,
     "market_share": 0.46,
-    "total_segmento": 433
+    "total_segmento": 435
    },
    {
     "posicao": 16,
@@ -2121,7 +2121,7 @@
     "modelo": "M.BENZ/ACCELO 1417",
     "emplacamentos": 1,
     "market_share": 0.23,
-    "total_segmento": 433
+    "total_segmento": 435
    }
   ],
   "LEVES": [
@@ -2129,153 +2129,153 @@
     "posicao": 1,
     "fabricante": "VW",
     "modelo": "VW/DELIVERY 9.180",
-    "emplacamentos": 58,
-    "market_share": 31.69,
-    "total_segmento": 183
+    "emplacamentos": 59,
+    "market_share": 31.72,
+    "total_segmento": 186
    },
    {
     "posicao": 2,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 817",
-    "emplacamentos": 57,
-    "market_share": 31.15,
-    "total_segmento": 183
+    "emplacamentos": 59,
+    "market_share": 31.72,
+    "total_segmento": 186
    },
    {
     "posicao": 3,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 9-190",
     "emplacamentos": 15,
-    "market_share": 8.2,
-    "total_segmento": 183
+    "market_share": 8.06,
+    "total_segmento": 186
    },
    {
     "posicao": 4,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 917",
     "emplacamentos": 12,
-    "market_share": 6.56,
-    "total_segmento": 183
+    "market_share": 6.45,
+    "total_segmento": 186
    },
    {
     "posicao": 5,
     "fabricante": "FOTON",
     "modelo": "I/FOTON AUMARK S 916",
     "emplacamentos": 10,
-    "market_share": 5.46,
-    "total_segmento": 183
+    "market_share": 5.38,
+    "total_segmento": 186
    },
    {
     "posicao": 6,
     "fabricante": "FOTON",
     "modelo": "I/FOTON AUMARK S 715",
     "emplacamentos": 10,
-    "market_share": 5.46,
-    "total_segmento": 183
+    "market_share": 5.38,
+    "total_segmento": 186
    },
    {
     "posicao": 7,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 917CE",
     "emplacamentos": 7,
-    "market_share": 3.83,
-    "total_segmento": 183
+    "market_share": 3.76,
+    "total_segmento": 186
    },
    {
     "posicao": 8,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 917 CE",
     "emplacamentos": 2,
-    "market_share": 1.09,
-    "total_segmento": 183
+    "market_share": 1.08,
+    "total_segmento": 186
    },
    {
     "posicao": 9,
     "fabricante": "FOTON",
     "modelo": "I/FOTON IBLUE EV 6T",
     "emplacamentos": 2,
-    "market_share": 1.09,
-    "total_segmento": 183
+    "market_share": 1.08,
+    "total_segmento": 186
    },
    {
     "posicao": 10,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ACCELO 1017 CE",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 11,
     "fabricante": "VW",
     "modelo": "VW/6.170 DRF 4X2",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 12,
     "fabricante": "HYUNDA",
     "modelo": "HYUNDAI/HD 80",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 13,
     "fabricante": "FOTON",
     "modelo": "I/FOTON AUMARK S 6.5",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 14,
     "fabricante": "AGRAL",
     "modelo": "AGRALE/A10000 P8",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 15,
     "fabricante": "FOTON",
     "modelo": "I/FOTON EAUMARK 9T",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 16,
     "fabricante": "FOTON",
     "modelo": "FOTON/AUMARK S 916 PRO",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 17,
     "fabricante": "HYUNDA",
     "modelo": "HYUNDAI/HD 78",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 18,
     "fabricante": "FORD",
     "modelo": "I/FORD F450 KING RANCH",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    },
    {
     "posicao": 19,
     "fabricante": "FOTON",
     "modelo": "FOTON/AUMARK S 715 PRO",
     "emplacamentos": 1,
-    "market_share": 0.55,
-    "total_segmento": 183
+    "market_share": 0.54,
+    "total_segmento": 186
    }
   ],
   "PESADOS": [
