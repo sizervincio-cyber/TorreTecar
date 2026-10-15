@@ -1,9 +1,9 @@
 {
  "periodo": {
-  "inicio": "0000-00-00",
-  "fim": "9999-99-99"
+  "inicio": "2026-01-01",
+  "fim": "2026-10-14"
  },
- "painel_atualizado_em": null,
+ "painel_atualizado_em": "15/10/2026",
  "filtros_painel": {
   "Ano Emplac.": "2026 ",
   "Grupo": "Todos ",
@@ -22,60 +22,106 @@
  "indicadores": [
   {
    "indicador": "Total Mercado",
-   "assobens": null,
-   "torre": 26626,
-   "diferenca": null,
-   "diferenca_pct": null
+   "assobens": 2932,
+   "torre": 2933,
+   "diferenca": 1,
+   "diferenca_pct": 0.03
   },
   {
    "indicador": "Total Mercedes-Benz",
-   "assobens": null,
-   "torre": 4045,
-   "diferenca": null,
-   "diferenca_pct": null
+   "assobens": 490,
+   "torre": 490,
+   "diferenca": 0,
+   "diferenca_pct": 0.0
   },
   {
    "indicador": "Market Share MB (%)",
-   "assobens": null,
-   "torre": 15.19,
-   "diferenca": null,
-   "diferenca_pct": null
+   "assobens": 16.7,
+   "torre": 16.71,
+   "diferenca": 0.01,
+   "diferenca_pct": 0.06
   }
  ],
- "fabricantes": [],
- "por_subsegmento_torre": [
+ "fabricantes": [
   {
-   "chave": "EXTRAPESADOS",
-   "emplacamentos": 12677,
-   "share": 47.61,
-   "mercedes_benz": 1301,
-   "share_mb_na_chave": 10.26
+   "indicador": "Fabricante VOLKSWAGEN",
+   "assobens": 1090,
+   "torre": 1091,
+   "diferenca": 1,
+   "diferenca_pct": 0.09,
+   "share_assobens": 37.18,
+   "share_torre": 37.2
   },
   {
+   "indicador": "Fabricante VOLVO",
+   "assobens": 549,
+   "torre": 549,
+   "diferenca": 0,
+   "diferenca_pct": 0.0,
+   "share_assobens": 18.72,
+   "share_torre": 18.72
+  },
+  {
+   "indicador": "Fabricante IVECO-FIAT",
+   "assobens": 350,
+   "torre": 350,
+   "diferenca": 0,
+   "diferenca_pct": 0.0,
+   "share_assobens": 11.94,
+   "share_torre": 11.93
+  },
+  {
+   "indicador": "Fabricante OTHERS",
+   "assobens": 227,
+   "torre": null,
+   "diferenca": null,
+   "diferenca_pct": null,
+   "share_assobens": 7.74,
+   "share_torre": null
+  },
+  {
+   "indicador": "Fabricante SCANIA",
+   "assobens": 226,
+   "torre": 226,
+   "diferenca": 0,
+   "diferenca_pct": 0.0,
+   "share_assobens": 7.71,
+   "share_torre": 7.71
+  }
+ ],
+ "por_subsegmento_torre": [
+  {
    "chave": "SEMIPESADOS",
-   "emplacamentos": 8885,
-   "share": 33.37,
-   "mercedes_benz": 1388,
-   "share_mb_na_chave": 15.62
+   "emplacamentos": 1283,
+   "share": 43.74,
+   "mercedes_benz": 220,
+   "share_mb_na_chave": 17.15
+  },
+  {
+   "chave": "EXTRAPESADOS",
+   "emplacamentos": 1133,
+   "share": 38.63,
+   "mercedes_benz": 111,
+   "share_mb_na_chave": 9.8
   },
   {
    "chave": "MEDIOS",
-   "emplacamentos": 3059,
-   "share": 11.49,
-   "mercedes_benz": 574,
-   "share_mb_na_chave": 18.76
+   "emplacamentos": 349,
+   "share": 11.9,
+   "mercedes_benz": 92,
+   "share_mb_na_chave": 26.36
   },
   {
    "chave": "LEVES",
-   "emplacamentos": 1995,
-   "share": 7.49,
-   "mercedes_benz": 782,
-   "share_mb_na_chave": 39.2
+   "emplacamentos": 158,
+   "share": 5.39,
+   "mercedes_benz": 67,
+   "share_mb_na_chave": 42.41
   },
   {
    "chave": "PESADOS",
    "emplacamentos": 10,
-   "share": 0.04,
+   "share": 0.34,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
   }
