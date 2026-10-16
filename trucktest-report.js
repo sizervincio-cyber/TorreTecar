@@ -102,7 +102,7 @@ const stack = (parts, { w = 560, h = 48, fmt = v => rs2(v) } = {}) => {
 };
 /* ---------- páginas ---------- */
 function build(T, R, mode = 'compact') {
- const hoje = new Date().toLocaleDateString('pt-BR'), emp = T.cli.empresa || 'Cliente', P = []; let OUT = P;
+ const hoje = (T.prot && T.prot.fim && /^\d{4}-\d{2}-\d{2}/.test(T.prot.fim)) ? dbr(T.prot.fim) : new Date().toLocaleDateString('pt-BR'), emp = T.cli.empresa || 'Cliente', P = []; let OUT = P;
  const fotoTipo = t => T.fotos.filter(f => f.tipo === t);
  const capa = fotoTipo('capa')[0] || T.fotos.find(f => f.tipo !== 'mapa' && f.tipo !== 'logo');
  const page = (...args) => { let [num, title, sub, tag, body, foot, cls = ''] = args; if (body === 'a' || body === 'w' || body === '') { cls = body; body = foot; foot = args[6] || ''; } title = title.charAt(0).toUpperCase() + title.slice(1); OUT.push(`<section class="pg"><div class="hd"><div class="n">${String(num).padStart(2, '0')}</div><div class="t"><h2>${title}</h2><div class="s">${sub}</div></div><div class="tag ${cls}">${tag}</div></div><div class="bd">${body}</div><div class="ft"><span>${foot}</span><span>${esc(emp)} · Truck Test 2.0 · Tecar Caminhões · ${hoje}</span></div></section>`); };

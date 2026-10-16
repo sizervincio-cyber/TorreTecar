@@ -1,0 +1,5247 @@
+[
+ {
+  "id": "ttc13_TT01",
+  "criadoEm": "2026-10-16T18:05:11.470Z",
+  "atualizadoEm": "2026-10-16T18:05:11.471Z",
+  "nome": "TT01 · CONSTRUTORA CENTRO LESTE S/A · Actros 2653S 8X4 · dados estimados",
+  "cli": {
+   "empresa": "CONSTRUTORA CENTRO LESTE S/A",
+   "cnpj": "02.155.735/0001-10",
+   "cidade": "Senador Canedo",
+   "uf": "GO",
+   "segmento": "Construção pesada e saneamento",
+   "atividade": "Serviços de engenharia · secundárias: Captação, tratamento e distribuição de água; Gestão de redes de esgoto; Atividades relacionadas a esgoto, exceto a gestão de redes",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Bruno Soares",
+   "instrutor": "a confirmar",
+   "frotaTotal": "190",
+   "frotaElegivel": "12",
+   "idadeMedia": "1,8",
+   "marcas": "Mercedes-Benz 112 · Volkswagen 76 · Volvo 2 · principais: ATEGO 2429 37 · 24.260 CRM 6X2 28 · ATEGO 2429CL 20",
+   "dores": "Disponibilidade dos cavalos em obra, consumo em terreno misto e custo de manutenção fora da garantia"
+  },
+  "op": {
+   "aplicacao": "Cavalo 8x4 com semirreboque prancha (máquinas) e caçamba basculante em obras de saneamento",
+   "rotas": "Senador Canedo (GO) → obras na região metropolitana de Goiânia pela GO-403 e BR-153, carregado\nretorno vazio ao canteiro\nSenador Canedo → Anápolis (GO) pela BR-153, parcial",
+   "cargaMedia": "30",
+   "cargaMax": "45",
+   "implemento": "Prancha 3 eixos rebaixada / basculante 25 m³",
+   "kmMes": "6500",
+   "mixCarregado": "55",
+   "entregasDia": "3",
+   "velMedia": "42",
+   "perfilRod": "60",
+   "ganhoAlt": "350",
+   "paradas100": "4,0",
+   "jornada": "Diurna, 3 deslocamentos/dia, 24 dias/mês",
+   "sazonalidade": "Baixa no período chuvoso (dez–mar) em obras de terraplenagem",
+   "diasOper": "24"
+  },
+  "base": {
+   "marca": "Volkswagen",
+   "modelo": "29.530 MTM 6x4",
+   "ano": "2024",
+   "qtd": "8",
+   "kml": "1,63",
+   "fonteKml": "",
+   "arla": "6,5",
+   "manut": "0,32",
+   "pneus": "0,11",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "980000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Actros 2653S 8X4",
+   "placa": "SDJ7G45",
+   "chassi": "9BM963414RB339051",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Prancha 3 eixos rebaixada / basculante 25 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "Actros 2653S 8X4",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Prancha 3 eixos rebaixada / basculante 25 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-03-09",
+   "fim": "2026-03-09",
+   "motorista": "a confirmar",
+   "pctCliente": "60",
+   "metodo": "ambos",
+   "clima": "Chuvas isoladas à tarde, 20–31 °C",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "1 dia(s) de contrato, odômetro de 219.000 km na entrega e 219.217 km na devolução (217 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-03-09",
+    "odometro": "219000",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-03-09",
+    "odometro": "219217",
+    "litros": "107.1",
+    "posto": "Posto base do cliente",
+    "obs": "217 km desde o anterior · 2,03 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Ciclo 1 · ida carregado",
+    "data": "2026-03-09",
+    "km": "113",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.77",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "415",
+    "paradas": "5",
+    "urbano": "40"
+   },
+   {
+    "nome": "Ciclo 1 · volta vazio",
+    "data": "2026-03-09",
+    "km": "104",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.34",
+    "litros": "",
+    "velMedia": "44",
+    "ganhoAlt": "379",
+    "paradas": "4",
+    "urbano": "40"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "80",
+   "marchaLenta": "20",
+   "freioMotor": "71",
+   "frenagens100": "10",
+   "trocas100": "42",
+   "cargaMotor": "62",
+   "tempoMov": "6,4",
+   "velMedia": "42",
+   "cambioAuto": "96",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 80% do tempo em movimento; marcha lenta de 20 min/dia, Consumo médio do período 1,99 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "visibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "3",
+     "mb": "5"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,4",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "3",
+   "modelo": "Actros 2653S 8X4",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 3 Actros 2653S 8X4 com decisão até 23/04/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 1,99 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Bruno · 20 dias",
+   "janela": "Abril de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT02",
+  "criadoEm": "2026-10-16T18:05:11.516Z",
+  "atualizadoEm": "2026-10-16T18:05:11.516Z",
+  "nome": "TT02 · CONSTRUTORA CENTRO LESTE S/A · Actros 2653S 8X4 · dados estimados",
+  "cli": {
+   "empresa": "CONSTRUTORA CENTRO LESTE S/A",
+   "cnpj": "02.155.735/0001-10",
+   "cidade": "Senador Canedo",
+   "uf": "GO",
+   "segmento": "Construção pesada e saneamento",
+   "atividade": "Serviços de engenharia · secundárias: Captação, tratamento e distribuição de água; Gestão de redes de esgoto; Atividades relacionadas a esgoto, exceto a gestão de redes",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Bruno Soares",
+   "instrutor": "a confirmar",
+   "frotaTotal": "190",
+   "frotaElegivel": "12",
+   "idadeMedia": "1,8",
+   "marcas": "Mercedes-Benz 112 · Volkswagen 76 · Volvo 2 · principais: ATEGO 2429 37 · 24.260 CRM 6X2 28 · ATEGO 2429CL 20",
+   "dores": "Disponibilidade dos cavalos em obra, consumo em terreno misto e custo de manutenção fora da garantia"
+  },
+  "op": {
+   "aplicacao": "Cavalo 8x4 com semirreboque prancha (máquinas) e caçamba basculante em obras de saneamento",
+   "rotas": "Senador Canedo (GO) → obras na região metropolitana de Goiânia pela GO-403 e BR-153, carregado\nretorno vazio ao canteiro\nSenador Canedo → Anápolis (GO) pela BR-153, parcial",
+   "cargaMedia": "30",
+   "cargaMax": "45",
+   "implemento": "Prancha 3 eixos rebaixada / basculante 25 m³",
+   "kmMes": "6500",
+   "mixCarregado": "55",
+   "entregasDia": "3",
+   "velMedia": "42",
+   "perfilRod": "60",
+   "ganhoAlt": "350",
+   "paradas100": "4,0",
+   "jornada": "Diurna, 3 deslocamentos/dia, 24 dias/mês",
+   "sazonalidade": "Baixa no período chuvoso (dez–mar) em obras de terraplenagem",
+   "diasOper": "24"
+  },
+  "base": {
+   "marca": "Volkswagen",
+   "modelo": "29.530 MTM 6x4",
+   "ano": "2024",
+   "qtd": "8",
+   "kml": "1,64",
+   "fonteKml": "",
+   "arla": "6,5",
+   "manut": "0,32",
+   "pneus": "0,11",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "980000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Actros 2653S 8X4",
+   "placa": "SDJ7G45",
+   "chassi": "9BM963414RB339051",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Prancha 3 eixos rebaixada / basculante 25 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "Actros 2653S 8X4",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Prancha 3 eixos rebaixada / basculante 25 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-04-16",
+   "fim": "2026-05-18",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Chuvas isoladas à tarde, 20–31 °C",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "32 dia(s) de contrato, odômetro de 224.000 km na entrega e 229.985 km na devolução (5.985 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-04-16",
+    "odometro": "224000",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-04-21",
+    "odometro": "224855",
+    "litros": "430.5",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "855 km desde o anterior · 1,99 km/L"
+   },
+   {
+    "data": "2026-04-25",
+    "odometro": "225710",
+    "litros": "421",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "855 km desde o anterior · 2,03 km/L"
+   },
+   {
+    "data": "2026-04-30",
+    "odometro": "226565",
+    "litros": "414.3",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "855 km desde o anterior · 2,06 km/L"
+   },
+   {
+    "data": "2026-05-04",
+    "odometro": "227420",
+    "litros": "419.5",
+    "posto": "Posto base do cliente",
+    "obs": "855 km desde o anterior · 2,04 km/L"
+   },
+   {
+    "data": "2026-05-09",
+    "odometro": "228275",
+    "litros": "430.1",
+    "posto": "Posto de apoio Tecar",
+    "obs": "855 km desde o anterior · 1,99 km/L"
+   },
+   {
+    "data": "2026-05-13",
+    "odometro": "229130",
+    "litros": "426",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "855 km desde o anterior · 2,01 km/L"
+   },
+   {
+    "data": "2026-05-18",
+    "odometro": "229985",
+    "litros": "440.6",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "855 km desde o anterior · 1,94 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-04-19",
+    "km": "622",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.73",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2151",
+    "paradas": "25",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-04-19",
+    "km": "575",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.3",
+    "litros": "",
+    "velMedia": "44",
+    "ganhoAlt": "1950",
+    "paradas": "23",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-04-25",
+    "km": "622",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.71",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2171",
+    "paradas": "25",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-04-25",
+    "km": "575",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.23",
+    "litros": "",
+    "velMedia": "44",
+    "ganhoAlt": "1853",
+    "paradas": "23",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-05-02",
+    "km": "622",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.72",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2090",
+    "paradas": "25",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-05-02",
+    "km": "575",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.2",
+    "litros": "",
+    "velMedia": "44",
+    "ganhoAlt": "2104",
+    "paradas": "23",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-05-08",
+    "km": "622",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.82",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2105",
+    "paradas": "25",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-05-08",
+    "km": "575",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.32",
+    "litros": "",
+    "velMedia": "44",
+    "ganhoAlt": "2274",
+    "paradas": "23",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-05-14",
+    "km": "622",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.7",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "1943",
+    "paradas": "25",
+    "urbano": "40"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-05-14",
+    "km": "575",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.34",
+    "litros": "",
+    "velMedia": "44",
+    "ganhoAlt": "2217",
+    "paradas": "23",
+    "urbano": "40"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "82",
+   "marchaLenta": "20",
+   "freioMotor": "81",
+   "frenagens100": "10",
+   "trocas100": "40",
+   "cargaMotor": "63",
+   "tempoMov": "6,4",
+   "velMedia": "42",
+   "cambioAuto": "97",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 82% do tempo em movimento; marcha lenta de 20 min/dia, Consumo médio do período 2,00 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "visibilidade": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "manobra": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "ruido": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "seguranca": {
+     "atual": "3",
+     "mb": "5"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,4",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "3",
+   "modelo": "Actros 2653S 8X4",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 3 Actros 2653S 8X4 com decisão até 02/07/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 2,00 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Bruno · 20 dias",
+   "janela": "Julho de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT03",
+  "criadoEm": "2026-10-16T18:05:11.532Z",
+  "atualizadoEm": "2026-10-16T18:05:11.533Z",
+  "nome": "TT03 · COOPERTIVA DOS PRODUTORES DE LEITE DE CAMPINAPOLIS · Actros 2653S 8X4 · dados estimados",
+  "cli": {
+   "empresa": "COOPERTIVA DOS PRODUTORES DE LEITE DE CAMPINAPOLIS",
+   "cnpj": "03.967.595/0001-47",
+   "cidade": "Campinápolis",
+   "uf": "MT",
+   "segmento": "Cooperativa de leite (laticínios)",
+   "atividade": "Fabricação de laticínios · secundárias: Cultivo de arroz; Cultivo de milho; Cultivo de outros cereais não especificados anteriormente",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "a definir (conta sem vendedor no CRM)",
+   "instrutor": "a confirmar",
+   "frotaTotal": "10",
+   "frotaElegivel": "2",
+   "idadeMedia": "3,5",
+   "marcas": "Mercedes-Benz 9 · Volkswagen 1 · principais: ATEGO 1726 CL 2 · ACTROS 2651LS6X4 1 · ATEGO 2730 6X4 CE 1",
+   "dores": "Estradas de terra na coleta, consumo e disponibilidade da frota Atego/Actros usada"
+  },
+  "op": {
+   "aplicacao": "Cavalo 8x4 com semirreboque tanque isotérmico para coleta e transferência de leite",
+   "rotas": "Campinápolis (MT) → Nova Xavantina (MT) pela MT-326, carregado\nretorno vazio para a cooperativa\nCampinápolis → Barra do Garças (MT) pela BR-158, carregado",
+   "cargaMedia": "28",
+   "cargaMax": "31",
+   "implemento": "Tanque isotérmico 3 eixos, 30 m³",
+   "kmMes": "8000",
+   "mixCarregado": "50",
+   "entregasDia": "2",
+   "velMedia": "48",
+   "perfilRod": "70",
+   "ganhoAlt": "520",
+   "paradas100": "2,5",
+   "jornada": "Diurna/noturna, 2 viagens/dia, 26 dias/mês",
+   "sazonalidade": "Pico de produção de leite de dezembro a abril (águas)",
+   "diasOper": "26"
+  },
+  "base": {
+   "marca": "Volvo",
+   "modelo": "FH 540 6x4",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "1,69",
+   "fonteKml": "",
+   "arla": "6",
+   "manut": "0,3",
+   "pneus": "0,11",
+   "disp": "95",
+   "diasParados": "18",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "1180000",
+   "taxa": "",
+   "deprec": "9",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Actros 2653S 8X4",
+   "placa": "TGH0A53",
+   "chassi": "9BM963414SB427807",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Tanque isotérmico 3 eixos, 30 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "Actros 2653S 8X4",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Tanque isotérmico 3 eixos, 30 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-06-01",
+   "fim": "2026-07-22",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Seco, 22–34 °C, sem chuva relevante",
+   "trafego": "Normal",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "51 dia(s) de contrato, odômetro de 12.000 km na entrega e 23.508 km na devolução (11.508 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-06-01",
+    "odometro": "12000",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-06-05",
+    "odometro": "12822",
+    "litros": "405.5",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "822 km desde o anterior · 2,03 km/L"
+   },
+   {
+    "data": "2026-06-08",
+    "odometro": "13644",
+    "litros": "411.7",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "822 km desde o anterior · 2,00 km/L"
+   },
+   {
+    "data": "2026-06-12",
+    "odometro": "14466",
+    "litros": "383.7",
+    "posto": "Posto base do cliente",
+    "obs": "822 km desde o anterior · 2,14 km/L"
+   },
+   {
+    "data": "2026-06-16",
+    "odometro": "15288",
+    "litros": "417",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "822 km desde o anterior · 1,97 km/L"
+   },
+   {
+    "data": "2026-06-19",
+    "odometro": "16110",
+    "litros": "381.1",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "822 km desde o anterior · 2,16 km/L"
+   },
+   {
+    "data": "2026-06-23",
+    "odometro": "16932",
+    "litros": "393.3",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "822 km desde o anterior · 2,09 km/L"
+   },
+   {
+    "data": "2026-06-27",
+    "odometro": "17754",
+    "litros": "414.5",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "822 km desde o anterior · 1,98 km/L"
+   },
+   {
+    "data": "2026-06-30",
+    "odometro": "18576",
+    "litros": "414.7",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "822 km desde o anterior · 1,98 km/L"
+   },
+   {
+    "data": "2026-07-04",
+    "odometro": "19398",
+    "litros": "383.4",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "822 km desde o anterior · 2,14 km/L"
+   },
+   {
+    "data": "2026-07-07",
+    "odometro": "20220",
+    "litros": "382.3",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "822 km desde o anterior · 2,15 km/L"
+   },
+   {
+    "data": "2026-07-11",
+    "odometro": "21042",
+    "litros": "385.5",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "822 km desde o anterior · 2,13 km/L"
+   },
+   {
+    "data": "2026-07-15",
+    "odometro": "21864",
+    "litros": "419.8",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "822 km desde o anterior · 1,96 km/L"
+   },
+   {
+    "data": "2026-07-18",
+    "odometro": "22686",
+    "litros": "413.3",
+    "posto": "Posto de apoio Tecar",
+    "obs": "822 km desde o anterior · 1,99 km/L"
+   },
+   {
+    "data": "2026-07-22",
+    "odometro": "23508",
+    "litros": "410.4",
+    "posto": "Posto base do cliente",
+    "obs": "822 km desde o anterior · 2,00 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-06-06",
+    "km": "1197",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.78",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "5350",
+    "paradas": "30",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-06-06",
+    "km": "1105",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.35",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "6453",
+    "paradas": "28",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-06-16",
+    "km": "1197",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.85",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "5773",
+    "paradas": "30",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-06-16",
+    "km": "1105",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.38",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "6348",
+    "paradas": "28",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-06-26",
+    "km": "1197",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.78",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "6389",
+    "paradas": "30",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-06-26",
+    "km": "1105",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.32",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "5305",
+    "paradas": "28",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-07-06",
+    "km": "1197",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.78",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "5671",
+    "paradas": "30",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-07-06",
+    "km": "1105",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.32",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "4950",
+    "paradas": "28",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-07-16",
+    "km": "1197",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.8",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "5453",
+    "paradas": "30",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-07-16",
+    "km": "1105",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.4",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "5918",
+    "paradas": "28",
+    "urbano": "30"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "78",
+   "marchaLenta": "28",
+   "freioMotor": "82",
+   "frenagens100": "8",
+   "trocas100": "38",
+   "cargaMotor": "65",
+   "tempoMov": "6,4",
+   "velMedia": "48",
+   "cambioAuto": "96",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 78% do tempo em movimento; marcha lenta de 28 min/dia, Consumo médio do período 2,06 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "visibilidade": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "3",
+     "mb": "5"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,3",
+   "dispC": "95"
+  },
+  "prop": {
+   "lote": "2",
+   "modelo": "Actros 2653S 8X4",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 2 Actros 2653S 8X4 com decisão até 05/09/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 2,06 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Vendedor · 20 dias",
+   "janela": "Setembro de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT04",
+  "criadoEm": "2026-10-16T18:05:11.548Z",
+  "atualizadoEm": "2026-10-16T18:05:11.548Z",
+  "nome": "TT04 · ETICA CONSTRUTORA LTDA · Actros 2653S 8X4 · dados estimados",
+  "cli": {
+   "empresa": "ETICA CONSTRUTORA LTDA",
+   "cnpj": "26.631.473/0001-80",
+   "cidade": "Goiânia",
+   "uf": "GO",
+   "segmento": "Construção civil",
+   "atividade": "Outras obras de engenharia civil não especificadas anteriormente · secundárias: Incorporação de empreendimentos imobiliários; Construção de edifícios; Construção de rodovias e ferrovias",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Bruno Soares",
+   "instrutor": "a confirmar",
+   "frotaTotal": "29",
+   "frotaElegivel": "1",
+   "idadeMedia": "2,8",
+   "marcas": "Mercedes-Benz 22 · Volkswagen 7 · principais: 9.170 DRC 4X2 6 · ATEGO 2426 6 · ATEGO 2429 6",
+   "dores": "Tempo parado por manutenção corretiva e consumo em trecho urbano"
+  },
+  "op": {
+   "aplicacao": "Cavalo 8x4 com semirreboque basculante / prancha para terraplenagem e transporte de máquinas",
+   "rotas": "Goiânia (GO) → obras em Aparecida de Goiânia e Senador Canedo pela BR-153, carregado\nretorno vazio ao pátio\nGoiânia → Anápolis (GO), parcial",
+   "cargaMedia": "28",
+   "cargaMax": "42",
+   "implemento": "Basculante 3 eixos 30 m³ / prancha",
+   "kmMes": "6000",
+   "mixCarregado": "55",
+   "entregasDia": "4",
+   "velMedia": "38",
+   "perfilRod": "50",
+   "ganhoAlt": "300",
+   "paradas100": "5,0",
+   "jornada": "Diurna, 4 deslocamentos/dia, 24 dias/mês",
+   "sazonalidade": "Baixa em dezembro e janeiro",
+   "diasOper": "24"
+  },
+  "base": {
+   "marca": "Volvo",
+   "modelo": "FH 540 6x4",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "1,6",
+   "fonteKml": "",
+   "arla": "6",
+   "manut": "0,3",
+   "pneus": "0,11",
+   "disp": "95",
+   "diasParados": "18",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "1180000",
+   "taxa": "",
+   "deprec": "9",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Actros 2653S 8X4",
+   "placa": "SDJ7G45",
+   "chassi": "9BM963414RB339051",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Basculante 3 eixos 30 m³ / prancha (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "Actros 2653S 8X4",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Basculante 3 eixos 30 m³ / prancha (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-06-09",
+   "fim": "2026-07-31",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Seco, 22–34 °C, sem chuva relevante",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "52 dia(s) de contrato, odômetro de 221.000 km na entrega e 229.925 km na devolução (8.925 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-06-09",
+    "odometro": "221000",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-06-13",
+    "odometro": "221744",
+    "litros": "384.9",
+    "posto": "Posto de apoio Tecar",
+    "obs": "744 km desde o anterior · 1,93 km/L"
+   },
+   {
+    "data": "2026-06-18",
+    "odometro": "222488",
+    "litros": "376.4",
+    "posto": "Posto de apoio Tecar",
+    "obs": "744 km desde o anterior · 1,98 km/L"
+   },
+   {
+    "data": "2026-06-22",
+    "odometro": "223231",
+    "litros": "397.2",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "743 km desde o anterior · 1,87 km/L"
+   },
+   {
+    "data": "2026-06-26",
+    "odometro": "223975",
+    "litros": "394.2",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "744 km desde o anterior · 1,89 km/L"
+   },
+   {
+    "data": "2026-07-01",
+    "odometro": "224719",
+    "litros": "386.4",
+    "posto": "Posto base do cliente",
+    "obs": "744 km desde o anterior · 1,93 km/L"
+   },
+   {
+    "data": "2026-07-05",
+    "odometro": "225462",
+    "litros": "364.4",
+    "posto": "Posto base do cliente",
+    "obs": "743 km desde o anterior · 2,04 km/L"
+   },
+   {
+    "data": "2026-07-09",
+    "odometro": "226206",
+    "litros": "364.6",
+    "posto": "Posto base do cliente",
+    "obs": "744 km desde o anterior · 2,04 km/L"
+   },
+   {
+    "data": "2026-07-14",
+    "odometro": "226950",
+    "litros": "395.8",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "744 km desde o anterior · 1,88 km/L"
+   },
+   {
+    "data": "2026-07-18",
+    "odometro": "227694",
+    "litros": "396.6",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "744 km desde o anterior · 1,88 km/L"
+   },
+   {
+    "data": "2026-07-22",
+    "odometro": "228438",
+    "litros": "368.5",
+    "posto": "Posto base do cliente",
+    "obs": "744 km desde o anterior · 2,02 km/L"
+   },
+   {
+    "data": "2026-07-27",
+    "odometro": "229181",
+    "litros": "397.1",
+    "posto": "Posto base do cliente",
+    "obs": "743 km desde o anterior · 1,87 km/L"
+   },
+   {
+    "data": "2026-07-31",
+    "odometro": "229925",
+    "litros": "373.4",
+    "posto": "Posto base do cliente",
+    "obs": "744 km desde o anterior · 1,99 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-06-14",
+    "km": "928",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.73",
+    "litros": "",
+    "velMedia": "36",
+    "ganhoAlt": "3135",
+    "paradas": "46",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-06-14",
+    "km": "857",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.22",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2628",
+    "paradas": "43",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-06-24",
+    "km": "928",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.74",
+    "litros": "",
+    "velMedia": "36",
+    "ganhoAlt": "3068",
+    "paradas": "46",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-06-24",
+    "km": "857",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.31",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2274",
+    "paradas": "43",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-07-05",
+    "km": "928",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.67",
+    "litros": "",
+    "velMedia": "36",
+    "ganhoAlt": "2812",
+    "paradas": "46",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-07-05",
+    "km": "857",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.29",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2597",
+    "paradas": "43",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-07-15",
+    "km": "928",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.7",
+    "litros": "",
+    "velMedia": "36",
+    "ganhoAlt": "3170",
+    "paradas": "46",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-07-15",
+    "km": "857",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.2",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2252",
+    "paradas": "43",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-07-25",
+    "km": "928",
+    "cargaT": "28",
+    "cond": "carregado",
+    "kmlFb": "1.66",
+    "litros": "",
+    "velMedia": "36",
+    "ganhoAlt": "2392",
+    "paradas": "46",
+    "urbano": "50"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-07-25",
+    "km": "857",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.27",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "2268",
+    "paradas": "43",
+    "urbano": "50"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "82",
+   "marchaLenta": "19",
+   "freioMotor": "75",
+   "frenagens100": "12",
+   "trocas100": "44",
+   "cargaMotor": "60",
+   "tempoMov": "6,6",
+   "velMedia": "38",
+   "cambioAuto": "98",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 82% do tempo em movimento; marcha lenta de 19 min/dia, Consumo médio do período 1,96 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "visibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "3",
+     "mb": "5"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,3",
+   "dispC": "95"
+  },
+  "prop": {
+   "lote": "1",
+   "modelo": "Actros 2653S 8X4",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 1 Actros 2653S 8X4 com decisão até 14/09/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 1,96 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Bruno · 20 dias",
+   "janela": "Setembro de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT05",
+  "criadoEm": "2026-10-16T18:05:11.562Z",
+  "atualizadoEm": "2026-10-16T18:05:11.562Z",
+  "nome": "TT05 · INOVATTO VEICULOS LTDA · Accelo 1017 4X2 · dados estimados",
+  "cli": {
+   "empresa": "INOVATTO VEICULOS LTDA",
+   "cnpj": "37.115.386/0001-97",
+   "cidade": "Goiânia",
+   "uf": "GO",
+   "segmento": "Comércio de veículos",
+   "atividade": "Comércio a varejo de automóveis, camionetas e utilitários novos · secundárias: Fabricação de automóveis, camionetas e utilitários; Fabricação de cabines, carrocerias e reboques para outros veículos automotores, exceto caminhões e ônibus; Comércio a varejo de automóveis, camionetas e utilitários usados",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Bruno Soares",
+   "instrutor": "a confirmar",
+   "frotaTotal": "4",
+   "frotaElegivel": "2",
+   "idadeMedia": "5,0",
+   "marcas": "Volkswagen Delivery 2 · Mercedes-Benz Accelo 2",
+   "dores": "Consumo urbano e custo por km do leve atual"
+  },
+  "op": {
+   "aplicacao": "Caminhão leve com plataforma/guincho para transporte de veículos e apoio à revenda",
+   "rotas": "Goiânia (GO) → clientes na região metropolitana, carregado\nretorno vazio à loja\nGoiânia → Anápolis (GO) pela BR-153, carregado",
+   "cargaMedia": "2.5",
+   "cargaMax": "4.5",
+   "implemento": "Plataforma hidráulica 6,5 m",
+   "kmMes": "4500",
+   "mixCarregado": "50",
+   "entregasDia": "5",
+   "velMedia": "35",
+   "perfilRod": "45",
+   "ganhoAlt": "180",
+   "paradas100": "8,0",
+   "jornada": "Diurna, 5 entregas/dia, 24 dias/mês",
+   "sazonalidade": "Pico em novembro e dezembro",
+   "diasOper": "24"
+  },
+  "base": {
+   "marca": "Volkswagen",
+   "modelo": "Delivery 11.180",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "5,78",
+   "fonteKml": "",
+   "arla": "5",
+   "manut": "0,21",
+   "pneus": "0,06",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "375000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Accelo 1017 4X2",
+   "placa": "SDC6H06",
+   "chassi": "9BM951104RB338528",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Plataforma hidráulica 6,5 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses"
+  },
+  "vo": {
+   "modelo": "Accelo 1017 4X2",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Plataforma hidráulica 6,5 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses",
+   "preco": "365000"
+  },
+  "compat": {},
+  "features": "OM 924 de 170 cv com 610 Nm | retomada cheia em subida urbana | menos trocas\nCâmbio G 85-6 de 6 marchas | escalonamento curto | consumo menor na entrega\nCabine com ar e suspensão de cabine | menos fadiga em 8 h | menos rotatividade de motorista",
+  "prot": {
+   "inicio": "2026-06-08",
+   "fim": "2026-07-31",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Seco, 22–34 °C, sem chuva relevante",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "100 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "53 dia(s) de contrato, odômetro de 226.000 km na entrega e 232.694 km na devolução (6.694 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-06-08",
+    "odometro": "226000",
+    "litros": "135",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-06-15",
+    "odometro": "226837",
+    "litros": "120.6",
+    "posto": "Posto base do cliente",
+    "obs": "837 km desde o anterior · 6,94 km/L"
+   },
+   {
+    "data": "2026-06-21",
+    "odometro": "227674",
+    "litros": "113.4",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "837 km desde o anterior · 7,38 km/L"
+   },
+   {
+    "data": "2026-06-28",
+    "odometro": "228510",
+    "litros": "119.4",
+    "posto": "Posto de apoio Tecar",
+    "obs": "836 km desde o anterior · 7,00 km/L"
+   },
+   {
+    "data": "2026-07-04",
+    "odometro": "229347",
+    "litros": "119.6",
+    "posto": "Posto base do cliente",
+    "obs": "837 km desde o anterior · 7,00 km/L"
+   },
+   {
+    "data": "2026-07-11",
+    "odometro": "230184",
+    "litros": "119",
+    "posto": "Posto de apoio Tecar",
+    "obs": "837 km desde o anterior · 7,03 km/L"
+   },
+   {
+    "data": "2026-07-18",
+    "odometro": "231020",
+    "litros": "122.2",
+    "posto": "Posto de apoio Tecar",
+    "obs": "836 km desde o anterior · 6,84 km/L"
+   },
+   {
+    "data": "2026-07-24",
+    "odometro": "231857",
+    "litros": "116.1",
+    "posto": "Posto base do cliente",
+    "obs": "837 km desde o anterior · 7,21 km/L"
+   },
+   {
+    "data": "2026-07-31",
+    "odometro": "232694",
+    "litros": "124.4",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "837 km desde o anterior · 6,73 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-06-13",
+    "km": "696",
+    "cargaT": "2.5",
+    "cond": "carregado",
+    "kmlFb": "6.2",
+    "litros": "",
+    "velMedia": "33",
+    "ganhoAlt": "1253",
+    "paradas": "56",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-06-13",
+    "km": "643",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "7.81",
+    "litros": "",
+    "velMedia": "37",
+    "ganhoAlt": "986",
+    "paradas": "51",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-06-24",
+    "km": "696",
+    "cargaT": "2.5",
+    "cond": "carregado",
+    "kmlFb": "6.03",
+    "litros": "",
+    "velMedia": "33",
+    "ganhoAlt": "1095",
+    "paradas": "56",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-06-24",
+    "km": "643",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.31",
+    "litros": "",
+    "velMedia": "37",
+    "ganhoAlt": "1182",
+    "paradas": "51",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-07-04",
+    "km": "696",
+    "cargaT": "2.5",
+    "cond": "carregado",
+    "kmlFb": "6.32",
+    "litros": "",
+    "velMedia": "33",
+    "ganhoAlt": "1086",
+    "paradas": "56",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-07-04",
+    "km": "643",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.18",
+    "litros": "",
+    "velMedia": "37",
+    "ganhoAlt": "1300",
+    "paradas": "51",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-07-14",
+    "km": "696",
+    "cargaT": "2.5",
+    "cond": "carregado",
+    "kmlFb": "6.31",
+    "litros": "",
+    "velMedia": "33",
+    "ganhoAlt": "1075",
+    "paradas": "56",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-07-14",
+    "km": "643",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.07",
+    "litros": "",
+    "velMedia": "37",
+    "ganhoAlt": "1254",
+    "paradas": "51",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-07-25",
+    "km": "696",
+    "cargaT": "2.5",
+    "cond": "carregado",
+    "kmlFb": "6.3",
+    "litros": "",
+    "velMedia": "33",
+    "ganhoAlt": "1177",
+    "paradas": "56",
+    "urbano": "55"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-07-25",
+    "km": "643",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.13",
+    "litros": "",
+    "velMedia": "37",
+    "ganhoAlt": "1210",
+    "paradas": "51",
+    "urbano": "55"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "78",
+   "marchaLenta": "24",
+   "freioMotor": "48",
+   "frenagens100": "17",
+   "trocas100": "67",
+   "cargaMotor": "65",
+   "tempoMov": "5,4",
+   "velMedia": "35",
+   "cambioAuto": "0",
+   "arlaPct": "4,8",
+   "obs": "Faixa verde em 78% do tempo em movimento; marcha lenta de 24 min/dia, Consumo médio do período 7,06 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "visibilidade": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "4",
+     "mb": "4"
+    }
+   },
+   "citacao": "No trânsito da cidade ele é macio e não esquenta; a cabine é bem mais confortável que a do atual.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "365000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "5",
+   "manutMB": "0,19",
+   "dispMB": "95",
+   "deprecMB": "10",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,0",
+   "pneusMB": "0,06",
+   "taxaAplic": 10.5,
+   "receita": "28000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,2",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "2",
+   "modelo": "Accelo 1017 4X2",
+   "preco": "R$ 365.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 36 meses\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 2 Accelo 1017 4X2 com decisão até 14/09/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 7,06 km/L e disponibilidade ≥ 95%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Bruno · 20 dias",
+   "janela": "Setembro de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT06",
+  "criadoEm": "2026-10-16T18:05:11.576Z",
+  "atualizadoEm": "2026-10-16T18:05:11.576Z",
+  "nome": "TT06 · JEFA AGRO LTDA · Actros 2653S 8X4 · dados estimados",
+  "cli": {
+   "empresa": "JEFA AGRO LTDA",
+   "cnpj": "19.572.636/0001-36",
+   "cidade": "Goiânia",
+   "uf": "GO",
+   "segmento": "Agronegócio (insumos e fertilizantes)",
+   "atividade": "Comércio atacadista de defensivos agrícolas, adubos, fertilizantes e corretivos do solo · secundárias: Atividades de apoio à agricultura não especificadas anteriormente; Comércio atacadista de máquinas, aparelhos e equipamentos para uso agropecuário; partes e peças; Organização logística do transporte de carga",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Camila Cavaliere",
+   "instrutor": "a confirmar",
+   "frotaTotal": "3",
+   "frotaElegivel": "1",
+   "idadeMedia": "1,3",
+   "marcas": "Mercedes-Benz 2 · Iveco 1 · principais: ACTROS 2653S 1 · ACTROS 2548S 1 · S-WAY 540-6X4 1",
+   "dores": "Consumo do S-Way e disponibilidade na safra"
+  },
+  "op": {
+   "aplicacao": "Cavalo 8x4 com bitrem graneleiro/sider para distribuição de fertilizantes e defensivos e retorno com grãos",
+   "rotas": "Rio Verde (GO) → Goiânia (GO) pela BR-060, carregado\nGoiânia → Rio Verde, vazio ou insumos\nGoiânia → Anápolis (GO) pela BR-153, carregado",
+   "cargaMedia": "38",
+   "cargaMax": "57",
+   "implemento": "Bitrem graneleiro 7 eixos, 2 × 30 m³",
+   "kmMes": "10000",
+   "mixCarregado": "50",
+   "entregasDia": "1",
+   "velMedia": "58",
+   "perfilRod": "90",
+   "ganhoAlt": "450",
+   "paradas100": "1,5",
+   "jornada": "Diurna/noturna, 1 viagem/dia, 26 dias/mês",
+   "sazonalidade": "Pico de colheita de fevereiro a maio (soja) e junho a agosto (milho)",
+   "diasOper": "26"
+  },
+  "base": {
+   "marca": "Iveco",
+   "modelo": "S-Way 540 6x4",
+   "ano": "2025",
+   "qtd": "1",
+   "kml": "1,6",
+   "fonteKml": "",
+   "arla": "6,5",
+   "manut": "0,3",
+   "pneus": "0,11",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "1060000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Actros 2653S 8X4",
+   "placa": "SDJ7G45",
+   "chassi": "9BM963414RB339051",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Bitrem graneleiro 7 eixos, 2 × 30 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "Actros 2653S 8X4",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Bitrem graneleiro 7 eixos, 2 × 30 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-08-03",
+   "fim": "2026-09-30",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Seco, 22–34 °C, sem chuva relevante",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "58 dia(s) de contrato, odômetro de 233.000 km na entrega e 249.346 km na devolução (16.346 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-08-03",
+    "odometro": "233000",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-08-06",
+    "odometro": "233743",
+    "litros": "364",
+    "posto": "Posto de apoio Tecar",
+    "obs": "743 km desde o anterior · 2,04 km/L"
+   },
+   {
+    "data": "2026-08-08",
+    "odometro": "234486",
+    "litros": "367.4",
+    "posto": "Posto base do cliente",
+    "obs": "743 km desde o anterior · 2,02 km/L"
+   },
+   {
+    "data": "2026-08-11",
+    "odometro": "235229",
+    "litros": "372.3",
+    "posto": "Posto base do cliente",
+    "obs": "743 km desde o anterior · 2,00 km/L"
+   },
+   {
+    "data": "2026-08-14",
+    "odometro": "235972",
+    "litros": "372.8",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "743 km desde o anterior · 1,99 km/L"
+   },
+   {
+    "data": "2026-08-16",
+    "odometro": "236715",
+    "litros": "388.5",
+    "posto": "Posto base do cliente",
+    "obs": "743 km desde o anterior · 1,91 km/L"
+   },
+   {
+    "data": "2026-08-19",
+    "odometro": "237458",
+    "litros": "393.8",
+    "posto": "Posto base do cliente",
+    "obs": "743 km desde o anterior · 1,89 km/L"
+   },
+   {
+    "data": "2026-08-21",
+    "odometro": "238201",
+    "litros": "375.5",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "743 km desde o anterior · 1,98 km/L"
+   },
+   {
+    "data": "2026-08-24",
+    "odometro": "238944",
+    "litros": "377.3",
+    "posto": "Posto base do cliente",
+    "obs": "743 km desde o anterior · 1,97 km/L"
+   },
+   {
+    "data": "2026-08-27",
+    "odometro": "239687",
+    "litros": "375",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "743 km desde o anterior · 1,98 km/L"
+   },
+   {
+    "data": "2026-08-29",
+    "odometro": "240430",
+    "litros": "368.9",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "743 km desde o anterior · 2,01 km/L"
+   },
+   {
+    "data": "2026-09-01",
+    "odometro": "241173",
+    "litros": "383.6",
+    "posto": "Posto de apoio Tecar",
+    "obs": "743 km desde o anterior · 1,94 km/L"
+   },
+   {
+    "data": "2026-09-04",
+    "odometro": "241916",
+    "litros": "367.9",
+    "posto": "Posto de apoio Tecar",
+    "obs": "743 km desde o anterior · 2,02 km/L"
+   },
+   {
+    "data": "2026-09-06",
+    "odometro": "242659",
+    "litros": "396.2",
+    "posto": "Posto de apoio Tecar",
+    "obs": "743 km desde o anterior · 1,88 km/L"
+   },
+   {
+    "data": "2026-09-09",
+    "odometro": "243402",
+    "litros": "378.1",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "743 km desde o anterior · 1,97 km/L"
+   },
+   {
+    "data": "2026-09-12",
+    "odometro": "244145",
+    "litros": "385.3",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "743 km desde o anterior · 1,93 km/L"
+   },
+   {
+    "data": "2026-09-14",
+    "odometro": "244888",
+    "litros": "364.1",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "743 km desde o anterior · 2,04 km/L"
+   },
+   {
+    "data": "2026-09-17",
+    "odometro": "245631",
+    "litros": "383.9",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "743 km desde o anterior · 1,94 km/L"
+   },
+   {
+    "data": "2026-09-19",
+    "odometro": "246374",
+    "litros": "369.3",
+    "posto": "Posto de apoio Tecar",
+    "obs": "743 km desde o anterior · 2,01 km/L"
+   },
+   {
+    "data": "2026-09-22",
+    "odometro": "247117",
+    "litros": "386.8",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "743 km desde o anterior · 1,92 km/L"
+   },
+   {
+    "data": "2026-09-25",
+    "odometro": "247860",
+    "litros": "361.5",
+    "posto": "Posto de apoio Tecar",
+    "obs": "743 km desde o anterior · 2,06 km/L"
+   },
+   {
+    "data": "2026-09-27",
+    "odometro": "248603",
+    "litros": "383.3",
+    "posto": "Posto de apoio Tecar",
+    "obs": "743 km desde o anterior · 1,94 km/L"
+   },
+   {
+    "data": "2026-09-30",
+    "odometro": "249346",
+    "litros": "376.7",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "743 km desde o anterior · 1,97 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-08-09",
+    "km": "1700",
+    "cargaT": "38",
+    "cond": "carregado",
+    "kmlFb": "1.67",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "6997",
+    "paradas": "26",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-08-09",
+    "km": "1569",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.17",
+    "litros": "",
+    "velMedia": "61",
+    "ganhoAlt": "6689",
+    "paradas": "24",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-08-20",
+    "km": "1700",
+    "cargaT": "38",
+    "cond": "carregado",
+    "kmlFb": "1.7",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "8725",
+    "paradas": "26",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-08-20",
+    "km": "1569",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.18",
+    "litros": "",
+    "velMedia": "61",
+    "ganhoAlt": "7979",
+    "paradas": "24",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-08-31",
+    "km": "1700",
+    "cargaT": "38",
+    "cond": "carregado",
+    "kmlFb": "1.7",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "6970",
+    "paradas": "26",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-08-31",
+    "km": "1569",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.32",
+    "litros": "",
+    "velMedia": "61",
+    "ganhoAlt": "6190",
+    "paradas": "24",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-09-12",
+    "km": "1700",
+    "cargaT": "38",
+    "cond": "carregado",
+    "kmlFb": "1.67",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "6798",
+    "paradas": "26",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-09-12",
+    "km": "1569",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.16",
+    "litros": "",
+    "velMedia": "61",
+    "ganhoAlt": "6820",
+    "paradas": "24",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-09-23",
+    "km": "1700",
+    "cargaT": "38",
+    "cond": "carregado",
+    "kmlFb": "1.69",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "6868",
+    "paradas": "26",
+    "urbano": "10"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-09-23",
+    "km": "1569",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.15",
+    "litros": "",
+    "velMedia": "61",
+    "ganhoAlt": "7480",
+    "paradas": "24",
+    "urbano": "10"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "78",
+   "marchaLenta": "18",
+   "freioMotor": "73",
+   "frenagens100": "6",
+   "trocas100": "40",
+   "cargaMotor": "68",
+   "tempoMov": "6,6",
+   "velMedia": "58",
+   "cambioAuto": "96",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 78% do tempo em movimento; marcha lenta de 18 min/dia, Consumo médio do período 1,96 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "visibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "cambio": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "manobra": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "3",
+     "mb": "5"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,4",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "1",
+   "modelo": "Actros 2653S 8X4",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 1 Actros 2653S 8X4 com decisão até 14/11/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 1,96 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Camila · 20 dias",
+   "janela": "Novembro de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT07",
+  "criadoEm": "2026-10-16T18:05:11.591Z",
+  "atualizadoEm": "2026-10-16T18:05:11.592Z",
+  "nome": "TT07 · MAGALHAES MOREIRA,LOCAÇOES INDUSTRIA,COMERCIO E SERVIÇOS LTD · Accelo 1017 4X2 · dados estimados",
+  "cli": {
+   "empresa": "MAGALHAES MOREIRA,LOCAÇOES INDUSTRIA,COMERCIO E SERVIÇOS LTD",
+   "cnpj": "13.042.651/0001-96",
+   "cidade": "Aparecida de Goiânia",
+   "uf": "GO",
+   "segmento": "Locação de equipamentos e serviços",
+   "atividade": "Aluguel de outras máquinas e equipamentos comerciais e industriais não especificados anteriormente, sem operador · secundárias: Fabricação de estruturas metálicas; Fabricação de esquadrias de metal; Fabricação de artigos de serralheria, exceto esquadrias",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Vinicius De Araujo",
+   "instrutor": "a confirmar",
+   "frotaTotal": "26",
+   "frotaElegivel": "4",
+   "idadeMedia": "1,7",
+   "marcas": "Mercedes-Benz 23 · Volkswagen 3 · principais: ACCELO 917 11 · ACCELO 1017 4 · ACCELO 817 4",
+   "dores": "Custo por km dos Accelo 917 mais antigos e paradas por manutenção"
+  },
+  "op": {
+   "aplicacao": "Caminhão leve com baú/plataforma para entrega e recolhimento de equipamentos locados",
+   "rotas": "Aparecida de Goiânia (GO) → clientes em Goiânia e região, carregado\nretorno com equipamentos recolhidos, parcial",
+   "cargaMedia": "3",
+   "cargaMax": "4.8",
+   "implemento": "Baú 6,5 m com plataforma elevatória",
+   "kmMes": "5000",
+   "mixCarregado": "55",
+   "entregasDia": "6",
+   "velMedia": "32",
+   "perfilRod": "35",
+   "ganhoAlt": "200",
+   "paradas100": "9,0",
+   "jornada": "Diurna, 6 entregas/dia, 25 dias/mês",
+   "sazonalidade": "Pico de março a outubro (obras)",
+   "diasOper": "25"
+  },
+  "base": {
+   "marca": "Volkswagen",
+   "modelo": "Delivery 9.170",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "5,77",
+   "fonteKml": "",
+   "arla": "5",
+   "manut": "0,2",
+   "pneus": "0,06",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "360000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Accelo 1017 4X2",
+   "placa": "SDC6H06",
+   "chassi": "9BM951104RB338528",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Baú 6,5 m com plataforma elevatória (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses"
+  },
+  "vo": {
+   "modelo": "Accelo 1017 4X2",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Baú 6,5 m com plataforma elevatória (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses",
+   "preco": "365000"
+  },
+  "compat": {},
+  "features": "OM 924 de 170 cv com 610 Nm | retomada cheia em subida urbana | menos trocas\nCâmbio G 85-6 de 6 marchas | escalonamento curto | consumo menor na entrega\nCabine com ar e suspensão de cabine | menos fadiga em 8 h | menos rotatividade de motorista",
+  "prot": {
+   "inicio": "2026-08-04",
+   "fim": "2026-09-30",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Seco, 22–34 °C, sem chuva relevante",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "100 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "57 dia(s) de contrato, odômetro de 232.000 km na entrega e 240.160 km na devolução (8.160 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-08-04",
+    "odometro": "232000",
+    "litros": "135",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-08-10",
+    "odometro": "232907",
+    "litros": "131.5",
+    "posto": "Posto de apoio Tecar",
+    "obs": "907 km desde o anterior · 6,90 km/L"
+   },
+   {
+    "data": "2026-08-17",
+    "odometro": "233813",
+    "litros": "123.5",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "906 km desde o anterior · 7,34 km/L"
+   },
+   {
+    "data": "2026-08-23",
+    "odometro": "234720",
+    "litros": "125.6",
+    "posto": "Posto base do cliente",
+    "obs": "907 km desde o anterior · 7,22 km/L"
+   },
+   {
+    "data": "2026-08-29",
+    "odometro": "235627",
+    "litros": "134.1",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "907 km desde o anterior · 6,77 km/L"
+   },
+   {
+    "data": "2026-09-05",
+    "odometro": "236533",
+    "litros": "133",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "906 km desde o anterior · 6,81 km/L"
+   },
+   {
+    "data": "2026-09-11",
+    "odometro": "237440",
+    "litros": "122.9",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "907 km desde o anterior · 7,38 km/L"
+   },
+   {
+    "data": "2026-09-17",
+    "odometro": "238347",
+    "litros": "133.3",
+    "posto": "Posto base do cliente",
+    "obs": "907 km desde o anterior · 6,80 km/L"
+   },
+   {
+    "data": "2026-09-24",
+    "odometro": "239253",
+    "litros": "126.9",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "906 km desde o anterior · 7,14 km/L"
+   },
+   {
+    "data": "2026-09-30",
+    "odometro": "240160",
+    "litros": "134",
+    "posto": "Posto de apoio Tecar",
+    "obs": "907 km desde o anterior · 6,77 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-08-10",
+    "km": "849",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.25",
+    "litros": "",
+    "velMedia": "30",
+    "ganhoAlt": "1467",
+    "paradas": "76",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-08-10",
+    "km": "783",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.29",
+    "litros": "",
+    "velMedia": "34",
+    "ganhoAlt": "1587",
+    "paradas": "70",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-08-21",
+    "km": "849",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.02",
+    "litros": "",
+    "velMedia": "30",
+    "ganhoAlt": "1687",
+    "paradas": "76",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-08-21",
+    "km": "783",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.02",
+    "litros": "",
+    "velMedia": "34",
+    "ganhoAlt": "1726",
+    "paradas": "70",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-09-01",
+    "km": "849",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.02",
+    "litros": "",
+    "velMedia": "30",
+    "ganhoAlt": "1806",
+    "paradas": "76",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-09-01",
+    "km": "783",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.03",
+    "litros": "",
+    "velMedia": "34",
+    "ganhoAlt": "1658",
+    "paradas": "70",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-09-12",
+    "km": "849",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.34",
+    "litros": "",
+    "velMedia": "30",
+    "ganhoAlt": "1879",
+    "paradas": "76",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-09-12",
+    "km": "783",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "7.89",
+    "litros": "",
+    "velMedia": "34",
+    "ganhoAlt": "1338",
+    "paradas": "70",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-09-23",
+    "km": "849",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.41",
+    "litros": "",
+    "velMedia": "30",
+    "ganhoAlt": "1803",
+    "paradas": "76",
+    "urbano": "65"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-09-23",
+    "km": "783",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.12",
+    "litros": "",
+    "velMedia": "34",
+    "ganhoAlt": "1397",
+    "paradas": "70",
+    "urbano": "65"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "75",
+   "marchaLenta": "20",
+   "freioMotor": "53",
+   "frenagens100": "19",
+   "trocas100": "88",
+   "cargaMotor": "64",
+   "tempoMov": "6,2",
+   "velMedia": "32",
+   "cambioAuto": "0",
+   "arlaPct": "4,8",
+   "obs": "Faixa verde em 75% do tempo em movimento; marcha lenta de 20 min/dia, Consumo médio do período 7,05 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "visibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "ruido": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "3",
+     "mb": "5"
+    }
+   },
+   "citacao": "No trânsito da cidade ele é macio e não esquenta; a cabine é bem mais confortável que a do atual.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "365000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "5",
+   "manutMB": "0,19",
+   "dispMB": "95",
+   "deprecMB": "10",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,0",
+   "pneusMB": "0,06",
+   "taxaAplic": 10.5,
+   "receita": "28000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,2",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "3",
+   "modelo": "Accelo 1017 4X2",
+   "preco": "R$ 365.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 36 meses\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 3 Accelo 1017 4X2 com decisão até 14/11/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 7,05 km/L e disponibilidade ≥ 95%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Vinicius · 20 dias",
+   "janela": "Novembro de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT08",
+  "criadoEm": "2026-10-16T18:05:11.606Z",
+  "atualizadoEm": "2026-10-16T18:05:11.606Z",
+  "nome": "TT08 · MINUANO INVESTIMENTOS E PARTICIPAÇÕES LTDA · Accelo 1017 4X2 · dados estimados",
+  "cli": {
+   "empresa": "MINUANO INVESTIMENTOS E PARTICIPAÇÕES LTDA",
+   "cnpj": "04.351.830/0001-14",
+   "cidade": "Brasília",
+   "uf": "DF",
+   "segmento": "Holding · distribuição no DF",
+   "atividade": "Holdings de instituições não financeiras · secundárias: Aluguel de imóveis próprios",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "a definir (conta sem vendedor no CRM)",
+   "instrutor": "a confirmar",
+   "frotaTotal": "4",
+   "frotaElegivel": "2",
+   "idadeMedia": "5,0",
+   "marcas": "Volkswagen Delivery 2 · Mercedes-Benz Accelo 2",
+   "dores": "Consumo urbano e manobrabilidade no centro"
+  },
+  "op": {
+   "aplicacao": "Caminhão leve com baú para distribuição urbana no Distrito Federal",
+   "rotas": "Brasília (DF) → entregas no Plano Piloto e cidades-satélite, carregado\nretorno vazio ao CD",
+   "cargaMedia": "3",
+   "cargaMax": "4.8",
+   "implemento": "Baú 6,5 m",
+   "kmMes": "4500",
+   "mixCarregado": "55",
+   "entregasDia": "8",
+   "velMedia": "28",
+   "perfilRod": "30",
+   "ganhoAlt": "150",
+   "paradas100": "12,0",
+   "jornada": "Diurna, 8 entregas/dia, 24 dias/mês",
+   "sazonalidade": "Pico em novembro e dezembro",
+   "diasOper": "24"
+  },
+  "base": {
+   "marca": "Volkswagen",
+   "modelo": "Delivery 11.180",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "5,75",
+   "fonteKml": "",
+   "arla": "5",
+   "manut": "0,21",
+   "pneus": "0,06",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "375000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Accelo 1017 4X2",
+   "placa": "SDC6H06",
+   "chassi": "9BM951104RB338528",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Baú 6,5 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses"
+  },
+  "vo": {
+   "modelo": "Accelo 1017 4X2",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Baú 6,5 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses",
+   "preco": "365000"
+  },
+  "compat": {},
+  "features": "OM 924 de 170 cv com 610 Nm | retomada cheia em subida urbana | menos trocas\nCâmbio G 85-6 de 6 marchas | escalonamento curto | consumo menor na entrega\nCabine com ar e suspensão de cabine | menos fadiga em 8 h | menos rotatividade de motorista",
+  "prot": {
+   "inicio": "2026-01-19",
+   "fim": "2026-02-19",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Chuvas isoladas à tarde, 20–31 °C",
+   "trafego": "Normal",
+   "pressao": "100 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "31 dia(s) de contrato, odômetro de 202.000 km na entrega e 205.984 km na devolução (3.984 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-01-19",
+    "odometro": "202000",
+    "litros": "135",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-01-27",
+    "odometro": "202996",
+    "litros": "146.8",
+    "posto": "Posto de apoio Tecar",
+    "obs": "996 km desde o anterior · 6,79 km/L"
+   },
+   {
+    "data": "2026-02-04",
+    "odometro": "203992",
+    "litros": "137.6",
+    "posto": "Posto de apoio Tecar",
+    "obs": "996 km desde o anterior · 7,24 km/L"
+   },
+   {
+    "data": "2026-02-11",
+    "odometro": "204988",
+    "litros": "137.7",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "996 km desde o anterior · 7,23 km/L"
+   },
+   {
+    "data": "2026-02-19",
+    "odometro": "205984",
+    "litros": "136.1",
+    "posto": "Posto de apoio Tecar",
+    "obs": "996 km desde o anterior · 7,32 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-01-22",
+    "km": "414",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.08",
+    "litros": "",
+    "velMedia": "27",
+    "ganhoAlt": "631",
+    "paradas": "50",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-01-22",
+    "km": "382",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "7.95",
+    "litros": "",
+    "velMedia": "29",
+    "ganhoAlt": "630",
+    "paradas": "46",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-01-28",
+    "km": "414",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.23",
+    "litros": "",
+    "velMedia": "27",
+    "ganhoAlt": "632",
+    "paradas": "50",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-01-28",
+    "km": "382",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.2",
+    "litros": "",
+    "velMedia": "29",
+    "ganhoAlt": "563",
+    "paradas": "46",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-02-03",
+    "km": "414",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.2",
+    "litros": "",
+    "velMedia": "27",
+    "ganhoAlt": "668",
+    "paradas": "50",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-02-03",
+    "km": "382",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.16",
+    "litros": "",
+    "velMedia": "29",
+    "ganhoAlt": "615",
+    "paradas": "46",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-02-09",
+    "km": "414",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.38",
+    "litros": "",
+    "velMedia": "27",
+    "ganhoAlt": "632",
+    "paradas": "50",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-02-09",
+    "km": "382",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.05",
+    "litros": "",
+    "velMedia": "29",
+    "ganhoAlt": "519",
+    "paradas": "46",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-02-15",
+    "km": "414",
+    "cargaT": "3",
+    "cond": "carregado",
+    "kmlFb": "6.06",
+    "litros": "",
+    "velMedia": "27",
+    "ganhoAlt": "609",
+    "paradas": "50",
+    "urbano": "70"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-02-15",
+    "km": "382",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.01",
+    "litros": "",
+    "velMedia": "29",
+    "ganhoAlt": "642",
+    "paradas": "46",
+    "urbano": "70"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "70",
+   "marchaLenta": "30",
+   "freioMotor": "51",
+   "frenagens100": "25",
+   "trocas100": "66",
+   "cargaMotor": "65",
+   "tempoMov": "6,7",
+   "velMedia": "28",
+   "cambioAuto": "0",
+   "arlaPct": "4,8",
+   "obs": "Faixa verde em 70% do tempo em movimento; marcha lenta de 30 min/dia, Consumo médio do período 7,03 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "visibilidade": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "cambio": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "seguranca": {
+     "atual": "4",
+     "mb": "4"
+    }
+   },
+   "citacao": "No trânsito da cidade ele é macio e não esquenta; a cabine é bem mais confortável que a do atual.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "365000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "5",
+   "manutMB": "0,19",
+   "dispMB": "95",
+   "deprecMB": "10",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,0",
+   "pneusMB": "0,06",
+   "taxaAplic": 10.5,
+   "receita": "28000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,2",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "2",
+   "modelo": "Accelo 1017 4X2",
+   "preco": "R$ 365.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 36 meses\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 2 Accelo 1017 4X2 com decisão até 05/04/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 7,03 km/L e disponibilidade ≥ 95%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Vendedor · 20 dias",
+   "janela": "Abril de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT09",
+  "criadoEm": "2026-10-16T18:05:11.621Z",
+  "atualizadoEm": "2026-10-16T18:05:11.621Z",
+  "nome": "TT09 · OFIR PETROLEO LTDA · Actros 2653S 6X4 · dados estimados",
+  "cli": {
+   "empresa": "OFIR PETROLEO LTDA",
+   "cnpj": "15.038.596/0001-96",
+   "cidade": "Senador Canedo",
+   "uf": "GO",
+   "segmento": "Combustíveis (distribuição)",
+   "atividade": "Comércio atacadista de combustíveis realizado por transportador retalhista (TRR) · secundárias: Comércio atacadista de lubrificantes; Transporte rodoviário de produtos perigosos; Armazéns gerais - emissão de warrant",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Conrado Junior",
+   "instrutor": "a confirmar",
+   "frotaTotal": "6",
+   "frotaElegivel": "1",
+   "idadeMedia": "1,8",
+   "marcas": "Mercedes-Benz 2 · Volvo 2 · Hyundai 1 · Iveco 1 · principais: ACTROS 2651S 2 · HD 80 1 · VM 290 6X2 R 1",
+   "dores": "Consumo dos cavalos atuais e dias parados"
+  },
+  "op": {
+   "aplicacao": "Cavalo 6x4 com bitrem-tanque de combustível",
+   "rotas": "Senador Canedo (GO) → Brasília (DF) pela BR-060, carregado\nBrasília → Senador Canedo, vazio\nSenador Canedo → Anápolis (GO) pela BR-153, carregado",
+   "cargaMedia": "37",
+   "cargaMax": "40",
+   "implemento": "Bitrem-tanque 7 eixos, 45 m³",
+   "kmMes": "9000",
+   "mixCarregado": "50",
+   "entregasDia": "2",
+   "velMedia": "56",
+   "perfilRod": "92",
+   "ganhoAlt": "430",
+   "paradas100": "1,5",
+   "jornada": "Diurna, 2 viagens/dia, 25 dias/mês",
+   "sazonalidade": "Pico de novembro a fevereiro",
+   "diasOper": "25"
+  },
+  "base": {
+   "marca": "Iveco",
+   "modelo": "S-Way 540 6x4",
+   "ano": "2025",
+   "qtd": "1",
+   "kml": "1,83",
+   "fonteKml": "",
+   "arla": "6,5",
+   "manut": "0,3",
+   "pneus": "0,11",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "1060000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Actros 2653S 6X4",
+   "placa": "SDJ7G45",
+   "chassi": "9BM963414RB339051",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "33",
+   "cmt": "74",
+   "implemento": "Bitrem-tanque 7 eixos, 45 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "Actros 2653S 6X4",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "33",
+   "cmt": "74",
+   "implemento": "Bitrem-tanque 7 eixos, 45 m³ (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-01-19",
+   "fim": "2026-02-19",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Chuvas isoladas à tarde, 20–31 °C",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "31 dia(s) de contrato, odômetro de 210.000 km na entrega e 217.956 km na devolução (7.956 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-01-19",
+    "odometro": "210000",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-01-22",
+    "odometro": "210884",
+    "litros": "386",
+    "posto": "Posto de apoio Tecar",
+    "obs": "884 km desde o anterior · 2,29 km/L"
+   },
+   {
+    "data": "2026-01-26",
+    "odometro": "211768",
+    "litros": "398.5",
+    "posto": "Posto base do cliente",
+    "obs": "884 km desde o anterior · 2,22 km/L"
+   },
+   {
+    "data": "2026-01-29",
+    "odometro": "212652",
+    "litros": "380.7",
+    "posto": "Posto de apoio Tecar",
+    "obs": "884 km desde o anterior · 2,32 km/L"
+   },
+   {
+    "data": "2026-02-02",
+    "odometro": "213536",
+    "litros": "411.7",
+    "posto": "Posto de apoio Tecar",
+    "obs": "884 km desde o anterior · 2,15 km/L"
+   },
+   {
+    "data": "2026-02-05",
+    "odometro": "214420",
+    "litros": "391.2",
+    "posto": "Posto de apoio Tecar",
+    "obs": "884 km desde o anterior · 2,26 km/L"
+   },
+   {
+    "data": "2026-02-09",
+    "odometro": "215304",
+    "litros": "411.9",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "884 km desde o anterior · 2,15 km/L"
+   },
+   {
+    "data": "2026-02-12",
+    "odometro": "216188",
+    "litros": "412.8",
+    "posto": "Posto de apoio Tecar",
+    "obs": "884 km desde o anterior · 2,14 km/L"
+   },
+   {
+    "data": "2026-02-16",
+    "odometro": "217072",
+    "litros": "389.2",
+    "posto": "Posto base do cliente",
+    "obs": "884 km desde o anterior · 2,27 km/L"
+   },
+   {
+    "data": "2026-02-19",
+    "odometro": "217956",
+    "litros": "386",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "884 km desde o anterior · 2,29 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-01-22",
+    "km": "827",
+    "cargaT": "37",
+    "cond": "carregado",
+    "kmlFb": "1.96",
+    "litros": "",
+    "velMedia": "53",
+    "ganhoAlt": "4020",
+    "paradas": "12",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-01-22",
+    "km": "764",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.63",
+    "litros": "",
+    "velMedia": "59",
+    "ganhoAlt": "3251",
+    "paradas": "11",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-01-28",
+    "km": "827",
+    "cargaT": "37",
+    "cond": "carregado",
+    "kmlFb": "1.9",
+    "litros": "",
+    "velMedia": "53",
+    "ganhoAlt": "3907",
+    "paradas": "12",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-01-28",
+    "km": "764",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.49",
+    "litros": "",
+    "velMedia": "59",
+    "ganhoAlt": "3513",
+    "paradas": "11",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-02-03",
+    "km": "827",
+    "cargaT": "37",
+    "cond": "carregado",
+    "kmlFb": "1.97",
+    "litros": "",
+    "velMedia": "53",
+    "ganhoAlt": "4051",
+    "paradas": "12",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-02-03",
+    "km": "764",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.48",
+    "litros": "",
+    "velMedia": "59",
+    "ganhoAlt": "3575",
+    "paradas": "11",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-02-09",
+    "km": "827",
+    "cargaT": "37",
+    "cond": "carregado",
+    "kmlFb": "2.01",
+    "litros": "",
+    "velMedia": "53",
+    "ganhoAlt": "3041",
+    "paradas": "12",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-02-09",
+    "km": "764",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.57",
+    "litros": "",
+    "velMedia": "59",
+    "ganhoAlt": "3083",
+    "paradas": "11",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-02-15",
+    "km": "827",
+    "cargaT": "37",
+    "cond": "carregado",
+    "kmlFb": "2",
+    "litros": "",
+    "velMedia": "53",
+    "ganhoAlt": "4048",
+    "paradas": "12",
+    "urbano": "8"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-02-15",
+    "km": "764",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.59",
+    "litros": "",
+    "velMedia": "59",
+    "ganhoAlt": "3279",
+    "paradas": "11",
+    "urbano": "8"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "81",
+   "marchaLenta": "19",
+   "freioMotor": "77",
+   "frenagens100": "6",
+   "trocas100": "35",
+   "cargaMotor": "67",
+   "tempoMov": "6,4",
+   "velMedia": "56",
+   "cambioAuto": "95",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 81% do tempo em movimento; marcha lenta de 19 min/dia, Consumo médio do período 2,24 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "visibilidade": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "4",
+     "mb": "5"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,4",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "1",
+   "modelo": "Actros 2653S 6X4",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 1 Actros 2653S 6X4 com decisão até 05/04/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 2,24 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Conrado · 20 dias",
+   "janela": "Abril de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT10",
+  "criadoEm": "2026-10-16T18:05:11.637Z",
+  "atualizadoEm": "2026-10-16T18:05:11.637Z",
+  "nome": "TT10 · WR INDUSTRIA E COMERCIO ESTOFADOS LTDA · Accelo 1017 4X2 · dados estimados",
+  "cli": {
+   "empresa": "WR INDUSTRIA E COMERCIO ESTOFADOS LTDA",
+   "cnpj": "03.867.813/0001-71",
+   "cidade": "Itapuranga",
+   "uf": "GO",
+   "segmento": "Estofados e reboque de veículos",
+   "atividade": "Serviços de reboque de veículos · secundárias: Serviços de manutenção e reparação mecânica de veículos automotores; Serviços de manutenção e reparação elétrica de veículos automotores; Serviço de táxi",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Vinicius De Araujo",
+   "instrutor": "a confirmar",
+   "frotaTotal": "2",
+   "frotaElegivel": "1",
+   "idadeMedia": "3,5",
+   "marcas": "Mercedes-Benz 2 · principais: ACCELO 1016 CE 1 · ACCELO 1017 CE 1",
+   "dores": "Consumo e conforto do motorista em viagens longas com o Accelo atual"
+  },
+  "op": {
+   "aplicacao": "Caminhão leve com plataforma de reboque e baú para entrega de estofados",
+   "rotas": "Itapuranga (GO) → Goiânia (GO) pela GO-156 e BR-153, carregado\nGoiânia → Itapuranga, vazio\nItapuranga → Anápolis (GO), carregado",
+   "cargaMedia": "2",
+   "cargaMax": "4",
+   "implemento": "Plataforma hidráulica 6,5 m / baú 7,0 m",
+   "kmMes": "5500",
+   "mixCarregado": "50",
+   "entregasDia": "4",
+   "velMedia": "48",
+   "perfilRod": "70",
+   "ganhoAlt": "380",
+   "paradas100": "3,0",
+   "jornada": "Diurna, 4 entregas/dia, 24 dias/mês",
+   "sazonalidade": "Pico em novembro e dezembro",
+   "diasOper": "24"
+  },
+  "base": {
+   "marca": "Volkswagen",
+   "modelo": "Delivery 11.180",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "6,02",
+   "fonteKml": "",
+   "arla": "5",
+   "manut": "0,21",
+   "pneus": "0,06",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "375000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Accelo 1017 4X2",
+   "placa": "SDC6H06",
+   "chassi": "9BM951104RB338528",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Plataforma hidráulica 6,5 m / baú 7,0 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses"
+  },
+  "vo": {
+   "modelo": "Accelo 1017 4X2",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Plataforma hidráulica 6,5 m / baú 7,0 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses",
+   "preco": "365000"
+  },
+  "compat": {},
+  "features": "OM 924 de 170 cv com 610 Nm | retomada cheia em subida urbana | menos trocas\nCâmbio G 85-6 de 6 marchas | escalonamento curto | consumo menor na entrega\nCabine com ar e suspensão de cabine | menos fadiga em 8 h | menos rotatividade de motorista",
+  "prot": {
+   "inicio": "2026-04-16",
+   "fim": "2026-05-18",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Chuvas isoladas à tarde, 20–31 °C",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "100 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "32 dia(s) de contrato, odômetro de 218.000 km na entrega e 223.065 km na devolução (5.065 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-04-16",
+    "odometro": "218000",
+    "litros": "135",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-04-22",
+    "odometro": "219013",
+    "litros": "132.7",
+    "posto": "Posto base do cliente",
+    "obs": "1013 km desde o anterior · 7,63 km/L"
+   },
+   {
+    "data": "2026-04-29",
+    "odometro": "220026",
+    "litros": "136.7",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "1013 km desde o anterior · 7,41 km/L"
+   },
+   {
+    "data": "2026-05-05",
+    "odometro": "221039",
+    "litros": "137.8",
+    "posto": "Posto de apoio Tecar",
+    "obs": "1013 km desde o anterior · 7,35 km/L"
+   },
+   {
+    "data": "2026-05-12",
+    "odometro": "222052",
+    "litros": "137.7",
+    "posto": "Posto base do cliente",
+    "obs": "1013 km desde o anterior · 7,36 km/L"
+   },
+   {
+    "data": "2026-05-18",
+    "odometro": "223065",
+    "litros": "139.2",
+    "posto": "Posto de apoio Tecar",
+    "obs": "1013 km desde o anterior · 7,28 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-04-19",
+    "km": "527",
+    "cargaT": "2",
+    "cond": "carregado",
+    "kmlFb": "6.34",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "1888",
+    "paradas": "16",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-04-19",
+    "km": "486",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.35",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "1986",
+    "paradas": "15",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-04-25",
+    "km": "527",
+    "cargaT": "2",
+    "cond": "carregado",
+    "kmlFb": "6.26",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "1968",
+    "paradas": "16",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-04-25",
+    "km": "486",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.2",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "1942",
+    "paradas": "15",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-05-02",
+    "km": "527",
+    "cargaT": "2",
+    "cond": "carregado",
+    "kmlFb": "6.63",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "1861",
+    "paradas": "16",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-05-02",
+    "km": "486",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.53",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "1827",
+    "paradas": "15",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-05-08",
+    "km": "527",
+    "cargaT": "2",
+    "cond": "carregado",
+    "kmlFb": "6.32",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "1868",
+    "paradas": "16",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-05-08",
+    "km": "486",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.4",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "2017",
+    "paradas": "15",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-05-14",
+    "km": "527",
+    "cargaT": "2",
+    "cond": "carregado",
+    "kmlFb": "6.52",
+    "litros": "",
+    "velMedia": "46",
+    "ganhoAlt": "1703",
+    "paradas": "16",
+    "urbano": "30"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-05-14",
+    "km": "486",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.57",
+    "litros": "",
+    "velMedia": "50",
+    "ganhoAlt": "1891",
+    "paradas": "15",
+    "urbano": "30"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "76",
+   "marchaLenta": "23",
+   "freioMotor": "47",
+   "frenagens100": "8",
+   "trocas100": "74",
+   "cargaMotor": "58",
+   "tempoMov": "4,8",
+   "velMedia": "48",
+   "cambioAuto": "0",
+   "arlaPct": "4,8",
+   "obs": "Faixa verde em 76% do tempo em movimento; marcha lenta de 23 min/dia, Consumo médio do período 7,35 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "visibilidade": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "manobra": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "4",
+     "mb": "5"
+    }
+   },
+   "citacao": "No trânsito da cidade ele é macio e não esquenta; a cabine é bem mais confortável que a do atual.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "365000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "5",
+   "manutMB": "0,19",
+   "dispMB": "95",
+   "deprecMB": "10",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,0",
+   "pneusMB": "0,06",
+   "taxaAplic": 10.5,
+   "receita": "28000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,2",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "1",
+   "modelo": "Accelo 1017 4X2",
+   "preco": "R$ 365.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 36 meses\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 1 Accelo 1017 4X2 com decisão até 02/07/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 7,35 km/L e disponibilidade ≥ 95%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Vinicius · 20 dias",
+   "janela": "Julho de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT11",
+  "criadoEm": "2026-10-16T18:05:11.653Z",
+  "atualizadoEm": "2026-10-16T18:05:11.653Z",
+  "nome": "TT11 · ZOEDE LOCAÇÕES DE BENS LTDA · Actros 2653S 8X4 · dados estimados",
+  "cli": {
+   "empresa": "ZOEDE LOCAÇÕES DE BENS LTDA",
+   "cnpj": "07.984.872/0001-80",
+   "cidade": "Goiânia",
+   "uf": "GO",
+   "segmento": "Locação de veículos e bens",
+   "atividade": "Locação de outros meios de transporte não especificados anteriormente, sem condutor · secundárias: Aluguel de máquinas e equipamentos para construção sem operador, exceto andaimes",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Vinicius De Araujo",
+   "instrutor": "a confirmar",
+   "frotaTotal": "74",
+   "frotaElegivel": "1",
+   "idadeMedia": "3,5",
+   "marcas": "Mercedes-Benz 74 · principais: ATEGO 2426 CL 40 · ATEGO 2429CL 24 · ACCELO 1316 10",
+   "dores": "Disponibilidade e custo de manutenção da frota locada"
+  },
+  "op": {
+   "aplicacao": "Cavalo 8x4 para locação a transportadores de carga pesada",
+   "rotas": "Goiânia (GO) → Anápolis (GO) pela BR-153, carregado\nAnápolis → Goiânia, vazio\nGoiânia → Rio Verde (GO) pela BR-060, carregado",
+   "cargaMedia": "35",
+   "cargaMax": "50",
+   "implemento": "Conforme locatário (prancha / graneleiro)",
+   "kmMes": "8500",
+   "mixCarregado": "50",
+   "entregasDia": "1",
+   "velMedia": "52",
+   "perfilRod": "80",
+   "ganhoAlt": "420",
+   "paradas100": "2,0",
+   "jornada": "Conforme locatário, 26 dias/mês",
+   "sazonalidade": "Demanda maior na safra (fev–ago)",
+   "diasOper": "26"
+  },
+  "base": {
+   "marca": "Volvo",
+   "modelo": "FH 540 6x4",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "1,67",
+   "fonteKml": "",
+   "arla": "6",
+   "manut": "0,3",
+   "pneus": "0,11",
+   "disp": "95",
+   "diasParados": "18",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "1180000",
+   "taxa": "",
+   "deprec": "9",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Actros 2653S 8X4",
+   "placa": "TGH0A53",
+   "chassi": "9BM963414SB427807",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Conforme locatário (prancha / graneleiro) (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "Actros 2653S 8X4",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Conforme locatário (prancha / graneleiro) (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-05-05",
+   "fim": "2026-05-15",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Seco, 22–34 °C, sem chuva relevante",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "10 dia(s) de contrato, odômetro de 8.000 km na entrega e 10.501 km na devolução (2.501 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-05-05",
+    "odometro": "8000",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-05-08",
+    "odometro": "8834",
+    "litros": "430.3",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "834 km desde o anterior · 1,94 km/L"
+   },
+   {
+    "data": "2026-05-12",
+    "odometro": "9667",
+    "litros": "390.5",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "833 km desde o anterior · 2,13 km/L"
+   },
+   {
+    "data": "2026-05-15",
+    "odometro": "10501",
+    "litros": "406.7",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "834 km desde o anterior · 2,05 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Ciclo 1 · ida carregado",
+    "data": "2026-05-06",
+    "km": "260",
+    "cargaT": "35",
+    "cond": "carregado",
+    "kmlFb": "1.73",
+    "litros": "",
+    "velMedia": "49",
+    "ganhoAlt": "1061",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 1 · volta vazio",
+    "data": "2026-05-06",
+    "km": "240",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.31",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "1128",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 2 · ida carregado",
+    "data": "2026-05-08",
+    "km": "260",
+    "cargaT": "35",
+    "cond": "carregado",
+    "kmlFb": "1.74",
+    "litros": "",
+    "velMedia": "49",
+    "ganhoAlt": "997",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 2 · volta vazio",
+    "data": "2026-05-08",
+    "km": "240",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.3",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "893",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 3 · ida carregado",
+    "data": "2026-05-09",
+    "km": "260",
+    "cargaT": "35",
+    "cond": "carregado",
+    "kmlFb": "1.75",
+    "litros": "",
+    "velMedia": "49",
+    "ganhoAlt": "1055",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 3 · volta vazio",
+    "data": "2026-05-09",
+    "km": "240",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.29",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "1007",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 4 · ida carregado",
+    "data": "2026-05-11",
+    "km": "260",
+    "cargaT": "35",
+    "cond": "carregado",
+    "kmlFb": "1.83",
+    "litros": "",
+    "velMedia": "49",
+    "ganhoAlt": "1147",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 4 · volta vazio",
+    "data": "2026-05-11",
+    "km": "240",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.38",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "1007",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 5 · ida carregado",
+    "data": "2026-05-13",
+    "km": "260",
+    "cargaT": "35",
+    "cond": "carregado",
+    "kmlFb": "1.74",
+    "litros": "",
+    "velMedia": "49",
+    "ganhoAlt": "1104",
+    "paradas": "5",
+    "urbano": "20"
+   },
+   {
+    "nome": "Ciclo 5 · volta vazio",
+    "data": "2026-05-13",
+    "km": "240",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.29",
+    "litros": "",
+    "velMedia": "55",
+    "ganhoAlt": "880",
+    "paradas": "5",
+    "urbano": "20"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "85",
+   "marchaLenta": "21",
+   "freioMotor": "77",
+   "frenagens100": "7",
+   "trocas100": "34",
+   "cargaMotor": "64",
+   "tempoMov": "6,3",
+   "velMedia": "52",
+   "cambioAuto": "95",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 85% do tempo em movimento; marcha lenta de 21 min/dia, Consumo médio do período 2,04 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "visibilidade": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "3",
+     "mb": "4"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,3",
+   "dispC": "95"
+  },
+  "prop": {
+   "lote": "1",
+   "modelo": "Actros 2653S 8X4",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 1 Actros 2653S 8X4 com decisão até 29/06/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 2,04 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Vinicius · 20 dias",
+   "janela": "Junho de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT12",
+  "criadoEm": "2026-10-16T18:05:11.668Z",
+  "atualizadoEm": "2026-10-16T18:05:11.668Z",
+  "nome": "TT12 · SIDERAL CAMINHÕES LTDA · Accelo 1017 4X2 · dados estimados",
+  "cli": {
+   "empresa": "SIDERAL CAMINHÕES LTDA",
+   "cnpj": "33.323.906/0001-04",
+   "cidade": "Contagem",
+   "uf": "MG",
+   "segmento": "Locação de automóveis",
+   "atividade": "Locação de automóveis sem condutor · secundárias: Serviço de transporte de passageiros - locação de automóveis com motorista; Transporte rodoviário coletivo de passageiros, sob regime de fretamento, intermunicipal, interestadual e internacional; Locação de outros meios de transporte não especificados anteriormente, sem condutor",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "a definir (conta sem vendedor no CRM)",
+   "instrutor": "a confirmar",
+   "frotaTotal": "4",
+   "frotaElegivel": "2",
+   "idadeMedia": "5,0",
+   "marcas": "Volkswagen Delivery 2 · Mercedes-Benz Accelo 2",
+   "dores": "Consumo em trânsito urbano pesado"
+  },
+  "op": {
+   "aplicacao": "Caminhão leve com plataforma para transporte de veículos da locadora",
+   "rotas": "Goiânia (GO) → filiais e clientes na região metropolitana, carregado\nretorno vazio\nGoiânia → Brasília (DF) pela BR-060, carregado",
+   "cargaMedia": "2",
+   "cargaMax": "4.5",
+   "implemento": "Plataforma hidráulica 6,5 m",
+   "kmMes": "3000",
+   "mixCarregado": "50",
+   "entregasDia": "3",
+   "velMedia": "38",
+   "perfilRod": "50",
+   "ganhoAlt": "250",
+   "paradas100": "6,0",
+   "jornada": "Diurna, 3 deslocamentos/dia, 22 dias/mês",
+   "sazonalidade": "Sem sazonalidade relevante",
+   "diasOper": "22"
+  },
+  "base": {
+   "marca": "Volkswagen",
+   "modelo": "Delivery 11.180",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "6,03",
+   "fonteKml": "",
+   "arla": "5",
+   "manut": "0,21",
+   "pneus": "0,06",
+   "disp": "93",
+   "diasParados": "26",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "375000",
+   "taxa": "",
+   "deprec": "11",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "Accelo 1017 4X2",
+   "placa": "SDC6H06",
+   "chassi": "9BM951104RB338528",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Plataforma hidráulica 6,5 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses"
+  },
+  "vo": {
+   "modelo": "Accelo 1017 4X2",
+   "motor": "OM 924 LA 4,8 L · 170 cv",
+   "potencia": "170",
+   "torque": "610",
+   "transmissao": "Mercedes-Benz G 85-6 (manual, 6 marchas)",
+   "relacao": "4,30",
+   "entreEixos": "3700",
+   "pneus": "215/75 R17.5 · 100 psi",
+   "pbt": "10,4",
+   "cmt": "15",
+   "implemento": "Plataforma hidráulica 6,5 m (do cliente)",
+   "tecnologias": "Freio motor, ABS/EBD, controle de tração, cabine com ar-condicionado, Fleetboard opcional",
+   "manutPlano": "Best Basic 36 meses",
+   "preco": "365000"
+  },
+  "compat": {},
+  "features": "OM 924 de 170 cv com 610 Nm | retomada cheia em subida urbana | menos trocas\nCâmbio G 85-6 de 6 marchas | escalonamento curto | consumo menor na entrega\nCabine com ar e suspensão de cabine | menos fadiga em 8 h | menos rotatividade de motorista",
+  "prot": {
+   "inicio": "2026-03-09",
+   "fim": "2026-03-09",
+   "motorista": "a confirmar",
+   "pctCliente": "60",
+   "metodo": "ambos",
+   "clima": "Chuvas isoladas à tarde, 20–31 °C",
+   "trafego": "Normal",
+   "pressao": "100 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "1 dia(s) de contrato, odômetro de 211.000 km na entrega e 211.109 km na devolução (109 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-03-09",
+    "odometro": "211000",
+    "litros": "135",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-03-09",
+    "odometro": "211109",
+    "litros": "14.4",
+    "posto": "Posto de apoio Tecar",
+    "obs": "109 km desde o anterior · 7,55 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Ciclo 1 · ida carregado",
+    "data": "2026-03-09",
+    "km": "57",
+    "cargaT": "2",
+    "cond": "carregado",
+    "kmlFb": "6.23",
+    "litros": "",
+    "velMedia": "36",
+    "ganhoAlt": "139",
+    "paradas": "3",
+    "urbano": "50"
+   },
+   {
+    "nome": "Ciclo 1 · volta vazio",
+    "data": "2026-03-09",
+    "km": "52",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "8.53",
+    "litros": "",
+    "velMedia": "40",
+    "ganhoAlt": "127",
+    "paradas": "3",
+    "urbano": "50"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "75",
+   "marchaLenta": "20",
+   "freioMotor": "45",
+   "frenagens100": "14",
+   "trocas100": "84",
+   "cargaMotor": "63",
+   "tempoMov": "3,6",
+   "velMedia": "38",
+   "cambioAuto": "0",
+   "arlaPct": "4,8",
+   "obs": "Faixa verde em 75% do tempo em movimento; marcha lenta de 20 min/dia, Consumo médio do período 7,37 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "visibilidade": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "retomada": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "cambio": {
+     "atual": "3",
+     "mb": "4"
+    },
+    "manobra": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "4",
+     "mb": "5"
+    }
+   },
+   "citacao": "No trânsito da cidade ele é macio e não esquenta; a cabine é bem mais confortável que a do atual.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "365000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "5",
+   "manutMB": "0,19",
+   "dispMB": "95",
+   "deprecMB": "10",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,0",
+   "pneusMB": "0,06",
+   "taxaAplic": 10.5,
+   "receita": "28000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,2",
+   "dispC": "93"
+  },
+  "prop": {
+   "lote": "2",
+   "modelo": "Accelo 1017 4X2",
+   "preco": "R$ 365.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 36 meses\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 2 Accelo 1017 4X2 com decisão até 23/04/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 7,37 km/L e disponibilidade ≥ 95%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Vendedor · 20 dias",
+   "janela": "Abril de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ },
+ {
+  "id": "ttc13_TT13",
+  "criadoEm": "2026-10-16T18:05:11.687Z",
+  "atualizadoEm": "2026-10-16T18:05:11.687Z",
+  "nome": "TT13 · N&L INDUSTRIA E COMERCIO LTDA · ACTROS 2653S · dados estimados",
+  "cli": {
+   "empresa": "N&L INDUSTRIA E COMERCIO LTDA",
+   "cnpj": "08.117.082/0001-60",
+   "cidade": "Trindade",
+   "uf": "GO",
+   "segmento": "Indústria de produtos de limpeza",
+   "atividade": "Fabricação de produtos de limpeza e polimento · secundárias: Fabricação de cosméticos, produtos de perfumaria e de higiene pessoal; Fabricação de outros produtos químicos não especificados anteriormente; Comércio atacadista de cosméticos e produtos de perfumaria",
+   "logo": "",
+   "contato": "",
+   "cargo": "",
+   "vendedor": "Raissa Sdr",
+   "instrutor": "a confirmar",
+   "frotaTotal": "10",
+   "frotaElegivel": "1",
+   "idadeMedia": "4,3",
+   "marcas": "Mercedes-Benz 10 · principais: ATEGO 1419 CL 9 · ATEGO 2426CE 1",
+   "dores": "Idade da frota Atego 1419 e consumo"
+  },
+  "op": {
+   "aplicacao": "Cavalo 8x4 com semirreboque baú/sider para matéria-prima e distribuição de produto acabado",
+   "rotas": "Trindade (GO) → Goiânia (GO) pela GO-060, carregado\nGoiânia → Trindade, vazio\nTrindade → Rio Verde (GO) pela BR-060, carregado",
+   "cargaMedia": "30",
+   "cargaMax": "45",
+   "implemento": "Semirreboque sider 3 eixos / baú",
+   "kmMes": "7500",
+   "mixCarregado": "50",
+   "entregasDia": "2",
+   "velMedia": "50",
+   "perfilRod": "75",
+   "ganhoAlt": "400",
+   "paradas100": "2,5",
+   "jornada": "Diurna, 2 viagens/dia, 25 dias/mês",
+   "sazonalidade": "Pico na entressafra (jun–set)",
+   "diasOper": "25"
+  },
+  "base": {
+   "marca": "Volvo",
+   "modelo": "FH 540 6x4",
+   "ano": "2021",
+   "qtd": "2",
+   "kml": "1,6",
+   "fonteKml": "",
+   "arla": "6",
+   "manut": "0,3",
+   "pneus": "0,11",
+   "disp": "95",
+   "diasParados": "18",
+   "custoDiaParado": "",
+   "diesel": "6,2",
+   "arlaPreco": "3,5",
+   "precoNovo": "1180000",
+   "taxa": "",
+   "deprec": "9",
+   "residualPct": ""
+  },
+  "vt": {
+   "modelo": "ACTROS 2653S",
+   "placa": "TGH0A53",
+   "chassi": "9BM963414SB427807",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Semirreboque sider 3 eixos / baú (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km"
+  },
+  "vo": {
+   "modelo": "ACTROS 2653S",
+   "motor": "OM 471 LA 12,8 L · 530 cv",
+   "potencia": "530",
+   "torque": "2600",
+   "transmissao": "G 330-12 PowerShift 3 (automatizada, 12 marchas)",
+   "relacao": "3,077",
+   "entreEixos": "3600",
+   "pneus": "295/80 R22.5 · 110 psi",
+   "pbt": "48",
+   "cmt": "91",
+   "implemento": "Semirreboque sider 3 eixos / baú (do cliente)",
+   "tecnologias": "PPC (Predictive Powertrain Control), freio motor + Top Brake, Active Brake Assist 5, MirrorCam, Fleetboard, cabine Streamspace",
+   "manutPlano": "Best Basic 60 meses / 600.000 km",
+   "preco": "1190000"
+  },
+  "compat": {},
+  "features": "Relação 3,077 com PowerShift 3 | roda a 1.250 rpm a 80 km/h | menos consumo em rodovia\nPPC lê o relevo | antecipa trocas e freio motor | menos frenagem de serviço\nMirrorCam e Active Brake Assist 5 | menos pontos cegos | menos sinistro",
+  "prot": {
+   "inicio": "2026-09-01",
+   "fim": "2026-09-30",
+   "motorista": "a confirmar",
+   "pctCliente": "90",
+   "metodo": "ambos",
+   "clima": "Seco, 22–34 °C, sem chuva relevante",
+   "trafego": "Normal; retenções em horário de pico na entrada de Goiânia",
+   "pressao": "110 psi em todos os eixos, conferida na entrega e na devolução",
+   "mesmoMotorista": true,
+   "mesmaRota": true,
+   "mesmaCarga": true,
+   "mesmoPeriodo": false,
+   "mesmoMetodo": false,
+   "comparador": "2",
+   "obs": "29 dia(s) de contrato, odômetro de 6.586 km na entrega e 12.706 km na devolução (6.120 km rodados). Operação real do cliente com implemento próprio; consumo apurado por Fleetboard e abastecimentos."
+  },
+  "abast": [
+   {
+    "data": "2026-09-01",
+    "odometro": "6586",
+    "litros": "432",
+    "posto": "Posto de apoio Tecar · entrega",
+    "obs": "tanque cheio na entrega"
+   },
+   {
+    "data": "2026-09-05",
+    "odometro": "7351",
+    "litros": "383.2",
+    "posto": "Posto base do cliente",
+    "obs": "765 km desde o anterior · 2,00 km/L"
+   },
+   {
+    "data": "2026-09-08",
+    "odometro": "8116",
+    "litros": "382.5",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "765 km desde o anterior · 2,00 km/L"
+   },
+   {
+    "data": "2026-09-12",
+    "odometro": "8881",
+    "litros": "374.7",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "765 km desde o anterior · 2,04 km/L"
+   },
+   {
+    "data": "2026-09-15",
+    "odometro": "9646",
+    "litros": "390.3",
+    "posto": "Posto base do cliente",
+    "obs": "765 km desde o anterior · 1,96 km/L"
+   },
+   {
+    "data": "2026-09-19",
+    "odometro": "10411",
+    "litros": "407",
+    "posto": "Posto de apoio Tecar",
+    "obs": "765 km desde o anterior · 1,88 km/L"
+   },
+   {
+    "data": "2026-09-23",
+    "odometro": "11176",
+    "litros": "378.1",
+    "posto": "Posto de apoio Tecar",
+    "obs": "765 km desde o anterior · 2,02 km/L"
+   },
+   {
+    "data": "2026-09-26",
+    "odometro": "11941",
+    "litros": "380.3",
+    "posto": "Posto rodoviário BR-060",
+    "obs": "765 km desde o anterior · 2,01 km/L"
+   },
+   {
+    "data": "2026-09-30",
+    "odometro": "12706",
+    "litros": "390",
+    "posto": "Posto rodoviário BR-153",
+    "obs": "765 km desde o anterior · 1,96 km/L"
+   }
+  ],
+  "trechos": [
+   {
+    "nome": "Semana 1 · ida carregado (agregado)",
+    "data": "2026-09-04",
+    "km": "636",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.74",
+    "litros": "",
+    "velMedia": "48",
+    "ganhoAlt": "2379",
+    "paradas": "16",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 1 · volta vazio (agregado)",
+    "data": "2026-09-04",
+    "km": "588",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.17",
+    "litros": "",
+    "velMedia": "52",
+    "ganhoAlt": "2306",
+    "paradas": "15",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 2 · ida carregado (agregado)",
+    "data": "2026-09-09",
+    "km": "636",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.71",
+    "litros": "",
+    "velMedia": "48",
+    "ganhoAlt": "2350",
+    "paradas": "16",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 2 · volta vazio (agregado)",
+    "data": "2026-09-09",
+    "km": "588",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.15",
+    "litros": "",
+    "velMedia": "52",
+    "ganhoAlt": "2082",
+    "paradas": "15",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 3 · ida carregado (agregado)",
+    "data": "2026-09-15",
+    "km": "636",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.68",
+    "litros": "",
+    "velMedia": "48",
+    "ganhoAlt": "2680",
+    "paradas": "16",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 3 · volta vazio (agregado)",
+    "data": "2026-09-15",
+    "km": "588",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.31",
+    "litros": "",
+    "velMedia": "52",
+    "ganhoAlt": "2244",
+    "paradas": "15",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 4 · ida carregado (agregado)",
+    "data": "2026-09-21",
+    "km": "636",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.68",
+    "litros": "",
+    "velMedia": "48",
+    "ganhoAlt": "2614",
+    "paradas": "16",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 4 · volta vazio (agregado)",
+    "data": "2026-09-21",
+    "km": "588",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.19",
+    "litros": "",
+    "velMedia": "52",
+    "ganhoAlt": "2055",
+    "paradas": "15",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 5 · ida carregado (agregado)",
+    "data": "2026-09-26",
+    "km": "636",
+    "cargaT": "30",
+    "cond": "carregado",
+    "kmlFb": "1.69",
+    "litros": "",
+    "velMedia": "48",
+    "ganhoAlt": "2477",
+    "paradas": "16",
+    "urbano": "25"
+   },
+   {
+    "nome": "Semana 5 · volta vazio (agregado)",
+    "data": "2026-09-26",
+    "km": "588",
+    "cargaT": "0",
+    "cond": "vazio",
+    "kmlFb": "2.26",
+    "litros": "",
+    "velMedia": "52",
+    "ganhoAlt": "2273",
+    "paradas": "15",
+    "urbano": "25"
+   }
+  ],
+  "tele": {
+   "rpmFaixa": "79",
+   "marchaLenta": "23",
+   "freioMotor": "79",
+   "frenagens100": "8",
+   "trocas100": "40",
+   "cargaMotor": "62",
+   "tempoMov": "6,0",
+   "velMedia": "50",
+   "cambioAuto": "96",
+   "arlaPct": "5,8",
+   "obs": "Faixa verde em 79% do tempo em movimento; marcha lenta de 23 min/dia, Consumo médio do período 1,95 km/L no mix real da operação,"
+  },
+  "drv": {
+   "scores": {
+    "conforto": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "ergonomia": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "dirigibilidade": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "visibilidade": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "frenagem": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "retomada": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "cambio": {
+     "atual": "4",
+     "mb": "4"
+    },
+    "manobra": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "ruido": {
+     "atual": "3",
+     "mb": "5"
+    },
+    "fadiga": {
+     "atual": "4",
+     "mb": "5"
+    },
+    "seguranca": {
+     "atual": "4",
+     "mb": "5"
+    }
+   },
+   "citacao": "Carregado na subida ele não cansa: o câmbio decide sozinho e o freio motor segura sem pisar no freio.",
+   "autorCitacao": "motorista do cliente (a confirmar)",
+   "escolha": "Escolheria o Mercedes-Benz pelo conforto e pelo consumo; ressalva sobre a rede de atendimento na rota.",
+   "comentarios": "Elogio: retomada e conforto · Ressalva: altura do degrau de acesso · Sugestão: treinamento de condução econômica na entrega"
+  },
+  "tco": {
+   "precoMB": "1190000",
+   "pag": "fin",
+   "entrada": "20",
+   "prazo": "60",
+   "taxa": "14",
+   "taxaUnit": "aa",
+   "carencia": "0",
+   "carTipo": "cap",
+   "horiz": "60",
+   "infDiesel": "5",
+   "arlaMB": "6",
+   "manutMB": "0,28",
+   "dispMB": "96",
+   "deprecMB": "9",
+   "residualMB": "",
+   "ipva": "1,5",
+   "segPct": "3,2",
+   "pneusMB": "0,11",
+   "taxaAplic": 10.5,
+   "receita": "85000",
+   "margem": "35",
+   "desagio": "5",
+   "custoVenda": "3",
+   "entradaC": "20",
+   "prazoC": "60",
+   "taxaC": "14",
+   "carenciaC": "0",
+   "ipvaC": "1,5",
+   "segPctC": "3,3",
+   "dispC": "95"
+  },
+  "prop": {
+   "lote": "1",
+   "modelo": "ACTROS 2653S",
+   "preco": "R$ 1.190.000",
+   "condicao": "Banco Mercedes-Benz · 14% a.a. · 60 meses · 20% de entrada · sem carência",
+   "inclui": "Best Basic 60 meses / 600.000 km\nFleetboard ativo\nTreinamento de condução econômica na entrega\nAvaliação dos usados na troca",
+   "validade": "30 dias",
+   "decisao": "Lote-piloto de 1 ACTROS 2653S com decisão até 14/11/2026",
+   "criterio": "Consumo médio de 90 dias no mix real igual ou melhor que 1,95 km/L e disponibilidade ≥ 96%",
+   "passos": "Confirmar odômetro e Fleetboard do período · Instrutor · 7 dias\nLevantar consumo real da frota atual (12 meses por placa) · Cliente · 15 dias\nApresentar proposta com usados na troca · Raissa · 20 dias",
+   "janela": "Novembro de 2026 (após a devolução do teste)"
+  },
+  "fotos": []
+ }
+]
