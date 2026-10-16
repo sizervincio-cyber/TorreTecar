@@ -2386,5 +2386,46 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20261016-192147",
+  "started_at": "2026-10-16T19:21:47-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-10-16T19:23:23-03:00",
+  "status": "success",
+  "file_name": "1921_emplacamentos.xlsx",
+  "file_hash": "de3acb56c440ca8777574949c5ae52c54586a9ae2275649531878172c30ee7dc",
+  "rows_downloaded": 2938,
+  "rows_valid": 2937,
+  "rows_imported": 0,
+  "rows_updated": 20,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "rows_enriched": 20,
+  "error_message": null,
+  "duration_seconds": 96.9,
+  "steps": [
+   "19:21:51 tentativa 1/3",
+   "19:22:05 login concluído no portal",
+   "19:22:08 BI autenticado",
+   "19:22:27 download concluído: 1921_emplacamentos.xlsx",
+   "19:23:03 enriquecimento: 51 chassis sem proprietário · janela 2026-01-01 → 2026-10-16",
+   "19:23:19 download de enriquecimento concluído: 1921_enriquecimento.xlsx",
+   "19:23:19 arquivo lido: aba 'Export', 2938 linhas, 17 colunas mapeadas",
+   "19:23:19 normalização: {'validas': 2937, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "19:23:19 validação: nível ok, qualidade 74/100",
+   "19:23:19 upsert por CHASSI: 0 inseridos, 0 atualizados, 2937 iguais (matriz 26631)",
+   "19:23:20 enriquecimento: 2907 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 20 atualizados/com proprietário · 2887 iguais · 0 ignorados",
+   "19:23:20 qualidade da matriz resultante: 100/100",
+   "19:23:23 matriz publicada (troca atômica; backup da anterior em storage)",
+   "19:23:23 KPIs: mercado 26631, MB 4047, share 15.2% (12m: 16.08%); Top 10 em 5 segmentos",
+   "19:23:23 conferência ASSOBENS × Torre: Total Mercado 2937/2938 (Δ1); Total Mercedes-Benz 492/492 (Δ0); Market Share MB (%) 16.8/16.75 (Δ-0.05)",
+   "19:23:23 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
