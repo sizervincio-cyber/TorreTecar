@@ -2703,5 +2703,52 @@
   "warnings": [
    "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
   ]
+ },
+ {
+  "id": "20261019-201457",
+  "started_at": "2026-10-19T20:14:57-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-10-19T20:21:35-03:00",
+  "status": "success",
+  "file_name": "2019_emplacamentos.xlsx",
+  "file_hash": "7fe49ad3aac0cca7a7956fb784aa942149880c706ebcdadb435ee36b941f59c1",
+  "rows_downloaded": 2946,
+  "rows_valid": 2945,
+  "rows_imported": 0,
+  "rows_updated": 0,
+  "rows_rejected": 1,
+  "prices_updated": 14,
+  "rows_enriched": 0,
+  "error_message": null,
+  "duration_seconds": 398.8,
+  "steps": [
+   "20:15:02 tentativa 1/3",
+   "20:15:20 login concluído no portal",
+   "20:15:25 BI autenticado",
+   "20:16:18 tentativa 1 falhou: Locator.click: Timeout 45000ms exceeded.\nCall log:\n  - waiting for locator(\"#report iframe\").first.content_frame.get_by_text(re.compile(r\"^ve[ií]culos$\", re.IGNORECASE)).first\n    - locator resolved t",
+   "20:16:48 tentativa 2/3",
+   "20:17:01 login concluído no portal",
+   "20:17:05 BI autenticado",
+   "20:17:57 tentativa 2 falhou: Locator.click: Timeout 45000ms exceeded.\nCall log:\n  - waiting for locator(\"#report iframe\").first.content_frame.get_by_text(re.compile(r\"^ve[ií]culos$\", re.IGNORECASE)).first\n    - locator resolved t",
+   "20:19:57 tentativa 3/3",
+   "20:20:13 login concluído no portal",
+   "20:20:20 BI autenticado",
+   "20:20:41 download concluído: 2019_emplacamentos.xlsx",
+   "20:21:18 enriquecimento: 13 chassis sem proprietário · janela 2026-01-01 → 2026-10-19",
+   "20:21:33 download de enriquecimento concluído: 2019_enriquecimento.xlsx",
+   "20:21:34 arquivo lido: aba 'Export', 2946 linhas, 17 colunas mapeadas",
+   "20:21:34 normalização: {'validas': 2945, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "20:21:34 validação: nível ok, qualidade 74/100",
+   "20:21:34 upsert por CHASSI: 0 inseridos, 0 atualizados, 2945 iguais (matriz 26639)",
+   "20:21:35 enriquecimento: 2933 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 0 atualizados/com proprietário · 2933 iguais · 0 ignorados",
+   "20:21:35 KPIs: mercado 26639, MB 4047, share 15.19% (12m: 16.04%); Top 10 em 5 segmentos",
+   "20:21:35 conferência ASSOBENS × Torre: Total Mercado None/26639 (ΔNone); Total Mercedes-Benz None/4047 (ΔNone); Market Share MB (%) None/15.19 (ΔNone)",
+   "20:21:35 histórico de preços: 14 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": [
+   "[Q_qualidade_lote] lote com qualidade 74/100 (ex.: exportação sem documento do proprietário)"
+  ]
  }
 ]
