@@ -13,7 +13,7 @@
   "2026-09",
   "2026-10"
  ],
- "base": 3496,
+ "base": 3504,
  "segmentos": {
   "SEMIPESADOS": [
    {
@@ -21,80 +21,80 @@
     "fabricante": "VW",
     "modelo": "VW/26.260 CRM 6X2",
     "emplacamentos": 198,
-    "market_share": 13.68,
-    "total_segmento": 1447
+    "market_share": 13.65,
+    "total_segmento": 1451
    },
    {
     "posicao": 2,
     "fabricante": "VW",
     "modelo": "VW/17.210 CRM 4X2",
     "emplacamentos": 160,
-    "market_share": 11.06,
-    "total_segmento": 1447
+    "market_share": 11.03,
+    "total_segmento": 1451
    },
    {
     "posicao": 3,
     "fabricante": "VW",
     "modelo": "VW/18.260 CRM 4X2 4P",
     "emplacamentos": 97,
-    "market_share": 6.7,
-    "total_segmento": 1447
+    "market_share": 6.69,
+    "total_segmento": 1451
    },
    {
     "posicao": 4,
     "fabricante": "VW",
     "modelo": "VW/30.320 CRM 8X2",
-    "emplacamentos": 92,
-    "market_share": 6.36,
-    "total_segmento": 1447
+    "emplacamentos": 93,
+    "market_share": 6.41,
+    "total_segmento": 1451
    },
    {
     "posicao": 5,
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 24-280",
     "emplacamentos": 81,
-    "market_share": 5.6,
-    "total_segmento": 1447
+    "market_share": 5.58,
+    "total_segmento": 1451
    },
    {
     "posicao": 6,
     "fabricante": "VW",
     "modelo": "VW/26.320 CRM 6X2",
     "emplacamentos": 80,
-    "market_share": 5.53,
-    "total_segmento": 1447
+    "market_share": 5.51,
+    "total_segmento": 1451
    },
    {
     "posicao": 7,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 2429",
     "emplacamentos": 72,
-    "market_share": 4.98,
-    "total_segmento": 1447
+    "market_share": 4.96,
+    "total_segmento": 1451
    },
    {
     "posicao": 8,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/VM 290 6X2 R",
     "emplacamentos": 70,
-    "market_share": 4.84,
-    "total_segmento": 1447
+    "market_share": 4.82,
+    "total_segmento": 1451
    },
    {
     "posicao": 9,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/VM 290 6X4 R",
     "emplacamentos": 69,
-    "market_share": 4.77,
-    "total_segmento": 1447
+    "market_share": 4.76,
+    "total_segmento": 1451
    },
    {
     "posicao": 10,
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 2429CL",
     "emplacamentos": 57,
-    "market_share": 3.94,
-    "total_segmento": 1447
+    "market_share": 3.93,
+    "total_segmento": 1451
    }
   ],
   "EXTRAPESADOS": [
@@ -102,8 +102,8 @@
     "posicao": 1,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/FH 540 6X4T",
-    "emplacamentos": 281,
-    "market_share": 19.89,
+    "emplacamentos": 277,
+    "market_share": 19.6,
     "total_segmento": 1413
    },
    {
@@ -158,8 +158,8 @@
     "posicao": 8,
     "fabricante": "IVECO",
     "modelo": "IVECO/S-WAY 540-6X4",
-    "emplacamentos": 53,
-    "market_share": 3.75,
+    "emplacamentos": 54,
+    "market_share": 3.82,
     "total_segmento": 1413
    },
    {
@@ -173,9 +173,9 @@
    {
     "posicao": 10,
     "fabricante": "SCANIA",
-    "modelo": "SCANIA/R500 A6X4",
-    "emplacamentos": 48,
-    "market_share": 3.4,
+    "modelo": "SCANIA/R460 A6X2",
+    "emplacamentos": 49,
+    "market_share": 3.47,
     "total_segmento": 1413
    }
   ],
@@ -348,17 +348,17 @@
     "posicao": 1,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/FH 540 6X4T",
-    "emplacamentos": 11,
-    "market_share": 84.62,
-    "total_segmento": 13
+    "emplacamentos": 15,
+    "market_share": 88.24,
+    "total_segmento": 17
    },
    {
     "posicao": 2,
     "fabricante": "SCANIA",
     "modelo": "SCANIA/R560 A6X4",
     "emplacamentos": 2,
-    "market_share": 15.38,
-    "total_segmento": 13
+    "market_share": 11.76,
+    "total_segmento": 17
    }
   ]
  }

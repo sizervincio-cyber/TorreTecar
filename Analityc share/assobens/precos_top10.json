@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-10-18T19:05:08-03:00",
+ "gerado_em": "2026-10-19T14:18:50-03:00",
  "janela": [
   "2025-11",
   "2025-12",
@@ -22,7 +22,7 @@
     "fabricante": "VW",
     "modelo": "VW/26.260 CRM 6X2",
     "emplacamentos": 198,
-    "market_share": 13.68,
+    "market_share": 13.65,
     "preco_identificado": 513838.1,
     "modelo_no_comparativo": "VW 26.260",
     "preco_mb_equivalente": 504112.07,
@@ -30,7 +30,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -9726.03,
     "gap_preco_pct": -1.89,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -38,7 +38,7 @@
     "fabricante": "VW",
     "modelo": "VW/17.210 CRM 4X2",
     "emplacamentos": 160,
-    "market_share": 11.06,
+    "market_share": 11.03,
     "preco_identificado": 439279.22,
     "modelo_no_comparativo": "VW 17.210",
     "preco_mb_equivalente": 438427.33,
@@ -46,7 +46,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -851.89,
     "gap_preco_pct": -0.19,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -54,7 +54,7 @@
     "fabricante": "VW",
     "modelo": "VW/18.260 CRM 4X2 4P",
     "emplacamentos": 97,
-    "market_share": 6.7,
+    "market_share": 6.69,
     "preco_identificado": 511911.31,
     "modelo_no_comparativo": "VW 18.260",
     "preco_mb_equivalente": 438427.33,
@@ -62,15 +62,15 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -73483.98,
     "gap_preco_pct": -14.35,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
     "posicao": 4,
     "fabricante": "VW",
     "modelo": "VW/30.320 CRM 8X2",
-    "emplacamentos": 92,
-    "market_share": 6.36,
+    "emplacamentos": 93,
+    "market_share": 6.41,
     "preco_identificado": null,
     "modelo_no_comparativo": null,
     "preco_mb_equivalente": null,
@@ -86,7 +86,7 @@
     "fabricante": "IVECO",
     "modelo": "IVECO/TECTOR 24-280",
     "emplacamentos": 81,
-    "market_share": 5.6,
+    "market_share": 5.58,
     "preco_identificado": 515308.39,
     "modelo_no_comparativo": "IVECO 24-280",
     "preco_mb_equivalente": 504112.07,
@@ -94,7 +94,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -11196.32,
     "gap_preco_pct": -2.17,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -102,7 +102,7 @@
     "fabricante": "VW",
     "modelo": "VW/26.320 CRM 6X2",
     "emplacamentos": 80,
-    "market_share": 5.53,
+    "market_share": 5.51,
     "preco_identificado": null,
     "modelo_no_comparativo": null,
     "preco_mb_equivalente": null,
@@ -118,7 +118,7 @@
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 2429",
     "emplacamentos": 72,
-    "market_share": 4.98,
+    "market_share": 4.96,
     "preco_identificado": 504112.07,
     "modelo_no_comparativo": "MB 2429",
     "preco_mb_equivalente": 504112.07,
@@ -126,7 +126,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-10-18T19:04:24-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -134,7 +134,7 @@
     "fabricante": "VOLVO",
     "modelo": "VOLVO/VM 290 6X2 R",
     "emplacamentos": 70,
-    "market_share": 4.84,
+    "market_share": 4.82,
     "preco_identificado": 538722.17,
     "modelo_no_comparativo": "VOLVO VM 290 6X2",
     "preco_mb_equivalente": 504112.07,
@@ -142,7 +142,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -34610.1,
     "gap_preco_pct": -6.42,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -150,7 +150,7 @@
     "fabricante": "VOLVO",
     "modelo": "VOLVO/VM 290 6X4 R",
     "emplacamentos": 69,
-    "market_share": 4.77,
+    "market_share": 4.76,
     "preco_identificado": 538722.17,
     "modelo_no_comparativo": "VOLVO VM 290 6X2",
     "preco_mb_equivalente": 504112.07,
@@ -158,7 +158,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -34610.1,
     "gap_preco_pct": -6.42,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -166,7 +166,7 @@
     "fabricante": "M.BENZ",
     "modelo": "M.BENZ/ATEGO 2429CL",
     "emplacamentos": 57,
-    "market_share": 3.94,
+    "market_share": 3.93,
     "preco_identificado": 504112.07,
     "modelo_no_comparativo": "MB 2429",
     "preco_mb_equivalente": 504112.07,
@@ -174,7 +174,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-10-18T19:04:24-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    }
   ],
@@ -183,8 +183,8 @@
     "posicao": 1,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/FH 540 6X4T",
-    "emplacamentos": 281,
-    "market_share": 19.89,
+    "emplacamentos": 277,
+    "market_share": 19.6,
     "preco_identificado": null,
     "modelo_no_comparativo": null,
     "preco_mb_equivalente": null,
@@ -295,8 +295,8 @@
     "posicao": 8,
     "fabricante": "IVECO",
     "modelo": "IVECO/S-WAY 540-6X4",
-    "emplacamentos": 53,
-    "market_share": 3.75,
+    "emplacamentos": 54,
+    "market_share": 3.82,
     "preco_identificado": null,
     "modelo_no_comparativo": null,
     "preco_mb_equivalente": null,
@@ -326,9 +326,9 @@
    {
     "posicao": 10,
     "fabricante": "SCANIA",
-    "modelo": "SCANIA/R500 A6X4",
-    "emplacamentos": 48,
-    "market_share": 3.4,
+    "modelo": "SCANIA/R460 A6X2",
+    "emplacamentos": 49,
+    "market_share": 3.47,
     "preco_identificado": null,
     "modelo_no_comparativo": null,
     "preco_mb_equivalente": null,
@@ -386,7 +386,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -70795.98,
     "gap_preco_pct": -15.32,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -418,7 +418,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -482,7 +482,7 @@
     "fonte_equivalencia": "grupo do Comparativo ASSOBENS",
     "gap_preco_rs": -6493.53,
     "gap_preco_pct": -1.63,
-    "data_captura_preco": "2026-10-16T12:07:25-03:00",
+    "data_captura_preco": "2026-10-19T14:18:02-03:00",
     "observacao": null
    },
    {
@@ -669,8 +669,8 @@
     "posicao": 1,
     "fabricante": "VOLVO",
     "modelo": "VOLVO/FH 540 6X4T",
-    "emplacamentos": 11,
-    "market_share": 84.62,
+    "emplacamentos": 15,
+    "market_share": 88.24,
     "preco_identificado": null,
     "modelo_no_comparativo": null,
     "preco_mb_equivalente": null,
@@ -686,7 +686,7 @@
     "fabricante": "SCANIA",
     "modelo": "SCANIA/R560 A6X4",
     "emplacamentos": 2,
-    "market_share": 15.38,
+    "market_share": 11.76,
     "preco_identificado": null,
     "modelo_no_comparativo": null,
     "preco_mb_equivalente": null,
