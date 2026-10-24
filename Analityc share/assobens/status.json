@@ -1,11 +1,11 @@
 {
  "fonte": "ASSOBENS",
- "ultima_execucao": "2026-10-24T12:07:07-03:00",
+ "ultima_execucao": "2026-10-24T17:07:31-03:00",
  "status": "success",
  "status_label": "Atualizado",
  "mensagem": "",
  "erro": null,
- "proxima_execucao": "2026-10-24T17:00-03:00",
+ "proxima_execucao": "2026-10-25T08:00-03:00",
  "agenda_local": "0 8,12,17 * * *",
  "timezone": "America/Sao_Paulo",
  "trigger_type": "scheduler",
@@ -17,12 +17,12 @@
  "precos_atualizados": 4,
  "proprietarios_enriquecidos": 0,
  "base_valida": {
-  "atualizado_em": "2026-10-24T12:07:07-03:00",
+  "atualizado_em": "2026-10-24T17:07:31-03:00",
   "registros_processados": 3021,
   "importados": 0,
   "atualizados": 0,
   "precos_atualizados": 4,
-  "run_id": "20261024-120532"
+  "run_id": "20261024-170545"
  },
  "avisos": []
 }
