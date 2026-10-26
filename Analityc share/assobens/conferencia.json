@@ -99,10 +99,10 @@
   },
   {
    "chave": "EXTRAPESADOS",
-   "emplacamentos": 1162,
-   "share": 38.36,
+   "emplacamentos": 1156,
+   "share": 38.16,
    "mercedes_benz": 112,
-   "share_mb_na_chave": 9.64
+   "share_mb_na_chave": 9.69
   },
   {
    "chave": "MEDIOS",
@@ -120,8 +120,8 @@
   },
   {
    "chave": "PESADOS",
-   "emplacamentos": 18,
-   "share": 0.59,
+   "emplacamentos": 24,
+   "share": 0.79,
    "mercedes_benz": 0,
    "share_mb_na_chave": 0.0
   }
