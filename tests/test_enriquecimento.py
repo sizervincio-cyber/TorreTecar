@@ -2,7 +2,7 @@
 import json
 
 from assobens import config
-from assobens.enriquecimento_downloader import janela_enriquecimento
+from assobens.enriquecimento_downloader import AssobensEnriquecimentoDownloader, janela_enriquecimento
 from assobens.importer import AssobensImporter
 from assobens.normalizer import AssobensNormalizer
 from assobens.parser import AssobensSpreadsheetParser
@@ -26,6 +26,29 @@ def test_janela_enriquecimento():
     assert janela_enriquecimento(rows, "2026-09-25") == ("2026-01-01", "2026-09-25")          # ano corrente inteiro
     assert janela_enriquecimento([{"DATA EMPLACAMENTO": "2026-09-01", "NOMEPROPRIETARIO": "X"}], "2026-01-20") == ("2025-09-22", "2026-01-20")  # mínimo 120 dias
     assert janela_enriquecimento([{"DATA EMPLACAMENTO": "2020-01-01", "NOMEPROPRIETARIO": ""}], "2026-09-25")[0] == "2025-08-21"  # teto 400 dias
+
+
+def test_filtro_de_segmento_aguarda_opcoes_carregarem():
+    """O portal popula o <select> por AJAX: a lista vazia no primeiro instante não é mudança de interface."""
+    class Loc:
+        first = None
+        def __init__(self):
+            self.first, self.leituras, self.escolhido = self, 0, None
+        def evaluate(self, js):
+            self.leituras += 1
+            return [] if self.leituras < 3 else [{"value": "4", "text": "VANS"}, {"value": "1", "text": "1.0-CAMINHÕES"}]
+        def select_option(self, v): self.escolhido = v
+        def dispatch_event(self, ev): pass
+
+    class Page:
+        def __init__(self): self.loc = Loc()
+        def locator(self, css): return self.loc
+        def wait_for_timeout(self, ms): pass
+
+    page = Page()
+    dl = AssobensEnriquecimentoDownloader.__new__(AssobensEnriquecimentoDownloader)
+    assert dl._select_caminhoes(page, "#seg") == "1.0-CAMINHÕES"
+    assert page.loc.escolhido == "1" and page.loc.leituras == 3
 
 
 def test_upsert_update_only_so_campos_de_proprietario(paths, tmp_path):

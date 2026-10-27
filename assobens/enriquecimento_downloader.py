@@ -73,10 +73,16 @@ class AssobensEnriquecimentoDownloader:
     def _select_caminhoes(self, page, css: str) -> str:
         """O filtro de segmento abre no primeiro item da associação (ex.: vans). Seleciona o de caminhões."""
         loc = page.locator(css).first
-        try:
-            opts = loc.evaluate("el => [...el.options].map(o => ({value: o.value, text: o.text}))")
-        except Exception as e:
-            raise InterfaceChangedError(f"filtro de segmento não encontrado na página de enriquecimento ({str(e).splitlines()[0][:80]})")
+        opts: list[dict] = []
+        # As opções chegam por AJAX depois do login: aguarda até 15s antes de concluir que o filtro mudou.
+        for _ in range(30):
+            try:
+                opts = loc.evaluate("el => [...el.options].map(o => ({value: o.value, text: o.text}))")
+            except Exception as e:
+                raise InterfaceChangedError(f"filtro de segmento não encontrado na página de enriquecimento ({str(e).splitlines()[0][:80]})")
+            if any(str(o.get("text", "")).strip() for o in opts):
+                break
+            page.wait_for_timeout(500)
         alvo = next((o for o in opts if re.search(r"CAMINH", o["text"], re.I)), None) or next((o for o in opts if str(o["value"]) == "1"), None)
         if alvo is None:
             raise InterfaceChangedError("segmento CAMINHÕES não está entre as opções do filtro: " + ", ".join(o["text"] for o in opts)[:200])
