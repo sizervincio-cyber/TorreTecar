@@ -57,6 +57,13 @@ jobs:
           [ "${{ inputs.skip_precos }}" = "true" ] && EXTRA="--skip-precos"
           python -m assobens sync --trigger "$TRIGGER" --executed-by "${{ github.actor }}" $EXTRA
 
+      - name: Cadastro das empresas (CNPJá)
+        # Só dados da empresa (sem contatos nem sócios). strategy=CACHE não consome créditos; sem o secret, a etapa é ignorada.
+        continue-on-error: true
+        env:
+          CNPJA_API_KEY: ${{ secrets.CNPJA_API_KEY }}
+        run: python -m assobens cnpja --somente-com-chave --estrategia CACHE --limite 600
+
       - name: Publicar artefatos de diagnóstico
         if: always()
         uses: actions/upload-artifact@v4

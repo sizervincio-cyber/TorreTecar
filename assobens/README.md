@@ -75,6 +75,18 @@ python -m pytest -q tests                           # testes
 
 Dependências: `pip install -r requirements-assobens.txt && python -m playwright install chromium`.
 
+## Cadastro das empresas (CNPJá)
+
+`python -m assobens cnpja` consulta cada CNPJ de pessoa jurídica da matriz na [CNPJá](https://cnpja.com/api) e grava
+`Analityc share/assobens/empresas_cnpja.json`, com razão social, situação cadastral, abertura, CNAE e perfil de negócio derivado, porte, capital social, Simples/MEI e município.
+**Telefones, e-mails, sócios e logradouro nunca são gravados.**
+
+- Com `CNPJA_API_KEY` (no `.env` ou nos secrets) usa a API Comercial. Com `--estrategia CACHE` (padrão), lê a base da CNPJá sem consumir créditos. As demais estratégias consultam a Receita em tempo real, a 1 crédito por CNPJ.
+- Sem chave, usa a API Pública (5 consultas/min): serve para testes.
+- O próprio JSON é o cache: um CNPJ só é reconsultado após `--max-age` dias (45). A fila prioriza quem comprou mais recentemente.
+- No CI a etapa roda depois da sincronização, com `--limite 600`, e é ignorada enquanto o secret não existir.
+- Quando os créditos acabam, a execução para e grava o que já consultou.
+
 ## Primeira execução em produção (obrigatória antes de ligar a agenda)
 
 1. Configurar os dois secrets no GitHub (ou `.env` local).

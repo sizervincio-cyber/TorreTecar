@@ -4,6 +4,7 @@
   python -m assobens importar <arquivo.xlsx>     # importa um Excel já baixado (sem navegador)
   python -m assobens discover                    # login + screenshots/aria dos relatórios (ajuste de seletores)
   python -m assobens kpis                        # recalcula kpis.json / top10 a partir da matriz atual
+  python -m assobens cnpja [--limite N] [--estrategia CACHE]  # cadastro das empresas pela CNPJá
   python -m assobens status                      # imprime status.json
 """
 from __future__ import annotations
@@ -74,6 +75,22 @@ def cmd_kpis(a) -> int:
     return 0
 
 
+def cmd_cnpja(a) -> int:
+    from .cnpja import CnpjaClient, CnpjaEnricher, api_key_from_env
+    from .importer import AssobensImporter
+    key = None if a.publica else api_key_from_env()
+    if a.somente_com_chave and not key:
+        print("CNPJá: CNPJA_API_KEY não configurada; etapa ignorada")
+        return 0
+    client = CnpjaClient(key, per_minute=a.por_minuto)
+    _, rows = AssobensImporter().load_matrix()
+    res = CnpjaEnricher(client).run(rows, limite=a.limite, strategy=a.estrategia, max_age=a.max_age)
+    print(res.resumo())
+    if res.perfis:
+        print("perfis: " + ", ".join(f"{k} {v}" for k, v in list(res.perfis.items())[:8]))
+    return 0 if res.erro is None or res.consultados else 1
+
+
 def cmd_status(a) -> int:
     from .runlog import read_json
     print(json.dumps(read_json(config.STATUS_PATH, {"status": "nunca executado"}), ensure_ascii=False, indent=1))
@@ -100,6 +117,15 @@ def main(argv=None) -> int:
     d.add_argument("--headed", action="store_true")
     d.set_defaults(fn=cmd_discover)
     sub.add_parser("kpis", help="recalcula KPIs e Top 10 da matriz atual").set_defaults(fn=cmd_kpis)
+    c = sub.add_parser("cnpja", help="enriquece os CNPJs da matriz com o cadastro da CNPJá (só dados da empresa)")
+    c.add_argument("--limite", type=int, default=None, help="máximo de CNPJs nesta execução")
+    c.add_argument("--estrategia", choices=["CACHE", "CACHE_IF_FRESH", "CACHE_IF_ERROR", "ONLINE"], default="CACHE",
+                   help="CACHE (padrão) não consome créditos; as demais podem consultar online (1 crédito cada)")
+    c.add_argument("--max-age", type=int, default=45, help="dias até reconsultar um CNPJ")
+    c.add_argument("--por-minuto", type=int, default=None, help="ritmo de consultas (padrão 60 com chave, 5 na API Pública)")
+    c.add_argument("--publica", action="store_true", help="força a API Pública, sem chave")
+    c.add_argument("--somente-com-chave", action="store_true", help="sai sem erro se CNPJA_API_KEY não estiver definida (CI)")
+    c.set_defaults(fn=cmd_cnpja)
     sub.add_parser("status", help="mostra o status da última sincronização").set_defaults(fn=cmd_status)
     a = p.parse_args(argv)
     return a.fn(a)

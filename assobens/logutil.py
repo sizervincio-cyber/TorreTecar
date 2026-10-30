@@ -18,9 +18,10 @@ _SENSITIVE_PATTERNS = [
 
 def redact(text: str) -> str:
     out = str(text)
-    pwd = os.environ.get("ASSOBENS_PASSWORD")
-    if pwd:
-        out = out.replace(pwd, "***")
+    for var in ("ASSOBENS_PASSWORD", "CNPJA_API_KEY"):
+        secret = os.environ.get(var)
+        if secret:
+            out = out.replace(secret, "***")
     for pat in _SENSITIVE_PATTERNS:
         out = pat.sub(lambda m: (m.group(1) + m.group(2) + "***") if m.lastindex else "***", out)
     return out
