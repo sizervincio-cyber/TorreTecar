@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-02",
+ "gerado_em": "2026-11-03",
  "data_maxima": "2026-10-31",
  "total_mercado": 26803,
  "total_mercedes_benz": 4075,
@@ -893,10 +893,10 @@
  "por_terreno": [
   {
    "chave": "ON ROAD",
-   "emplacamentos": 24990,
-   "share": 93.24,
+   "emplacamentos": 24995,
+   "share": 93.25,
    "mercedes_benz": 3530,
-   "share_mb_na_chave": 14.13
+   "share_mb_na_chave": 14.12
   },
   {
    "chave": "OFF ROAD",
@@ -907,10 +907,10 @@
   },
   {
    "chave": "(vazio)",
-   "emplacamentos": 393,
-   "share": 1.47,
+   "emplacamentos": 388,
+   "share": 1.45,
    "mercedes_benz": 101,
-   "share_mb_na_chave": 25.7
+   "share_mb_na_chave": 26.03
   }
  ],
  "top_municipios": [
