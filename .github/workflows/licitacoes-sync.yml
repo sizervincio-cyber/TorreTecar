@@ -28,6 +28,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # rodada que esperou na fila parte da versão mais recente (não do commit de quando foi disparada)
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
@@ -49,11 +52,16 @@ jobs:
         run: |
           git config user.name "licitacoes-bot"
           git config user.email "licitacoes-bot@users.noreply.github.com"
-          git add "Analityc share/licitacoes"
-          git diff --cached --quiet && exit 0
-          git commit -m "data: licitações PNCP $(date +'%d/%m/%Y %H:%M') [skip ci]"
+          # Só esta rotina escreve em "Analityc share/licitacoes" e as rodadas não se sobrepõem (concurrency):
+          # a base desta rodada é a mais nova. Grava sobre o main mais recente trocando SÓ essa pasta, sem rebase
+          # (o rebase dos JSON gerava conflito e perdia a rodada inteira) e sem desfazer outros commits.
           for i in 1 2 3; do
-            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            git fetch -q origin main
+            git reset -q --mixed origin/main
+            git add "Analityc share/licitacoes"
+            git diff --cached --quiet && exit 0
+            git commit -q -m "data: licitações $(date +'%d/%m/%Y %H:%M') [skip ci]"
+            git push origin HEAD:main && exit 0
             sleep 15
           done
           exit 1
