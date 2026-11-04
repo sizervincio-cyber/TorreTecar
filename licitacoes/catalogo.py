@@ -57,6 +57,17 @@ OBJETO_DESCARTE = rx(r"COMBUSTIV|GASOLINA|ETANOL|ABASTECIMENTO|SEGURO|LAVAGEM|RA
 OBJETO_FORTE = rx(r"CAMINH(?!ONETE)|ONIBUS|PECAS|AMBULANC|\bVANS?\b|FURGA")
 
 
+OBJETO_VEICULO = rx(r"CAMINH(?!ONETE)|ONIBUS|MICRO-?ONIBUS|AMBULANC|FURGA|\bVANS?\b|VEICUL|CHASSI|BASCULANT|CACAMBA|"
+                    r"\bPIPA\b|COMPACTADOR|COLETOR|PRANCHA|MUNCK|GUINDAUTO|CAVALO MECANICO|PATRULHA MECANIZADA|"
+                    r"TRANSPORTE ESCOLAR|UNIDADE MOVEL|SPRINTER|ACCELO|ATEGO|ACTROS")
+
+
+def objeto_veiculo(objeto: str) -> bool:
+    """Objeto que pode ser compra de veículo completo (usado no histórico, onde o foco é veículo)."""
+    o = norm(objeto)
+    return objeto_relevante(objeto) and bool(OBJETO_VEICULO.search(o)) and not re.search(r"^(?:\W*\[[^\]]*\]\W*)?(?:AQUISICAO DE )?PECAS", o)
+
+
 def objeto_relevante(objeto: str) -> bool:
     """Contratação que pode conter produto de interesse. Serviço puro (locação, manutenção, transporte) é descartado
     aqui mesmo, sem baixar itens."""

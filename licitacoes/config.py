@@ -15,7 +15,8 @@ COMPRAS_PATH = DATA_DIR / "compras.json"        # contratações relevantes (cab
 VEICULOS_PATH = DATA_DIR / "itens_veiculos.json"    # foco: caminhões, ônibus, vans (compra e locação)
 POSVENDA_PATH = DATA_DIR / "itens_posvenda.json"    # peças, acessórios, motores e manutenção
 LEGADO_ITENS_PATH = DATA_DIR / "itens.json"         # formato antigo (base única), lido só para migrar
-FORNECEDOR_MARCA_PATH = DATA_DIR / "fornecedor_marca.json"  # concessionária → marca (derivado dos emplacamentos)
+ALVOS_PATH = DATA_DIR / "alvos.json"           # compradores públicos que emplacaram (régua e busca por CNPJ)
+FORNECEDOR_MARCA_PATH =DATA_DIR / "fornecedor_marca.json"  # concessionária → marca (derivado dos emplacamentos)
 MATRIZ_PATH = REPO_ROOT / "Analityc share" / "consolidado_emplacamentos_2020_2026.xlsx"
 
 TZ = ZoneInfo("America/Sao_Paulo")
@@ -32,7 +33,11 @@ MODALIDADES = {
     8: "Dispensa",
 }
 
-CONSULTA_URL = "https://pncp.gov.br/api/consulta"   # contratações por data/UF/modalidade
+# No histórico (foco em veículo) a dispensa fica de fora: veículo novo supera o limite de dispensa e o volume de
+# dispensas (peças, serviços) é o que mais pesava na varredura.
+MODALIDADES_HISTORICO = (6, 7, 4, 5)
+
+CONSULTA_URL ="https://pncp.gov.br/api/consulta"   # contratações por data/UF/modalidade
 PNCP_URL = "https://pncp.gov.br/api/pncp"           # itens e resultados de uma contratação
 PORTAL_URL = "https://pncp.gov.br/app/editais"      # link público de evidência
 PAGE_SIZE = 50

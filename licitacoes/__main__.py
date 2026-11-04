@@ -44,6 +44,13 @@ def cmd_sync(a) -> int:
         from .comprasgov import ComprasGovClient
         cg = ComprasGovClient()
     col = Coletor(mapa_marca=mapa_marcas(), ufs=ufs, cg=cg)
+    from .alvos import alvos_emplacamento, por_matriz
+    from .coletor import _write
+    todos = alvos_emplacamento(minimo=1)
+    _write(config.ALVOS_PATH, {"_doc": "Compradores públicos com emplacamento desde 01/2021 na base ASSOBENS (régua da "
+                                       "cobertura das licitações). CNPJ de órgão público é dado público.", "alvos": todos})
+    col.alvos = {k: v for k, v in por_matriz(todos).items() if v["n"] >= 2}
+    print(f"órgãos públicos que emplacaram desde 2021: {len(todos)} CNPJs · buscados pela matriz (2+ veículos): {len(col.alvos)}")
     res = col.run(minutos=a.minutos, historico=not a.sem_historico)
     print(res.resumo())
     e = col.estado

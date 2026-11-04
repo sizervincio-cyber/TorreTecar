@@ -81,6 +81,16 @@ class ComprasGovClient:
                 }
         return out
 
+    def uasgs_do_orgao(self, cnpj: str) -> dict[str, dict]:
+        """Todas as UASGs de um órgão (em qualquer UF): para órgãos-alvo com sede fora da região."""
+        out = {}
+        for x in self._paginas("modulo-uasg/1_consultarUasg", {"cnpjCpfOrgao": cnpj, "statusUasg": "true"}):
+            out[str(int(x["codigoUasg"]))] = {
+                "uf": x.get("siglaUf"), "municipio": x.get("nomeMunicipioIbge"), "ibge": x.get("codigoMunicipioIbge"),
+                "nome": x.get("nomeUasg"), "cnpj": x.get("cnpjCpfOrgao") or cnpj, "sisg": x.get("usoSisg"),
+            }
+        return out
+
     def pregoes(self, ini: str, fim: str):
         yield from self._paginas("modulo-legado/3_consultarPregoes",
                                  {"dt_data_edital_inicial": ini, "dt_data_edital_final": fim, "pertence14133": "false"})

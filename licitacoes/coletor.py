@@ -1,9 +1,12 @@
-"""Coleta incremental do PNCP para GO, MT e TO.
+"""Coleta incremental de licitações para GO, MT e TO (PNCP + Compras.gov.br).
 
 Cada execução tem um orçamento de tempo e faz, nesta ordem:
-  1. Atualização: contratações publicadas ou alteradas desde a última execução (rota /atualizacao). Pega editais
-     novos, homologações e resultados que chegaram depois.
-  2. Histórico: janelas mensais ainda não varridas, da mais recente para 01/2021 (rota /publicacao).
+  1. Atualização PNCP: contratações publicadas ou alteradas desde a última execução (rota /atualizacao), completa
+     (veículos, peças e motores). Pega editais novos, homologações e resultados que chegaram depois.
+  2. Órgãos-alvo: compradores públicos que emplacaram caminhão na base ASSOBENS, buscados pelo CNPJ em qualquer UF
+     (pega compras centralizadas de órgãos com sede fora da região, como a CODEVASF), ano a ano desde 2021.
+  3. Histórico PNCP por UF: janelas mensais da mais recente para 01/2021, só contratações de veículo.
+  4. Compras.gov.br: pregões da lei antiga (2021–2024) das UASGs de GO, MT e TO e dos órgãos-alvo.
 Para cada contratação cujo objeto interessa, baixa os itens, classifica e, nos itens relevantes com resultado,
 baixa fornecedor, quantidade e preço homologados. Tudo é salvo a cada janela, então uma execução interrompida
 continua de onde parou na próxima.
@@ -13,6 +16,7 @@ from __future__ import annotations
 import logging
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 
@@ -82,6 +86,7 @@ def resumo_compra(c: dict) -> dict:
         "emenda": bool(c.get("emendaParlamentar")),
         "link": f"https://pncp.gov.br/app/editais/{cnpj}/{ano}/{seq}",
         "fonte": "PNCP",
+        "escopo": "REGIONAL" if un.get("ufSigla") in config.UFS else "NACIONAL",
     }
 
 
@@ -111,6 +116,8 @@ class Coletor:
                  modalidades=None, inicio: date = config.INICIO, clock=time.monotonic, cg: ComprasGovClient | None = None):
         self.client = client or PncpClient()
         self.cg = cg
+        self.alvos: dict = {}
+        self.paralelo = 4
         self.mapa_marca = mapa_marca or {}
         self.ufs = tuple(ufs)
         self.modalidades = tuple(modalidades or config.MODALIDADES)
@@ -145,32 +152,23 @@ class Coletor:
         return mudou
 
     # ---------- processamento de uma contratação ----------
-    def processar(self, c: dict, res: Resultado, prazo: float = float("inf")) -> None:
-        """Baixa e classifica os itens de uma contratação. Grava tudo ou nada: se o prazo estoura no meio de um
-        catálogo grande, a contratação fica para a próxima execução (não entra pela metade)."""
+    def _deve_baixar(self, c: dict, so_veiculos: bool) -> bool:
         cid = compra_id(c)
         atual = c.get("dataAtualizacaoGlobal") or c.get("dataAtualizacao")
         antiga = self.compras.get(cid)
         if cid in self.descartadas or (antiga and antiga.get("atualizada") == atual and antiga.get("itens_em")):
-            return
-        if not catalogo.objeto_relevante(c.get("objetoCompra")):
-            return
-        cnpj, ano, seq = c["orgaoEntidade"]["cnpj"], c["anoCompra"], c["sequencialCompra"]
-        rel = []
+            return False
+        return catalogo.objeto_veiculo(c.get("objetoCompra")) if so_veiculos else catalogo.objeto_relevante(c.get("objetoCompra"))
+
+    def _baixar(self, c: dict, so_veiculos: bool) -> tuple[list[dict], int]:
+        """Rede + classificação de uma contratação (roda em paralelo). No histórico (so_veiculos) só detalha os itens
+        de veículo completo: catálogos de peças com centenas de itens eram o gargalo e não são o foco."""
+        cnpj, ano, seq, cid = c["orgaoEntidade"]["cnpj"], c["anoCompra"], c["sequencialCompra"], compra_id(c)
+        rows, nres = [], 0
         for it in self.client.itens(cnpj, ano, seq):
             cl = catalogo.classificar(it.get("descricao"), c.get("objetoCompra"), it.get("valorUnitarioEstimado"), it.get("unidadeMedida"))
-            if cl:
-                rel.append((it, cl))
-        if not rel:
-            self.descartadas.add(cid)
-            self.compras.pop(cid, None)
-            for k in [k for k in self.itens if k[0] == cid]:
-                del self.itens[k]
-            return
-        rows, nres = [], 0
-        for it, cl in rel:
-            if self.clock() > prazo:
-                raise _PrazoEsgotado()
+            if not cl or (so_veiculos and catalogo.base_do_segmento(cl["segmento"]) != "VEICULOS"):
+                continue
             marca, similar = catalogo.marca_descricao(it.get("descricao"))
             row = {
                 "compra": cid, "n": it.get("numeroItem"), "desc": (it.get("descricao") or "")[:300],
@@ -194,9 +192,21 @@ class Coletor:
                     })
                     nres += 1
             rows.append(row)
+        return rows, nres
+
+    def _gravar(self, c: dict, rows: list[dict], nres: int, res: Resultado, alvo: bool = False) -> None:
+        cid = compra_id(c)
+        if not rows:
+            self.descartadas.add(cid)
+            self.compras.pop(cid, None)
+            for k in [k for k in self.itens if k[0] == cid]:
+                del self.itens[k]
+            return
         comp = resumo_compra(c)
         comp["itens_em"] = datetime.now(config.TZ).date().isoformat()
         comp["n_itens"] = len(rows)
+        if alvo:
+            comp["alvo"] = True             # achada pela busca do órgão que emplacou na região
         for k in [k for k in self.itens if k[0] == cid]:
             del self.itens[k]
         self.compras[cid] = comp
@@ -206,22 +216,70 @@ class Coletor:
         res.itens_relevantes += len(rows)
         res.resultados += nres
 
-    def _varrer(self, rota: str, ini: str, fim: str, res: Resultado, prazo: float) -> bool:
-        """Varre UFs × modalidades de uma janela. False se o prazo acabou no meio (a janela não conta como concluída)."""
-        for uf in self.ufs:
-            for mod in self.modalidades:
-                for c in self.client.contratacoes(rota, ini, fim, uf, mod):
+    def processar(self, c: dict, res: Resultado, prazo: float = float("inf"), so_veiculos: bool = False) -> None:
+        """Uma contratação, sem paralelismo (usado nos testes e em reprocessamentos pontuais)."""
+        if not self._deve_baixar(c, so_veiculos):
+            return
+        if self.clock() > prazo:
+            raise _PrazoEsgotado()
+        rows, nres = self._baixar(c, so_veiculos)
+        self._gravar(c, rows, nres, res)
+
+    def _varrer(self, rota: str, ini: str, fim: str, res: Resultado, prazo: float, so_veiculos: bool = False,
+                ufs=None, modalidades=None, cnpj: str | None = None) -> bool:
+        """Varre UFs × modalidades (ou um CNPJ de órgão) de uma janela, baixando os itens em paralelo.
+        False se o prazo acabou no meio (a janela não conta como concluída)."""
+        lote: list[dict] = []
+
+        def descarregar() -> bool:
+            if not lote:
+                return True
+            if self.clock() > prazo:
+                return False
+            with ThreadPoolExecutor(max_workers=self.paralelo) as ex:
+                baixados = list(ex.map(lambda c: self._baixar(c, so_veiculos), lote))
+            for c, (rows, nres) in zip(lote, baixados):
+                self._gravar(c, rows, nres, res, alvo=bool(cnpj))
+            lote.clear()
+            self.salvar(self.hoje)        # grava o parcial para a Torre já enxergar
+            return True
+
+        for uf in (ufs if ufs is not None else self.ufs):
+            for mod in (modalidades or self.modalidades):
+                for c in self.client.contratacoes(rota, ini, fim, uf, mod, cnpj):
                     res.contratacoes_lidas += 1
-                    antes = res.compras_relevantes
-                    try:
-                        self.processar(c, res, prazo)
-                    except _PrazoEsgotado:
+                    if self._deve_baixar(c, so_veiculos):
+                        lote.append(c)
+                    if len(lote) >= 3 * self.paralelo and not descarregar():
                         return False
-                    if res.compras_relevantes != antes and res.compras_relevantes % 25 == 0:
-                        self.salvar(self.hoje)   # janelas longas: grava o parcial para a Torre já enxergar
                     if self.clock() > prazo:
                         return False
-        return True
+        return descarregar()
+
+    def _alvos(self, hoje: date, res: Resultado, prazo: float) -> None:
+        """Busca pelo CNPJ de cada comprador público que emplacou na região, ano a ano (ano corrente: semanal)."""
+        if not self.alvos:
+            return
+        feitos = self.estado.setdefault("alvos_feitos", {})
+        semana = hoje.strftime("%G-W%V")
+        anos = list(range(hoje.year, self.inicio.year - 1, -1))
+        for cnpj in self.alvos:
+            for ano in anos:
+                chave = f"{cnpj}|{ano}" + (f"|{semana}" if ano == hoje.year else "")
+                if chave in feitos:
+                    continue
+                if self.clock() > prazo:
+                    return
+                ini, fim = f"{ano}-01-01", (hoje.isoformat() if ano == hoje.year else f"{ano}-12-31")
+                log.info("órgão-alvo %s %s %s", cnpj, (self.alvos[cnpj].get("nome") or "")[:40], ano)
+                if not self._varrer("publicacao", ini, fim, res, prazo, so_veiculos=True, ufs=[None],
+                                    modalidades=config.MODALIDADES_HISTORICO, cnpj=cnpj):
+                    return
+                for k in [k for k in feitos if k.startswith(f"{cnpj}|{ano}|")]:
+                    del feitos[k]           # semana anterior do ano corrente
+                feitos[chave] = hoje.isoformat()
+                res.janelas += 1
+        self.estado["alvos_total"] = len(self.alvos)
 
     # ---------- segunda fonte: Compras.gov.br (pregões da lei antiga) ----------
     def _indice_pncp(self) -> set:
@@ -242,8 +300,8 @@ class Coletor:
         antiga = self.compras.get(cid)
         if cid in self.descartadas or (antiga and antiga.get("atualizada") == p.get("dt_alteracao") and antiga.get("itens_em")):
             return
-        if not catalogo.objeto_relevante(p.get("tx_objeto")):
-            return
+        if not catalogo.objeto_veiculo(p.get("tx_objeto")):
+            return                           # lei antiga = histórico: foco em veículo
         num = str(p.get("numero") or "")
         seq, ano = num[:-4].lstrip("0"), num[-4:]
         if (info["cnpj"], ano, seq) in idx_pncp:
@@ -304,7 +362,7 @@ class Coletor:
             "publicada": (p.get("dt_data_edital") or "")[:10], "abertura": (p.get("dt_inicio_proposta") or "")[:16],
             "encerramento": (p.get("dt_fim_proposta") or "")[:16], "situacao": p.get("ds_situacao_pregao"),
             "atualizada": p.get("dt_alteracao"), "emenda": False, "link": link_compra(str(p.get("id_compra"))),
-            "fonte": "COMPRASGOV", "uasg": uasg,
+            "fonte": "COMPRASGOV", "uasg": uasg, "escopo": "REGIONAL" if info["uf"] in config.UFS else "NACIONAL",
             "itens_em": datetime.now(config.TZ).date().isoformat(), "n_itens": len(rows),
         }
         for k in [k for k in self.itens if k[0] == cid]:
@@ -323,6 +381,9 @@ class Coletor:
         if not pendentes or self.clock() > prazo:
             return
         uasgs = self.cg.uasgs(self.ufs)
+        for cnpj in list(self.alvos)[:60]:
+            for k, v in self.cg.uasgs_do_orgao(cnpj).items():
+                uasgs.setdefault(k, v)
         idx = self._indice_pncp()
         for ym in pendentes:
             if self.clock() > prazo:
@@ -362,12 +423,15 @@ class Coletor:
             res.janelas += 1
             self.salvar(hoje)
             if historico:
+                self._alvos(hoje, res, prazo)
+                self.salvar(hoje)
                 for ym in janelas_mensais(self.inicio, hoje):
                     if ym in janelas or self.clock() > prazo:
                         continue
                     a, b = limites_mes(ym)
-                    log.info("histórico %s", ym)
-                    if not self._varrer("publicacao", a, b, res, prazo):
+                    log.info("histórico %s (veículos)", ym)
+                    if not self._varrer("publicacao", a, b, res, prazo, so_veiculos=True,
+                                        modalidades=config.MODALIDADES_HISTORICO):
                         break
                     janelas[ym] = datetime.now(config.TZ).isoformat(timespec="seconds")
                     res.janelas += 1

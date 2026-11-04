@@ -2,13 +2,14 @@ name: Licitações PNCP
 
 on:
   schedule:
-    # A cada 3 horas (UTC). Cada execução pega o que mudou no PNCP e avança o histórico desde 01/2021.
-    - cron: "23 */3 * * *"
+    # De hora em hora (UTC). Cada execução pega o que mudou no PNCP, busca os órgãos que emplacaram na região e
+    # avança o histórico desde 01/2021 (PNCP e Compras.gov.br). Execuções não se sobrepõem (concurrency).
+    - cron: "23 * * * *"
   workflow_dispatch:
     inputs:
       minutos:
         description: "Orçamento de tempo da coleta (minutos)"
-        default: "45"
+        default: "50"
 
 concurrency:
   group: licitacoes-sync
@@ -41,7 +42,7 @@ jobs:
         run: python -m pytest -q tests/test_licitacoes.py
 
       - name: Coletar PNCP
-        run: python -m licitacoes sync --minutos "${{ inputs.minutos || '45' }}"
+        run: python -m licitacoes sync --minutos "${{ inputs.minutos || '50' }}"
 
       - name: Versionar dados
         if: success()

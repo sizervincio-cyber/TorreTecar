@@ -121,17 +121,19 @@ class FakeClient:
     def __init__(self, por_janela):
         self.por_janela, self.requests, self.chamadas = por_janela, 0, []
 
-    def contratacoes(self, rota, ini, fim, uf, mod):
+    def contratacoes(self, rota, ini, fim, uf, mod, cnpj=None):
         self.requests += 1
-        self.chamadas.append((rota, ini[:7], uf, mod))
-        return list(self.por_janela.get((rota, ini[:7], uf, mod), []))
+        self.chamadas.append((rota, ini[:7], uf, mod, cnpj))
+        return list(self.por_janela.get((rota, ini[:7], uf if not cnpj else cnpj, mod), []))
 
     def itens(self, cnpj, ano, seq):
         self.requests += 1
         return {1: [{"numeroItem": 1, "descricao": "CAMINHÃO BASCULANTE 6X4 Mercedes-Benz ou similar", "quantidade": 2,
                      "unidadeMedida": "UN", "valorUnitarioEstimado": 700000, "valorTotal": 1400000, "temResultado": True},
                     {"numeroItem": 2, "descricao": "Gasolina comum", "quantidade": 1000, "temResultado": False}],
-                2: [{"numeroItem": 1, "descricao": "Material de escritório", "quantidade": 1, "temResultado": False}]}[seq]
+                2: [{"numeroItem": 1, "descricao": "Material de escritório", "quantidade": 1, "temResultado": False}]}.get(seq, [
+                    {"numeroItem": 1, "descricao": "CAMINHÃO BASCULANTE 6X4, ZERO KM", "quantidade": 3, "unidadeMedida": "UN",
+                     "valorUnitarioEstimado": 690000, "valorTotal": 2070000, "temResultado": False}])
 
     def resultados(self, cnpj, ano, seq, item):
         self.requests += 1
@@ -216,6 +218,10 @@ class FakeCG:
                  "quantidade": 1, "unidade": "UN", "valor_estimado": 690000, "cnpj_fornecedor": "02714977000953", "nome_fornecedor": "TECAR CAMINHOES E SERVICOS LTDA"},
                 {"numero_item_licitacao": 2, "codigo_item_servico": 123, "nome_servico": "Manutenção", "quantidade": 1, "valor_estimado": 9000}]
 
+    def uasgs_do_orgao(self, cnpj):
+        self.requests += 1
+        return {}
+
     def homologados(self, uasg, ini, fim):
         self.requests += 1
         return {"9895830500001202200001": {"valor_homologado_item": 655000, "quantidade_item": 1, "dt_hom": "2022-04-01"}} if self.homologa else {}
@@ -248,3 +254,58 @@ def test_comprasgov_sem_homologado_marca_preco_pendente(lic_paths):
     col.run(minutos=60, hoje=date(2022, 5, 10))
     r = col.itens[("CG-98958305000012022", 1)]["r"][0]
     assert r["vu"] is None and r["preco_pendente"] and r["nome"].startswith("TECAR")
+
+
+def test_objeto_veiculo_no_historico():
+    assert catalogo.objeto_veiculo("Aquisição de caminhão basculante para a Secretaria de Obras")
+    assert catalogo.objeto_veiculo("Registro de preços para aquisição de veículos tipo van e micro-ônibus")
+    assert not catalogo.objeto_veiculo("Aquisição de peças para manutenção da frota de caminhões")
+    assert not catalogo.objeto_veiculo("Locação de caminhão pipa")
+
+
+def compra_codevasf(seq, objeto):
+    c = compra(seq, objeto)
+    c["orgaoEntidade"] = {"cnpj": "00399857000126", "razaoSocial": "CODEVASF", "esferaId": "F", "poderId": "E"}
+    c["unidadeOrgao"] = {"ufSigla": "DF", "municipioNome": "Brasília", "codigoIbge": "5300108", "nomeUnidade": "SEDE"}
+    return c
+
+
+def test_orgao_alvo_busca_por_cnpj_e_marca_escopo_nacional(lic_paths):
+    jan = {("publicacao", "2026-01", "00399857000126", 6): [compra_codevasf(9, "Aquisição de caminhão basculante"),
+                                                           compra_codevasf(10, "Aquisição de peças para caminhões")]}
+    cli = FakeClient(jan)
+    col = Coletor(client=cli, ufs=["GO"], modalidades=[6], inicio=date(2026, 1, 1))
+    col.alvos = {"00399857000126": {"nome": "COMPANHIA DE DESENVOLVIMENTO DOS VALES", "n": 374}}
+    col.run(minutos=60, hoje=date(2026, 3, 5))
+    assert any(ch[4] == "00399857000126" and ch[2] is None for ch in cli.chamadas)      # sem filtro de UF
+    c = col.compras["00399857000126-2026-9"]
+    assert c["escopo"] == "NACIONAL" and c["alvo"] and c["uf"] == "DF"
+    assert "00399857000126-2026-10" not in col.compras        # peças não entram no histórico/alvos
+    est = json.loads(config.ESTADO_PATH.read_text(encoding="utf-8"))
+    assert any(k.startswith("00399857000126|2026|") for k in est["alvos_feitos"])
+    n = cli.requests
+    Coletor(client=cli, ufs=["GO"], modalidades=[6], inicio=date(2026, 1, 1)).run(minutos=60, hoje=date(2026, 3, 5))
+    assert not any(ch[4] for ch in cli.chamadas[n:])             # alvo do ano já varrido nesta semana: não repete
+
+
+def test_alvos_emplacamento(tmp_path):
+    import openpyxl
+    from licitacoes.alvos import alvos_emplacamento
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.append(["CHASSI", "DATA EMPLACAMENTO", "MARCA", "UF", "CPFCNPJPROPRIETARIO", "TIPOCNPJPROPRIETARIO", "NOMEPROPRIETARIO"])
+    ws.append(["A1", "2024-05-01", "IVECO", "GO", "00.399.857/0001-26", "JURIDICA", "COMPANHIA DE DESENVOLVIMENTO DOS VALES DO SAO FRANCISCO"])
+    ws.append(["A2", "2025-02-01", "VW", "TO", "00.399.857/0001-26", "JURIDICA", "COMPANHIA DE DESENVOLVIMENTO DOS VALES DO SAO FRANCISCO"])
+    ws.append(["A3", "2024-05-01", "VW", "GO", "05.128.774/0001-16", "JURIDICA", "J R TRANSPORTES"])
+    ws.append(["A4", "2019-05-01", "VW", "GO", "01.105.329/0001-80", "JURIDICA", "MUNICIPIO DE HIDROLANDIA"])
+    wb.save(tmp_path / "m.xlsx")
+    a = alvos_emplacamento(tmp_path / "m.xlsx")
+    assert list(a) == ["00399857000126"] and a["00399857000126"]["n"] == 2 and a["00399857000126"]["ufs"] == {"GO": 1, "TO": 1}
+
+
+def test_cnpj_matriz_e_agrupamento_por_matriz():
+    from licitacoes.alvos import cnpj_matriz, por_matriz
+    assert cnpj_matriz("00399857") == "00399857000126"          # CODEVASF
+    assert cnpj_matriz("05128774") == "05128774000116"
+    g = por_matriz({"00399857003907": {"nome": "CODEVASF GO", "n": 278}, "00399857003818": {"nome": "CODEVASF TO", "n": 88}})
+    assert list(g) == ["00399857000126"] and g["00399857000126"]["n"] == 366
