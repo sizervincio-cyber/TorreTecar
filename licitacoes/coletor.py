@@ -293,8 +293,13 @@ class Coletor:
                     return
                 ini, fim = f"{ano}-01-01", (hoje.isoformat() if ano == hoje.year else f"{ano}-12-31")
                 log.info("órgão-alvo %s %s %s", cnpj, (self.alvos[cnpj].get("nome") or "")[:40], ano)
-                if not self._varrer("publicacao", ini, fim, res, prazo, so_veiculos=True, ufs=[None],
-                                    modalidades=config.MODALIDADES_HISTORICO, cnpj=cnpj):
+                try:
+                    ok = self._varrer("publicacao", ini, fim, res, prazo, so_veiculos=True, ufs=[None],
+                                      modalidades=config.MODALIDADES_HISTORICO, cnpj=cnpj)
+                except PncpError as e:
+                    self._falha(res, f"órgão-alvo {cnpj} {ano}", e)
+                    continue                # falha pontual: tenta de novo na próxima rodada, segue com os demais
+                if not ok:
                     return
                 with self._trava:
                     for k in [k for k in feitos if k.startswith(f"{cnpj}|{ano}|")]:
@@ -453,13 +458,25 @@ class Coletor:
                 return
             a, b = limites_mes(ym)
             log.info("histórico %s %s (veículos)", uf, ym)
-            if not self._varrer("publicacao", a, b, res, prazo, so_veiculos=True, ufs=[uf],
-                                modalidades=config.MODALIDADES_HISTORICO):
+            try:
+                ok = self._varrer("publicacao", a, b, res, prazo, so_veiculos=True, ufs=[uf],
+                                  modalidades=config.MODALIDADES_HISTORICO)
+            except PncpError as e:
+                self._falha(res, f"histórico {uf} {ym}", e)
+                continue                    # falha pontual: o mês fica pendente e a etapa segue
+            if not ok:
                 return
             with self._trava:
                 janelas[f"{uf}|{ym}"] = datetime.now(config.TZ).isoformat(timespec="seconds")
                 res.janelas += 1
             self._salvar_parcial()
+
+    def _falha(self, res: Resultado, onde: str, e: Exception) -> None:
+        with self._trava:
+            res.avisos.append(f"{onde}: {str(e)[:120]}")
+            if len(res.avisos) > 40:
+                del res.avisos[20:-20]
+        log.warning("%s: %s", onde, e)
 
     def _etapa(self, nome: str, fn, res: Resultado) -> None:
         """Roda uma etapa paralela; a falha de uma fonte não derruba as outras."""

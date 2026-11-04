@@ -326,3 +326,44 @@ def test_mes_so_conta_quando_todas_as_ufs_terminam(lic_paths):
     col = Coletor(client=FakeClient({}), ufs=["GO", "MT"], modalidades=[6], inicio=date(2026, 9, 1))
     col.estado["janelas"] = {"GO|2026-10": "x", "2026-09": "x"}      # formato antigo (sem UF) vale para todas
     assert not col._mes_feito("2026-10") and col._mes_feito("2026-09")
+
+
+def test_freio_global_apos_429():
+    import io, urllib.error
+    from licitacoes.pncp import PncpClient
+    t = [0.0]
+    esperas = []
+    respostas = [429, 429, 200]
+
+    def opener(req, timeout=None):
+        st = respostas.pop(0)
+        if st != 200:
+            raise urllib.error.HTTPError(req.full_url, st, "x", {}, io.BytesIO(b""))
+        class R(io.BytesIO):
+            status = 200
+        return R(b'{"ok": 1}')
+
+    def sleep(s):
+        esperas.append(round(s, 1)); t[0] += s
+
+    c = PncpClient(opener=opener, sleep=sleep, relogio=lambda: t[0], pause=0)
+    assert c._get("https://x") == {"ok": 1} and c.limitado == 2
+    assert 20.0 in esperas and 40.0 in esperas            # freio crescente: 20 s, depois 40 s
+    assert c._seguidos == 0                               # sucesso zera a sequência
+
+
+def test_falha_pontual_nao_derruba_a_etapa(lic_paths):
+    from licitacoes.pncp import PncpError
+
+    class Instavel(FakeClient):
+        def contratacoes(self, rota, ini, fim, uf, mod, cnpj=None):
+            if rota == "publicacao" and ini.startswith("2026-10") and uf == "GO":
+                raise PncpError("PNCP indisponível")
+            return super().contratacoes(rota, ini, fim, uf, mod, cnpj)
+
+    jan = {("publicacao", "2026-09", "GO", 6): [compra(1, "Aquisição de caminhão basculante")]}
+    col = Coletor(client=Instavel(jan), ufs=["GO"], modalidades=[6], inicio=date(2026, 9, 1))
+    res = col.run(minutos=60, hoje=date(2026, 11, 4))
+    est = json.loads(config.ESTADO_PATH.read_text(encoding="utf-8"))
+    assert "GO|2026-09" in est["janelas"] and "GO|2026-10" not in est["janelas"]   # outubro fica pendente
+    assert res.compras_relevantes == 1 and any("histórico GO 2026-10" in a for a in res.avisos)
