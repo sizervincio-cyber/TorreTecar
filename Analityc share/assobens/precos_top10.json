@@ -1,5 +1,5 @@
 {
- "gerado_em": "2026-11-03T15:13:41-03:00",
+ "gerado_em": "2026-11-03T21:20:23-03:00",
  "janela": [
   "2025-11",
   "2025-12",
@@ -142,7 +142,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-11-03T15:12:48-03:00",
+    "data_captura_preco": "2026-11-03T21:19:36-03:00",
     "observacao": null
    },
    {
@@ -174,7 +174,7 @@
     "fonte_equivalencia": "modelo Mercedes-Benz",
     "gap_preco_rs": 0.0,
     "gap_preco_pct": 0.0,
-    "data_captura_preco": "2026-11-03T15:12:48-03:00",
+    "data_captura_preco": "2026-11-03T21:19:36-03:00",
     "observacao": null
    }
   ],
