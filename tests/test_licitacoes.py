@@ -309,3 +309,20 @@ def test_cnpj_matriz_e_agrupamento_por_matriz():
     assert cnpj_matriz("05128774") == "05128774000116"
     g = por_matriz({"00399857003907": {"nome": "CODEVASF GO", "n": 278}, "00399857003818": {"nome": "CODEVASF TO", "n": 88}})
     assert list(g) == ["00399857000126"] and g["00399857000126"]["n"] == 366
+
+
+def test_historico_paralelo_por_uf(lic_paths):
+    jan = {("publicacao", "2026-10", "GO", 6): [compra(1, "Aquisição de caminhão basculante")],
+           ("publicacao", "2026-10", "MT", 6): [compra(3, "Aquisição de ônibus escolar")]}
+    col = Coletor(client=FakeClient(jan), ufs=["GO", "MT"], modalidades=[6], inicio=date(2026, 9, 1))
+    res = col.run(minutos=60, hoje=date(2026, 11, 4))
+    est = json.loads(config.ESTADO_PATH.read_text(encoding="utf-8"))
+    assert {"GO|2026-10", "MT|2026-10", "GO|2026-09", "MT|2026-09"} <= set(est["janelas"])
+    assert est["meses_concluidos"] == 2 and est["meses_por_uf"] == {"GO": 2, "MT": 2}
+    assert res.compras_relevantes == 2 and not res.avisos
+
+
+def test_mes_so_conta_quando_todas_as_ufs_terminam(lic_paths):
+    col = Coletor(client=FakeClient({}), ufs=["GO", "MT"], modalidades=[6], inicio=date(2026, 9, 1))
+    col.estado["janelas"] = {"GO|2026-10": "x", "2026-09": "x"}      # formato antigo (sem UF) vale para todas
+    assert not col._mes_feito("2026-10") and col._mes_feito("2026-09")

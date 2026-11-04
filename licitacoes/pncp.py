@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -9,18 +10,23 @@ import urllib.request
 
 from . import config
 
+# Teto de consultas simultâneas ao PNCP somando todas as etapas paralelas da coleta (carga moderada numa API pública).
+MAX_SIMULTANEAS = 8
+
 
 class PncpError(Exception):
     pass
 
 
 class PncpClient:
-    def __init__(self, pause: float = 0.3, timeout: int = 120, opener=None, sleep=time.sleep):
+    def __init__(self, pause: float = 0.3, timeout: int = 120, opener=None, sleep=time.sleep, simultaneas: int = MAX_SIMULTANEAS):
         self.pause = pause
         self.timeout = timeout
         self._open = opener or urllib.request.urlopen
         self._sleep = sleep
         self.requests = 0
+        self.limitado = 0                      # respostas 429 (o servidor pediu para desacelerar)
+        self._vaga = threading.BoundedSemaphore(simultaneas)
 
     def _get(self, url: str):
         for tentativa in range(5):
@@ -29,14 +35,16 @@ class PncpClient:
             self.requests += 1
             req = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "torre-tecar/1.0"})
             try:
-                with self._open(req, timeout=self.timeout) as r:
+                with self._vaga, self._open(req, timeout=self.timeout) as r:
                     body = r.read()
                     return json.loads(body.decode("utf-8")) if body else None
             except urllib.error.HTTPError as e:
                 if e.code in (204, 404):
                     return None
                 if e.code in (429, 500, 502, 503, 504):
-                    self._sleep(min(120, 15 * (tentativa + 1)))
+                    if e.code == 429:
+                        self.limitado += 1
+                    self._sleep(min(120, 15 * (tentativa + 1)))   # espera fora da vaga: as demais seguem
                     continue
                 raise PncpError(f"PNCP {e.code} em {url[:160]}")
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError):

@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import logging
 import re
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
@@ -118,6 +119,9 @@ class Coletor:
         self.cg = cg
         self.alvos: dict = {}
         self.paralelo = 4
+        self._trava = threading.RLock()        # gravação e estado: uma etapa por vez
+        self._trava_relogio = threading.Lock()
+        self._ultimo_salvo = 0.0
         self.mapa_marca = mapa_marca or {}
         self.ufs = tuple(ufs)
         self.modalidades = tuple(modalidades or config.MODALIDADES)
@@ -131,6 +135,10 @@ class Coletor:
         self.itens = {(i["compra"], i["n"]): i for i in brutos}
         self.descartadas = set(self.estado.get("descartadas", []))
         self.reclassificar()
+
+    def _agora(self) -> float:
+        with self._trava_relogio:
+            return self.clock()
 
     def reclassificar(self) -> int:
         """Aplica o catálogo atual aos itens já coletados (as regras evoluem; a base acompanha sem recoletar)."""
@@ -153,6 +161,10 @@ class Coletor:
 
     # ---------- processamento de uma contratação ----------
     def _deve_baixar(self, c: dict, so_veiculos: bool) -> bool:
+        with self._trava:
+            return self._deve_baixar_sem_trava(c, so_veiculos)
+
+    def _deve_baixar_sem_trava(self, c: dict, so_veiculos: bool) -> bool:
         cid = compra_id(c)
         atual = c.get("dataAtualizacaoGlobal") or c.get("dataAtualizacao")
         antiga = self.compras.get(cid)
@@ -195,6 +207,10 @@ class Coletor:
         return rows, nres
 
     def _gravar(self, c: dict, rows: list[dict], nres: int, res: Resultado, alvo: bool = False) -> None:
+        with self._trava:
+            self._gravar_sem_trava(c, rows, nres, res, alvo)
+
+    def _gravar_sem_trava(self, c: dict, rows: list[dict], nres: int, res: Resultado, alvo: bool = False) -> None:
         cid = compra_id(c)
         if not rows:
             self.descartadas.add(cid)
@@ -220,7 +236,7 @@ class Coletor:
         """Uma contratação, sem paralelismo (usado nos testes e em reprocessamentos pontuais)."""
         if not self._deve_baixar(c, so_veiculos):
             return
-        if self.clock() > prazo:
+        if self._agora() > prazo:
             raise _PrazoEsgotado()
         rows, nres = self._baixar(c, so_veiculos)
         self._gravar(c, rows, nres, res)
@@ -234,14 +250,14 @@ class Coletor:
         def descarregar() -> bool:
             if not lote:
                 return True
-            if self.clock() > prazo:
+            if self._agora() > prazo:
                 return False
             with ThreadPoolExecutor(max_workers=self.paralelo) as ex:
                 baixados = list(ex.map(lambda c: self._baixar(c, so_veiculos), lote))
             for c, (rows, nres) in zip(lote, baixados):
                 self._gravar(c, rows, nres, res, alvo=bool(cnpj))
             lote.clear()
-            self.salvar(self.hoje)        # grava o parcial para a Torre já enxergar
+            self._salvar_parcial()        # grava o parcial para a Torre já enxergar
             return True
 
         for uf in (ufs if ufs is not None else self.ufs):
@@ -252,9 +268,14 @@ class Coletor:
                         lote.append(c)
                     if len(lote) >= 3 * self.paralelo and not descarregar():
                         return False
-                    if self.clock() > prazo:
+                    if self._agora() > prazo:
                         return False
         return descarregar()
+
+    def _salvar_parcial(self, intervalo: float = 90) -> None:
+        with self._trava:
+            if self._agora() - self._ultimo_salvo >= intervalo:
+                self.salvar(self.hoje)
 
     def _alvos(self, hoje: date, res: Resultado, prazo: float) -> None:
         """Busca pelo CNPJ de cada comprador público que emplacou na região, ano a ano (ano corrente: semanal)."""
@@ -268,17 +289,18 @@ class Coletor:
                 chave = f"{cnpj}|{ano}" + (f"|{semana}" if ano == hoje.year else "")
                 if chave in feitos:
                     continue
-                if self.clock() > prazo:
+                if self._agora() > prazo:
                     return
                 ini, fim = f"{ano}-01-01", (hoje.isoformat() if ano == hoje.year else f"{ano}-12-31")
                 log.info("órgão-alvo %s %s %s", cnpj, (self.alvos[cnpj].get("nome") or "")[:40], ano)
                 if not self._varrer("publicacao", ini, fim, res, prazo, so_veiculos=True, ufs=[None],
                                     modalidades=config.MODALIDADES_HISTORICO, cnpj=cnpj):
                     return
-                for k in [k for k in feitos if k.startswith(f"{cnpj}|{ano}|")]:
-                    del feitos[k]           # semana anterior do ano corrente
-                feitos[chave] = hoje.isoformat()
-                res.janelas += 1
+                with self._trava:
+                    for k in [k for k in feitos if k.startswith(f"{cnpj}|{ano}|")]:
+                        del feitos[k]       # semana anterior do ano corrente
+                    feitos[chave] = hoje.isoformat()
+                    res.janelas += 1
         self.estado["alvos_total"] = len(self.alvos)
 
     # ---------- segunda fonte: Compras.gov.br (pregões da lei antiga) ----------
@@ -292,6 +314,10 @@ class Coletor:
         return idx
 
     def processar_cg(self, p: dict, uasgs: dict, idx_pncp: set, res: Resultado, prazo: float) -> None:
+        # rede fora da trava (a API é lenta); só a gravação no estado compartilhado fica travada
+        self._processar_cg(p, uasgs, idx_pncp, res, prazo)
+
+    def _processar_cg(self, p: dict, uasgs: dict, idx_pncp: set, res: Resultado, prazo: float) -> None:
         uasg = str(p.get("co_uasg"))
         info = uasgs.get(uasg)
         if not info:
@@ -305,7 +331,8 @@ class Coletor:
         num = str(p.get("numero") or "")
         seq, ano = num[:-4].lstrip("0"), num[-4:]
         if (info["cnpj"], ano, seq) in idx_pncp:
-            self.descartadas.add(cid)        # mesmo pregão já veio pelo PNCP
+            with self._trava:
+                self.descartadas.add(cid)    # mesmo pregão já veio pelo PNCP
             return
         rel = []
         for it in self.cg.itens(uasg, int(num)):
@@ -316,10 +343,11 @@ class Coletor:
             if cl:
                 rel.append((it, desc, cl))
         if not rel:
-            self.descartadas.add(cid)
-            self.compras.pop(cid, None)
+            with self._trava:
+                self.descartadas.add(cid)
+                self.compras.pop(cid, None)
             return
-        if self.clock() > prazo:
+        if self._agora() > prazo:
             raise _PrazoEsgotado()
         hom = {}
         if str(p.get("ds_situacao_pregao") or "").lower().startswith("homolog") and any(it.get("cnpj_fornecedor") for it, _, _ in rel):
@@ -351,42 +379,44 @@ class Coletor:
             rows.append(row)
         nome = str(p.get("no_orgao") or "")
         esfera = "F" if info.get("sisg") else ("M" if re.search(r"MUNIC|PREFEIT|CAMARA|FUNDO M|FMS|SAAE", catalogo.norm(nome + " " + str(p.get("no_ausg") or ""))) else "E")
-        self.compras[cid] = {
-            "id": cid, "orgao_cnpj": info["cnpj"], "orgao": nome or info["nome"], "esfera": esfera, "poder": None,
-            "uf": info["uf"], "municipio": (info["municipio"] or "").title(), "ibge": info["ibge"], "unidade": p.get("no_ausg"),
-            "modalidade": None, "modalidade_nome": "Pregão (lei antiga) · Compras.gov.br",
-            "srp": str(p.get("ds_tipo_pregao_compra") or "").upper() == "SISRP",
-            "numero": seq, "ano": int(ano) if ano.isdigit() else None, "processo": p.get("co_processo"),
-            "objeto": (p.get("tx_objeto") or "")[:400],
-            "valor_estimado": p.get("valor_estimado_total"), "valor_homologado": p.get("valor_homologado_total"),
-            "publicada": (p.get("dt_data_edital") or "")[:10], "abertura": (p.get("dt_inicio_proposta") or "")[:16],
-            "encerramento": (p.get("dt_fim_proposta") or "")[:16], "situacao": p.get("ds_situacao_pregao"),
-            "atualizada": p.get("dt_alteracao"), "emenda": False, "link": link_compra(str(p.get("id_compra"))),
-            "fonte": "COMPRASGOV", "uasg": uasg, "escopo": "REGIONAL" if info["uf"] in config.UFS else "NACIONAL",
-            "itens_em": datetime.now(config.TZ).date().isoformat(), "n_itens": len(rows),
-        }
-        for k in [k for k in self.itens if k[0] == cid]:
-            del self.itens[k]
-        for row in rows:
-            self.itens[(cid, row["n"])] = row
-        res.compras_relevantes += 1
-        res.itens_relevantes += len(rows)
-        res.resultados += nres
+        with self._trava:
+            self.compras[cid] = {
+                "id": cid, "orgao_cnpj": info["cnpj"], "orgao": nome or info["nome"], "esfera": esfera, "poder": None,
+                "uf": info["uf"], "municipio": (info["municipio"] or "").title(), "ibge": info["ibge"], "unidade": p.get("no_ausg"),
+                "modalidade": None, "modalidade_nome": "Pregão (lei antiga) · Compras.gov.br",
+                "srp": str(p.get("ds_tipo_pregao_compra") or "").upper() == "SISRP",
+                "numero": seq, "ano": int(ano) if ano.isdigit() else None, "processo": p.get("co_processo"),
+                "objeto": (p.get("tx_objeto") or "")[:400],
+                "valor_estimado": p.get("valor_estimado_total"), "valor_homologado": p.get("valor_homologado_total"),
+                "publicada": (p.get("dt_data_edital") or "")[:10], "abertura": (p.get("dt_inicio_proposta") or "")[:16],
+                "encerramento": (p.get("dt_fim_proposta") or "")[:16], "situacao": p.get("ds_situacao_pregao"),
+                "atualizada": p.get("dt_alteracao"), "emenda": False, "link": link_compra(str(p.get("id_compra"))),
+                "fonte": "COMPRASGOV", "uasg": uasg, "escopo": "REGIONAL" if info["uf"] in config.UFS else "NACIONAL",
+                "itens_em": datetime.now(config.TZ).date().isoformat(), "n_itens": len(rows),
+            }
+            for k in [k for k in self.itens if k[0] == cid]:
+                del self.itens[k]
+            for row in rows:
+                self.itens[(cid, row["n"])] = row
+            res.compras_relevantes += 1
+            res.itens_relevantes += len(rows)
+            res.resultados += nres
 
     def _comprasgov(self, hoje: date, res: Resultado, prazo: float) -> None:
         janelas = self.estado.setdefault("cg_janelas", {})
         meses = [m for m in janelas_mensais(self.inicio, hoje) if m <= FIM_LEGADO]
         pendentes = [m for m in meses if m not in janelas]
         self.estado["cg_meses_total"], self.estado["cg_meses_concluidos"] = len(meses), len(meses) - len(pendentes)
-        if not pendentes or self.clock() > prazo:
+        if not pendentes or self._agora() > prazo:
             return
         uasgs = self.cg.uasgs(self.ufs)
         for cnpj in list(self.alvos)[:60]:
             for k, v in self.cg.uasgs_do_orgao(cnpj).items():
                 uasgs.setdefault(k, v)
-        idx = self._indice_pncp()
+        with self._trava:
+            idx = self._indice_pncp()
         for ym in pendentes:
-            if self.clock() > prazo:
+            if self._agora() > prazo:
                 return
             a, b = limites_mes(ym)
             log.info("Compras.gov.br %s", ym)
@@ -398,22 +428,56 @@ class Coletor:
                     vistos.add(p.get("id_compra"))
                     res.contratacoes_lidas += 1
                     self.processar_cg(p, uasgs, idx, res, prazo)
-                    if self.clock() > prazo:
+                    if self._agora() > prazo:
                         return
             except _PrazoEsgotado:
                 return
-            janelas[ym] = datetime.now(config.TZ).isoformat(timespec="seconds")
-            self.estado["cg_meses_concluidos"] = len([m for m in meses if m in janelas])
-            res.janelas += 1
-            self.salvar(hoje)
+            with self._trava:
+                janelas[ym] = datetime.now(config.TZ).isoformat(timespec="seconds")
+                self.estado["cg_meses_concluidos"] = len([m for m in meses if m in janelas])
+                res.janelas += 1
+            self._salvar_parcial()
+
+    # ---------- histórico PNCP por UF ----------
+    def _mes_feito(self, ym: str) -> bool:
+        """Mês concluído nas três UFs (ou no formato antigo, sem UF)."""
+        j = self.estado.get("janelas", {})
+        return ym in j or all(f"{uf}|{ym}" in j for uf in self.ufs)
+
+    def _historico_uf(self, uf: str, hoje: date, res: Resultado, prazo: float) -> None:
+        janelas = self.estado.setdefault("janelas", {})
+        for ym in janelas_mensais(self.inicio, hoje):
+            if ym in janelas or f"{uf}|{ym}" in janelas:
+                continue
+            if self._agora() > prazo:
+                return
+            a, b = limites_mes(ym)
+            log.info("histórico %s %s (veículos)", uf, ym)
+            if not self._varrer("publicacao", a, b, res, prazo, so_veiculos=True, ufs=[uf],
+                                modalidades=config.MODALIDADES_HISTORICO):
+                return
+            with self._trava:
+                janelas[f"{uf}|{ym}"] = datetime.now(config.TZ).isoformat(timespec="seconds")
+                res.janelas += 1
+            self._salvar_parcial()
+
+    def _etapa(self, nome: str, fn, res: Resultado) -> None:
+        """Roda uma etapa paralela; a falha de uma fonte não derruba as outras."""
+        try:
+            fn()
+        except (PncpError, ComprasGovError) as e:
+            with self._trava:
+                res.avisos.append(f"{nome}: {e}")
+            log.warning("%s: %s", nome, e)
 
     # ---------- execução ----------
     def run(self, minutos: float = 50, hoje: date | None = None, historico: bool = True) -> Resultado:
+        """1) atualização recente (todas as modalidades); 2) em paralelo, até o prazo: órgãos-alvo, histórico de
+        cada UF e Compras.gov.br. As etapas paralelas dividem o teto de consultas simultâneas do cliente PNCP."""
         hoje = self.hoje = hoje or datetime.now(config.TZ).date()
-        prazo_total = self.clock() + minutos * 60
-        prazo = self.clock() + minutos * 60 * (0.6 if self.cg else 1)   # PNCP primeiro; o restante vai ao Compras.gov.br
+        prazo = self._agora() + minutos * 60
         res = Resultado()
-        janelas = self.estado.setdefault("janelas", {})
+        self.estado.setdefault("janelas", {})
         try:
             ult = self.estado.get("ultima_atualizacao")
             ini = (date.fromisoformat(ult) - timedelta(days=2)).isoformat() if ult else hoje.replace(day=1).isoformat()
@@ -421,43 +485,39 @@ class Coletor:
             if self._varrer("atualizacao", ini, hoje.isoformat(), res, prazo):
                 self.estado["ultima_atualizacao"] = hoje.isoformat()
             res.janelas += 1
-            self.salvar(hoje)
-            if historico:
-                self._alvos(hoje, res, prazo)
-                self.salvar(hoje)
-                for ym in janelas_mensais(self.inicio, hoje):
-                    if ym in janelas or self.clock() > prazo:
-                        continue
-                    a, b = limites_mes(ym)
-                    log.info("histórico %s (veículos)", ym)
-                    if not self._varrer("publicacao", a, b, res, prazo, so_veiculos=True,
-                                        modalidades=config.MODALIDADES_HISTORICO):
-                        break
-                    janelas[ym] = datetime.now(config.TZ).isoformat(timespec="seconds")
-                    res.janelas += 1
-                    self.salvar(hoje)
         except PncpError as e:
             res.erro = str(e)
             log.warning("%s", e)
+        self.salvar(hoje)
+        etapas = []
+        if historico:
+            etapas.append(("órgãos-alvo", lambda: self._alvos(hoje, res, prazo)))
+            etapas += [(f"histórico {uf}", lambda uf=uf: self._historico_uf(uf, hoje, res, prazo)) for uf in self.ufs]
+        if self.cg:
+            etapas.append(("Compras.gov.br", lambda: self._comprasgov(hoje, res, prazo)))
         try:
-            if self.cg:
-                self._comprasgov(hoje, res, prazo_total)
-        except ComprasGovError as e:
-            res.avisos.append(str(e))
-            log.warning("%s", e)
+            if etapas:
+                with ThreadPoolExecutor(max_workers=len(etapas)) as ex:
+                    for f in [ex.submit(self._etapa, nome, fn, res) for nome, fn in etapas]:
+                        f.result()
         finally:
             res.requisicoes = self.client.requests + (self.cg.requests if self.cg else 0)
+            if getattr(self.client, "limitado", 0):
+                res.avisos.append(f"PNCP pediu para desacelerar {self.client.limitado} vez(es) (429); a coleta esperou e seguiu")
             self.salvar(hoje, res)
         return res
 
     def salvar(self, hoje: date, res: Resultado | None = None) -> None:
-        total_meses = len(janelas_mensais(self.inicio, hoje))
-        feitas = sorted(self.estado.get("janelas", {}))
+        meses = janelas_mensais(self.inicio, hoje)
+        total_meses = len(meses)
+        feitas = sorted(m for m in meses if self._mes_feito(m))
+        self._ultimo_salvo = self._agora()
         self.estado.update({
             "fonte": "PNCP — API de Consulta (pncp.gov.br/api/consulta) e API PNCP (itens e resultados)",
             "ufs": list(self.ufs), "modalidades": {str(k): config.MODALIDADES.get(k, str(k)) for k in self.modalidades},
             "inicio": self.inicio.isoformat(), "meses_total": total_meses, "meses_concluidos": len(feitas),
             "mais_antigo_concluido": feitas[0] if feitas else None,
+            "meses_por_uf": {uf: sum(1 for m in meses if m in self.estado.get("janelas", {}) or f"{uf}|{m}" in self.estado.get("janelas", {})) for uf in self.ufs},
             "descartadas": sorted(self.descartadas),
             "atualizado_em": datetime.now(config.TZ).isoformat(timespec="seconds"),
         })
