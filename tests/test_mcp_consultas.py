@@ -105,6 +105,20 @@ def test_carteira_por_responsavel(bases):
     assert l["mercado_5a"] == 3 and l["vendas_tecar_12m"] == 1  # janela de 12m termina na última data da base
 
 
+def test_carteira_total_sem_duplicar_quando_carteiras_se_sobrepoem(bases):
+    html = bases.caminho("Analitycmbb.html")
+    t = html.read_text(encoding="utf-8")
+    # mesmo CNPJ também atribuído a uma SDR: a soma das linhas conta o cliente duas vezes
+    t = t.replace('const CRM_RESP=[', 'const CRM_RESP=[{"n": "Nicole", "role": "SDR", "casa": "Anápolis"}, ')
+    t = t.replace('"05128774000116", 0, 0,', '"05128774000116", 0, 1,')
+    t = t.replace('const CRM_ROWS=[', 'const CRM_ROWS=[[2, 1, "J", "J R TRANSPORTES", "05128774000116", 0, 0, 1, 0, 0, "GO", "2022-05", 7, 0], ')
+    html.write_text(t, encoding="utf-8")
+    c = q.carteira_por_responsavel(bases)
+    assert len(c["linhas"]) == 2 and c["total_sem_duplicar"]["responsaveis"] == 2
+    assert c["soma_das_linhas_com_sobreposicao"]["mercado_12m"] == 2 * c["total_sem_duplicar"]["mercado_12m"]
+    assert c["total_sem_duplicar"]["raizes_cnpj"] == 1 and "Não some" in c["atencao"]
+
+
 def test_licitacoes_e_itens(bases):
     l = q.buscar_licitacoes(bases, texto="caminhao", uf="GO", somente_abertas=True)
     assert l["encontradas"] == 1 and l["valor_estimado_total"] == 1000.5  # valor em texto não quebra a soma

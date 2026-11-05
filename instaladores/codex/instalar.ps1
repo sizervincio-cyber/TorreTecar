@@ -5,7 +5,8 @@
 # Uso: powershell -ExecutionPolicy Bypass -File .\instalar.ps1 [-Token "torre_..."] [-Url "https://.../mcp"]
 param(
   [string]$Token = "",
-  [string]$Url = "https://mcp.2-25-95-244.sslip.io/mcp"
+  [string]$Url = "https://mcp.2-25-95-244.sslip.io/mcp",
+  [switch]$NovoToken
 )
 $ErrorActionPreference = "Stop"
 $aqui = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -16,7 +17,12 @@ New-Item -ItemType Directory -Force -Path $codexHome | Out-Null
 Write-Host ""
 Write-Host "== Torre Tecar para o Codex ==" -ForegroundColor Cyan
 
-# 1) Token (gerado na VPS com deploy/mcp-token.sh)
+# 1) Token (gerado na VPS com deploy/mcp-token.sh). Numa reinstalacao, reaproveita o token ja salvo.
+$salvo = [Environment]::GetEnvironmentVariable("TORRE_MCP_TOKEN", "User")
+if (-not $Token -and -not $NovoToken -and $salvo -match '^torre_[0-9a-f]{48}$') {
+  $Token = $salvo
+  Write-Host "Usando o token ja salvo neste computador (para trocar: instalar.ps1 -NovoToken)."
+}
 if (-not $Token) {
   $seguro = Read-Host "Cole o token do MCP da Torre (gerado na VPS)" -AsSecureString
   $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro)

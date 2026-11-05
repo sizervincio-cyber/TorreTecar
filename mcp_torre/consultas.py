@@ -266,7 +266,20 @@ def carteira_por_responsavel(b: Bases, casa: str | None = None, responsavel: str
                        "mercedes_benz_12m": sum(r["marca"] == MB for r in r12),
                        "vendas_tecar_12m": len(tecar12), "share_tecar_12m_pct": _pct(len(tecar12), len(r12))})
     linhas.sort(key=lambda x: -x["mercado_12m"])
+    # Um mesmo CNPJ pode estar com mais de um responsável (vendedor + SDR, duas casas): somar as linhas duplica.
+    todas = set().union(*(a["raizes"] for a in agrupado.values())) if agrupado else set()
+    rs = [r for rz in todas for r in por_raiz.get(rz, [])]
+    r12 = [r for r in rs if r["data"] >= ref12]
+    tec = sum("TECAR" in sem_acento(r["concessionario"]) for r in r12)
+    total = {"responsaveis": len(linhas), "raizes_cnpj": len(todas), "raizes_que_compraram_12m": len({r["raiz"] for r in r12}),
+             "mercado_12m": len(r12), "mercado_5a": sum(r["data"] >= ref60 for r in rs),
+             "mercedes_benz_12m": sum(r["marca"] == MB for r in r12), "vendas_tecar_12m": tec,
+             "share_tecar_12m_pct": _pct(tec, len(r12))}
+    soma = {k: sum(l[k] for l in linhas) for k in ("clientes_pj", "mercado_12m", "vendas_tecar_12m")}
     return {"janela_12m_desde": ref12, "crm_exportado_em": b.crm()["meta"].get("exportDate"), "linhas": linhas,
+            "total_sem_duplicar": total, "soma_das_linhas_com_sobreposicao": soma,
+            "atencao": "As carteiras se sobrepõem (o mesmo CNPJ pode ter mais de um responsável). Não some as linhas: "
+                       "para totais e share geral use total_sem_duplicar.",
             "regra": "mercado = emplacamentos de todas as marcas nos CNPJs (raiz) da carteira; vendas Tecar = "
                      "concessionário contém TECAR", "fonte": _fonte(b, MATRIZ, TORRE_HTML)}
 

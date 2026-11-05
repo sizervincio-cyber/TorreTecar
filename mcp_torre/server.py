@@ -91,7 +91,8 @@ def criar_mcp(bases: Bases) -> MCPServer:
     @ferramenta
     def carteira_por_responsavel(casa: str | None = None, responsavel: str | None = None) -> dict:
         """Carteira do CRM por vendedor: clientes PJ, raízes de CNPJ, quantos compraram em 12 meses, mercado da
-        carteira (todas as marcas) em 12 meses e 5 anos, Mercedes-Benz e vendas Tecar."""
+        carteira (todas as marcas) em 12 meses e 5 anos, Mercedes-Benz e vendas Tecar. As carteiras se sobrepõem:
+        nunca some as linhas; para totais e share geral use total_sem_duplicar."""
         return q.carteira_por_responsavel(bases, casa, responsavel)
 
     @ferramenta
