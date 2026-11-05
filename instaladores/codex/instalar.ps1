@@ -24,12 +24,12 @@ if (-not $Token -and -not $NovoToken -and $salvo -match '^torre_[0-9a-f]{48}$') 
   Write-Host "Usando o token ja salvo neste computador (para trocar: instalar.ps1 -NovoToken)."
 }
 if (-not $Token) {
-  $seguro = Read-Host "Cole o token do MCP da Torre (gerado na VPS)" -AsSecureString
+  $seguro = Read-Host "Cole o seu token do MCP da Torre (torre_...)" -AsSecureString
   $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($seguro)
   try { $Token = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr) } finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
 }
 $Token = $Token.Trim()
-if ($Token -notmatch '^torre_[0-9a-f]{48}$') { throw "Token em formato inesperado. Gere um novo na VPS: cd /opt/torre/repo/deploy && ./mcp-token.sh" }
+if ($Token -notmatch '^torre_[0-9a-f]{48}$') { throw "Token em formato inesperado (esperado: torre_ + 48 caracteres). Confira o token recebido do administrador da Torre." }
 [Environment]::SetEnvironmentVariable("TORRE_MCP_TOKEN", $Token, "User")
 $env:TORRE_MCP_TOKEN = $Token
 Write-Host "1/4 Token salvo na variavel de ambiente do usuario TORRE_MCP_TOKEN"
@@ -72,7 +72,7 @@ try {
 } catch {
   $codigo = $null
   if ($_.Exception.Response) { $codigo = [int]$_.Exception.Response.StatusCode }
-  if ($codigo -eq 401) { Write-Host "4/4 O MCP recusou o token (401). Gere outro na VPS e rode o instalador de novo." -ForegroundColor Yellow }
+  if ($codigo -eq 401) { Write-Host "4/4 O MCP recusou o token (401). Peca um token novo ao administrador e rode: instalar.ps1 -NovoToken" -ForegroundColor Yellow }
   else { Write-Host "4/4 Nao consegui falar com o MCP agora ($($_.Exception.Message)). A instalacao ficou feita; teste de novo quando a rota estiver no ar." -ForegroundColor Yellow }
 }
 
