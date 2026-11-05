@@ -1,0 +1,4 @@
+# Arquivos que rodam no VPS (Linux): sempre LF, para o bash e o Docker não quebrarem com CRLF do Windows.
+*.sh text eol=lf
+server/** text eol=lf
+deploy/** text eol=lf
