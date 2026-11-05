@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<title>NOME DO RELATÓRIO · Tecar Caminhões</title>
+<!-- Modelo da skill torre-relatorios: mantenha este <style> inteiro; troque só o conteúdo das páginas. -->
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#0d0f12;--ink2:#3c4450;--ink3:#79828f;--line:#dfe3e8;--soft:#f2f4f6;--paper:#fff;
+ --mb:#111318;--sc:#B8432F;--vo:#3B6EA5;--daf:#C9A227;--iv:#7E5BA6;--vw:#4E8F5B;--out:#9AA3AD;
+ --good:#1e7b4f;--bad:#b3261e;--warn:#b7791f;--acc:#00A19B}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;color:var(--ink);background:#8a8f96;-webkit-font-smoothing:antialiased;
+ font-variant-numeric:tabular-nums}
+.pg{width:1280px;height:720px;background:var(--paper);position:relative;overflow:hidden;margin:0 auto 18px;
+ display:flex;flex-direction:column}
+@page{size:1280px 720px;margin:0}
+@media print{body{background:none}.pg{margin:0;page-break-after:always;box-shadow:none}.pg:last-child{page-break-after:auto}}
+.hd{display:flex;align-items:flex-end;gap:14px;padding:26px 46px 12px;border-bottom:2px solid var(--mb)}
+.hd .n{font-size:34px;font-weight:800;color:var(--line);line-height:.85;letter-spacing:-.03em}
+.hd .t{flex:1}
+.hd h2{font-size:20px;font-weight:750;letter-spacing:-.01em;line-height:1.1}
+.hd .s{font-size:11.5px;color:var(--ink3);margin-top:3px;font-weight:500}
+.hd .tag{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--paper);
+ background:var(--mb);padding:4px 9px;border-radius:3px;white-space:nowrap}
+.bd{flex:1;padding:16px 46px 14px;display:flex;flex-direction:column;gap:11px;min-height:0}
+.ft{padding:7px 46px 12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;
+ font-size:8.5px;color:var(--ink3);letter-spacing:.05em;text-transform:uppercase;font-weight:600}
+.g{display:grid;gap:11px;min-height:0;overflow:hidden}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}
+.g21{grid-template-columns:1.62fr 1fr}.g12{grid-template-columns:1fr 1.62fr}
+.g31{grid-template-columns:2.1fr 1fr}
+.pn{border:1px solid var(--line);border-radius:7px;padding:11px 13px;min-width:0;display:flex;flex-direction:column;background:var(--paper)}
+.pn h3{font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink2);
+ margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pn h3 em{font-style:normal;font-size:8.5px;color:var(--ink3);letter-spacing:.02em;text-transform:none;font-weight:600}
+.ch{flex:1;min-height:0;width:100%}
+.kpis{display:grid;gap:10px}.k4{grid-template-columns:repeat(4,1fr)}.k3{grid-template-columns:repeat(3,1fr)}
+.k5{grid-template-columns:repeat(5,1fr)}.k2{grid-template-columns:repeat(2,1fr)}
+.kp{border:1px solid var(--line);border-left:3px solid var(--mb);border-radius:6px;padding:9px 11px;background:var(--paper)}
+.kp.b{border-left-color:var(--bad)}.kp.g{border-left-color:var(--good)}.kp.w{border-left-color:var(--warn)}
+.kp.a{border-left-color:var(--acc)}.kp.n{border-left-color:var(--out)}
+.kp .l{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.kp .v{font-size:25px;font-weight:800;letter-spacing:-.025em;line-height:1.08;margin:3px 0 1px}
+.kp .v small{font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:0}
+.kp .d{font-size:9.5px;color:var(--ink2);line-height:1.3}
+table{width:100%;border-collapse:collapse;font-size:10.5px}
+th{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);
+ padding:3px 6px;border-bottom:1.5px solid var(--mb);text-align:right;white-space:nowrap}
+td{padding:2.5px 6px;border-bottom:1px solid var(--soft);text-align:right;white-space:nowrap}
+th.l,td.l{text-align:left}
+tr.tot td{border-top:1.5px solid var(--mb);border-bottom:none;font-weight:800;font-size:11.5px;padding-top:5px}
+tr.hi td{background:#f7f9fa}
+td.neg,.neg{color:var(--bad);font-weight:700}td.pos,.pos{color:var(--good);font-weight:700}
+.warn{color:var(--warn);font-weight:700}.dim{color:var(--ink3)}
+.b{font-weight:750}
+.note{font-size:9px;color:var(--ink3);line-height:1.42;margin-top:7px}
+.co{background:var(--soft);border-left:3px solid var(--mb);border-radius:0 6px 6px 0;padding:9px 12px;font-size:10.5px;line-height:1.45}
+.co.g{border-left-color:var(--good)}.co.b{border-left-color:var(--bad)}.co.w{border-left-color:var(--warn)}
+.co .t{display:block;font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
+.chip{display:inline-block;font-size:8px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;
+ padding:2px 6px;border-radius:3px;border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+.chip.mb{background:var(--mb);color:#fff;border-color:var(--mb)}
+.chip.b{border-color:var(--bad);color:var(--bad)}.chip.g{border-color:var(--good);color:var(--good)}
+.chip.w{border-color:var(--warn);color:var(--warn)}
+.dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:10.5px;align-items:baseline}
+.dl dt{font-size:8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);white-space:nowrap}
+.dl dd{font-weight:650}
+/* capa */
+.cv{background:var(--mb);color:#fff;justify-content:space-between;padding:0}
+.cv .top{padding:52px 62px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.cv .star{width:52px;height:52px;opacity:.95}
+.cv .mid{padding:0 62px}
+.cv .eye{font-size:10px;font-weight:800;letter-spacing:.3em;text-transform:uppercase;color:#8e959e}
+.cv h1{font-size:52px;font-weight:800;letter-spacing:-.035em;line-height:1.02;margin:14px 0 0}
+.cv h1 span{color:#8e959e}
+.cv .sub{font-size:15px;color:#c6cbd1;margin-top:16px;line-height:1.45;max-width:820px;font-weight:500}
+.cv .strip{display:flex;gap:0;border-top:1px solid #2a2e34;margin-top:30px}
+.cv .strip div{flex:1;padding:16px 0 0}
+.cv .strip .l{font-size:8px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:#79828f}
+.cv .strip .v{font-size:23px;font-weight:800;margin-top:4px;letter-spacing:-.02em}
+.cv .strip .v small{font-size:11px;color:#8e959e;font-weight:600}
+.cv .bot{padding:0 62px 40px;font-size:9.5px;color:#79828f;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
+.bar{height:7px;border-radius:2px;display:inline-block;vertical-align:middle}
+.lg{display:flex;gap:12px;flex-wrap:wrap;font-size:9px;color:var(--ink2);font-weight:650;margin-top:5px}
+.lg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.chip{white-space:nowrap}table.sm td{padding:3px 6px;font-size:10px;line-height:1.2}table.sm th{padding:3px 6px}.cut{display:block;max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:9.5px}.pg.long{height:auto;min-height:720px}.pg.long .bd{flex:none}.all td.obs{font-size:9.5px;line-height:1.3;color:#3c4450;max-width:560px;white-space:normal}.all td{vertical-align:top;padding:4px 6px}.all th{padding:5px 6px}.co.ok{border-left-color:var(--good)}.kp.ok{border-left-color:var(--good)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+</head><body>
+
+<!-- ===================== CAPA (opcional, para 3+ páginas) ===================== -->
+<section class="pg cv">
+ <div class="top"><div class="eye">Tecar Caminhões · Mercedes-Benz · Inteligência comercial</div><div class="eye">NOV 2026</div></div>
+ <div class="mid">
+  <div class="eye">TEMA DO RELATÓRIO</div>
+  <h1>Título-conclusão em uma linha<br><span>com o segundo bloco em cinza</span></h1>
+  <div class="sub">Uma ou duas frases dizendo o recorte (período, região, segmento) e a pergunta que o relatório responde.</div>
+  <div class="strip">
+   <div><div class="l">INDICADOR 1</div><div class="v">0<small> un</small></div></div>
+   <div><div class="l">INDICADOR 2</div><div class="v">0,0%</div></div>
+   <div><div class="l">INDICADOR 3</div><div class="v">R$ 0 mi</div></div>
+   <div><div class="l">INDICADOR 4</div><div class="v">0</div></div>
+  </div>
+ </div>
+ <div class="bot">Fonte: emplacamentos GO/MT/TO (Torre) · CRM Tecar · bases até dd/mm/aaaa</div>
+</section>
+
+<!-- ===================== PÁGINA ANALÍTICA ===================== -->
+<section class="pg">
+ <div class="hd">
+  <div class="n">01</div>
+  <div class="t"><h2>Título que já é a conclusão, com o número principal e a tensão</h2>
+   <div class="s">O que esta página mostra · recorte · período</div></div>
+  <div class="tag">ETIQUETA DO TEMA</div>
+ </div>
+ <div class="bd">
+  <div class="kpis k4">
+   <div class="kp"><div class="l">Rótulo curto</div><div class="v">0<small> un</small></div><div class="d">contexto em uma linha</div></div>
+   <div class="kp g"><div class="l">Positivo</div><div class="v">+0,0%</div><div class="d">contexto</div></div>
+   <div class="kp b"><div class="l">Negativo</div><div class="v">0,0%</div><div class="d">contexto</div></div>
+   <div class="kp w"><div class="l">Atenção</div><div class="v">0</div><div class="d">contexto</div></div>
+  </div>
+  <div class="g g21" style="flex:1">
+   <div class="pn"><h3>Título do gráfico<em>nota do recorte</em></h3><div class="ch" id="ch1"></div>
+    <div class="lg"><span><i style="background:var(--mb)"></i>Mercedes-Benz</span><span><i style="background:var(--vo)"></i>Volvo</span><span><i style="background:var(--sc)"></i>Scania</span></div>
+   </div>
+   <div class="pn"><h3>Tabela<em>ordenada por volume</em></h3>
+    <table class="sm"><thead><tr><th class="l">Marca</th><th>Un</th><th>Share</th><th>Δ</th></tr></thead>
+     <tbody>
+      <tr><td class="l b">Volvo</td><td>0</td><td>0,0%</td><td class="pos">+0,0</td></tr>
+      <tr class="hi"><td class="l b">Mercedes-Benz</td><td>0</td><td>0,0%</td><td class="neg">−0,0</td></tr>
+      <tr class="tot"><td class="l">Total</td><td>0</td><td>100%</td><td></td></tr>
+     </tbody></table>
+    <div class="co" style="margin-top:10px"><span class="t">Leitura</span>Duas a quatro frases: o que mudou, por quê, e o que fazer. <b>Destaque o número decisivo.</b></div>
+   </div>
+  </div>
+ </div>
+ <div class="ft"><span>Emplacamentos GO/MT/TO (Torre) · recorte e regras da página</span><span>Tecar Caminhões · emplacamentos até dd/mm/aaaa · dd/mm/aaaa</span></div>
+</section>
+
+<script>
+/* EXEMPLO: troque pelos números do MCP torre-tecar. Uma entrada por gráfico: id do <div> -> opção ECharts. */
+const COR={"M.BENZ":"#111318",VOLVO:"#3B6EA5",SCANIA:"#B8432F",DAF:"#C9A227",IVECO:"#7E5BA6",VW:"#4E8F5B",OUTRAS:"#9AA3AD"};
+const BASE={animation:false,textStyle:{fontFamily:"Inter, Segoe UI, sans-serif",color:"#3c4450",fontSize:10},
+ grid:{left:8,right:60,top:6,bottom:6,containLabel:true}};
+const fmt=v=>Number(v).toLocaleString("pt-BR");
+const OPT={
+ ch1:{...BASE,
+  xAxis:{type:"value",axisLabel:{formatter:fmt},splitLine:{lineStyle:{color:"#eef0f2"}}},
+  yAxis:{type:"category",inverse:true,data:["VOLVO","SCANIA","M.BENZ"],axisTick:{show:false},axisLine:{show:false}},
+  series:[{type:"bar",barWidth:16,data:[300,200,100].map((v,i)=>({value:v,itemStyle:{color:COR[["VOLVO","SCANIA","M.BENZ"][i]]}})),
+   label:{show:true,position:"right",formatter:p=>fmt(p.value)+" un",fontWeight:700}}]}
+};
+for(const id in OPT){const el=document.getElementById(id);if(el)echarts.init(el,null,{renderer:"svg"}).setOption(OPT[id]);}
+window.__READY=true;
+</script>
+</body></html>

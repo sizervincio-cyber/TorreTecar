@@ -58,3 +58,16 @@ docker compose up -d atualiza-dados
 ## Desfazer
 
 `docker compose down` (os dados ficam no volume `torre_pg`) e reverter o PR do `zero-touch-ops` com `./atualizar.sh` do RadarDispensa.
+
+## MCP somente leitura para o Codex
+
+Contêiner `mcp` (alias `torre-mcp` na rede `proxy_edge`), perfil Compose `mcp`. Lê as mesmas bases da Torre em modo somente leitura (`..:/srv/site:ro`, sistema de arquivos do contêiner também somente leitura): emplacamentos com CNPJ, placa e chassi, CRM embutido, licitações e preços. Não grava nada.
+
+1. Gerar o token e subir o MCP (o token aparece uma vez; no `.env` fica só o SHA-256):
+   ```bash
+   cd /opt/torre/repo/deploy && ./mcp-token.sh
+   ```
+2. Publicar a rota `mcp.2-25-95-244.sslip.io` no Caddy do RadarDispensa (PR no `zero-touch-ops`) e rodar o `./atualizar.sh` dele.
+3. No computador: `irm https://raw.githubusercontent.com/sizervincio-cyber/TorreTecar/main/instaladores/instalar-codex.ps1 | iex` e colar o token. Ou baixar `instaladores/torre-tecar-codex.zip` e rodar `instalar.ps1`.
+
+Revogar todos os tokens e parar o MCP: `./mcp-token.sh --revogar`.

@@ -2,3 +2,4 @@
 *.sh text eol=lf
 server/** text eol=lf
 deploy/** text eol=lf
+mcp_torre/** text eol=lf

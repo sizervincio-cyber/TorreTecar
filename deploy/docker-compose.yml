@@ -75,6 +75,32 @@ services:
     logging: *logs
     networks: [saida]
 
+  # MCP somente leitura para o Codex (perfil "mcp": só sobe depois de gerar um token com ./mcp-token.sh).
+  mcp:
+    profiles: ["mcp"]
+    build:
+      context: ..
+      dockerfile: mcp_torre/Dockerfile
+    image: torre-mcp:local
+    restart: unless-stopped
+    environment:
+      TORRE_MCP_SITE_ROOT: /srv/site
+      TORRE_MCP_TOKENS_SHA256: "${TORRE_MCP_TOKENS_SHA256:-}"
+      TORRE_MCP_HOSTS: "${TORRE_MCP_HOSTS:-mcp.2-25-95-244.sslip.io,torre-mcp:8000}"
+    volumes:
+      - ..:/srv/site:ro                 # mesmas bases que a Torre exibe; nada é gravado
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 384m
+    cpus: 0.4
+    logging: *logs
+    networks:
+      proxy_edge:
+        aliases: [torre-mcp]            # nome usado no Caddyfile do RadarDispensa
+
 volumes:
   torre_pg:
 

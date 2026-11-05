@@ -33,3 +33,6 @@ __pycache__/
 # Servidor da Torre (VPS)
 server/*.db
 deploy/ssh/
+
+# Pacote instalavel do Codex (MCP + skill de relatorios)
+!instaladores/torre-tecar-codex.zip

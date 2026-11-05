@@ -1,0 +1,24 @@
+TORRE TECAR PARA O CODEX
+========================
+
+O que este pacote instala no seu computador:
+  1. O MCP "torre-tecar": acesso SOMENTE LEITURA as bases da Torre na VPS
+     (emplacamentos com CNPJ, placa e chassi; CRM; licitacoes; precos).
+  2. A skill "torre-relatorios": monta relatorios no padrao visual da Torre
+     (paginas 1280x720, titulo-conclusao, KPIs, tabelas, graficos, Leitura) e exporta PDF.
+
+Antes de instalar (uma vez, no console da VPS):
+  cd /opt/torre/repo/deploy && ./mcp-token.sh
+  -> copie o token que aparece (torre_...). Ele so aparece uma vez.
+
+Instalar (PowerShell, nesta pasta):
+  powershell -ExecutionPolicy Bypass -File .\instalar.ps1
+  -> cole o token quando pedir; depois feche e abra o Codex.
+
+Testar no Codex:
+  "Use o MCP torre-tecar e me diga ate quando vao as bases."
+  "No padrao da Torre, faca um relatorio do share Mercedes-Benz em extrapesados GO 2025 x 2026."
+
+Trocar ou revogar acesso (VPS):
+  ./mcp-token.sh            gera um token novo (os antigos continuam valendo)
+  ./mcp-token.sh --revogar  apaga todos os tokens e para o MCP
