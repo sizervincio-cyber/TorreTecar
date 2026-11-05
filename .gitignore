@@ -29,3 +29,7 @@ cnpj-map-PRIVADO.json
 storage/
 __pycache__/
 .pytest_cache/
+
+# Servidor da Torre (VPS)
+server/*.db
+deploy/ssh/

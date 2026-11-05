@@ -208,7 +208,7 @@ footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-si
 const CONFIG = {
  WHATSAPP: '5562998621007',            // WhatsApp da Tecar (Matheus) que recebe os pedidos de estudo (DDI+DDD+número, só dígitos)
  EMAIL: 'comercial@tecar.com.br',      // e-mail que recebe os pedidos de estudo
- LEAD_ENDPOINT: '',                     // URL do Web App (Google Apps Script, docs/leads-apps-script.gs) que grava o lead; vazio = fica só no navegador
+ LEAD_ENDPOINT: window.TORRE_SERVER ? '/api/leads' : '',   // no servidor da Torre grava em /api/leads; fora dele (GitHub Pages) o lead fica só no navegador
  REF_DATA: 'outubro de 2026'
 };
 /* Catálogo Mercedes-Benz: ficha técnica oficial (dossiê Tecar) + referências comerciais do simulador de TCO da Tecar. */

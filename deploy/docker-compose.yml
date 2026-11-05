@@ -1,0 +1,87 @@
+# Torre Tecar no VPS: API + Postgres + atualização dos dados do repositório.
+# Sistema independente: projeto, banco, volumes e redes próprios. Não publica portas no host;
+# o tráfego chega pelo Caddy do RadarDispensa, que só enxerga a API pela rede "proxy_edge".
+name: torre
+
+x-logs: &logs
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: torre
+      POSTGRES_USER: torre
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no deploy/.env}"
+    command: ["postgres", "-c", "shared_buffers=64MB", "-c", "max_connections=20", "-c", "work_mem=4MB"]
+    volumes:
+      - torre_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U torre -d torre"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    mem_limit: 256m
+    cpus: 0.5
+    logging: *logs
+    networks: [interno]
+
+  api:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    image: torre-api:local
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: "postgresql+psycopg://torre:${POSTGRES_PASSWORD}@db:5432/torre"
+      TORRE_SITE_ROOT: /srv/site
+      TORRE_COOKIE_SECURE: "true"
+      TORRE_PUBLIC_HOST_PREFIX: "simule."
+    volumes:
+      - ..:/srv/site:ro                 # páginas e dados do checkout (lista fechada em server/app/site.py)
+    mem_limit: 256m
+    cpus: 0.5
+    logging: *logs
+    networks:
+      interno:
+      proxy_edge:
+        aliases: [torre-api]            # nome usado no Caddyfile do RadarDispensa
+
+  # Enquanto as rotinas ainda rodam no GitHub Actions (Fase 1), traz os dados novos do repositório a cada 10 min.
+  atualiza-dados:
+    image: alpine:3.20
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        apk add --no-cache -q git openssh-client
+        git config --global --add safe.directory /repo
+        while true; do
+          git -C /repo pull --ff-only -q || echo "$$(date -Iseconds) git pull falhou"
+          sleep 600
+        done
+    volumes:
+      - ..:/repo
+      - ./ssh:/root/.ssh:ro             # chave de deploy (só leitura no GitHub) quando o repositório ficar privado
+    mem_limit: 64m
+    cpus: 0.2
+    logging: *logs
+    networks: [saida]
+
+volumes:
+  torre_pg:
+
+networks:
+  interno:
+    internal: true                      # Postgres sem saída para a internet e sem porta no host
+  saida:
+  proxy_edge:
+    name: proxy_edge
+    external: true                      # criada pelo instalar.sh (ou pelo RadarDispensa)
