@@ -24,8 +24,11 @@ _DADOS = [
 # Host público do simulador: só o necessário para o simule.html abrir.
 _PUBLICO = [r"simule\.html", r"ASSETS/grupo-tecar-squarelogo-1553565271092\.webp", r"LOGO\.png"]
 
+# Recursos da tela de login do painel: precisam abrir antes de existir sessão.
+_LOGIN_PUBLICO = [r"ASSETS/login-fundo\.webp"]
+
 _RE = lambda lst: re.compile("^(?:" + "|".join(lst) + ")$")  # noqa: E731
-RE_PAGINAS, RE_DADOS, RE_PUBLICO = _RE(_PAGINAS), _RE(_DADOS), _RE(_PUBLICO)
+RE_PAGINAS, RE_DADOS, RE_PUBLICO, RE_LOGIN = _RE(_PAGINAS), _RE(_DADOS), _RE(_PUBLICO), _RE(_LOGIN_PUBLICO)
 _HEAD = re.compile(rb"<head[^>]*>", re.I)
 
 
@@ -42,6 +45,10 @@ def classifica(rel: str) -> str | None:
 
 def publico(rel: str) -> bool:
     return bool(RE_PUBLICO.match(rel)) and ".." not in rel.split("/")
+
+
+def recurso_do_login(rel: str) -> bool:
+    return bool(RE_LOGIN.match(rel)) and ".." not in rel.split("/")
 
 
 def resolve(root: Path, rel: str) -> Path | None:

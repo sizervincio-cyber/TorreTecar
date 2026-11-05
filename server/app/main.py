@@ -172,6 +172,9 @@ def create_app(settings: Settings | None = None, engine=None) -> FastAPI:
         if host_publico(req):
             p = site.resolve(cfg.site_root, rel) if site.publico(rel) else None
             return entrega(p, rel, {"publico": True}) if p else Response(status_code=404)
+        if site.recurso_do_login(rel):
+            p = site.resolve(cfg.site_root, rel)
+            return FileResponse(p, headers={"Cache-Control": "public, max-age=86400"}) if p else Response(status_code=404)
         tipo = site.classifica(rel)
         p = site.resolve(cfg.site_root, rel) if tipo else None
         if p is None:

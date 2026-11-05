@@ -61,6 +61,19 @@ def test_sem_login_paginas_redirecionam_e_dados_recusam(ambiente):
     assert c.get("/login").status_code == 200
 
 
+def test_fundo_do_login_abre_sem_sessao_e_so_ele(ambiente):
+    app = ambiente[0]
+    site = app.state.settings.site_root
+    (site / "ASSETS" / "login-fundo.webp").write_bytes(b"arte")
+    (site / "ASSETS" / "hero-actros.jpg").write_bytes(b"outra")
+    c = cliente(app)
+    r = c.get("/ASSETS/login-fundo.webp")
+    assert r.status_code == 200 and r.content == b"arte"
+    assert "/ASSETS/login-fundo.webp" in c.get("/login").text
+    assert c.get("/ASSETS/hero-actros.jpg").status_code == 401  # o resto dos assets segue exigindo login
+    assert cliente(app, "simule.test").get("/ASSETS/login-fundo.webp").status_code == 404
+
+
 def test_so_arquivos_da_lista_saem_mesmo_logado(ambiente):
     c = cliente(ambiente[0])
     assert entra(c).status_code == 303
