@@ -4,6 +4,9 @@
   python -m server.app.cli senha --login matheus
   python -m server.app.cli desativar --login giselle
   python -m server.app.cli listar
+  python -m server.app.cli oauth-clientes               (conectores OAuth registrados, ex.: ChatGPT)
+  python -m server.app.cli oauth-revogar --login giselle   (derruba o acesso do ChatGPT desse usuário)
+  python -m server.app.cli oauth-revogar --todos           (derruba o acesso OAuth de todo mundo)
 
 A senha é pedida no terminal (ou lida da entrada com --senha-stdin) e nunca aparece no histórico do shell.
 """
@@ -13,12 +16,12 @@ import argparse
 import getpass
 import sys
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 
 from .auth import encerra_sessoes_do_usuario, hash_senha
 from .config import PERFIS, load_settings
 from .db import make_engine, make_sessionmaker
-from .models import Usuario
+from .models import OAuthCliente, OAuthCodigo, OAuthRefresh, Usuario
 
 
 def _senha(a) -> str:
@@ -47,15 +50,33 @@ def main(argv=None, engine=None) -> int:
     pf.add_argument("--login", required=True)
     pf.add_argument("--perfil", required=True, choices=PERFIS)
     sub.add_parser("listar")
+    sub.add_parser("oauth-clientes")
+    rv = sub.add_parser("oauth-revogar")
+    g = rv.add_mutually_exclusive_group(required=True)
+    g.add_argument("--login")
+    g.add_argument("--todos", action="store_true")
     a = p.parse_args(argv)
 
     Sessions = make_sessionmaker(engine or make_engine(load_settings().database_url))
     with Sessions() as db:
-        login = getattr(a, "login", "").strip().lower()
+        login = (getattr(a, "login", "") or "").strip().lower()
         u = db.scalar(select(Usuario).where(Usuario.login == login)) if login else None
         if a.cmd == "listar":
             for x in db.scalars(select(Usuario).order_by(Usuario.login)):
                 print(f"{x.login:32} {x.perfil:10} {'ativo' if x.ativo else 'inativo':8} {x.nome}")
+            return 0
+        if a.cmd == "oauth-clientes":
+            from sqlalchemy import func
+            for x in db.scalars(select(OAuthCliente).order_by(OAuthCliente.criado_em)):
+                ativos = db.scalar(select(func.count()).select_from(OAuthRefresh).where(
+                    OAuthRefresh.client_id == x.client_id, OAuthRefresh.usado.is_(False)))
+                print(f"{x.client_id:36} {x.criado_em:%Y-%m-%d} {ativos:3} acesso(s) {x.nome}")
+            return 0
+        if a.cmd == "oauth-revogar" and a.todos:
+            db.execute(delete(OAuthRefresh))
+            db.execute(delete(OAuthCodigo))
+            db.commit()
+            print("ok (access tokens já emitidos vencem em até TORRE_OAUTH_ACCESS_MIN minutos)")
             return 0
         if a.cmd == "criar":
             if u is not None:
@@ -69,6 +90,9 @@ def main(argv=None, engine=None) -> int:
         elif a.cmd == "desativar":
             u.ativo = False
             encerra_sessoes_do_usuario(db, u.id)
+        elif a.cmd == "oauth-revogar":
+            db.execute(delete(OAuthRefresh).where(OAuthRefresh.usuario_id == u.id))
+            db.execute(delete(OAuthCodigo).where(OAuthCodigo.usuario_id == u.id))
         elif a.cmd == "perfil":
             u.perfil = a.perfil
             encerra_sessoes_do_usuario(db, u.id)
