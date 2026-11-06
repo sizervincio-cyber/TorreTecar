@@ -46,7 +46,8 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Testes
-        run: python -m pytest -q tests
+        # Só os testes das rotinas: os do servidor e do MCP têm dependências próprias (server/ e mcp_torre/).
+        run: python -m pytest -q tests --ignore-glob="tests/test_servidor*" --ignore-glob="tests/test_mcp*"
 
       - name: Sincronizar
         env:
