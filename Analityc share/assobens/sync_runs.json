@@ -4336,5 +4336,45 @@
    "15:27:40 histórico de preços: 60 linhas novas/alteradas de 60 capturadas"
   ],
   "warnings": []
+ },
+ {
+  "id": "20261106-111826",
+  "started_at": "2026-11-06T11:18:26-03:00",
+  "trigger_type": "manual",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-11-06T11:20:13-03:00",
+  "status": "success",
+  "file_name": "1118_emplacamentos.xlsx",
+  "file_hash": "8963f9616af3281c4aa09a6a7cd52748812bd3a12a849b7b7a95d659d9e49b19",
+  "rows_downloaded": 3165,
+  "rows_valid": 3164,
+  "rows_imported": 12,
+  "rows_updated": 39,
+  "rows_rejected": 1,
+  "prices_updated": 60,
+  "rows_enriched": 39,
+  "error_message": null,
+  "duration_seconds": 107.6,
+  "steps": [
+   "11:18:32 tentativa 1/3",
+   "11:18:47 login concluído no portal",
+   "11:18:52 BI autenticado",
+   "11:19:12 download concluído: 1118_emplacamentos.xlsx",
+   "11:19:49 enriquecimento: 95 chassis sem proprietário · janela 2026-01-01 → 2026-11-06",
+   "11:20:06 download de enriquecimento concluído: 1118_enriquecimento.xlsx",
+   "11:20:06 arquivo lido: aba 'Export', 3165 linhas, 17 colunas mapeadas",
+   "11:20:06 normalização: {'validas': 3164, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "11:20:06 validação: nível ok, qualidade 75/100",
+   "11:20:06 upsert por CHASSI: 12 inseridos, 0 atualizados, 3152 iguais (matriz 26858)",
+   "11:20:08 enriquecimento: 3097 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 39 atualizados/com proprietário · 3058 iguais · 0 ignorados",
+   "11:20:08 tração inferida: 0 pelo texto do modelo · 0 pela tabela manual · 11 pelo histórico do mesmo modelo · 5 sem tração",
+   "11:20:08 qualidade da matriz resultante: 100/100",
+   "11:20:13 matriz publicada (troca atômica; backup da anterior em storage)",
+   "11:20:13 KPIs: mercado 26858, MB 4086, share 15.21% (12m: 16.49%); Top 10 em 4 segmentos",
+   "11:20:13 conferência ASSOBENS × Torre: Total Mercado 3164/3165 (Δ1); Total Mercedes-Benz 531/531 (Δ0); Market Share MB (%) 16.8/16.78 (Δ-0.02)",
+   "11:20:13 histórico de preços: 60 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": []
  }
 ]
