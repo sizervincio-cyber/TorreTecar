@@ -26,10 +26,10 @@ def next_run(after: datetime | None = None) -> datetime:
     """Próxima execução agendada (08/12/17 America/Sao_Paulo) depois de `after`."""
     t = (after or now_local()).astimezone(config.TZ)
     for h in config.SCHEDULE_HOURS:
-        cand = t.replace(hour=h, minute=0, second=0, microsecond=0)
+        cand = t.replace(hour=h, minute=config.SCHEDULE_MINUTE, second=0, microsecond=0)
         if cand > t:
             return cand
-    nxt = (t + timedelta(days=1)).replace(hour=config.SCHEDULE_HOURS[0], minute=0, second=0, microsecond=0)
+    nxt = (t + timedelta(days=1)).replace(hour=config.SCHEDULE_HOURS[0], minute=config.SCHEDULE_MINUTE, second=0, microsecond=0)
     return nxt
 
 

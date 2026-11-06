@@ -39,9 +39,12 @@ BACKUP_DIR = STORAGE_DIR / "backup"
 SELECTORS_PATH = PACKAGE_DIR / "selectors.json"
 
 TZ = ZoneInfo("America/Sao_Paulo")
-SCHEDULE_HOURS = (8, 12, 17)          # horário local America/Sao_Paulo
-SCHEDULE_CRON_LOCAL = "0 8,12,17 * * *"
-SCHEDULE_CRON_UTC = "0 11,15,20 * * *"  # GitHub Actions só aceita UTC; BR sem horário de verão desde 2019
+# A cada 2h em horários alternados (07:40–19:40 local): o agendador do GitHub atrasa e pula rodadas em
+# horários cheios, e assim ficam garantidas pelo menos 3 por dia. A rotina só grava quando há dado novo.
+SCHEDULE_HOURS = (7, 9, 11, 13, 15, 17, 19)   # horário local America/Sao_Paulo (minuto 40)
+SCHEDULE_MINUTE = 40
+SCHEDULE_CRON_LOCAL = "40 7,9,11,13,15,17,19 * * *"
+SCHEDULE_CRON_UTC = "40 10,12,14,16,18,20,22 * * *"  # GitHub Actions só aceita UTC; BR sem horário de verão desde 2019
 
 PORTAL_URL = "https://portal.assobens.org.br/"
 PORTAL_LOGIN_URL = "https://portal.assobens.org.br/wp-login.php"
