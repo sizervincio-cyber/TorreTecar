@@ -33,6 +33,7 @@ log = logging.getLogger("torre-mcp.auditoria")
 
 ESCOPO = "torre.read"
 MAX_CORPO = 256_000          # uma chamada MCP de consulta nunca chega perto disso
+TEMPO_CORPO_S = 10.0
 WELL_KNOWN = "/.well-known/oauth-protected-resource"
 
 
@@ -142,7 +143,11 @@ class Portao:
         return [(b"www-authenticate", ("Bearer " + ", ".join(partes)).encode())]
 
     def _limite(self, chave: str) -> bool:
-        agora, fila = time.monotonic(), self.janela[chave]
+        agora = time.monotonic()
+        if len(self.janela) > 5000:            # varre chaves sem chamadas no último minuto (muitos IPs distintos)
+            for k in [k for k, f in self.janela.items() if not f or agora - f[-1] > 60]:
+                del self.janela[k]
+        fila = self.janela[chave]
         while fila and agora - fila[0] > 60:
             fila.popleft()
         if len(fila) >= self.por_minuto:
@@ -186,14 +191,19 @@ class Portao:
 
         # Lê o corpo (limitado) para registrar qual ferramenta foi chamada, e o devolve intacto ao SDK.
         corpo = b""
-        while True:
-            m = await receive()
-            corpo += m.get("body", b"")
-            if len(corpo) > MAX_CORPO:
-                _audita(rid, principal, ip, "-", 413, inicio)
-                return await _json(413, {"erro": "requisição grande demais"})(scope, receive, send)
-            if not m.get("more_body"):
-                break
+        try:
+            with anyio.fail_after(TEMPO_CORPO_S):   # envio lento não segura vaga de conexão
+                while True:
+                    m = await receive()
+                    corpo += m.get("body", b"")
+                    if len(corpo) > MAX_CORPO:
+                        _audita(rid, principal, ip, "-", 413, inicio)
+                        return await _json(413, {"erro": "requisição grande demais"})(scope, receive, send)
+                    if not m.get("more_body"):
+                        break
+        except TimeoutError:
+            _audita(rid, principal, ip, "-", 408, inicio)
+            return await _json(408, {"erro": "corpo da requisição demorou demais"})(scope, receive, send)
         acao = _acao(corpo)
         entregue = False
 

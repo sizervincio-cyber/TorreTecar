@@ -49,6 +49,7 @@ services:
       TORRE_MCP_RESOURCE_URL: "${TORRE_MCP_RESOURCE_URL:-}"
       TORRE_OAUTH_PRIVATE_KEY: "${TORRE_OAUTH_PRIVATE_KEY:-}"     # só a API assina tokens
       TORRE_OAUTH_LOGINS_PILOTO: "${TORRE_OAUTH_LOGINS_PILOTO:-}" # piloto: só estes logins; vazio = liberado
+      TORRE_OAUTH_REDIRECT_URIS: "${TORRE_OAUTH_REDIRECT_URIS:-https://chatgpt.com/connector_platform_oauth_redirect,https://chatgpt.com/connector/oauth/}"
     volumes:
       - ..:/srv/site:ro                 # páginas e dados do checkout (lista fechada em server/app/site.py)
     mem_limit: 256m

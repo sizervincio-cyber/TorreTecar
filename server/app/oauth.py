@@ -26,13 +26,14 @@ import secrets
 import time
 from datetime import datetime, timedelta, timezone
 from html import escape
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import parse_qs, unquote, urlencode, urlsplit
 
 import jwt
 from cryptography.hazmat.primitives import serialization
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, update
+from starlette.concurrency import run_in_threadpool
 
 from .auth import Limitador
 from .config import Settings
@@ -44,6 +45,26 @@ GRANTS = ("authorization_code", "refresh_token")
 CODIGO_MIN = 5
 _PKCE = re.compile(r"^[A-Za-z0-9._~-]{43,128}$")
 _SEM_CACHE = {"Cache-Control": "no-store", "Pragma": "no-cache"}
+MAX_CORPO = 16_000           # nenhum pedido OAuth legítimo chega perto disso
+CLIENTE_ORFAO_DIAS = 30      # cliente DCR sem token vivo há mais tempo que isso é apagado
+
+
+async def le_corpo(req: Request) -> bytes | None:
+    """Lê o corpo parando em MAX_CORPO (não carrega tudo na memória antes de checar). None = grande demais."""
+    cl = req.headers.get("content-length", "")
+    if cl.isdigit() and int(cl) > MAX_CORPO:
+        return None
+    buf = b""
+    async for parte in req.stream():
+        buf += parte
+        if len(buf) > MAX_CORPO:
+            return None
+    return buf
+
+
+def _form(corpo: bytes) -> dict:
+    """application/x-www-form-urlencoded -> dict (primeiro valor de cada campo)."""
+    return {k: v[0] for k, v in parse_qs(corpo.decode("utf-8", "replace"), keep_blank_values=True).items()}
 
 
 def _h(v: str) -> str:
@@ -137,9 +158,13 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
         quem = ip(req)
         if registros_ip.bloqueado(quem):
             return _erro("invalid_client_metadata", "limite de registros por hora", 429)
-        corpo = await req.body()
-        if len(corpo) > 16_000:
-            return _erro("invalid_client_metadata", "metadados grandes demais")
+        registros_ip.registra(quem)            # conta a tentativa antes de ler o corpo: rajada paralela não fura o limite
+        corpo = await le_corpo(req)
+        if corpo is None:
+            return _erro("invalid_client_metadata", "metadados grandes demais", 413)
+        return await run_in_threadpool(registra_cliente, corpo, quem)
+
+    def registra_cliente(corpo: bytes, quem: str):
         try:
             m = json.loads(corpo or b"{}")
         except ValueError:
@@ -160,10 +185,14 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
         if (m.get("response_types") or ["code"]) != ["code"]:
             return _erro("invalid_client_metadata", "response_types: só code")
         nome = str(m.get("client_name") or "")[:160]
-        registros_ip.registra(quem)
         client_id = "tc_" + secrets.token_urlsafe(24)
         segredo = secrets.token_urlsafe(32) if metodo != "none" else None
         with db() as s:
+            # limpeza: clientes com mais de CLIENTE_ORFAO_DIAS sem nenhum refresh ou código vivo
+            limite = agora() - timedelta(days=CLIENTE_ORFAO_DIAS)
+            vivos = select(OAuthRefresh.client_id).union(select(OAuthCodigo.client_id))
+            s.execute(delete(OAuthCliente).where(OAuthCliente.criado_em < limite, OAuthCliente.client_id.not_in(vivos))
+                      .execution_options(synchronize_session=False))
             s.add(OAuthCliente(client_id=client_id, nome=nome, redirect_uris=json.dumps(uris), auth_metodo=metodo,
                                segredo_hash=_h(segredo) if segredo else None, ip=quem))
         resp = {"client_id": client_id, "client_id_issued_at": int(time.time()), "client_name": nome,
@@ -234,7 +263,12 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
     async def authorize_decisao(req: Request):
         if fora(req):
             return Response(status_code=404)
-        p = {k: str(v) for k, v in (await req.form()).items()}
+        corpo = await le_corpo(req)
+        if corpo is None:
+            return pagina_erro("Pedido grande demais.", 413)
+        return await run_in_threadpool(decide, req, _form(corpo))
+
+    def decide(req: Request, p: dict):
         u = usuario_req(req)
         if u is None:
             return pagina_erro("Sua sessão expirou. Volte ao ChatGPT e conecte de novo.", 401)
@@ -262,7 +296,6 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
         if basic.lower().startswith("basic "):
             try:
                 cid_b, _, segredo = base64.b64decode(basic[6:]).decode().partition(":")
-                from urllib.parse import unquote
                 cid_b, segredo = unquote(cid_b), unquote(segredo)
             except Exception:  # noqa: BLE001
                 return None
@@ -292,7 +325,9 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
                 "refresh_token": refresh, "scope": ESCOPO}
 
     def usuario_valido(s, uid: int) -> Usuario | None:
-        u = s.get(Usuario, uid)
+        # Trava a linha do usuário: a revogação (CLI) trava a mesma linha, então um refresh nunca grava um sucessor
+        # depois de a revogação ter apagado os tokens. No SQLite o FOR UPDATE é ignorado (a escrita já é serial).
+        u = s.scalar(select(Usuario).where(Usuario.id == uid).with_for_update())
         return u if u is not None and pode(u) else None
 
     @app.post("/oauth/token")
@@ -302,7 +337,12 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
         quem = ip(req)
         if falhas_token.bloqueado(quem):
             return _erro("invalid_request", "muitas tentativas; aguarde", 429)
-        f = {k: str(v) for k, v in (await req.form()).items()}
+        corpo = await le_corpo(req)
+        if corpo is None:
+            return _erro("invalid_request", "pedido grande demais", 413)
+        return await run_in_threadpool(troca, req, _form(corpo), quem)
+
+    def troca(req: Request, f: dict, quem: str):
         res = (f.get("resource") or "").rstrip("/")
         if res and res != recurso:
             falhas_token.registra(quem)
@@ -314,55 +354,75 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
                 return _erro("invalid_client", "cliente não autenticado", 401, {"WWW-Authenticate": "Basic"})
             g = f.get("grant_type")
             if g == "authorization_code":
-                c = s.get(OAuthCodigo, _h(f.get("code", "")))
-                if c is None:
+                h = _h(f.get("code", ""))
+                c = s.get(OAuthCodigo, h)
+                # Reivindicação atômica: só quem apagar a linha emite token. Duas trocas simultâneas do mesmo código:
+                # a segunda apaga 0 linhas e recebe invalid_grant.
+                apagou = s.execute(delete(OAuthCodigo).where(OAuthCodigo.codigo_hash == h)
+                                   .execution_options(synchronize_session=False)).rowcount
+                if c is None or apagou != 1:
                     falhas_token.registra(quem)
                     return _erro("invalid_grant", "código inválido ou já usado")
-                s.delete(c)                       # uso único, mesmo que a troca falhe abaixo
-                s.flush()
                 v = f.get("code_verifier", "")
                 desafio = base64.urlsafe_b64encode(hashlib.sha256(v.encode()).digest()).rstrip(b"=").decode()
                 ok = (c.client_id == cli.client_id and _utc(c.expira_em) > agora() and _PKCE.match(v or "")
-                      and hmac.compare_digest(desafio, c.code_challenge) and f.get("redirect_uri", c.redirect_uri) == c.redirect_uri)
+                      and hmac.compare_digest(desafio, c.code_challenge) and c.recurso == recurso
+                      and f.get("redirect_uri", c.redirect_uri) == c.redirect_uri)
                 u = usuario_valido(s, c.usuario_id) if ok else None
                 if u is None:
                     falhas_token.registra(quem)
-                    return _erro("invalid_grant", "código, PKCE, redirect_uri ou usuário inválido")
+                    return _erro("invalid_grant", "código, PKCE, redirect_uri, recurso ou usuário inválido")
                 return JSONResponse(emite(s, cli, u), headers=_SEM_CACHE)
             if g == "refresh_token":
-                r = s.get(OAuthRefresh, _h(f.get("refresh_token", "")))
+                h = _h(f.get("refresh_token", ""))
+                r = s.get(OAuthRefresh, h)
                 if r is None or r.client_id != cli.client_id:
                     falhas_token.registra(quem)
                     return _erro("invalid_grant", "refresh token inválido")
-                if r.usado:                       # reuso: alguém copiou o token -> derruba a família toda
-                    s.execute(delete(OAuthRefresh).where(OAuthRefresh.familia == r.familia))
+                familia, uid = r.familia, r.usuario_id
+                u = usuario_valido(s, uid)            # trava o usuário antes de reivindicar o token
+                # Reivindicação atômica: marca como usado só se ainda não estava. 0 linhas = reuso (ou corrida) -> derruba a família.
+                marcou = s.execute(update(OAuthRefresh).where(OAuthRefresh.token_hash == h, OAuthRefresh.usado.is_(False))
+                                   .values(usado=True).execution_options(synchronize_session=False)).rowcount
+                if marcou != 1:
+                    s.execute(delete(OAuthRefresh).where(OAuthRefresh.familia == familia)
+                              .execution_options(synchronize_session=False))
                     return _erro("invalid_grant", "refresh token já usado; acesso revogado")
-                if _utc(r.expira_em) < agora():
-                    return _erro("invalid_grant", "refresh token vencido")
+                if _utc(r.expira_em) < agora() or r.recurso != recurso:
+                    return _erro("invalid_grant", "refresh token vencido ou emitido para outro recurso")
                 if f.get("scope") and set(f["scope"].split()) - {ESCOPO}:
                     return _erro("invalid_scope", "escopo além do concedido")
-                u = usuario_valido(s, r.usuario_id)
                 if u is None:
-                    s.execute(delete(OAuthRefresh).where(OAuthRefresh.familia == r.familia))
+                    s.execute(delete(OAuthRefresh).where(OAuthRefresh.familia == familia)
+                              .execution_options(synchronize_session=False))
                     return _erro("invalid_grant", "usuário sem acesso")
-                r.usado = True
-                return JSONResponse(emite(s, cli, u, r.familia), headers=_SEM_CACHE)
+                return JSONResponse(emite(s, cli, u, familia), headers=_SEM_CACHE)
             return _erro("unsupported_grant_type", "use authorization_code ou refresh_token")
 
     @app.post("/oauth/revoke")
     async def revoke(req: Request):
         if fora(req):
             return Response(status_code=404)
-        f = {k: str(v) for k, v in (await req.form()).items()}
+        corpo = await le_corpo(req)
+        if corpo is None:
+            return _erro("invalid_request", "pedido grande demais", 413)
+        return await run_in_threadpool(revoga, req, _form(corpo))
+
+    def revoga(req: Request, f: dict):
+        tok = f.get("token", "")
         with db() as s:
             cli = autentica_cliente(s, req, f)
             if cli is None:
                 return _erro("invalid_client", "cliente não autenticado", 401)
-            r = s.get(OAuthRefresh, _h(f.get("token", "")))
+            if tok.count(".") == 2 or f.get("token_type_hint") == "access_token":
+                # Access tokens são JWT de vida curta sem lista de revogação: dizer a verdade (RFC 7009 §2.2.1).
+                return _erro("unsupported_token_type", "revogue o refresh token; o access token vence sozinho em "
+                             f"até {cfg.oauth_access_min} minutos")
+            r = s.get(OAuthRefresh, _h(tok))
             if r is not None and r.client_id == cli.client_id:
-                s.execute(delete(OAuthRefresh).where(OAuthRefresh.familia == r.familia))
-        return Response(status_code=200, headers=_SEM_CACHE)   # RFC 7009: 200 mesmo para token desconhecido
-
+                s.execute(delete(OAuthRefresh).where(OAuthRefresh.familia == r.familia)
+                          .execution_options(synchronize_session=False))
+        return Response(status_code=200, headers=_SEM_CACHE)   # RFC 7009: 200 mesmo para refresh desconhecido
 
 def lista_clientes(s) -> list[OAuthCliente]:
     return list(s.scalars(select(OAuthCliente).order_by(OAuthCliente.criado_em)))

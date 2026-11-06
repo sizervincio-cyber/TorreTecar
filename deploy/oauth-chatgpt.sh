@@ -12,13 +12,14 @@ cd "$(dirname "$0")"
 PAINEL="https://torre.2-25-95-244.sslip.io"
 MCP="https://mcp.2-25-95-244.sslip.io/mcp"
 NOVA=0
+PILOTO=""
 define() { sed -i "/^$1=/d" .env; printf '%s=%s\n' "$1" "$2" >> .env; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --painel) PAINEL="${2%/}"; shift 2 ;;
     --mcp) MCP="${2%/}"; shift 2 ;;
     --nova-chave) NOVA=1; shift ;;
-    --piloto) define TORRE_OAUTH_LOGINS_PILOTO "$2"; echo "Piloto: só $2 recebe acesso do ChatGPT."; shift 2 ;;
+    --piloto) PILOTO="${2:?informe os logins}"; shift 2 ;;
     --liberar)
       sed -i '/^TORRE_OAUTH_LOGINS_PILOTO=/d' .env
       docker compose up -d --force-recreate api
@@ -32,10 +33,16 @@ while [ $# -gt 0 ]; do
     *) echo "opção desconhecida: $1"; exit 1 ;;
   esac
 done
-grep -qE '^TORRE_OAUTH_LOGINS_PILOTO=.+' .env || {
+[ -n "$PILOTO" ] || grep -qE '^TORRE_OAUTH_LOGINS_PILOTO=.+' .env || {
   echo "Ligue primeiro em piloto: ./oauth-chatgpt.sh --piloto SEU_LOGIN (depois de validar: --liberar)."; exit 1; }
 case "$PAINEL$MCP" in *http://*) echo "Use https:// nos dois endereços."; exit 1 ;; esac
 
+# 1) Constrói ANTES de mexer no .env: se o build falhar, nada muda e a API em execução segue como estava.
+docker network inspect proxy_edge >/dev/null 2>&1 || docker network create proxy_edge >/dev/null
+docker compose --profile mcp build api mcp
+
+# 2) Só agora grava a configuração nova.
+if [ -n "$PILOTO" ]; then define TORRE_OAUTH_LOGINS_PILOTO "$PILOTO"; echo "Piloto: só $PILOTO recebe acesso do ChatGPT."; fi
 if [ "$NOVA" = 1 ] || ! grep -qE '^TORRE_OAUTH_PRIVATE_KEY=.+' .env; then
   TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
   openssl ecparam -name prime256v1 -genkey -noout -out "$TMP/ec.pem"
@@ -43,15 +50,19 @@ if [ "$NOVA" = 1 ] || ! grep -qE '^TORRE_OAUTH_PRIVATE_KEY=.+' .env; then
   openssl ec -in "$TMP/ec.pem" -pubout -out "$TMP/pub.pem" 2>/dev/null
   define TORRE_OAUTH_PRIVATE_KEY "$(base64 -w0 "$TMP/priv.pem")"
   define TORRE_OAUTH_PUBLIC_KEY "$(base64 -w0 "$TMP/pub.pem")"
-  echo "Par de chaves ES256 gerado (tokens antigos deixam de valer)."
+  echo "Par de chaves ES256 gerado."
 fi
 define TORRE_OAUTH_ISSUER "$PAINEL"
 define TORRE_MCP_RESOURCE_URL "$MCP"
 chmod 600 .env
 
-docker network inspect proxy_edge >/dev/null 2>&1 || docker network create proxy_edge >/dev/null
-docker compose --profile mcp build api mcp
-docker compose --profile mcp up -d api mcp
+# 3) Sobe com a configuração nova (--force-recreate: a API velha nunca continua com a lista antiga).
+docker compose --profile mcp up -d --force-recreate api mcp
+
+# 4) Chave nova: derruba também os refresh tokens guardados (senão eles ganhariam access tokens novos).
+if [ "$NOVA" = 1 ]; then
+  for _ in $(seq 1 30); do docker compose exec -T api python -m server.app.cli oauth-revogar --todos && break; sleep 2; done
+fi
 
 cat <<TXT
 

@@ -444,3 +444,83 @@ def test_piloto_so_libera_os_logins_da_lista_e_corta_o_refresh(tmp_path, chaves)
     _, d = pkce()
     r = autoriza(c2, cid, d, login="bia")
     assert "code" in parse_qs(urlsplit(r.headers["location"]).query)
+
+
+# ---------------------------------------------------------------- correções da revisão automática do PR #1
+def test_corpo_grande_recusado_sem_ler_tudo(painel):
+    c, *_ = painel
+    grande = "x" * 20_000
+    assert c.post("/oauth/register", content=grande, headers={"content-type": "application/json"}).status_code == 413
+    assert c.post("/oauth/token", content="a=" + grande,
+                  headers={"content-type": "application/x-www-form-urlencoded"}).status_code == 413
+    assert c.post("/oauth/revoke", content="a=" + grande,
+                  headers={"content-type": "application/x-www-form-urlencoded"}).status_code == 413
+
+
+def test_revogar_access_token_diz_que_nao_suporta(painel):
+    c, *_ = painel
+    cid, t = fluxo_completo(c)
+    r = c.post("/oauth/revoke", data={"token": t["access_token"], "client_id": cid})
+    assert r.status_code == 400 and r.json()["error"] == "unsupported_token_type"
+    assert c.post("/oauth/revoke", data={"token": t["refresh_token"], "client_id": cid}).status_code == 200
+    r = c.post("/oauth/token", data={"grant_type": "refresh_token", "refresh_token": t["refresh_token"], "client_id": cid})
+    assert r.json()["error"] == "invalid_grant"
+
+
+def test_grant_de_outro_recurso_nao_vale_depois_da_troca_de_url(tmp_path, chaves):
+    engine = make_engine(f"sqlite:///{tmp_path / 'r.db'}")
+    Base.metadata.create_all(engine)
+    S = make_sessionmaker(engine)
+    with S() as db:
+        db.add(Usuario(login="ana", nome="Ana", perfil="vendedor", senha_hash=hash_senha(SENHA)))
+        db.commit()
+
+    def app(recurso):
+        cfg = Settings(site_root=tmp_path, oauth_issuer=ISS, oauth_recurso=recurso, oauth_chave_privada=chaves[1],
+                       oauth_redirects=(CB,))
+        return TestClient(create_app(cfg, engine), base_url=ISS, follow_redirects=False)
+
+    cid, t = fluxo_completo(app(RES))
+    # MCP mudou de endereço: o refresh antigo (sem 'resource' no pedido) não ganha token para o endereço novo
+    r = app("https://mcp-novo.test/mcp").post("/oauth/token", data={"grant_type": "refresh_token",
+                                                                   "refresh_token": t["refresh_token"], "client_id": cid})
+    assert r.json()["error"] == "invalid_grant"
+
+
+def test_cliente_confidencial_com_segredo_no_corpo(painel):
+    c, *_ = painel
+    reg = registra(c, token_endpoint_auth_method="client_secret_post")
+    v, d = pkce()
+    codigo = parse_qs(urlsplit(autoriza(c, reg["client_id"], d).headers["location"]).query)["code"][0]
+    r = c.post("/oauth/token", data={"grant_type": "authorization_code", "code": codigo, "redirect_uri": CB,
+                                     "code_verifier": v, "client_id": reg["client_id"], "client_secret": reg["client_secret"]})
+    assert r.status_code == 200
+
+
+def test_mcp_corta_corpo_lento(bases, chaves, monkeypatch):
+    import anyio
+    from mcp_torre import auth as A
+    monkeypatch.setattr(A, "TEMPO_CORPO_S", 0.2)
+    p = A.Portao(None, A.ConfigAuth(hashes_codex={hashlib.sha256(CODEX.encode()).hexdigest()}))
+    enviados = []
+
+    async def receive():
+        await anyio.sleep(5)                   # cliente que nunca termina de mandar o corpo
+        return {"type": "http.request", "body": b"", "more_body": False}
+
+    async def send(m):
+        enviados.append(m)
+
+    scope = {"type": "http", "path": "/mcp", "method": "POST", "client": ("1.2.3.4", 1),
+             "headers": [(b"authorization", f"Bearer {CODEX}".encode())]}
+    anyio.run(p, scope, receive, send)
+    assert enviados[0]["status"] == 408
+
+
+def test_limite_do_mcp_nao_acumula_chaves(bases, chaves):
+    from mcp_torre import auth as A
+    p = A.Portao(None, A.ConfigAuth(hashes_codex={"x"}))
+    for i in range(6000):
+        p.janela[f"ip:{i}"]                   # chaves vazias (expiradas)
+    p._limite("ip:novo")
+    assert len(p.janela) < 10

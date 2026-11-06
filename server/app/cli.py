@@ -21,7 +21,7 @@ from sqlalchemy import delete, select
 from .auth import encerra_sessoes_do_usuario, hash_senha
 from .config import PERFIS, load_settings
 from .db import make_engine, make_sessionmaker
-from .models import OAuthCliente, OAuthCodigo, OAuthRefresh, Usuario
+from .models import OAuthCliente, OAuthCodigo, OAuthRefresh, Usuario, agora
 
 
 def _senha(a) -> str:
@@ -68,11 +68,14 @@ def main(argv=None, engine=None) -> int:
         if a.cmd == "oauth-clientes":
             from sqlalchemy import func
             for x in db.scalars(select(OAuthCliente).order_by(OAuthCliente.criado_em)):
-                ativos = db.scalar(select(func.count()).select_from(OAuthRefresh).where(
-                    OAuthRefresh.client_id == x.client_id, OAuthRefresh.usado.is_(False)))
+                ativos = db.scalar(select(func.count()).select_from(OAuthRefresh).join(
+                    Usuario, Usuario.id == OAuthRefresh.usuario_id).where(
+                    OAuthRefresh.client_id == x.client_id, OAuthRefresh.usado.is_(False),
+                    OAuthRefresh.expira_em > agora(), Usuario.ativo.is_(True)))
                 print(f"{x.client_id:36} {x.criado_em:%Y-%m-%d} {ativos:3} acesso(s) {x.nome}")
             return 0
         if a.cmd == "oauth-revogar" and a.todos:
+            db.execute(select(Usuario.id).with_for_update())     # serializa com refresh em andamento
             db.execute(delete(OAuthRefresh))
             db.execute(delete(OAuthCodigo))
             db.commit()
@@ -91,6 +94,7 @@ def main(argv=None, engine=None) -> int:
             u.ativo = False
             encerra_sessoes_do_usuario(db, u.id)
         elif a.cmd == "oauth-revogar":
+            db.execute(select(Usuario.id).where(Usuario.id == u.id).with_for_update())
             db.execute(delete(OAuthRefresh).where(OAuthRefresh.usuario_id == u.id))
             db.execute(delete(OAuthCodigo).where(OAuthCodigo.usuario_id == u.id))
         elif a.cmd == "perfil":

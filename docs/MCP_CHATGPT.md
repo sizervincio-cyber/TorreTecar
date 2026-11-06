@@ -5,7 +5,7 @@
 - **A MCP existente foi reaproveitada, não reescrita.** As mesmas 11 ferramentas do Codex, com os mesmos nomes e o mesmo endpoint `https://mcp.<dominio>/mcp` (Streamable HTTP). O token fixo do Codex continua valendo.
 - **O que faltava para o ChatGPT era a autenticação.** O ChatGPT não usa o token fixo do Codex; ele descobre e faz OAuth sozinho. O painel da Torre virou o **servidor de autorização OAuth 2.1** (DCR + PKCE S256), usando o **login que já existe**. O MCP só verifica o token com a **chave pública**.
 - **Somente leitura em camadas técnicas, não por prompt.** O processo do MCP não tem credencial de banco, lê as bases de um volume `:ro`, roda com o sistema de arquivos `read_only` e aceita só `POST /mcp`. O catálogo é fechado (13 ferramentas de leitura) e o token tem um único escopo, `torre.read`.
-- **Evidência:** 178 testes passando (20 novos). Um teste ponta a ponta sobre HTTP real com o **cliente OAuth oficial do SDK MCP** fez descoberta, DCR, PKCE, login, consentimento, token e consultas em dados reais.
+- **Evidência:** 185 testes passando (27 novos). Um teste ponta a ponta sobre HTTP real com o **cliente OAuth oficial do SDK MCP** fez descoberta, DCR, PKCE, login, consentimento, token e consultas em dados reais.
 - **Pendente de ação humana (3 itens, seção 11):** publicar a rota `mcp.` no Caddy, rodar `./oauth-chatgpt.sh` na VPS e cadastrar o conector na conta do ChatGPT. A conexão com o ChatGPT real **não foi testada** daqui porque não há acesso à conta.
 
 ## 2. Diagnóstico da MCP atual
@@ -53,7 +53,7 @@ O único nó novo é o servidor de autorização dentro do painel, que já tinha
 | `deploy/oauth-chatgpt.sh` | novo | Gera as chaves ES256, grava o `.env`, sobe API e MCP; `--desligar` |
 | `deploy/atualizar.sh`, `mcp-token.sh` | alterado | MCP sobe também só com OAuth; revogar os tokens do Codex não derruba o ChatGPT |
 | `requirements` (server, mcp_torre) | alterado | `pyjwt[crypto]` |
-| `tests/test_mcp_chatgpt.py` | novo | 20 testes (seção 8) |
+| `tests/test_mcp_chatgpt.py` | novo | 27 testes (seção 8) |
 
 Nada foi alterado em `instaladores/` (o Codex usa o mesmo URL e o mesmo token).
 
@@ -74,7 +74,7 @@ Nada foi alterado em `instaladores/` (o Codex usa o mesmo URL e o mesmo token).
 | Access token | JWT ES256, 30 min, `iss`, `aud` = URL do MCP (RFC 8707), `sub`, `login`, `perfil`, `scope=torre.read`, `client_id`, `jti` |
 | Refresh token | 30 dias, opaco (só o hash no banco), **rotação** e **detecção de reuso**: um token velho reapresentado revoga a família inteira |
 | Perfis | `admin`, `gestor`, `vendedor` (`TORRE_MCP_PERFIS`). `simulacao` (que no painel já não vê dados) recebe `access_denied`. O MCP confere o perfil de novo no token |
-| Revogação | `cli desativar/senha/perfil` e `oauth-revogar` apagam os refresh tokens; endpoint RFC 7009. O access token já emitido vale até vencer (máx. 30 min) |
+| Revogação | `cli desativar/senha/perfil` e `oauth-revogar` apagam os refresh tokens; endpoint RFC 7009 (refresh token; para access token responde `unsupported_token_type`). O access token já emitido vale até vencer (máx. 30 min). `--nova-chave` troca a chave e apaga todos os refresh tokens |
 | Segredos | Chave privada só no `deploy/.env` (chmod 600) e só no contêiner `api`. O MCP recebe só a chave pública. Nenhum token vai para log ou resposta |
 | Codex | Token fixo `torre_...` inalterado (o ChatGPT não reutiliza esse token) |
 
@@ -116,11 +116,11 @@ A anotação `readOnlyHint` é só declaração: a garantia vem dos itens 3 a 5.
 ## 8. Evidências de testes
 
 ```
-python -m pytest -q   ->   178 passed, 1 failed
+python -m pytest -q   ->   185 passed, 1 failed
 ```
 A falha (`test_sync_job::test_sem_credenciais_configuradas`) já existia antes da mudança: falta o Playwright no ambiente de teste. Não tem relação com o MCP.
 
-`tests/test_mcp_chatgpt.py` (20 testes):
+`tests/test_mcp_chatgpt.py` (27 testes):
 - **Compatibilidade:** descoberta RFC 8414 e RFC 9728; `WWW-Authenticate` com `resource_metadata`; initialize, tools/list e tools/call com o token OAuth; schemas de entrada e saída; regressão do Codex com OAuth ligado e desligado.
 - **OAuth:** fluxo completo; rotação de refresh e reuso que revoga a família; código de uso único e queimado na 1ª tentativa; PKCE errado; cliente confidencial exigindo segredo (post e basic); `resource` de outro servidor (`invalid_target`); OAuth desligado sem configuração; host público `simule.` sem OAuth.
 - **Red team:** redirect fora da lista (domínio parecido, http, `../`, userinfo, fragmento); cliente ou redirect desconhecido nunca redireciona; CSRF forjado (403); perfil `simulacao` (`access_denied`); usuário desativado perde o refresh; tokens sem assinatura, de outra chave, vencidos, de outro `aud`, de emissor falso, sem `sub`, `alg=none`, HS256 com a chave pública, escopo de escrita e perfil `simulacao` no token; limite por usuário (429); argumento de 5.000 caracteres; ids maliciosos no `fetch`; erro sem traceback.
