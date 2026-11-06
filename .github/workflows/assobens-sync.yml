@@ -2,8 +2,10 @@ name: ASSOBENS sync
 
 on:
   schedule:
-    # GitHub Actions cron usa UTC: 11/15/20 UTC = 08/12/17 America/Sao_Paulo
-    - cron: "0 11,15,20 * * *"
+    # GitHub Actions cron usa UTC. O agendador do GitHub atrasa horas e pula execuções em horários cheios
+    # (em nov/2026 só 2 das 3 rodadas diárias saíam): horários alternados, a cada 2h, para garantir
+    # pelo menos 3 rodadas por dia. A rotina só grava quando há dado novo.
+    - cron: "40 10,12,14,16,18,20,22 * * *"
   workflow_dispatch:
     inputs:
       skip_precos:

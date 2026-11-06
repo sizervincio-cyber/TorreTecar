@@ -33,6 +33,9 @@ class PncpClient:
         self._trava = threading.Lock()
         self._freio_ate = 0.0                  # freio global: após um 429 todas as etapas esperam juntas
         self._seguidos = 0
+        # Disjuntor: quando o PNCP fica fora do ar, a 1ª URL já gasta as 5 tentativas (~4 min). Depois disso as
+        # demais consultas falham na hora, em vez de repetir 4 min para cada órgão/janela (uma noite inteira).
+        self.fora_do_ar = False
 
     def _frear(self) -> None:
         with self._trava:
@@ -47,6 +50,8 @@ class PncpClient:
             self._sleep(espera)
 
     def _get(self, url: str):
+        if self.fora_do_ar:
+            raise PncpError(f"PNCP fora do ar nesta execução; não tentado: {url[:160]}")
         for tentativa in range(5):
             self._esperar_freio()
             if self.requests:
@@ -58,6 +63,7 @@ class PncpClient:
                     body = r.read()
                     with self._trava:
                         self._seguidos = 0
+                        self.fora_do_ar = False
                     return json.loads(body.decode("utf-8")) if body else None
             except urllib.error.HTTPError as e:
                 if e.code in (204, 404):
@@ -71,6 +77,7 @@ class PncpClient:
                 raise PncpError(f"PNCP {e.code} em {url[:160]}")
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError):
                 self._sleep(min(120, 15 * (tentativa + 1)))
+        self.fora_do_ar = True
         raise PncpError(f"PNCP indisponível após 5 tentativas: {url[:160]}")
 
     def contratacoes(self, rota: str, ini: str, fim: str, uf: str | None, modalidade: int, cnpj: str | None = None):

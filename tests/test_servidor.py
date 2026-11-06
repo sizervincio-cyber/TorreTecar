@@ -4,7 +4,10 @@ import json
 from datetime import timedelta
 
 import pytest
-from fastapi.testclient import TestClient
+
+# As rotinas (ASSOBENS, licitações) rodam no CI só com requirements-assobens.txt; o servidor tem os seus próprios.
+pytest.importorskip("fastapi", reason="dependências do servidor (server/requirements.txt) não instaladas")
+from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy import update
 
 from server.app import cli
