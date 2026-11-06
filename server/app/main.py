@@ -14,7 +14,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 from sqlalchemy import select, text
 
-from . import site
+from . import oauth, site
 from .auth import Limitador, autentica, cria_sessao, encerra_sessao, usuario_da_sessao
 from .config import PERFIL_FRONT, Settings, load_settings
 from .db import make_engine, make_sessionmaker
@@ -153,6 +153,9 @@ def create_app(settings: Settings | None = None, engine=None) -> FastAPI:
         with db() as s:
             rows = s.scalars(select(Lead).order_by(Lead.recebido_em.desc()).limit(2000)).all()
             return {"leads": [json.loads(r.payload) for r in rows]}
+
+    # ---------- OAuth 2.1 do MCP somente leitura (antes da rota genérica de arquivos) ----------
+    oauth.registrar(app, cfg, db, usuario, para_login, host_publico, ip)
 
     # ---------- páginas e dados ----------
     def entrega(path, rel: str, marcador: dict) -> Response:

@@ -70,4 +70,8 @@ Contêiner `mcp` (alias `torre-mcp` na rede `proxy_edge`), perfil Compose `mcp`.
 2. Publicar a rota `mcp.2-25-95-244.sslip.io` no Caddy do RadarDispensa (PR no `zero-touch-ops`) e rodar o `./atualizar.sh` dele.
 3. No computador: `irm https://raw.githubusercontent.com/sizervincio-cyber/TorreTecar/main/instaladores/instalar-codex.ps1 | iex` e colar o token. Ou baixar `instaladores/torre-tecar-codex.zip` e rodar `instalar.ps1`.
 
-Revogar todos os tokens e parar o MCP: `./mcp-token.sh --revogar`.
+Revogar todos os tokens do Codex: `./mcp-token.sh --revogar` (se o OAuth do ChatGPT estiver ligado, o MCP continua no ar só para ele).
+
+## MCP no ChatGPT (OAuth 2.1)
+
+O painel vira o servidor de autorização (login da Torre, PKCE, registro dinâmico) e o MCP só verifica o token com a chave pública. Ligar em piloto: `./oauth-chatgpt.sh --piloto SEU_LOGIN`; validar: `./validar-mcp.sh <painel> <mcp>`; liberar para todos: `./oauth-chatgpt.sh --liberar`. Desligar: `./oauth-chatgpt.sh --desligar`. Revogar acessos: `docker compose exec api python -m server.app.cli oauth-revogar --login X` (ou `--todos`). Guia completo, testes, auditoria somente leitura e rollback: [`docs/MCP_CHATGPT.md`](../docs/MCP_CHATGPT.md).

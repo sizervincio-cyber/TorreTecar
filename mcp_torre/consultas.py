@@ -399,3 +399,81 @@ def indicadores_assobens(b: Bases) -> dict:
     return {"kpis": b.json(f"{ASSOBENS}/kpis.json", {}), "top10_segmentos": b.json(f"{ASSOBENS}/top10_segmentos.json", {}),
             "conferencia": b.json(f"{ASSOBENS}/conferencia.json", {}),
             "fonte": _fonte(b, f"{ASSOBENS}/kpis.json", f"{ASSOBENS}/top10_segmentos.json")}
+
+
+# ---------- search / fetch (padrão do ChatGPT para pesquisa e conhecimento da empresa) ----------
+LIMITE_SEARCH = 20
+
+
+def _termos(texto: str) -> list[str]:
+    return [t for t in sem_acento(texto).split() if len(t) >= 2][:8]
+
+
+def pesquisar(b: Bases, consulta: str, url_painel: str = "") -> dict:
+    """Clientes (raiz de CNPJ, pelo nome no CRM ou nos emplacamentos, ou pelo CNPJ) e licitações (objeto, órgão,
+    município). Devolve só id, título e url; o conteúdo vem por detalhar()."""
+    consulta = str(consulta or "").strip()
+    if len(consulta) < 2:
+        raise ErroConsulta("informe pelo menos 2 caracteres para pesquisar")
+    termos, doc = _termos(consulta), digitos(consulta)
+    tem = lambda s: all(t in sem_acento(s) for t in termos)  # noqa: E731
+    out, vistos = [], set()
+
+    def add(id_, titulo, url):
+        if id_ not in vistos and len(out) < LIMITE_SEARCH:
+            vistos.add(id_)
+            out.append({"id": id_, "title": titulo, "url": url})
+
+    painel = (url_painel.rstrip("/") + "/Analitycmbb.html") if url_painel else ""
+    if len(doc) >= 8:
+        for c in b.crm()["contas"]:
+            if c["raiz"] == doc[:8]:
+                add(f"cliente:{c['raiz']}", f"Cliente {c['nome']} (CNPJ raiz {c['raiz']})", painel)
+        for r in b.emplacamentos():
+            if r["raiz"] == doc[:8]:
+                add(f"cliente:{r['raiz']}", f"Cliente {r['proprietario']} (CNPJ raiz {r['raiz']})", painel)
+                break
+    elif termos:
+        for c in b.crm()["contas"]:
+            if c["raiz"] and tem(c["nome"]):
+                add(f"cliente:{c['raiz']}", f"Cliente {c['nome']} (CNPJ raiz {c['raiz']}) · CRM {c['casa']}", painel)
+        nomes: dict[str, str] = {}
+        for r in b.emplacamentos():
+            if r["raiz"] and r["raiz"] not in nomes and tem(r["proprietario"]):
+                nomes[r["raiz"]] = r["proprietario"]
+        for rz, nome in sorted(nomes.items(), key=lambda kv: kv[1]):
+            add(f"cliente:{rz}", f"Cliente {nome} (CNPJ raiz {rz})", painel)
+        compras = sorted(_compras(b).values(), key=lambda c: c.get("publicada") or "", reverse=True)
+        for c in compras:
+            if tem(" ".join(str(c.get(k) or "") for k in ("objeto", "orgao", "unidade", "municipio"))):
+                add(f"licitacao:{c.get('id')}", f"Licitação {c.get('orgao')}/{c.get('uf')} · "
+                    f"{str(c.get('objeto') or '')[:120]}", c.get("link") or "")
+    return {"results": out}
+
+
+def detalhar(b: Bases, id_: str, url_painel: str = "") -> dict:
+    """Documento completo de um resultado de pesquisar(): cliente:<raiz CNPJ> ou licitacao:<id>."""
+    tipo, _, chave = str(id_ or "").partition(":")
+    painel = (url_painel.rstrip("/") + "/Analitycmbb.html") if url_painel else ""
+    if tipo == "cliente" and len(chave) == 8 and chave.isdigit():
+        r = cliente_360(b, chave, 30)
+        if not r.get("encontrado"):
+            raise ErroConsulta(f"cliente {id_} não encontrado")
+        conta = r["contas"][0]
+        return {"id": id_, "title": f"Cliente {conta['nome']} (CNPJ raiz {chave})",
+                "text": _json_compacto(r), "url": painel,
+                "metadata": {"tipo": "cliente", "fonte": r["fonte"], "janela_12m_desde": r["janela_12m_desde"]}}
+    if tipo == "licitacao" and 0 < len(chave) <= 80:
+        c = _compras(b).get(chave)
+        if not c:
+            raise ErroConsulta(f"licitação {id_} não encontrada")
+        itens = [it for base in ("veiculos", "posvenda") for it in _itens(b, base) if it.get("compra") == chave][:200]
+        return {"id": id_, "title": f"Licitação {c.get('orgao')}/{c.get('uf')}",
+                "text": _json_compacto({"licitacao": c, "itens": itens}), "url": c.get("link") or "",
+                "metadata": {"tipo": "licitacao", "fonte": _fonte(b, f"{LICITACOES}/compras.json")}}
+    raise ErroConsulta("id inválido: use um id devolvido por search (cliente:<8 dígitos> ou licitacao:<id>)")
+
+
+def _json_compacto(v) -> str:
+    import json
+    return json.dumps(v, ensure_ascii=False, separators=(",", ":"), default=str)

@@ -9,8 +9,13 @@ cd "$(dirname "$0")"
 
 if [ "${1:-}" = "--revogar" ]; then
   sed -i '/^TORRE_MCP_TOKENS_SHA256=/d' .env
-  docker compose --profile mcp stop mcp >/dev/null 2>&1 || true
-  echo "Tokens revogados e MCP parado."
+  if grep -qE '^TORRE_OAUTH_PUBLIC_KEY=.+' .env; then
+    docker compose --profile mcp up -d --force-recreate mcp >/dev/null   # ChatGPT (OAuth) continua; Codex sai
+    echo "Tokens do Codex revogados. O MCP segue no ar só para o ChatGPT (OAuth)."
+  else
+    docker compose --profile mcp stop mcp >/dev/null 2>&1 || true
+    echo "Tokens revogados e MCP parado."
+  fi
   exit 0
 fi
 

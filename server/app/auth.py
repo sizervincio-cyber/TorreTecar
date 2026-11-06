@@ -12,7 +12,7 @@ from argon2.exceptions import InvalidHashError, VerificationError
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from .models import Sessao, Usuario, agora
+from .models import OAuthCodigo, OAuthRefresh, Sessao, Usuario, agora
 
 _ph = PasswordHasher()
 # Hash fixo para gastar o mesmo tempo quando o login não existe (não revela quais logins são válidos).
@@ -77,7 +77,12 @@ def encerra_sessao(db: Session, token: str | None) -> None:
 
 
 def encerra_sessoes_do_usuario(db: Session, usuario_id: int) -> None:
+    """Derruba as sessões do painel e as autorizações OAuth (ChatGPT) do usuário.
+    Trava a linha do usuário antes: um refresh em andamento (que trava a mesma linha) termina antes ou espera."""
+    db.execute(select(Usuario.id).where(Usuario.id == usuario_id).with_for_update())
     db.execute(delete(Sessao).where(Sessao.usuario_id == usuario_id))
+    db.execute(delete(OAuthRefresh).where(OAuthRefresh.usuario_id == usuario_id))
+    db.execute(delete(OAuthCodigo).where(OAuthCodigo.usuario_id == usuario_id))
 
 
 class Limitador:
