@@ -42,6 +42,7 @@ class Settings:
     oauth_chave_privada: str = ""                # PEM ES256 (ou base64 de uma linha), só no deploy/.env
     oauth_redirects: tuple[str, ...] = ()        # redirect_uri aceitos no registro (exatos ou prefixo terminado em /)
     oauth_perfis: tuple[str, ...] = ("admin", "gestor", "vendedor")   # 'simulacao' não vê dados: sem MCP
+    oauth_logins_piloto: tuple[str, ...] = ()   # piloto: só estes logins recebem token; vazio = todos os perfis acima
     oauth_access_min: int = 30
     oauth_refresh_dias: int = 30
     oauth_registros_por_hora_ip: int = 10
@@ -64,6 +65,7 @@ def load_settings() -> Settings:
         oauth_chave_privada=e.get("TORRE_OAUTH_PRIVATE_KEY", "").strip(),
         oauth_redirects=_lista(e.get("TORRE_OAUTH_REDIRECT_URIS", REDIRECTS_PADRAO)),
         oauth_perfis=_lista(e.get("TORRE_MCP_PERFIS", "admin,gestor,vendedor")),
+        oauth_logins_piloto=_lista(e.get("TORRE_OAUTH_LOGINS_PILOTO", "")),
         oauth_access_min=int(e.get("TORRE_OAUTH_ACCESS_MIN", "30")),
         oauth_refresh_dias=int(e.get("TORRE_OAUTH_REFRESH_DIAS", "30")),
     )

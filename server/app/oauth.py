@@ -99,6 +99,12 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
     def fora(req: Request) -> bool:
         return host_publico(req)
 
+    piloto = {x.lower() for x in cfg.oauth_logins_piloto}
+
+    def pode(u: Usuario) -> bool:
+        """Perfil com acesso a dados e, durante o piloto (TORRE_OAUTH_LOGINS_PILOTO), login na lista."""
+        return u.ativo and u.perfil in cfg.oauth_perfis and (not piloto or u.login.lower() in piloto)
+
     def metadados() -> dict:
         return {
             "issuer": iss, "authorization_endpoint": f"{iss}/oauth/authorize", "token_endpoint": f"{iss}/oauth/token",
@@ -211,9 +217,9 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
         u = usuario_req(req)
         if u is None:
             return para_login(req)
-        if u.perfil not in cfg.oauth_perfis:
+        if not pode(u):
             return RedirectResponse(_com_query(ru, {"error": "access_denied", "error_description":
-                                                    "perfil sem acesso às bases da Torre", "state": p.get("state"),
+                                                    "usuário sem acesso ao MCP da Torre", "state": p.get("state"),
                                                     "iss": iss}), status_code=303)
         campos = {"client_id": cli.client_id, "redirect_uri": ru, "response_type": "code", "state": p.get("state") or "",
                   "code_challenge": p["code_challenge"], "code_challenge_method": "S256",
@@ -240,7 +246,7 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
                 return RedirectResponse(_com_query(ru, {"error": erro_red[0], "state": p.get("state"), "iss": iss}), 303)
             if not hmac.compare_digest(p.get("csrf", ""), csrf(req, cli.client_id, ru, p["code_challenge"])):
                 return pagina_erro("Pedido de autorização inválido (CSRF). Tente de novo.", 403)
-            if p.get("decisao") != "permitir" or u.perfil not in cfg.oauth_perfis:
+            if p.get("decisao") != "permitir" or not pode(u):
                 return RedirectResponse(_com_query(ru, {"error": "access_denied", "state": p.get("state"), "iss": iss}), 303)
             codigo = secrets.token_urlsafe(32)
             s.execute(delete(OAuthCodigo).where(OAuthCodigo.expira_em < agora()).execution_options(synchronize_session=False))
@@ -287,7 +293,7 @@ def registrar(app: FastAPI, cfg: Settings, db, usuario_req, para_login, host_pub
 
     def usuario_valido(s, uid: int) -> Usuario | None:
         u = s.get(Usuario, uid)
-        return u if u is not None and u.ativo and u.perfil in cfg.oauth_perfis else None
+        return u if u is not None and pode(u) else None
 
     @app.post("/oauth/token")
     async def token(req: Request):

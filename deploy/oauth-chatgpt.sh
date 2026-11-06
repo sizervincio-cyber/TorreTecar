@@ -3,7 +3,8 @@
 #  - gera o par de chaves ES256 (privada: só a API assina tokens; pública: o MCP só verifica);
 #  - grava no deploy/.env: TORRE_OAUTH_ISSUER, TORRE_MCP_RESOURCE_URL, TORRE_OAUTH_PRIVATE_KEY, TORRE_OAUTH_PUBLIC_KEY;
 #  - reconstrói e sobe a API (migração 0002 roda sozinha) e o MCP.
-# Uso: ./oauth-chatgpt.sh [--painel https://torre.<dominio>] [--mcp https://mcp.<dominio>/mcp] [--nova-chave]
+# Uso: ./oauth-chatgpt.sh --piloto SEU_LOGIN [--painel https://torre.<dominio>] [--mcp https://mcp.<dominio>/mcp] [--nova-chave]
+#      ./oauth-chatgpt.sh --liberar      (fim do piloto: todos os perfis admin/gestor/vendedor podem conectar)
 #      ./oauth-chatgpt.sh --desligar     (tira o OAuth; o Codex continua com o token fixo)
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -11,11 +12,17 @@ cd "$(dirname "$0")"
 PAINEL="https://torre.2-25-95-244.sslip.io"
 MCP="https://mcp.2-25-95-244.sslip.io/mcp"
 NOVA=0
+define() { sed -i "/^$1=/d" .env; printf '%s=%s\n' "$1" "$2" >> .env; }
 while [ $# -gt 0 ]; do
   case "$1" in
     --painel) PAINEL="${2%/}"; shift 2 ;;
     --mcp) MCP="${2%/}"; shift 2 ;;
     --nova-chave) NOVA=1; shift ;;
+    --piloto) define TORRE_OAUTH_LOGINS_PILOTO "$2"; echo "Piloto: só $2 recebe acesso do ChatGPT."; shift 2 ;;
+    --liberar)
+      sed -i '/^TORRE_OAUTH_LOGINS_PILOTO=/d' .env
+      docker compose up -d --force-recreate api
+      echo "Piloto encerrado: perfis admin, gestor e vendedor podem conectar o ChatGPT."; exit 0 ;;
     --desligar)
       sed -i -E '/^TORRE_(OAUTH_ISSUER|MCP_RESOURCE_URL|OAUTH_PRIVATE_KEY|OAUTH_PUBLIC_KEY)=/d' .env
       docker compose up -d --force-recreate api
@@ -25,9 +32,10 @@ while [ $# -gt 0 ]; do
     *) echo "opção desconhecida: $1"; exit 1 ;;
   esac
 done
+grep -qE '^TORRE_OAUTH_LOGINS_PILOTO=.+' .env || {
+  echo "Ligue primeiro em piloto: ./oauth-chatgpt.sh --piloto SEU_LOGIN (depois de validar: --liberar)."; exit 1; }
 case "$PAINEL$MCP" in *http://*) echo "Use https:// nos dois endereços."; exit 1 ;; esac
 
-define() { sed -i "/^$1=/d" .env; printf '%s=%s\n' "$1" "$2" >> .env; }
 if [ "$NOVA" = 1 ] || ! grep -qE '^TORRE_OAUTH_PRIVATE_KEY=.+' .env; then
   TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
   openssl ecparam -name prime256v1 -genkey -noout -out "$TMP/ec.pem"
@@ -50,6 +58,8 @@ cat <<TXT
 OAuth do ChatGPT ligado.
   Servidor de autorização: $PAINEL/.well-known/oauth-authorization-server
   MCP (cole no ChatGPT):   $MCP
+Validar (deste servidor ou de qualquer máquina):
+  ./validar-mcp.sh $PAINEL $MCP
 Conferir:
   curl -s $PAINEL/.well-known/oauth-authorization-server
   curl -s ${MCP%/mcp}/.well-known/oauth-protected-resource/mcp

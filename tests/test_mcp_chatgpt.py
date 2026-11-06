@@ -414,3 +414,33 @@ def test_cli_lista_clientes_e_revoga(painel, capsys):
     assert cli.main(["oauth-revogar", "--todos"], engine=engine) == 0
     with S() as db:
         assert db.query(OAuthRefresh).count() == 0
+
+
+def test_piloto_so_libera_os_logins_da_lista_e_corta_o_refresh(tmp_path, chaves):
+    engine = make_engine(f"sqlite:///{tmp_path / 'p.db'}")
+    Base.metadata.create_all(engine)
+    S = make_sessionmaker(engine)
+    with S() as db:
+        db.add_all([Usuario(login="ana", nome="Ana", perfil="vendedor", senha_hash=hash_senha(SENHA)),
+                    Usuario(login="bia", nome="Bia", perfil="admin", senha_hash=hash_senha(SENHA))])
+        db.commit()
+
+    def app(piloto):
+        cfg = Settings(site_root=tmp_path, oauth_issuer=ISS, oauth_recurso=RES, oauth_chave_privada=chaves[1],
+                       oauth_redirects=(CB,), oauth_logins_piloto=piloto)
+        return TestClient(create_app(cfg, engine), base_url=ISS, follow_redirects=False)
+
+    c = app(("ana",))
+    cid, t = fluxo_completo(c)                                   # ana (piloto) conecta
+    c_bia = TestClient(c.app, base_url=ISS, follow_redirects=False)
+    _, d = pkce()
+    r = autoriza(c_bia, cid, d, login="bia")                     # bia (admin, fora do piloto) não
+    assert parse_qs(urlsplit(r.headers["location"]).query)["error"] == ["access_denied"]
+    # piloto trocado sem ana: o refresh dela deixa de valer
+    r = app(("bia",)).post("/oauth/token", data={"grant_type": "refresh_token", "refresh_token": t["refresh_token"], "client_id": cid})
+    assert r.json()["error"] == "invalid_grant"
+    # liberado (lista vazia): bia conecta
+    c2 = app(())
+    _, d = pkce()
+    r = autoriza(c2, cid, d, login="bia")
+    assert "code" in parse_qs(urlsplit(r.headers["location"]).query)

@@ -165,14 +165,12 @@ log: {"quem":"usuario:1","login":"ana","tipo":"oauth","acao":"tools/call:search"
 ```bash
 cd /opt/torre/repo/deploy
 ./atualizar.sh                                   # código novo; a API aplica a migração 0002 sozinha
-./oauth-chatgpt.sh                               # chaves ES256 + .env + sobe api e mcp
+./oauth-chatgpt.sh --piloto SEU_LOGIN            # chaves ES256 + .env + sobe api e mcp, só para você
 #   domínio novo: ./oauth-chatgpt.sh --painel https://torre.NOVO --mcp https://mcp.NOVO/mcp
 #   e TORRE_MCP_HOSTS=mcp.NOVO,torre-mcp:8000 no .env
 
-# Conferir
-curl -s https://torre.2-25-95-244.sslip.io/.well-known/oauth-authorization-server
-curl -s https://mcp.2-25-95-244.sslip.io/.well-known/oauth-protected-resource/mcp
-curl -si -X POST https://mcp.2-25-95-244.sslip.io/mcp | grep -i www-authenticate
+# Conferir (9 checagens; com TORRE_MCP_TOKEN também valida o Codex)
+TORRE_MCP_TOKEN=torre_... ./validar-mcp.sh https://torre.2-25-95-244.sslip.io https://mcp.2-25-95-244.sslip.io/mcp
 docker compose --profile mcp logs --tail 50 mcp    # linhas "torre-mcp.auditoria"
 
 # Operação
@@ -187,13 +185,28 @@ docker compose exec api python -m server.app.cli oauth-revogar --login fulano   
 
 Não há porta nova no host, mudança de domínio nem alteração no RadarDispensa ou na Quântica.
 
+## 10.1 Liberação controlada (piloto → todos)
+
+| Fase | O que fazer | Critério para avançar |
+|---|---|---|
+| 0. Deploy | `./atualizar.sh` e `./oauth-chatgpt.sh --piloto SEU_LOGIN` | `./validar-mcp.sh` com **9 OK** (inclui o Codex com o seu token) |
+| 1. Piloto | Só `SEU_LOGIN` recebe token; qualquer outro usuário recebe "acesso negado" ao tentar conectar | Uma consulta completa no ChatGPT: conectar → login → Permitir → *"até quando vão as bases"* → *"share MB extrapesados GO 2025 x 2026"* → *"pesquise o cliente X"* e abrir o resultado. Os números batem com a Torre e aparecem as linhas `torre-mcp.auditoria` com o seu login no log |
+| 2. Liberação | `./oauth-chatgpt.sh --liberar` (recria só a API, em segundos) | Usuários `admin`, `gestor` e `vendedor` conectam; `simulacao` continua sem acesso |
+| Volta | `./oauth-chatgpt.sh --piloto SEU_LOGIN` de novo (os outros perdem o refresh na hora e o access token em até 30 min) ou `--desligar` | |
+
+O piloto é aplicado na autorização, na troca do código e no refresh, por isso tirar alguém da lista corta o acesso no próximo refresh. Testado em `test_piloto_so_libera_os_logins_da_lista_e_corta_o_refresh`.
+
+## 10.2 Codex: o que muda
+
+Nada no uso. Mesmo URL (`https://mcp.<dominio>/mcp`), mesmo token `torre_...`, mesmas 11 ferramentas com os mesmos nomes e argumentos, e os instaladores e a skill `torre-relatorios` intactos. O piloto e o OAuth não se aplicam ao token fixo. Diferenças percebidas: as respostas trazem também `structuredContent`, os erros de validação agora dizem o motivo (antes vinha só "Error executing tool") e há duas ferramentas a mais (`search` e `fetch`). No deploy, o contêiner `mcp` é recriado e fica alguns segundos fora do ar. Evidência: teste `test_codex_token_fixo_continua_funcionando` (com OAuth ligado e desligado) e o `validar-mcp.sh` com o token do Codex.
+
 ## 11. Ações humanas pendentes
 
 | # | Ação | Quem | Por quê |
 |---|---|---|---|
 | 1 | Publicar `mcp.2-25-95-244.sslip.io → torre-mcp:8000` no Caddyfile do RadarDispensa (PR no `zero-touch-ops`), sem remover o cabeçalho `Authorization`, e rodar `./atualizar.sh` de lá | Admin da VPS | Repositório e infraestrutura fora do alcance desta sessão |
-| 2 | `./atualizar.sh` e `./oauth-chatgpt.sh` na VPS | Admin da VPS | Gera a chave privada lá (ela nunca passa pelo repositório) |
-| 3 | Cadastrar o conector no ChatGPT (seção 9) e validar o fluxo | Usuário com conta elegível | Sem acesso à conta ChatGPT daqui: **conexão real pendente de teste** |
+| 2 | `./atualizar.sh`, `./oauth-chatgpt.sh --piloto SEU_LOGIN` e `./validar-mcp.sh` na VPS | Admin da VPS | Gera a chave privada lá (ela nunca passa pelo repositório) |
+| 3 | Cadastrar o conector no ChatGPT (seção 9), fazer a consulta do piloto (10.1) e só então `--liberar` | Usuário com conta elegível | Sem acesso à conta ChatGPT daqui: **conexão real pendente de teste** |
 
 ## 12. Riscos e mitigação
 

@@ -74,4 +74,4 @@ Revogar todos os tokens do Codex: `./mcp-token.sh --revogar` (se o OAuth do Chat
 
 ## MCP no ChatGPT (OAuth 2.1)
 
-O painel vira o servidor de autorização (login da Torre, PKCE, registro dinâmico) e o MCP só verifica o token com a chave pública. Ligar: `./oauth-chatgpt.sh`. Desligar: `./oauth-chatgpt.sh --desligar`. Revogar acessos: `docker compose exec api python -m server.app.cli oauth-revogar --login X` (ou `--todos`). Guia completo, testes, auditoria somente leitura e rollback: [`docs/MCP_CHATGPT.md`](../docs/MCP_CHATGPT.md).
+O painel vira o servidor de autorização (login da Torre, PKCE, registro dinâmico) e o MCP só verifica o token com a chave pública. Ligar em piloto: `./oauth-chatgpt.sh --piloto SEU_LOGIN`; validar: `./validar-mcp.sh <painel> <mcp>`; liberar para todos: `./oauth-chatgpt.sh --liberar`. Desligar: `./oauth-chatgpt.sh --desligar`. Revogar acessos: `docker compose exec api python -m server.app.cli oauth-revogar --login X` (ou `--todos`). Guia completo, testes, auditoria somente leitura e rollback: [`docs/MCP_CHATGPT.md`](../docs/MCP_CHATGPT.md).
