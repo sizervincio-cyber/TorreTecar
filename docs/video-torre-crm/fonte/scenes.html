@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Torre CRM</title>
+<style>
+:root{
+  --bg:#060A13; --ink:#EAF0FA; --mut:#8C9AB3; --line:rgba(255,255,255,.09);
+  --cy:#3DD6F5; --vi:#7C6CFF; --gr:#34D399; --am:#F5B942; --rd:#FF6B6B;
+  --card:rgba(255,255,255,.045);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:Inter,"Inter Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+#bg{position:absolute;inset:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.55}
+#grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:80px 80px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 75%);opacity:.5}
+.scene{position:absolute;inset:0;opacity:0;padding:110px 140px}
+.kicker{font-size:22px;letter-spacing:.32em;text-transform:uppercase;color:var(--cy);font-weight:600}
+.s0t .h1{font-size:82px;white-space:nowrap}
+.s0t .kicker{font-size:22px}
+.h1{font-size:96px;font-weight:800;letter-spacing:-.035em;line-height:1.02}
+.h2{font-size:64px;font-weight:750;letter-spacing:-.03em;line-height:1.08}
+.mut{color:var(--mut)}
+.grad{background:linear-gradient(90deg,var(--cy),var(--vi));-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.1);border-radius:24px;backdrop-filter:blur(6px)}
+.pill{display:inline-flex;align-items:center;gap:12px;padding:12px 22px;border-radius:999px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.05);font-size:24px;font-weight:600}
+.dot{width:12px;height:12px;border-radius:50%}
+/* HUD */
+#hud{position:absolute;left:140px;top:56px;display:flex;gap:18px;align-items:center;font-size:20px;letter-spacing:.2em;color:var(--mut);font-weight:600}
+#hud b{color:var(--ink)}
+#brand{position:absolute;right:140px;top:50px;font-weight:800;font-size:24px;letter-spacing:.08em}
+#brand span{color:var(--cy)}
+#prog{position:absolute;left:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--cy),var(--vi));width:0}
+#cap{position:absolute;left:50%;bottom:54px;transform:translateX(-50%);max-width:1500px;text-align:center;font-size:32px;font-weight:550;
+  line-height:1.35;padding:14px 30px;border-radius:14px;background:rgba(3,6,12,.72);border:1px solid rgba(255,255,255,.08)}
+/* S0 */
+.form{position:absolute;right:140px;top:250px;width:640px;padding:36px}
+.field{height:58px;border-radius:12px;background:rgba(255,255,255,.06);margin:14px 0 22px;position:relative;overflow:hidden;font-size:24px;padding:14px 18px;color:var(--mut)}
+.flabel{font-size:18px;color:var(--mut);letter-spacing:.06em}
+.cursor{display:inline-block;width:3px;height:30px;background:var(--cy);vertical-align:middle;margin-left:4px}
+.clock{position:absolute;left:140px;bottom:200px;font-size:30px;color:var(--am);font-weight:700}
+/* S1 */
+.chan{position:absolute;width:230px;height:230px;border-radius:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-size:26px;font-weight:650}
+.chan svg{width:84px;height:84px}
+.crmbox{position:absolute;right:220px;top:390px;width:330px;height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.msg{position:absolute;width:120px;height:52px;border-radius:14px;background:rgba(61,214,245,.18);border:1px solid rgba(61,214,245,.45)}
+/* S2 */
+.logo{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);text-align:center}
+.ring{position:absolute;left:50%;top:44%;border-radius:50%;border:2px solid rgba(61,214,245,.5);transform:translate(-50%,-50%)}
+.tower{width:120px;height:120px;margin:0 auto 34px}
+/* S3 */
+.src{position:absolute;left:140px;width:420px;height:92px;display:flex;align-items:center;gap:20px;padding:0 26px;font-size:28px;font-weight:650}
+.ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.ev{position:absolute;right:140px;width:700px;padding:24px 28px}
+.ev .t{font-size:18px;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.ev .b{font-size:25px;margin-top:8px}
+.ev .s{font-size:18px;color:var(--mut);margin-top:10px}
+/* S4 */
+.node{position:absolute;transform:translate(-50%,-50%);padding:22px 30px;border-radius:20px;text-align:center;min-width:240px}
+.node .k{font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:700}
+.node .v{font-size:28px;font-weight:700;margin-top:6px}
+/* S5 */
+.agent{position:absolute;width:520px;padding:30px 32px}
+.agent .n{font-size:30px;font-weight:750}
+.agent .d{font-size:22px;color:var(--mut);margin-top:10px;line-height:1.35}
+.bar{height:6px;border-radius:6px;background:rgba(255,255,255,.08);margin-top:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:100%;transform-origin:left;background:linear-gradient(90deg,var(--cy),var(--vi))}
+/* S6 */
+.phone{position:absolute;left:220px;top:180px;width:380px;height:760px;border-radius:56px;border:10px solid #1B2333;background:#0B111D;padding:40px 22px}
+.bubble{border-radius:18px;padding:16px 18px;font-size:19px;line-height:1.4;margin-bottom:14px}
+.btn{border-radius:14px;padding:18px;text-align:center;font-weight:750;font-size:22px;background:var(--gr);color:#04140D}
+.dash{position:absolute;right:140px;top:200px;width:1000px;height:600px;padding:40px}
+.fbar{height:58px;border-radius:12px;margin:18px 0;display:flex;align-items:center;padding:0 20px;font-size:22px;font-weight:650;transform-origin:left}
+/* S7 */
+.layer{position:absolute;left:50%;width:1300px;height:92px;margin-left:-650px;display:flex;align-items:center;justify-content:space-between;padding:0 36px;border-radius:18px}
+.layer .l{font-size:19px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);font-weight:700;width:300px}
+.layer .r{font-size:30px;font-weight:700;flex:1}
+/* S8 */
+.ms{position:absolute;top:470px;width:330px;text-align:center}
+.ms .c{width:34px;height:34px;border-radius:50%;margin:0 auto 26px;border:4px solid var(--cy);background:var(--bg)}
+.ms .w{font-size:20px;color:var(--cy);font-weight:700;letter-spacing:.12em}
+.ms .n{font-size:32px;font-weight:750;margin-top:10px}
+.ms .d{font-size:21px;color:var(--mut);margin-top:8px}
+</style>
+</head>
+<body>
+<div id="bg">
+  <div class="orb" id="o1" style="width:900px;height:900px;background:#1B4DFF"></div>
+  <div class="orb" id="o2" style="width:800px;height:800px;background:#00B3D6"></div>
+  <div class="orb" id="o3" style="width:700px;height:700px;background:#6A3DFF"></div>
+  <div id="grid"></div>
+</div>
+
+<!-- S0 HOOK -->
+<section class="scene" id="s0">
+  <div style="position:absolute;left:140px;top:280px;width:1000px;font-size:0" class="s0t">
+    <div class="kicker" data-a="up" data-t="0">Vendas de caminhões</div>
+    <div class="h1" style="margin-top:30px" data-a="up" data-t=".2">Vendedor de caminhão</div>
+    <div class="h1 mut" data-a="up" data-t=".5">não deveria passar a noite</div>
+    <div class="h1" data-a="up" data-t=".8"><span class="grad">digitando no CRM.</span></div>
+  </div>
+  <div class="form card" data-a="right" data-t=".6">
+    <div class="flabel">CLIENTE</div><div class="field"><span data-a="type" data-t="1.0" data-d="1.2" data-text="Transportadora Cerrado Ltda"></span><span class="cursor blink"></span></div>
+    <div class="flabel">MODELO</div><div class="field"><span data-a="type" data-t="2.0" data-d="1" data-text="Actros 2651 · 3 unid."></span></div>
+    <div class="flabel">ETAPA</div><div class="field"><span data-a="type" data-t="2.8" data-d=".8" data-text="Proposta enviada"></span></div>
+    <div class="flabel">PRÓXIMA AÇÃO</div><div class="field"><span data-a="type" data-t="3.4" data-d=".9" data-text="Ligar na segunda..."></span></div>
+  </div>
+  <div class="clock" data-a="up" data-t="1.4">⏱ <span data-a="clock" data-t="1.4" data-d="3.6"></span></div>
+</section>
+
+<!-- S1 PROBLEM -->
+<section class="scene" id="s1">
+  <div class="kicker" data-a="up" data-t="0" style="margin-top:40px">O problema</div>
+  <div class="h2" style="margin-top:20px;max-width:1200px" data-a="up" data-t=".2">A venda acontece fora do sistema.</div>
+  <div class="chan card" style="left:140px;top:420px" data-a="scale" data-t=".5">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="1.6"><path d="M3 21l1.6-4.6A8.5 8.5 0 1 1 7.7 19.6L3 21z"/><path d="M8.5 9.5c.5 2.5 2.5 4.5 5 5l1.4-1.4 2 1-.6 1.8c-4 .4-8.6-4.2-8.2-8.2l1.8-.6 1 2z"/></svg>WhatsApp</div>
+  <div class="chan card" style="left:430px;top:420px" data-a="scale" data-t=".8">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#3DD6F5" stroke-width="1.6"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>Telefone</div>
+  <div class="chan card" style="left:720px;top:420px" data-a="scale" data-t="1.1">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#F5B942" stroke-width="1.6"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="5.5" cy="18" r="2"/><circle cx="17.5" cy="18" r="2"/></svg>Pátio</div>
+  <div class="msg" data-a="fly" data-t="1.6" data-d="2.4" data-x0="260" data-y0="500" data-x1="1520" data-y1="540" data-die=".55"></div>
+  <div class="msg" data-a="fly" data-t="2.0" data-d="2.4" data-x0="550" data-y0="520" data-x1="1520" data-y1="560" data-die=".6"></div>
+  <div class="msg" data-a="fly" data-t="2.4" data-d="2.4" data-x0="840" data-y0="500" data-x1="1520" data-y1="520" data-die=".5"></div>
+  <div class="msg" data-a="fly" data-t="2.9" data-d="2.4" data-x0="260" data-y0="560" data-x1="1520" data-y1="580" data-die="2"></div>
+  <div class="msg" data-a="fly" data-t="3.3" data-d="2.4" data-x0="550" data-y0="480" data-x1="1520" data-y1="500" data-die=".45"></div>
+  <div class="crmbox card" data-a="left" data-t=".8">
+    <div class="flabel">CHEGA AO CRM</div>
+    <div style="font-size:120px;font-weight:800;color:var(--rd);letter-spacing:-.04em"><span data-a="count" data-t="2" data-d="3" data-from="100" data-to="10"></span>%</div>
+    <div class="mut" style="font-size:22px">das conversas</div>
+  </div>
+</section>
+
+<!-- S2 REVEAL -->
+<section class="scene" id="s2">
+  <div class="ring" data-a="ring" data-t=".1" data-d="2.2" data-size="760"></div>
+  <div class="ring" data-a="ring" data-t=".5" data-d="2.2" data-size="980"></div>
+  <div class="logo">
+    <svg class="tower" viewBox="0 0 120 120" data-a="scale" data-t=".2">
+      <defs><linearGradient id="lg" x1="0" x2="1"><stop offset="0" stop-color="#3DD6F5"/><stop offset="1" stop-color="#7C6CFF"/></linearGradient></defs>
+      <path d="M48 112 L54 30 L66 30 L72 112 Z" fill="url(#lg)"/><rect x="40" y="18" width="40" height="14" rx="4" fill="url(#lg)"/>
+      <circle cx="60" cy="10" r="6" fill="#3DD6F5"/><path d="M28 30a40 40 0 0 1 64 0" stroke="#3DD6F5" stroke-width="4" fill="none" opacity=".6"/>
+    </svg>
+    <div class="h1" style="font-size:150px" data-a="up" data-t=".5">TORRE <span class="grad">CRM</span></div>
+    <div style="font-size:40px;margin-top:28px;font-weight:550" class="mut" data-a="up" data-t="1.4">O CRM da Tecar que <b style="color:var(--ink)">se preenche sozinho</b>.</div>
+    <div style="margin-top:44px;display:flex;gap:16px;justify-content:center">
+      <span class="pill" data-a="up" data-t="2.4"><i class="dot" style="background:var(--cy)"></i>Captura</span>
+      <span class="pill" data-a="up" data-t="2.6"><i class="dot" style="background:var(--vi)"></i>Organização</span>
+      <span class="pill" data-a="up" data-t="2.8"><i class="dot" style="background:var(--gr)"></i>Raciocínio</span>
+      <span class="pill" data-a="up" data-t="3.0"><i class="dot" style="background:var(--am)"></i>Execução</span>
+    </div>
+  </div>
+</section>
+
+<!-- S3 CAPTURA -->
+<section class="scene" id="s3">
+  <div class="kicker" data-a="up" data-t="0" style="margin-top:40px">C · Captura</div>
+  <div class="h2" style="margin-top:20px" data-a="up" data-t=".2">Zero digitação. <span class="grad">Toda conversa vira dado.</span></div>
+  <div class="src card" style="top:340px" data-a="left" data-t=".8"><span class="ico" style="background:rgba(52,211,153,.15);color:var(--gr)">●</span>WhatsApp</div>
+  <div class="src card" style="top:450px" data-a="left" data-t="1.1"><span class="ico" style="background:rgba(61,214,245,.15);color:var(--cy)">●</span>Ligações</div>
+  <div class="src card" style="top:560px" data-a="left" data-t="1.4"><span class="ico" style="background:rgba(124,108,255,.18);color:var(--vi)">●</span>Agenda e e-mail</div>
+  <div class="src card" style="top:670px" data-a="left" data-t="1.7"><span class="ico" style="background:rgba(245,185,66,.15);color:var(--am)">●</span>Nota de voz</div>
+  <svg style="position:absolute;left:560px;top:330px" width="520" height="460" viewBox="0 0 520 460" fill="none">
+    <path data-a="draw" data-t="2.4" data-d="1" d="M0 56 C 260 56, 260 120, 520 120" stroke="#34D399" stroke-width="3"/>
+    <path data-a="draw" data-t="2.7" data-d="1" d="M0 166 C 260 166, 260 230, 520 230" stroke="#3DD6F5" stroke-width="3"/>
+    <path data-a="draw" data-t="3.0" data-d="1" d="M0 276 C 260 276, 260 230, 520 230" stroke="#7C6CFF" stroke-width="3"/>
+    <path data-a="draw" data-t="3.3" data-d="1" d="M0 386 C 260 386, 260 340, 520 340" stroke="#F5B942" stroke-width="3"/>
+  </svg>
+  <div class="ev card" style="top:380px" data-a="right" data-t="3.6"><div class="t" style="color:var(--gr)">WhatsApp · 09:42</div><div class="b">“Queremos 3 Actros 2651 para março.”</div><div class="s">Fonte: conversa com José · Transp. Cerrado</div></div>
+  <div class="ev card" style="top:545px" data-a="right" data-t="5.6"><div class="t" style="color:var(--cy)">Ligação · 14:10 · 6 min</div><div class="b">Pediu simulação de financiamento FINAME.</div><div class="s">Fonte: gravação transcrita</div></div>
+  <div class="ev card" style="top:710px" data-a="right" data-t="7.6"><div class="t" style="color:var(--am)">Nota de voz · 17:05</div><div class="b">Frota atual: 12 caminhões, idade média 9 anos.</div><div class="s">Fonte: áudio do vendedor</div></div>
+</section>
+
+<!-- S4 ORGANIZAÇÃO -->
+<section class="scene" id="s4">
+  <div class="kicker" data-a="up" data-t="0" style="margin-top:40px">O · Organização</div>
+  <div class="h2" style="margin-top:20px" data-a="up" data-t=".2">O mapa de contexto de <span class="grad">cada cliente</span>.</div>
+  <svg style="position:absolute;inset:0" width="1920" height="1080" fill="none">
+    <path data-a="draw" data-t="1.6" data-d=".9" d="M960 620 L 520 470" stroke="rgba(61,214,245,.6)" stroke-width="2.5"/>
+    <path data-a="draw" data-t="1.9" data-d=".9" d="M960 620 L 1400 470" stroke="rgba(61,214,245,.6)" stroke-width="2.5"/>
+    <path data-a="draw" data-t="2.2" data-d=".9" d="M960 620 L 520 810" stroke="rgba(61,214,245,.6)" stroke-width="2.5"/>
+    <path data-a="draw" data-t="2.5" data-d=".9" d="M960 620 L 1400 810" stroke="rgba(61,214,245,.6)" stroke-width="2.5"/>
+    <path data-a="draw" data-t="2.8" data-d=".9" d="M1400 470 L 1400 810" stroke="rgba(124,108,255,.5)" stroke-width="2" stroke-dasharray="6 8"/>
+  </svg>
+  <div class="node card" style="left:960px;top:620px;border-color:rgba(61,214,245,.6);box-shadow:0 0 80px rgba(61,214,245,.25)" data-a="scale" data-t=".9"><div class="k">Conta</div><div class="v">Transportadora Cerrado</div><div class="mut" style="font-size:18px;margin-top:6px">CNPJ · Goiânia</div></div>
+  <div class="node card" style="left:520px;top:470px" data-a="scale" data-t="2.0"><div class="k">Contatos</div><div class="v">José (compras) · Ana (frota)</div></div>
+  <div class="node card" style="left:1400px;top:470px" data-a="scale" data-t="2.3"><div class="k">Frota</div><div class="v">12 caminhões · 9 anos</div></div>
+  <div class="node card" style="left:520px;top:810px" data-a="scale" data-t="2.6"><div class="k">Proposta</div><div class="v">3× Actros 2651</div></div>
+  <div class="node card" style="left:1400px;top:810px;border-color:rgba(52,211,153,.5)" data-a="scale" data-t="2.9"><div class="k">Oportunidade</div><div class="v" style="color:var(--gr)">R$ <span data-a="count" data-t="3.2" data-d="2" data-from="0" data-to="2.4" data-dec="1"></span> mi</div></div>
+  <div class="pill" style="position:absolute;left:140px;top:300px" data-a="up" data-t="5"><i class="dot" style="background:var(--gr)"></i>Cada campo com a fonte de origem</div>
+  <div class="pill" style="position:absolute;left:760px;top:300px" data-a="up" data-t="6"><i class="dot" style="background:var(--vi)"></i>Duplicados resolvidos pela IA</div>
+</section>
+
+<!-- S5 AGENTES -->
+<section class="scene" id="s5">
+  <div class="kicker" data-a="up" data-t="0" style="margin-top:40px">R · Raciocínio</div>
+  <div class="h2" style="margin-top:20px" data-a="up" data-t=".2">Agentes que <span class="grad">trabalham por você</span>.</div>
+  <div class="agent card" style="left:140px;top:330px" data-a="up" data-t="1.6"><div class="n">🧭 Prep de visita</div><div class="d">Frota, histórico e TCO prontos 1 hora antes.</div><div class="bar"><i data-a="grow" data-t="2.0" data-d="1.5"></i></div></div>
+  <div class="agent card" style="left:700px;top:330px" data-a="up" data-t="4.2"><div class="n">📝 Pós-contato</div><div class="d">Resumo e próxima ação de cada conversa.</div><div class="bar"><i data-a="grow" data-t="4.6" data-d="1.5"></i></div></div>
+  <div class="agent card" style="left:1260px;top:330px" data-a="up" data-t="6.2"><div class="n">⚡ Deal parado</div><div class="d">Diagnóstico vs. ganhos e perdidos + rascunho.</div><div class="bar"><i data-a="grow" data-t="6.6" data-d="1.5"></i></div></div>
+  <div class="agent card" style="left:420px;top:620px" data-a="up" data-t="9"><div class="n">🏛️ Radar de licitações</div><div class="d">Edital compatível vai direto ao vendedor da região.</div><div class="bar"><i data-a="grow" data-t="9.4" data-d="1.5"></i></div></div>
+  <div class="agent card" style="left:980px;top:620px" data-a="up" data-t="11"><div class="n">🔄 Renovação de frota</div><div class="d">Contas com caminhões antigos, por potencial.</div><div class="bar"><i data-a="grow" data-t="11.4" data-d="1.5"></i></div></div>
+</section>
+
+<!-- S6 EXECUÇÃO -->
+<section class="scene" id="s6">
+  <div class="kicker" data-a="up" data-t="0" style="position:absolute;left:140px;top:110px">E · Execução</div>
+  <div class="phone" data-a="up" data-t=".3">
+    <div class="flabel">RASCUNHO DO AGENTE</div>
+    <div class="bubble" style="background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);margin-top:16px">Olá José! Conforme conversamos, segue a simulação FINAME dos 3 Actros 2651 com entrega em março. Posso passar aí na quinta às 10h?</div>
+    <div class="bubble" style="background:rgba(255,255,255,.05);font-size:16px;color:var(--mut)">Fonte: WhatsApp 09:42 · Ligação 14:10</div>
+    <div class="btn" data-a="press" data-t="2.4" style="margin-top:30px">Aprovar e enviar</div>
+    <div style="text-align:center;margin-top:22px;font-size:22px;color:var(--gr);font-weight:700" data-a="up" data-t="2.9">✓ Enviado</div>
+  </div>
+  <div class="dash card" data-a="right" data-t="4">
+    <div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:30px;font-weight:750">Funil · Goiânia + Anápolis</div><div class="pill" style="font-size:18px"><i class="dot" style="background:var(--gr)"></i>tempo real</div></div>
+    <div class="fbar" style="width:100%;background:rgba(61,214,245,.22)" data-a="grow" data-t="5" data-d="1">Prospecção · 84</div>
+    <div class="fbar" style="width:78%;background:rgba(61,214,245,.32)" data-a="grow" data-t="5.3" data-d="1">Visita · 52</div>
+    <div class="fbar" style="width:56%;background:rgba(124,108,255,.38)" data-a="grow" data-t="5.6" data-d="1">Proposta · 31</div>
+    <div class="fbar" style="width:38%;background:rgba(124,108,255,.5)" data-a="grow" data-t="5.9" data-d="1">Crédito · 18</div>
+    <div class="fbar" style="width:24%;background:rgba(52,211,153,.55)" data-a="grow" data-t="6.2" data-d="1">Faturado · 11</div>
+  </div>
+  <div class="pill" style="position:absolute;right:140px;top:840px;font-size:26px;border-color:rgba(52,211,153,.5)" data-a="up" data-t="10.5"><i class="dot" style="background:var(--gr)"></i>Atividades sincronizadas com o portal da montadora ✓</div>
+</section>
+
+<!-- S7 STACK -->
+<section class="scene" id="s7">
+  <div class="kicker" data-a="up" data-t="0" style="margin-top:20px">Stack</div>
+  <div class="h2" style="margin-top:16px" data-a="up" data-t=".2">Por baixo do capô.</div>
+  <div class="layer card" style="top:300px" data-a="left" data-t="1.6"><span class="l">Backend</span><span class="r">FastAPI · Postgres 16 + pgvector</span><span class="pill" style="font-size:18px">já existe</span></div>
+  <div class="layer card" style="top:410px" data-a="left" data-t="4.6"><span class="l">Jobs</span><span class="r">Redis + Arq</span></div>
+  <div class="layer card" style="top:520px;border-color:rgba(124,108,255,.5)" data-a="left" data-t="6.6"><span class="l">IA</span><span class="r">Claude · Haiku / Sonnet / Opus roteados</span></div>
+  <div class="layer card" style="top:630px" data-a="left" data-t="9.6"><span class="l">Canais</span><span class="r">WhatsApp Cloud API · Whisper</span></div>
+  <div class="layer card" style="top:740px" data-a="left" data-t="13.2"><span class="l">Front</span><span class="r">Next.js PWA · cockpit + painel</span></div>
+  <div class="layer card" style="top:850px;border-color:rgba(52,211,153,.5)" data-a="left" data-t="15.6"><span class="l">Infra</span><span class="r">Nosso VPS · Docker · LGPD</span><span class="pill" style="font-size:18px;color:var(--gr)">dados no Brasil</span></div>
+</section>
+
+<!-- S8 ROADMAP -->
+<section class="scene" id="s8">
+  <div class="kicker" data-a="up" data-t="0" style="margin-top:40px">Plano</div>
+  <div class="h2" style="margin-top:20px" data-a="up" data-t=".2">Piloto em <span class="grad">6 semanas</span>.</div>
+  <div style="position:absolute;left:300px;right:300px;top:486px;height:4px;background:rgba(255,255,255,.1)"></div>
+  <div style="position:absolute;left:300px;width:1320px;top:486px;height:4px;background:linear-gradient(90deg,var(--cy),var(--vi));transform-origin:left" data-a="grow" data-t="1" data-d="5"></div>
+  <div class="ms" style="left:135px" data-a="up" data-t="1.2"><div class="c"></div><div class="w">SEM 1–2</div><div class="n">Fundação</div><div class="d">Banco, fila, eventos</div></div>
+  <div class="ms" style="left:575px" data-a="up" data-t="2.4"><div class="c"></div><div class="w">SEM 3–5</div><div class="n">Captura</div><div class="d">WhatsApp, agenda, voz</div></div>
+  <div class="ms" style="left:1015px" data-a="up" data-t="3.6"><div class="c"></div><div class="w">SEM 5–8</div><div class="n">Agentes</div><div class="d">Prep, resumo, deal parado</div></div>
+  <div class="ms" style="left:1455px" data-a="up" data-t="4.8"><div class="c" style="border-color:var(--gr)"></div><div class="w" style="color:var(--gr)">SEM 7–9</div><div class="n">Cockpit</div><div class="d">Celular + painel</div></div>
+  <div class="pill" style="position:absolute;left:50%;transform:translateX(-50%);top:780px;font-size:26px" data-a="fade" data-t="6"><i class="dot" style="background:var(--am)"></i>1 loja · 3 vendedores · medir antes de escalar</div>
+</section>
+
+<!-- S9 CTA -->
+<section class="scene" id="s9">
+  <div class="ring" data-a="ring" data-t=".1" data-d="2.4" data-size="900"></div>
+  <div class="logo">
+    <div class="h1" style="font-size:150px" data-a="scale" data-t=".1">TORRE <span class="grad">CRM</span></div>
+    <div style="display:flex;gap:44px;justify-content:center;margin-top:50px;font-size:42px;font-weight:750;white-space:nowrap">
+      <span data-a="up" data-t="1.2">Menos digitação.</span>
+      <span data-a="up" data-t="2.2" style="color:var(--cy)">Mais visitas.</span>
+      <span data-a="up" data-t="3.2" style="color:var(--gr)">Mais caminhões vendidos.</span>
+    </div>
+    <div class="mut" style="font-size:26px;margin-top:60px;letter-spacing:.2em" data-a="fade" data-t="4.2">TECAR · GOIÂNIA · ANÁPOLIS</div>
+  </div>
+</section>
+
+<div id="hud"><b id="hnum">01</b><span id="hname"></span></div>
+<div id="brand">TORRE <span>CRM</span></div>
+<div id="cap"></div>
+<div id="prog"></div>
+
+<script>
+// Motor de animação determinístico: render(t) desenha o quadro do segundo t.
+const ease = p => 1 - Math.pow(1 - p, 3);
+const easeBack = p => { const c = 1.6; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); };
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+let T = null; // {scenes:[{start,dur,caps:[{t,txt}]}], total}
+const names = ['','O problema','Torre CRM','Captura','Organização','Agentes','Execução','Stack','Plano','Torre CRM'];
+document.querySelectorAll('path[data-a="draw"]').forEach(p => { const L = p.getTotalLength(); p.dataset.len = L; p.style.strokeDasharray = L; });
+
+window.setTiming = (timing) => { T = timing; };
+window.render = (t) => {
+  // fundo
+  const o = [['o1', 200, 120, .07], ['o2', 1300, 600, .05], ['o3', 900, -100, .06]];
+  o.forEach(([id, x, y, s], i) => { document.getElementById(id).style.transform =
+    `translate(${x + Math.sin(t * s * 3 + i) * 160}px, ${y + Math.cos(t * s * 2.4 + i) * 120}px)`; });
+  document.getElementById('prog').style.width = (t / T.total * 100) + '%';
+  T.scenes.forEach((sc, i) => {
+    const el = document.getElementById('s' + i);
+    const lt = t - sc.start;
+    const fadeIn = clamp(lt / .45), fadeOut = clamp((sc.start + sc.dur - t) / .45);
+    const vis = i === 0 ? Math.min(1, fadeOut) : Math.min(fadeIn, i === T.scenes.length - 1 ? 1 : fadeOut);
+    el.style.opacity = (lt < -0.01 || lt > sc.dur + .01) ? 0 : vis;
+    el.style.transform = `scale(${1 + .02 * (1 - fadeIn)})`;
+    if (el.style.opacity == 0) return;
+    if (lt >= 0 && lt <= sc.dur) {
+      document.getElementById('hnum').textContent = String(i + 1).padStart(2, '0');
+      document.getElementById('hname').textContent = names[i];
+      let cap = '';
+      sc.caps.forEach(c => { if (lt >= c.t) cap = c.txt; });
+      const capEl = document.getElementById('cap');
+      capEl.textContent = cap; capEl.style.opacity = cap ? 1 : 0;
+    }
+    el.querySelectorAll('[data-a]').forEach(n => anim(n, lt));
+  });
+};
+function anim(n, lt) {
+  const a = n.dataset.a, st = +n.dataset.t || 0, d = +(n.dataset.d || .8);
+  const raw = clamp((lt - st) / d), p = ease(raw);
+  switch (a) {
+    case 'up': n.style.opacity = p; n.style.transform = `translateY(${(1 - p) * 46}px)`; break;
+    case 'fade': n.style.opacity = p; break;
+    case 'left': n.style.opacity = p; n.style.transform = `translateX(${-(1 - p) * 80}px)`; break;
+    case 'right': n.style.opacity = p; n.style.transform = `translateX(${(1 - p) * 80}px)`; break;
+    case 'scale': { const q = clamp((lt - st) / d); const s = q <= 0 ? .8 : .8 + .2 * easeBack(q);
+      n.style.opacity = clamp(q * 1.6); const base = n.classList.contains('node') ? 'translate(-50%,-50%) ' : '';
+      n.style.transform = base + `scale(${s})`; break; }
+    case 'draw': n.style.strokeDashoffset = (+n.dataset.len) * (1 - p); break;
+    case 'grow': n.style.transform = `scaleX(${p})`; n.style.opacity = raw > 0 ? 1 : 0; break;
+    case 'type': { const s = n.dataset.text; n.textContent = s.slice(0, Math.round(s.length * raw)); n.style.color = '#EAF0FA'; break; }
+    case 'count': { const f = +n.dataset.from, to = +n.dataset.to, dec = +(n.dataset.dec || 0);
+      n.textContent = (f + (to - f) * p).toFixed(dec).replace('.', ','); break; }
+    case 'clock': { const m = 21 * 60 + 30 + Math.floor(raw * 150); n.textContent =
+      `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')} · ainda digitando`; break; }
+    case 'ring': { const sz = +n.dataset.size; n.style.width = n.style.height = sz * (.6 + .4 * p) + 'px';
+      n.style.opacity = raw <= 0 ? 0 : (1 - raw) * .9 + .1; break; }
+    case 'press': { const q = clamp((lt - st) / .35); const s = q <= 0 || q >= 1 ? 1 : 1 - .08 * Math.sin(q * Math.PI);
+      n.style.transform = `scale(${s})`; n.style.boxShadow = q > 0 ? `0 0 ${40 * (1 - clamp(q - .5))}px rgba(52,211,153,.8)` : 'none'; break; }
+    case 'fly': { const x0 = +n.dataset.x0, y0 = +n.dataset.y0, x1 = +n.dataset.x1, y1 = +n.dataset.y1, die = +n.dataset.die;
+      const x = x0 + (x1 - x0) * raw, y = y0 + (y1 - y0) * raw - Math.sin(raw * Math.PI) * 120;
+      n.style.left = x + 'px'; n.style.top = y + 'px';
+      const op = raw <= 0 || raw >= 1 ? 0 : (raw < die ? 1 : clamp(1 - (raw - die) * 5));
+      n.style.opacity = op;
+      if (die > 1) { n.style.background = 'rgba(52,211,153,.3)'; n.style.borderColor = '#34D399'; }
+      break; }
+  }
+}
+</script>
+</body>
+</html>

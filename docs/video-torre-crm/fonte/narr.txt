@@ -1,0 +1,10 @@
+Vendedor de caminhão não deveria passar a noite digitando no CRM.
+Hoje, a venda acontece no WhatsApp, no telefone e no pátio. E quase nada chega ao sistema.
+Apresentamos o Torre CRM. O CRM da Tecar que se preenche sozinho, com inteligência artificial.
+Primeiro, a captura. WhatsApp, ligações, agenda, e-mail e nota de voz. Cada conversa vira um registro, com a fonte original.
+Depois, a organização. A inteligência artificial monta o mapa de cada cliente: conta, contatos, frota, oportunidades e propostas.
+Então, os agentes. Eles preparam a visita com a frota e o custo total de operação, resumem cada contato, destravam negócios parados e avisam de licitações e de renovação de frota.
+Na ponta, a execução. O vendedor aprova os rascunhos no celular com um toque. O gerente vê o funil em tempo real. E as atividades vão direto para o portal da montadora.
+Por baixo, uma stack sólida. FastAPI e Postgres com busca vetorial. Fila com Redis. Claude com roteamento de modelos. API oficial do WhatsApp, transcrição com Whisper e painel em Next.js. Tudo no nosso servidor, dentro da LGPD.
+O plano é simples. Fundação, captura, agentes e painel. Piloto com três vendedores em seis semanas.
+Torre CRM. Menos digitação, mais visitas, mais caminhões vendidos.
