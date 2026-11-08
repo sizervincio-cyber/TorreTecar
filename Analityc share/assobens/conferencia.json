@@ -4,7 +4,21 @@
   "fim": "9999-99-99"
  },
  "painel_atualizado_em": null,
- "filtros_painel": {},
+ "filtros_painel": {
+  "Ano Emplac.": "2026 ",
+  "Grupo": "Todos ",
+  "Municipio": "Todos ",
+  "Uf": "Todos ",
+  "Região MB": "Todos ",
+  "Distrito": "Todos ",
+  "Area Operacional": "Todos ",
+  "Combustível": "Todos ",
+  "Ano_Fabricacao_Filtro": "Todos ",
+  "Segmentos": "01-CAMINHAO ",
+  "Subseg.": "Todos ",
+  "Terreno": "Todos ",
+  "Tração": "Todos "
+ },
  "indicadores": [
   {
    "indicador": "Total Mercado",
