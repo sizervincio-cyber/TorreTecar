@@ -2,7 +2,7 @@
 
 Usado pelos dois lados, para que respondam sempre a mesma coisa:
   - API da Torre (painel "Preço Fenatran" e importador);
-  - MCP somente leitura (ferramenta consultar_preco_fenatran), que lê só o snapshot gerado pela API.
+  - MCP somente leitura (ferramenta consultar_precos_fenatran), que lê só o snapshot gerado pela API.
 
 Regras de negócio (PROMPT_CLAUDE_MODULO_PRECO_FENATRAN.md):
   - preços nominais das circulares, em centavos inteiros, por veículo; nada de recalcular ICMS ou aplicar desconto;
@@ -448,3 +448,101 @@ def _restricoes(meta: dict, origem: str) -> list[str]:
     if origem != "ambos":
         r.append(f"Mostrando só a origem {origem}; peça 'ambos' para ver fábrica e estoque.")
     return [x for x in r if x]
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Contrato da ferramenta MCP consultar_precos_fenatran (somente leitura). Reaproveita consultar(); não recalcula imposto.
+
+ORIGENS_MCP = {"todas": "ambos", "fabrica": "fabrica", "estoque_ci102": "estoque"}
+_RE_SEPARA = re.compile(r"\s*(?:,|;|\+|\b[EeOo][Uu]?\b(?=\s))\s*")
+
+
+def _decimal(centavos: int) -> str:
+    """Centavos inteiros -> '123456.78' (sem ponto flutuante)."""
+    reais, cent = divmod(int(centavos), 100)
+    return f"{reais}.{cent:02d}"
+
+
+def _partes_modelo(modelo: str, versao: str | None) -> list[str]:
+    """'Axor 2545 LS e S' -> ['Axor 2545 LS', 'Axor 2545 S']; versao='LS' + '2545' -> ['2545 LS']."""
+    texto = (modelo or "").strip()
+    if versao:
+        texto = f"{texto} {versao.strip()}"
+    pedacos = [p for p in _RE_SEPARA.split(texto) if p and p.strip()]
+    if len(pedacos) <= 1:
+        return [texto]
+    m = re.search(r"\d{3,4}", pedacos[0])
+    prefixo = pedacos[0][: m.end()] if m else ""
+    return [p if re.search(r"\d", p) or not prefixo else f"{prefixo} {p}" for p in pedacos]
+
+
+def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: str | None = None,
+                  origem: str | None = "todas", configuracao: str | None = None, ano_modelo: str | None = None,
+                  up: str | None = None, agora: datetime | None = None, fonte_erro: str | None = None) -> dict:
+    """Resposta padronizada para o ChatGPT/Codex: faixa escolhida pela quantidade, unitário e total do lote em
+    decimal exato por origem, fonte documental e restrições. fonte_erro: falha ao ler o snapshot (não é 'sem modelo')."""
+    agora = agora or agora_sp()
+    base = {"fonte": "FENATRAN", "quantidade_solicitada": quantidade,
+            "consultado_em": agora.astimezone(TZ).isoformat(timespec="seconds")}
+    if fonte_erro or not snap or not snap.get("campanha"):
+        return {**base, "status": "indisponivel", "status_consulta": "fonte_indisponivel", "resultados": [],
+                "mensagem": "A base Fenatran não pôde ser lida agora (falha de integração, não ausência do modelo). "
+                            "Não use outra fonte de preço; tente de novo ou consulte o painel da Torre.",
+                **({"detalhe_erro": fonte_erro} if fonte_erro else {})}
+    o = ORIGENS_MCP.get((origem or "todas").strip().lower())
+    if o is None:
+        return {**base, "status_consulta": "filtro_invalido", "resultados": [],
+                "mensagem": "origem deve ser fabrica, estoque_ci102 ou todas"}
+    if not (modelo or "").strip():
+        return {**base, "status_consulta": "filtro_obrigatorio", "resultados": [], "mensagem": "Informe o modelo."}
+
+    vistos, itens, ultimo = set(), [], None
+    for parte in _partes_modelo(modelo, versao):
+        r = consultar(snap, modelo=parte, quantidade=quantidade, origem=o, configuracao=configuracao,
+                      ano_modelo=ano_modelo, up=up, calcular_total=True, limite=LIMITE_MAX, agora=agora)
+        ultimo = r
+        if r["status_consulta"] not in ("ok",):
+            if r["status_consulta"] in ("campanha_inativa", "quantidade_fora_condicao_fenatran", "filtro_invalido"):
+                break
+            continue
+        for it in r["resultados"]:
+            if it["variante"] not in vistos:
+                vistos.add(it["variante"])
+                itens.append((it, r))
+    r0 = ultimo or {}
+    out = {**base, "status": {"active": "ativo"}.get(r0.get("status"), r0.get("status")),
+           "versao_tabela": r0.get("versao"), "aviso_uso_interno": r0.get("aviso_uso_interno")}
+    st = r0.get("status_consulta")
+    if st == "campanha_inativa":
+        return {**out, "status_consulta": "campanha_inativa", "resultados": [], "mensagem": r0.get("mensagem")}
+    if st == "quantidade_fora_condicao_fenatran":
+        return {**out, "status_consulta": st, "faixa_aplicada": None, "resultados": [], "mensagem": r0.get("mensagem")}
+    if st == "filtro_invalido":
+        return {**out, "status_consulta": st, "resultados": [], "mensagem": r0.get("mensagem")}
+    faixa, _ = _faixa(quantidade)
+    if not itens:
+        return {**out, "status_consulta": "sem_resultados", "faixa_aplicada": faixa.replace("_", "-"),
+                "resultados": [], "mensagem": f"Nenhuma variante Fenatran para '{modelo}'. A tabela está ativa; "
+                                             "confira o número do modelo (ex.: 2545, 2653, 1719)."}
+    resultados, familias = [], []
+    for it, r in itens:
+        precos = {}
+        for nome, chave in (("fabrica", "fabrica"), ("estoque_ci102", "estoque")):
+            fx = (it.get("faixa_aplicavel") or {}).get(chave)
+            if fx:
+                precos[nome] = {"unitario": _decimal(fx["unitario_centavos"]), "unitario_brl": fx["unitario"],
+                                "total_lote": _decimal(fx["total_centavos"]), "total_lote_brl": fx["total"]}
+        resultados.append({"modelo": it["modelo"], "familia": it["familia"], "ano_modelo": it["ano_modelo"],
+                           "up": it["up"], "qvv": it["variante"], "configuracao": it["configuracao"],
+                           "precos": precos, "fonte_documental": it["source_file"], "pagina": it["source_page"],
+                           "status_validacao_fiscal": it["status_validacao_fiscal"]})
+        if it["familia"] not in familias:
+            familias.append(it["familia"])
+    cond = _condicoes({**METADADOS_PADRAO, **(((snap or {}).get("campanha") or {}).get("metadados") or {})},
+                      familias, agora)
+    return {**out, "status_consulta": "ok", "faixa_aplicada": faixa.replace("_", "-"),
+            "total_encontrado": len(resultados), "resultados": resultados,
+            "condicoes_comerciais": cond, "restricoes": r0.get("restricoes", []),
+            "disponibilidade": "Preço não implica veículo disponível; confirmar estoque/programação com o comercial.",
+            "atualizacao": {"versao_tabela": r0.get("versao"),
+                            "expira_em": ((snap.get("campanha") or {}).get("expira_em"))}}

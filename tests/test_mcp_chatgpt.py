@@ -33,7 +33,7 @@ CODEX = "torre_" + "c" * 48
 ACCEPT = {"Accept": "application/json, text/event-stream"}
 FERRAMENTAS = {"status_dados", "resumo_emplacamentos", "comparar_periodos", "buscar_emplacamentos", "cliente_360",
                "carteira_por_responsavel", "buscar_crm", "buscar_licitacoes", "itens_licitacoes", "precos",
-               "indicadores_assobens", "search", "fetch", "consultar_preco_fenatran"}
+               "indicadores_assobens", "search", "fetch", "consultar_precos_fenatran"}
 
 
 def _par():
@@ -367,13 +367,13 @@ def test_nenhuma_ferramenta_altera_as_bases(bases, chaves):
                  "b_ini": "2026", "b_fim": "2026"}), ("buscar_emplacamentos", {"uf": "GO"}), ("cliente_360", {"cnpj_ou_nome": "05128774"}),
                 ("buscar_crm", {}), ("buscar_licitacoes", {}), ("itens_licitacoes", {}), ("precos", {}),
                 ("search", {"query": "transportes"}), ("fetch", {"id": "cliente:05128774"}),
-                ("consultar_preco_fenatran", {"modelo": "2653", "quantidade": 11})]
+                ("consultar_precos_fenatran", {"modelo": "2653", "quantidade": 11})]
     for texto in ADVERSARIAIS:
         chamadas += [("buscar_emplacamentos", {"proprietario_contem": texto}), ("cliente_360", {"cnpj_ou_nome": texto}),
                      ("buscar_crm", {"texto": texto}), ("buscar_licitacoes", {"texto": texto, "orgao": texto}),
                      ("precos", {"modelo_contem": texto}), ("search", {"query": texto}), ("fetch", {"id": texto}),
                      ("resumo_emplacamentos", {"agrupar_por": texto}),
-                     ("consultar_preco_fenatran", {"modelo": texto, "variante": texto, "origem": texto})]
+                     ("consultar_precos_fenatran", {"modelo": texto, "versao": texto, "quantidade": 5, "up": texto})]
     with mcp(bases.raiz, chaves) as m:
         vistas = set()
         for nome, args in chamadas:

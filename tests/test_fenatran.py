@@ -333,28 +333,41 @@ def rpc(c, nome, args, token=CODEX):
                                             "params": {"name": nome, "arguments": args}})
 
 
+def sc(m, args, token=CODEX):
+    return rpc(m, "consultar_precos_fenatran", args, token).json()["result"]["structuredContent"]
+
+
 def test_mcp_consulta_respeita_status_e_continua_somente_leitura(amb):
     importa(amb)
     marca_conferido(amb)
     with mcp_app(amb["tmp"], amb["priv"]) as m:
-        r = rpc(m, "consultar_preco_fenatran", {"modelo": "2653"}).json()["result"]["structuredContent"]
-        assert r["status_consulta"] == "campanha_inativa" and r["resultados"] == []          # rascunho
+        r = sc(m, {"modelo": "2653", "quantidade": 5})
+        assert r["status_consulta"] == "campanha_inativa" and r["resultados"] == []          # Teste E: rascunho
         status(amb, "active")
-        r = rpc(m, "consultar_preco_fenatran", {"modelo": "Actros 2653", "quantidade": 11}).json()["result"]["structuredContent"]
-        assert r["total_encontrado"] == 3 and r["resultados"][0]["faixa_aplicavel"]["faixa"] == "11–15 unidades"
-        r = rpc(m, "consultar_preco_fenatran", {"variante": "QVV26539881C"}).json()["result"]["structuredContent"]
+        r = sc(m, {"modelo": "Actros 2653", "quantidade": 11})
+        assert r["status_consulta"] == "ok" and r["faixa_aplicada"] == "11-15" and r["total_encontrado"] == 3
+        r = sc(m, {"modelo": "QVV26539881C", "quantidade": 5})
         p = r["resultados"][0]["precos"]
-        assert [p["fabrica"]["5_10"]["valor"], p["fabrica"]["11_15"]["valor"], p["estoque"]["5_10"]["valor"],
-                p["estoque"]["11_15"]["valor"]] == ["R$ 100.123,45", "R$ 99.123,45", "R$ 110.000,00", "R$ 109.000,00"]
+        assert p["fabrica"] == {"unitario": "100123.45", "unitario_brl": "R$ 100.123,45",
+                                "total_lote": "500617.25", "total_lote_brl": "R$ 500.617,25"}
+        assert p["estoque_ci102"]["unitario"] == "110000.00" and p["estoque_ci102"]["total_lote"] == "550000.00"
+        assert r["fonte"] == "FENATRAN" and r["status"] == "ativo" and r["versao_tabela"] == 1
+        assert r["resultados"][0]["fonte_documental"] and r["resultados"][0]["pagina"] == 1
         status(amb, "inactive")
-        r = rpc(m, "consultar_preco_fenatran", {"variante": "QVV26539881C"}).json()["result"]["structuredContent"]
-        assert r["status_consulta"] == "campanha_inativa" and "10012345" not in json.dumps(r)      # efeito imediato
-        assert rpc(m, "consultar_preco_fenatran", {"modelo": "2653"}, token=None).status_code == 401
-        assert rpc(m, "consultar_preco_fenatran", {"modelo": "2653"}, token="torre_" + "0" * 48).status_code == 401
+        r = sc(m, {"modelo": "QVV26539881C", "quantidade": 5})
+        assert r["status_consulta"] == "campanha_inativa" and "100123" not in json.dumps(r)      # efeito imediato
+        assert rpc(m, "consultar_precos_fenatran", {"modelo": "2653", "quantidade": 5}, token=None).status_code == 401
+        assert rpc(m, "consultar_precos_fenatran", {"modelo": "2653", "quantidade": 5},
+                   token="torre_" + "0" * 48).status_code == 401                               # Teste F
         tools = m.post("/mcp", headers={**ACCEPT, "Authorization": f"Bearer {CODEX}"},
                        json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"}).json()["result"]["tools"]
-        t = next(x for x in tools if x["name"] == "consultar_preco_fenatran")
+        t = next(x for x in tools if x["name"] == "consultar_precos_fenatran")
         assert t["annotations"]["readOnlyHint"] is True and t["annotations"]["destructiveHint"] is False
+        assert set(t["inputSchema"]["required"]) == {"modelo", "quantidade"}
+        assert t["inputSchema"]["properties"]["origem"]["enum"] == ["fabrica", "estoque_ci102", "todas"]
+        assert "Fenatran" in t["description"] and "ASSOBENS" in t["description"]             # Teste G: roteamento
+        pr = next(x for x in tools if x["name"] == "precos")
+        assert "Fenatran" not in pr["description"]
         nomes = {x["name"] for x in tools}
         assert "precos" in nomes and not any(n for n in nomes if any(v in n for v in ("importar", "ativar", "desativar",
                                                                                        "apagar", "editar", "gravar")))
@@ -362,10 +375,38 @@ def test_mcp_consulta_respeita_status_e_continua_somente_leitura(amb):
         assert s.query(ComercialLote).count() == 1
 
 
-def test_mcp_sem_snapshot_responde_indisponivel(amb):
+def test_mcp_faixas_versoes_e_quantidade(amb):
+    importa(amb)
+    marca_conferido(amb)
+    status(amb, "active")
+    with mcp_app(amb["tmp"], amb["priv"]) as m:
+        r = sc(m, {"modelo": "2653 LS e S", "quantidade": 5})                              # várias versões
+        assert {x["modelo"] for x in r["resultados"]} == {"2653LS/36", "2653 S/36"} or len(r["resultados"]) == 3
+        r = sc(m, {"modelo": "2653", "versao": "LS", "quantidade": 5})
+        assert [x["qvv"] for x in r["resultados"]] == ["QVV26539933T"]
+        r = sc(m, {"modelo": "QVV26539881C", "quantidade": 12})                             # Teste C
+        assert r["faixa_aplicada"] == "11-15"
+        assert r["resultados"][0]["precos"]["fabrica"]["unitario"] == "99123.45"
+        assert r["resultados"][0]["precos"]["fabrica"]["total_lote"] == "1189481.40"
+        for q in (4, 16, 0):                                                                # Teste D
+            r = sc(m, {"modelo": "2653", "quantidade": q})
+            assert r["status_consulta"] == "quantidade_fora_condicao_fenatran" and r["resultados"] == []
+        r = sc(m, {"modelo": "2653", "quantidade": 5, "origem": "estoque_ci102"})
+        assert all(set(x["precos"]) == {"estoque_ci102"} for x in r["resultados"])
+        r = sc(m, {"modelo": "9999", "quantidade": 5})
+        assert r["status_consulta"] == "sem_resultados" and r["status"] == "ativo"
+
+
+def test_mcp_sem_snapshot_ou_corrompido_e_falha_de_fonte(amb):                             # Teste I
     with mcp_app(amb["tmp"], amb["tmp"] / "vazio") as m:
-        r = rpc(m, "consultar_preco_fenatran", {"modelo": "2653"}).json()["result"]["structuredContent"]
-        assert r["status_consulta"] == "campanha_inativa" and r["status"] == "indisponivel"
+        r = sc(m, {"modelo": "2653", "quantidade": 5})
+        assert r["status_consulta"] == "fonte_indisponivel" and "não ausência do modelo" in r["mensagem"]
+    ruim = amb["tmp"] / "corrompido"
+    ruim.mkdir()
+    (ruim / "fenatran_2026.json").write_text("{quebrado", encoding="utf-8")
+    with mcp_app(amb["tmp"], ruim) as m:
+        r = sc(m, {"modelo": "2653", "quantidade": 5})
+        assert r["status_consulta"] == "fonte_indisponivel" and r["resultados"] == []
 
 
 # ---------------------------------------------------------------- tabela real (só com os arquivos privados)
@@ -395,3 +436,28 @@ def test_tabela_real_107_conferida_com_os_pdfs(amb):
         row = next(x for x in csv.DictReader(fh) if x["variante"] == "QVV26539881C")
     assert (p["fabrica"]["5_10"]["centavos"], p["fabrica"]["11_15"]["centavos"], p["estoque"]["5_10"]["centavos"],
             p["estoque"]["11_15"]["centavos"]) == tuple(int(row[c]) for c in F.PRECOS)
+
+
+@pytest.mark.skipif(not TEM_REAL, reason="dados_privados/fenatran ausente (fora do git)")
+def test_real_axor_2545_ls_e_s_para_5_unidades():                                       # Testes A e B
+    import csv
+    with open(REAL / "fenatran_precos_importacao.csv", encoding="utf-8-sig") as fh:
+        linhas = list(csv.DictReader(fh))
+    precos, erros = F.valida_linhas(linhas)
+    assert not erros
+    snap_ = {"campanha": {"status": "active", "versao": 1}, "precos": precos}
+    r = F.consultar_mcp(snap_, modelo="Axor 2545 LS e S", quantidade=5)
+    assert r["status_consulta"] == "ok" and r["faixa_aplicada"] == "5-10"
+    assert {x["modelo"] for x in r["resultados"]} == {"2545 LS/36", "2545 S/36"}
+    for x in r["resultados"]:                                    # esperado vem do CSV privado, nunca de constante no git
+        row = next(l for l in linhas if l["variante"] == x["qvv"])
+        fab, est = int(row["preco_fabrica_5_10_centavos"]), int(row["preco_estoque_5_10_centavos"])
+        assert x["precos"]["fabrica"]["unitario"] == f"{fab // 100}.{fab % 100:02d}"
+        assert x["precos"]["fabrica"]["total_lote"] == f"{fab * 5 // 100}.{fab * 5 % 100:02d}"
+        assert x["precos"]["estoque_ci102"]["unitario"] == f"{est // 100}.{est % 100:02d}"
+        assert x["fonte_documental"] == row["source_file"] and x["pagina"] == int(row["source_page"])
+    r12 = F.consultar_mcp(snap_, modelo="2545", quantidade=12)                              # Teste C, dados reais
+    for x in r12["resultados"]:
+        row = next(l for l in linhas if l["variante"] == x["qvv"])
+        c = int(row["preco_fabrica_11_15_centavos"])
+        assert x["precos"]["fabrica"]["unitario"] == f"{c // 100}.{c % 100:02d}"
