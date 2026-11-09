@@ -363,7 +363,7 @@ def test_mcp_consulta_respeita_status_e_continua_somente_leitura(amb):
                        json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"}).json()["result"]["tools"]
         t = next(x for x in tools if x["name"] == "consultar_precos_fenatran")
         assert t["annotations"]["readOnlyHint"] is True and t["annotations"]["destructiveHint"] is False
-        assert set(t["inputSchema"]["required"]) == {"modelo", "quantidade"}
+        assert set(t["inputSchema"]["required"]) == {"quantidade"}
         assert t["inputSchema"]["properties"]["modalidade"]["enum"] == ["fabrica", "estoque_ci102", "concessionario", "todas"]
         assert "Fenatran" in t["description"] and "ASSOBENS" in t["description"]             # Teste G: roteamento
         pr = next(x for x in tools if x["name"] == "precos")
@@ -468,7 +468,7 @@ def test_mcp_modalidades_icms_e_alternativas(amb):                              
     marca_conferido(amb)
     status(amb, "active")
     with mcp_app(amb["tmp"], amb["priv"]) as m:
-        r = sc(m, {"modelo": "Actros 2653 S", "quantidade": 15, "modalidade": "todas", "icms": 12, "uf": "go"})
+        r = sc(m, {"modelo": "Actros 2653 S", "quantidade": 15, "modalidade": "todas", "uf": "go"})
         assert r["status_consulta"] == "ok" and r["faixa_aplicada"] == "11-15"
         assert {x["qvv"] for x in r["resultados"]} == {"QVV26539881C", "QVV26539929C"}
         p = r["resultados"][0]["precos"]
@@ -476,7 +476,7 @@ def test_mcp_modalidades_icms_e_alternativas(amb):                              
         assert p["estoque_ci102"]["unitario"] == "109000.00" and p["estoque_ci102"]["total_lote"] == "1635000.00"
         assert p["concessionario"]["status"] == "indisponivel" and "unitario" not in p["concessionario"]
         t = r["condicoes_tributarias"]
-        assert t["icms_fabrica_pct"] == 7 and t["icms_estoque_ci102_pct"] == 12 and "aviso_icms" not in t
+        assert t["icms_fabrica_pct"] == 7 and t["icms_estoque_ci102_pct"] == 12
         assert t["uf_informada"] == "GO" and "aviso_uf" in t
         r = sc(m, {"modelo": "2653", "quantidade": 5, "modalidade": "fabrica", "icms": 18})
         assert all(set(x["precos"]) == {"fabrica"} for x in r["resultados"])
@@ -486,3 +486,28 @@ def test_mcp_modalidades_icms_e_alternativas(amb):                              
         assert "precos" not in json.dumps(r["alternativas_cadastradas"])
         r = rpc(m, "consultar_precos_fenatran", {"modelo": "2653", "quantidade": 5, "modalidade": "desconto"}).json()
         assert r["result"]["isError"] is True and "100123" not in json.dumps(r)          # enum barrado no esquema
+
+
+def test_mcp_icms_seleciona_condicao_familia_e_outras_marcas(amb):                     # Testes A, C, E
+    importa(amb)
+    marca_conferido(amb)
+    status(amb, "active")
+    with mcp_app(amb["tmp"], amb["priv"]) as m:
+        r = sc(m, {"modelo": "Actros 2653 S", "quantidade": 12, "icms": 12})
+        assert r["faixa_aplicada"] == "11-15" and "Estoque CI 102" in r["selecao_por_icms"]
+        assert {x["qvv"] for x in r["resultados"]} == {"QVV26539881C", "QVV26539929C"}     # todas, sem escolher
+        assert all(set(x["precos"]) == {"estoque_ci102"} for x in r["resultados"])
+        assert r["resultados"][0]["precos"]["estoque_ci102"]["total_lote"] == "1308000.00"
+        r = sc(m, {"modelo": "2653", "quantidade": 5, "icms": 7})
+        assert all(set(x["precos"]) == {"fabrica"} for x in r["resultados"])
+        r = sc(m, {"familia": "ACTROS", "configuracao": "6x4", "quantidade": 5})               # sem modelo
+        assert r["status_consulta"] == "ok" and r["total_encontrado"] == 3
+        r = sc(m, {"variante": "QVV26539933T", "quantidade": 5})
+        assert [x["qvv"] for x in r["resultados"]] == ["QVV26539933T"]
+        r = sc(m, {"modelo": "Scania R560", "quantidade": 5})
+        assert r["status_consulta"] == "sem_resultados" and r["resultados"] == []
+        assert "só contém Mercedes-Benz" in r["mensagem"]
+        r = sc(m, {"quantidade": 5})
+        assert r["status_consulta"] == "filtro_obrigatorio" and r["resultados"] == []       # sem extração em massa
+        r = sc(m, {"modelo": "2653", "quantidade": 20})
+        assert r["status_consulta"] == "quantidade_fora_condicao_fenatran" and r["resultados"] == []

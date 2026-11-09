@@ -156,11 +156,13 @@ def criar_mcp(bases: Bases, url_painel: str = "", privado: Bases | None = None) 
         return q.precos(bases, modelo_contem, marca, grupo_contem, desde, limite)
 
     @ferramenta
-    def consultar_precos_fenatran(modelo: str, quantidade: int, versao: str | None = None,
+    def consultar_precos_fenatran(quantidade: int, modelo: str | None = None, versao: str | None = None,
                                   modalidade: Literal["fabrica", "estoque_ci102", "concessionario", "todas"] = "todas",
                                   configuracao: str | None = None, ano_modelo: str | None = None,
                                   up: str | None = None, icms: float | None = None,
-                                  uf: str | None = None) -> dict[str, Any]:
+                                  uf: str | None = None,
+                                  familia: Literal["ACTROS", "AXOR", "ATEGO", "ACCELO"] | None = None,
+                                  variante: str | None = None) -> dict[str, Any]:
         """PREÇO FENATRAN — use SEMPRE que a pergunta citar Fenatran, condição Fenatran ou preço Fenatran, ou pedir
         preço/valor de Accelo, Atego, Actros ou Axor para N unidades. Fonte: tabela comercial interna e temporária
         do Grupo Tecar (circulares Fenatran), NÃO o histórico ASSOBENS (para mercado/histórico use precos; nunca
@@ -170,7 +172,10 @@ def criar_mcp(bases: Bases, url_painel: str = "", privado: Bases | None = None) 
         faixa 5–10 ou 11–15 (fora delas status_consulta = quantidade_fora_condicao_fenatran: não invente preço).
         modalidade: fabrica, estoque_ci102 (preço estoque), concessionario ou todas (padrão). A tabela só tem
         fábrica e estoque CI 102: concessionario volta status indisponivel com justificativa (nunca estime).
-        icms e uf: opcionais, só conferência; os preços são nominais e nunca recalculados. Devolve TODAS as variantes compatíveis, com unitário e
+        icms: 7 seleciona a condição Fábrica e 12 a Estoque CI 102 (classificação informada pelo solicitante,
+        pendente de validação fiscal); os preços são nominais e nunca recalculados. uf: só informativo.
+        familia (ACTROS, AXOR, ATEGO, ACCELO), variante (QVV exato), configuracao ('6x2'), ano_modelo e up são
+        filtros opcionais; para comparar uma família inteira basta familia + configuracao, sem modelo. Devolve TODAS as variantes compatíveis, com unitário e
         total_lote exatos por origem, QVV, UP, configuração, fonte_documental e página.
         status_consulta: ok | sem_resultados (tabela ativa, modelo não existe nela) | campanha_inativa (diga que a
         tabela não está ativa) | fonte_indisponivel (erro de integração: não diga que o modelo não existe) |
@@ -186,7 +191,7 @@ def criar_mcp(bases: Bases, url_painel: str = "", privado: Bases | None = None) 
                 erro = type(e).__name__
         else:
             erro = "base_privada_nao_configurada"
-        return fenatran.consultar_mcp(snap, modelo=modelo, quantidade=quantidade, versao=versao, origem=modalidade, icms=icms, uf=uf,
+        return fenatran.consultar_mcp(snap, modelo=modelo, quantidade=quantidade, versao=versao, origem=modalidade, icms=icms, uf=uf, familia=familia, variante=variante,
                                       configuracao=configuracao, ano_modelo=ano_modelo, up=up, fonte_erro=erro)
 
     @ferramenta

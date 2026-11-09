@@ -480,10 +480,11 @@ def _partes_modelo(modelo: str, versao: str | None) -> list[str]:
     return [p if re.search(r"\d", p) or not prefixo else f"{prefixo} {p}" for p in pedacos]
 
 
-def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: str | None = None,
+def consultar_mcp(snap: dict | None, *, modelo: str | None, quantidade: int, versao: str | None = None,
                   origem: str | None = "todas", configuracao: str | None = None, ano_modelo: str | None = None,
                   up: str | None = None, agora: datetime | None = None, fonte_erro: str | None = None,
-                  icms: float | None = None, uf: str | None = None) -> dict:
+                  icms: float | None = None, uf: str | None = None, familia: str | None = None,
+                  variante: str | None = None) -> dict:
     """Resposta padronizada para o ChatGPT/Codex: faixa escolhida pela quantidade, unitário e total do lote em
     decimal exato por origem, fonte documental e restrições. fonte_erro: falha ao ler o snapshot (não é 'sem modelo')."""
     agora = agora or agora_sp()
@@ -500,14 +501,25 @@ def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: st
         return {**base, "status_consulta": "filtro_invalido", "resultados": [],
                 "mensagem": "modalidade deve ser fabrica, estoque_ci102, concessionario ou todas"}
     pedida = {"estoque": "estoque_ci102"}.get(pedida, pedida)
+    selecao_por_icms = None
+    if icms is not None and pedida == "todas":         # ICMS identifica a condição cadastrada; nunca recalcula preço
+        al = {**METADADOS_PADRAO["aliquotas"], **((((snap.get("campanha") or {}).get("metadados") or {})
+                                                   .get("aliquotas")) or {})}
+        if icms == al.get("icms_fabrica_pct"):
+            pedida, o, selecao_por_icms = "fabrica", "fabrica", f"ICMS {icms:g}% → condição Fábrica"
+        elif icms == al.get("icms_estoque_pct"):
+            pedida, o, selecao_por_icms = "estoque_ci102", "estoque", f"ICMS {icms:g}% → condição Estoque CI 102"
     mods = MODALIDADES if pedida == "todas" else (pedida,)
-    if not (modelo or "").strip():
-        return {**base, "status_consulta": "filtro_obrigatorio", "resultados": [], "mensagem": "Informe o modelo."}
+    if not any((x or "").strip() for x in (modelo, familia, variante, configuracao)):
+        return {**base, "status_consulta": "filtro_obrigatorio", "resultados": [],
+                "mensagem": "Informe modelo, família, variante (QVV) ou configuração."}
 
     vistos, itens, ultimo = set(), [], None
-    for parte in _partes_modelo(modelo, versao):
+    partes = _partes_modelo(modelo, versao) if (modelo or "").strip() else [None]
+    for parte in partes:
         r = consultar(snap, modelo=parte, quantidade=quantidade, origem=o, configuracao=configuracao,
-                      ano_modelo=ano_modelo, up=up, calcular_total=True, limite=LIMITE_MAX, agora=agora)
+                      ano_modelo=ano_modelo, up=up, familia=familia, variante=variante, calcular_total=True,
+                      limite=LIMITE_MAX, agora=agora)
         ultimo = r
         if r["status_consulta"] not in ("ok",):
             if r["status_consulta"] in ("campanha_inativa", "quantidade_fora_condicao_fenatran", "filtro_invalido"):
@@ -518,6 +530,8 @@ def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: st
                 vistos.add(it["variante"])
                 itens.append((it, r))
     r0 = ultimo or {}
+    if selecao_por_icms:
+        base["selecao_por_icms"] = selecao_por_icms
     out = {**base, "status": {"active": "ativo"}.get(r0.get("status"), r0.get("status")),
            "versao_tabela": r0.get("versao"), "aviso_uso_interno": r0.get("aviso_uso_interno")}
     st = r0.get("status_consulta")
@@ -534,7 +548,8 @@ def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: st
         alt = [f"{f} {m}" for f, m in todos if num and numero_base(norm(m))[:2] == num.group(0)[:2]][:12]
         return {**out, "status_consulta": "sem_resultados", "faixa_aplicada": faixa.replace("_", "-"),
                 "resultados": [], "alternativas_cadastradas": alt,
-                "mensagem": f"Nenhuma variante Fenatran para '{modelo}'. A tabela está ativa. As alternativas "
+                "mensagem": f"Nenhuma variante Fenatran para '{modelo or familia or variante or configuracao}'. A tabela "
+                            "está ativa e só contém Mercedes-Benz Accelo, Atego, Actros e Axor. As alternativas "
                             "listadas são só modelos cadastrados com numeração próxima: não são equivalentes "
                             "comerciais e não têm preço presumido."}
     resultados, familias = [], []
