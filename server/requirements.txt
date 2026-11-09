@@ -6,3 +6,4 @@ alembic>=1.13,<2
 argon2-cffi>=23.1
 python-multipart>=0.0.9
 pyjwt[crypto]>=2.8,<3
+pymupdf>=1.24,<2          # conferência da importação Fenatran contra as circulares em PDF

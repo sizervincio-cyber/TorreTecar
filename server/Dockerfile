@@ -9,7 +9,10 @@ COPY server/requirements.txt server/requirements.txt
 RUN pip install -r server/requirements.txt \
  && useradd --system --uid 10001 --home /app torre
 
+COPY precos_comerciais/ precos_comerciais/
 COPY server/ server/
+# Pasta do snapshot Fenatran: o volume nomeado herda dono e permissão daqui na primeira montagem.
+RUN mkdir -p /srv/privado && chown torre /srv/privado && chmod 755 /srv/privado
 USER torre
 
 EXPOSE 8000

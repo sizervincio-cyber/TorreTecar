@@ -11,7 +11,7 @@ from pathlib import Path
 
 # Páginas e recursos estáticos (qualquer usuário logado).
 _PAGINAS = [
-    r"Analitycmbb\.html", r"gestao-tecar\.html", r"tco-simulador\.html", r"trucktest\.html", r"simule\.html",
+    r"Analitycmbb\.html", r"gestao-tecar\.html", r"fenatran\.html", r"tco-simulador\.html", r"trucktest\.html", r"simule\.html",
     r"trucktest-[\w-]+\.(js|json|xlsx)", r"LOGO\.png", r"ASSETS/[\w./ -]+\.(png|jpe?g|webp|svg)",
     r"Analityc share/capa\.(jpg|png|webp)",
 ]

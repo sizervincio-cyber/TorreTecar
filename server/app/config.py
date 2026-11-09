@@ -46,6 +46,8 @@ class Settings:
     oauth_access_min: int = 30
     oauth_refresh_dias: int = 30
     oauth_registros_por_hora_ip: int = 10
+    # Pasta privada (volume Docker fora do git): snapshot da campanha Fenatran que o MCP lê em modo somente leitura.
+    privado_dir: Path = REPO_ROOT / "dados_privados" / "runtime"
 
     @property
     def oauth_ligado(self) -> bool:
@@ -68,4 +70,5 @@ def load_settings() -> Settings:
         oauth_logins_piloto=_lista(e.get("TORRE_OAUTH_LOGINS_PILOTO", "")),
         oauth_access_min=int(e.get("TORRE_OAUTH_ACCESS_MIN", "30")),
         oauth_refresh_dias=int(e.get("TORRE_OAUTH_REFRESH_DIAS", "30")),
+        privado_dir=Path(e.get("TORRE_PRIVADO_DIR", str(REPO_ROOT / "dados_privados" / "runtime"))),
     )

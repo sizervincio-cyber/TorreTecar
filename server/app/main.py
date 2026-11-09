@@ -14,7 +14,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
 from sqlalchemy import select, text
 
-from . import oauth, site
+from . import fenatran, oauth, site
 from .auth import Limitador, autentica, cria_sessao, encerra_sessao, usuario_da_sessao
 from .config import PERFIL_FRONT, Settings, load_settings
 from .db import make_engine, make_sessionmaker
@@ -156,6 +156,9 @@ def create_app(settings: Settings | None = None, engine=None) -> FastAPI:
 
     # ---------- OAuth 2.1 do MCP somente leitura (antes da rota genérica de arquivos) ----------
     oauth.registrar(app, cfg, db, usuario, para_login, host_publico, ip)
+
+    # ---------- Preço Fenatran (condições comerciais temporárias; antes da rota genérica de arquivos) ----------
+    fenatran.registrar(app, cfg, db, usuario)
 
     # ---------- páginas e dados ----------
     def entrega(path, rel: str, marcador: dict) -> Response:

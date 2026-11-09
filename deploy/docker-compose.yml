@@ -50,8 +50,11 @@ services:
       TORRE_OAUTH_PRIVATE_KEY: "${TORRE_OAUTH_PRIVATE_KEY:-}"     # só a API assina tokens
       TORRE_OAUTH_LOGINS_PILOTO: "${TORRE_OAUTH_LOGINS_PILOTO:-}" # piloto: só estes logins; vazio = liberado
       TORRE_OAUTH_REDIRECT_URIS: "${TORRE_OAUTH_REDIRECT_URIS:-https://chatgpt.com/connector_platform_oauth_redirect,https://chatgpt.com/connector/oauth/}"
+      TORRE_PRIVADO_DIR: /srv/privado   # snapshot do Preço Fenatran (a API grava; o MCP só lê)
     volumes:
       - ..:/srv/site:ro                 # páginas e dados do checkout (lista fechada em server/app/site.py)
+      - torre_privado:/srv/privado      # dados comerciais privados: fora do git, fora do checkout
+      - ${TORRE_IMPORTACAO_DIR:-/opt/torre/privado}:/srv/importacao:ro   # CSV, manifesto e PDFs para importar
     mem_limit: 256m
     cpus: 0.5
     logging: *logs
@@ -82,7 +85,7 @@ services:
     networks: [saida]
 
   # MCP somente leitura para o Codex e o ChatGPT (perfil "mcp": sobe depois de ./mcp-token.sh ou ./oauth-chatgpt.sh).
-  # Sem banco, sem credencial de escrita: lê as bases do volume :ro e só verifica tokens (chave pública).
+  # Sem banco, sem credencial de escrita: lê as bases e o snapshot Fenatran em volumes :ro e só verifica tokens.
   mcp:
     profiles: ["mcp"]
     build:
@@ -98,8 +101,10 @@ services:
       TORRE_OAUTH_ISSUER: "${TORRE_OAUTH_ISSUER:-}"
       TORRE_OAUTH_PUBLIC_KEY: "${TORRE_OAUTH_PUBLIC_KEY:-}"       # só verifica; não emite token
       TORRE_MCP_PAINEL_URL: "${TORRE_OAUTH_ISSUER:-}"             # link de citação nos resultados de search
+      TORRE_MCP_PRIVADO_DIR: /srv/privado                        # snapshot Fenatran (só leitura)
     volumes:
       - ..:/srv/site:ro                 # mesmas bases que a Torre exibe; nada é gravado
+      - torre_privado:/srv/privado:ro   # Preço Fenatran: só o snapshot que a API publica; nunca escreve
     read_only: true
     tmpfs:
       - /tmp:size=16m
@@ -114,6 +119,7 @@ services:
 
 volumes:
   torre_pg:
+  torre_privado:                        # snapshot do Preço Fenatran (sem preços quando a campanha não está ativa)
 
 networks:
   interno:

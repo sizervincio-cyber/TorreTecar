@@ -9,6 +9,7 @@ COPY mcp_torre/requirements.txt mcp_torre/requirements.txt
 RUN pip install -r mcp_torre/requirements.txt \
  && useradd --system --uid 10002 --home /app torre-mcp
 
+COPY precos_comerciais/ precos_comerciais/
 COPY mcp_torre/ mcp_torre/
 USER torre-mcp
 

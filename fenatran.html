@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Preço Fenatran · Torre Tecar</title>
+<style>
+:root{--ink:#0d0f12;--ink2:#3c4450;--ink3:#79828f;--line:#dfe3e8;--soft:#f2f4f6;--mb:#111318;--good:#1e7b4f;--bad:#b3261e;--warn:#b7791f;--acc:#00A19B;--hi:#fff6e5}
+*{box-sizing:border-box}body{margin:0;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:var(--ink);background:#f6f7f9;font-variant-numeric:tabular-nums}
+header{background:#fff;border-bottom:2px solid var(--mb);padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+header .t{flex:1;min-width:260px}h1{font-size:20px;margin:2px 0}.eye{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid var(--line);margin-right:4px}
+.badge.tmp{background:var(--mb);color:#fff;border-color:var(--mb)}.badge.st-active{border-color:var(--good);color:var(--good)}.badge.st-draft{border-color:var(--warn);color:var(--warn)}.badge.st-off{border-color:var(--bad);color:var(--bad)}
+a.voltar{font-size:13px;color:var(--ink2)}
+main{padding:14px 20px;max-width:1400px;margin:0 auto}
+.aviso{background:#fff;border-left:3px solid var(--warn);padding:8px 12px;font-size:12.5px;color:var(--ink2);border-radius:0 6px 6px 0;margin-bottom:10px}
+.filtros{display:grid;grid-template-columns:2fr repeat(6,1fr);gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:10px}
+.filtros label{font-size:11px;font-weight:700;color:var(--ink3);display:flex;flex-direction:column;gap:3px}
+input,select{font:inherit;font-size:14px;padding:7px 8px;border:1px solid var(--line);border-radius:6px;background:#fff}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--mb);outline-offset:1px}
+.estado{background:#fff;border:1px dashed var(--line);border-radius:8px;padding:22px;text-align:center;color:var(--ink2)}
+.estado b{display:block;font-size:15px;color:var(--ink);margin-bottom:4px}
+.resumo{font-size:13px;color:var(--ink2);margin:6px 2px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:8px;font-size:13px}
+th{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);text-align:right;padding:7px 8px;border-bottom:1.5px solid var(--mb);white-space:nowrap}
+td{padding:6px 8px;border-bottom:1px solid var(--soft);text-align:right;white-space:nowrap}th.l,td.l{text-align:left}
+td.aplic,th.aplic{background:var(--hi);font-weight:800}th.aplic::after{content:" ◆"}
+.var{font-family:Consolas,monospace;font-size:12px}
+.cards{display:none}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:8px}
+.card .h{font-weight:800}.card .s{font-size:12px;color:var(--ink3)}
+.card dl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;margin:8px 0 0;font-size:13px}.card dt{color:var(--ink2)}.card dd{margin:0;text-align:right;font-weight:700}
+.card .aplic{background:var(--hi)}
+.cond{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12.5px;color:var(--ink2)}
+.cond h2,.adm h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin:0 0 6px}
+.adm{background:#fff;border:2px solid var(--mb);border-radius:8px;padding:12px;margin-top:16px;font-size:13px}
+.adm button{font:inherit;font-size:13px;padding:6px 12px;border-radius:6px;border:1px solid var(--mb);background:#fff;cursor:pointer;margin:2px}
+.adm button.p{background:var(--mb);color:#fff}
+.adm table{font-size:12px}.mono{font-family:Consolas,monospace;font-size:11px;word-break:break-all;white-space:normal}
+@media (max-width:820px){.filtros{grid-template-columns:1fr 1fr}.filtros label:first-child{grid-column:1/-1}table.res{display:none}.cards{display:block}}
+</style></head><body>
+<header>
+ <div class="t"><div class="eye">Torre Tecar · Comercial</div><h1>Condições Comerciais Fenatran</h1>
+  <div id="cab"><span class="badge tmp">Temporário · Fenatran</span></div></div>
+ <a class="voltar" href="/Analitycmbb.html">◂ Voltar à Torre</a>
+</header>
+<main>
+ <div class="aviso" id="aviso">Uso interno e exclusivo do Grupo Tecar. Preços unitários por veículo, por faixa de quantidade. Alíquotas (7% fábrica, 12% estoque CI 102) informadas pelo solicitante, pendentes de validação fiscal.</div>
+ <form class="filtros" id="f" onsubmit="return false" aria-label="Filtros">
+  <label>Busca (modelo, número ou QVV)<input id="q" placeholder="ex.: 2653, 2548 S/36, QVV26539881C" autocomplete="off"></label>
+  <label>Família<select id="familia"><option value="">Todas</option></select></label>
+  <label>Ano/Mod.<select id="ano_modelo"><option value="">Todos</option></select></label>
+  <label>UP<select id="up"><option value="">Todas</option></select></label>
+  <label>Config.<select id="configuracao"><option value="">Todas</option></select></label>
+  <label>Origem<select id="origem"><option value="ambos">Fábrica e estoque</option><option value="fabrica">Fábrica</option><option value="estoque">Estoque CI 102</option></select></label>
+  <label>Quantidade<input id="quantidade" type="number" min="1" max="99" placeholder="un."></label>
+ </form>
+ <div id="saida" aria-live="polite"></div>
+ <div id="cond"></div>
+ <section class="adm" id="adm" hidden></section>
+</main>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ST={active:['Ativa','st-active'],draft:['Rascunho','st-draft'],inactive:['Inativa','st-off'],archived:['Arquivada','st-off'],expirada:['Expirada','st-off'],indisponivel:['Não importada','st-off']};
+let admin=false;
+async function api(url,opt){const r=await fetch(url,{cache:'no-store',credentials:'same-origin',...(opt||{})});
+ if(r.status===401){location.href='/login?next=/fenatran.html';throw new Error('login')}
+ let j={};try{j=await r.json()}catch(e){}return {status:r.status,j}}
+function estado(t,m){$('#saida').innerHTML=`<div class="estado"><b>${esc(t)}</b>${esc(m||'')}</div>`;$('#cond').innerHTML=''}
+async function opcoes(){
+ if(!window.TORRE_SERVER){estado('Disponível só na Torre do servidor','Abra pelo endereço da Torre com login.');return false}
+ const {status,j}=await api('/api/fenatran/opcoes');
+ if(status===403){estado('Sem permissão','Seu perfil não tem acesso à tabela Fenatran.');return false}
+ admin=!!j.pode_administrar;
+ const st=ST[j.status]||[j.status,'st-off'];
+ $('#cab').innerHTML=`<span class="badge tmp">Temporário · Fenatran</span><span class="badge ${st[1]}">Status: ${esc(st[0])}</span>`+
+  (j.versao?`<span class="badge">Versão ${esc(j.versao)}</span>`:'')+(j.fonte?`<div class="eye" style="margin-top:6px;text-transform:none;letter-spacing:0">${esc(j.fonte)}</div>`:'');
+ for(const[k,lst]of[['familia',j.familias],['ano_modelo',j.anos_modelo],['up',j.ups],['configuracao',j.configuracoes]]){
+  const s=$('#'+k);s.length=1;(lst||[]).forEach(v=>s.add(new Option(v,v)))}
+ if(admin)carregaAdmin();
+ return true}
+let tmr;function agenda(){clearTimeout(tmr);tmr=setTimeout(busca,250)}
+async function busca(){
+ const p=new URLSearchParams();const q=$('#q').value.trim();
+ if(q)p.set('modelo',q);for(const k of['familia','ano_modelo','up','configuracao','origem','quantidade']){const v=$('#'+k).value;if(v)p.set(k,v)}
+ if(!q&&!['familia','ano_modelo','up','configuracao','quantidade'].some(k=>$('#'+k).value))p.set('listar_todos','1');
+ p.set('limite','200');
+ const {status,j}=await api('/api/fenatran/consulta?'+p);
+ if(status===403){estado('Sem permissão','Seu perfil não tem acesso à tabela Fenatran.');return}
+ const sc=j.status_consulta;
+ if(sc==='campanha_inativa'){const st=ST[j.status]||[j.status];estado('Tabela Fenatran indisponível',`Status da campanha: ${st[0]}. Procure o gestor comercial.`);return}
+ if(sc==='filtro_obrigatorio'||sc==='filtro_invalido'){estado('Filtro incompleto',j.mensagem);return}
+ if(sc==='sem_resultados'){estado('Nenhuma variante encontrada','Confira o modelo, a família ou o código QVV.');return}
+ render(j)}
+function render(j){
+ const fora=j.status_consulta==='quantidade_fora_condicao_fenatran';
+ const origens=j.filtros_aplicados.origem==='ambos'?['fabrica','estoque']:[j.filtros_aplicados.origem];
+ const rot={fabrica:'Fábrica',estoque:'Estoque CI 102'};
+ const faixa=j.resultados[0]&&j.resultados[0].faixa_aplicavel?(j.filtros_aplicados.quantidade<=10?'5_10':'11_15'):null;
+ const cols=[];origens.forEach(o=>['5_10','11_15'].forEach(f=>cols.push([o,f])));
+ let h=`<div class="resumo">${j.total_encontrado} variante(s) · critério: ${esc(j.criterio||'-')}${j.previa_rascunho?' · <b>PRÉVIA DE RASCUNHO (não publicada)</b>':''}${faixa?` · faixa aplicável: ${faixa.replace('_','–')} unidades (◆)`:''}</div>`;
+ if(fora)h+=`<div class="aviso" role="alert" style="border-color:var(--bad)">${esc(j.mensagem)}</div>`;
+ if(j.duplicidades_de_preco&&j.duplicidades_de_preco.length)h+=`<div class="resumo">Mesmos preços em variantes distintas: ${j.duplicidades_de_preco.map(d=>esc(d.variantes.join(' = '))).join(' · ')}</div>`;
+ h+=`<table class="res"><thead><tr><th class="l">Modelo</th><th class="l">Família</th><th class="l">Ano/Mod.</th><th class="l">UP</th><th class="l">Variante</th><th class="l">Config.</th>`+
+  (fora?'':cols.map(([o,f])=>`<th class="${f===faixa?'aplic':''}">${rot[o]} ${f.replace('_','–')}</th>`).join(''))+`<th class="l">Fonte</th></tr></thead><tbody>`;
+ let c='';
+ for(const r of j.resultados){
+  const pr=r.precos||{};
+  h+=`<tr><td class="l"><b>${esc(r.modelo)}</b></td><td class="l">${esc(r.familia)}</td><td class="l">${esc(r.ano_modelo)}</td><td class="l">${esc(r.up)}</td><td class="l var">${esc(r.variante)}</td><td class="l">${esc(r.configuracao)}</td>`+
+   (fora?'':cols.map(([o,f])=>`<td class="${f===faixa?'aplic':''}">${esc(pr[o]?.[f]?.valor)}</td>`).join(''))+`<td class="l" style="font-size:11px">${esc(r.source_file)} p.${esc(r.source_page)}</td></tr>`;
+  c+=`<div class="card"><div class="h">${esc(r.familia)} ${esc(r.modelo)} · ${esc(r.ano_modelo)}</div><div class="s">${esc(r.up)} · <span class="var">${esc(r.variante)}</span> · ${esc(r.configuracao)}</div>`+
+   (fora?'':`<dl>${cols.map(([o,f])=>`<dt class="${f===faixa?'aplic':''}">${rot[o]} ${f.replace('_','–')} un${f===faixa?' ◆':''}</dt><dd class="${f===faixa?'aplic':''}">${esc(pr[o]?.[f]?.valor)}</dd>`).join('')}</dl>`)+`</div>`}
+ h+=`</tbody></table><div class="cards">${c}</div>`;
+ $('#saida').innerHTML=h;
+ const cd=j.condicoes_comerciais||{};let k='<div class="cond"><h2>Condições e restrições</h2><ul>';
+ for(const[f,v]of Object.entries(cd.por_familia||{}))k+=`<li><b>${esc(f)}:</b> ${esc(v.texto)}${v.alerta?` <b style="color:var(--bad)">${esc(v.alerta)}</b>`:''}</li>`;
+ (cd.gerais||[]).concat(j.restricoes||[]).forEach(x=>k+=`<li>${esc(x)}</li>`);
+ $('#cond').innerHTML=k+'</ul></div>'}
+async function carregaAdmin(){
+ const {status,j}=await api('/api/admin/fenatran');if(status!==200)return;
+ const a=$('#adm');a.hidden=false;const c=j.campanha;
+ if(!c){a.innerHTML='<h2>Administração</h2>Campanha ainda não importada (importe pela linha de comando do servidor).';return}
+ const nomes={active:'Ativar (publicar)',inactive:'Desativar',archived:'Arquivar',draft:'Voltar a rascunho'};
+ let h=`<h2>Administração · somente administradores</h2><p>Status atual: <b>${esc((ST[c.status]||[c.status])[0])}</b> · versão ${esc(c.versao)} · responsável ${esc(c.responsavel)} · atualizado ${esc(c.atualizado_em)}</p>
+ <p>${c.transicoes.map(t=>`<button class="${t==='active'?'p':''}" data-st="${t}">${esc(nomes[t]||t)}</button>`).join('')}</p>
+ <p><label>Expiração opcional (horário de Brasília): <input type="datetime-local" id="exp" value="${esc((c.expira_em||'').slice(0,16))}"></label> <button id="salvaExp">Salvar</button> <button id="limpaExp">Sem expiração</button></p>
+ <h2>Importações</h2><table><thead><tr><th class="l">Versão</th><th class="l">Arquivo</th><th>Linhas</th><th class="l">Por família</th><th class="l">SHA-256 CSV</th><th class="l">PDFs</th><th class="l">Conferência</th><th class="l">Diff</th><th class="l">Por / em</th></tr></thead><tbody>`;
+ for(const l of j.lotes){h+=`<tr><td class="l">${esc(l.versao)}${l.atual?' (atual)':''}</td><td class="l">${esc(l.arquivo_csv)}</td><td>${esc(l.linhas)}</td><td class="l">${esc(Object.entries(l.por_familia).map(([k,v])=>k+' '+v).join(', '))}</td><td class="l mono">${esc(l.sha256_csv)}</td>
+  <td class="l mono">${Object.entries(l.documentos).map(([k,v])=>esc(k)+': '+esc(v.sha256||'-')+(v.sha256_confere?' ✔ confere':'')).join('<br>')}</td>
+  <td class="l">${l.conferencia.conferido?'✔ conferido com os PDFs':'✖ '+esc((l.conferencia.divergencias||[]).length)+' divergência(s)'}</td>
+  <td class="l">+${l.diff.novas.length} / −${l.diff.removidas.length} / Δ${l.diff.alteradas.length}</td><td class="l">${esc(l.executado_por)}<br>${esc(l.executado_em)}</td></tr>`}
+ h+=`</tbody></table><h2 style="margin-top:12px">Trilha</h2><table><tbody>${j.eventos.map(e=>`<tr><td class="l">${esc(e.em)}</td><td class="l">${esc(e.acao)}</td><td class="l">${esc(e.de)} → ${esc(e.para)}</td><td class="l">${esc(e.usuario)}</td><td class="l">${esc(e.detalhe)}</td></tr>`).join('')}</tbody></table>`;
+ a.innerHTML=h;
+ a.querySelectorAll('button[data-st]').forEach(b=>b.onclick=async()=>{const m=prompt(`Confirmar: ${b.textContent}. Motivo (fica na trilha):`);if(m===null)return;
+  const r=await api('/api/admin/fenatran/status',{method:'POST',headers:{'Content-Type':'application/json','X-Torre-Acao':'1'},body:JSON.stringify({status:b.dataset.st,motivo:m})});
+  if(r.status!==200)alert(r.j.erro||'Falha');await opcoes();busca()});
+ const exp=async v=>{const r=await api('/api/admin/fenatran/expiracao',{method:'POST',headers:{'Content-Type':'application/json','X-Torre-Acao':'1'},body:JSON.stringify({expira_em:v})});if(r.status!==200)alert(r.j.erro||'Falha');await opcoes();busca()};
+ $('#salvaExp').onclick=()=>exp($('#exp').value||null);$('#limpaExp').onclick=()=>exp(null)}
+$('#q').addEventListener('input',agenda);document.querySelectorAll('#f select,#quantidade').forEach(e=>e.addEventListener('change',busca));
+opcoes().then(ok=>{if(ok)busca()});
+</script>
+</body></html>
