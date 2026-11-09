@@ -156,7 +156,7 @@ def criar_mcp(bases: Bases, url_painel: str = "", privado: Bases | None = None) 
         return q.precos(bases, modelo_contem, marca, grupo_contem, desde, limite)
 
     @ferramenta
-    def consultar_precos_fenatran(quantidade: int, modelo: str | None = None, versao: str | None = None,
+    def consultar_precos_fenatran(quantidade: int | None = None, modelo: str | None = None, versao: str | None = None,
                                   modalidade: Literal["fabrica", "estoque_ci102", "concessionario", "todas"] = "todas",
                                   configuracao: str | None = None, ano_modelo: str | None = None,
                                   up: str | None = None, icms: float | None = None,
@@ -168,14 +168,15 @@ def criar_mcp(bases: Bases, url_painel: str = "", privado: Bases | None = None) 
         do Grupo Tecar (circulares Fenatran), NÃO o histórico ASSOBENS (para mercado/histórico use precos; nunca
         misture as duas fontes nem complete uma com a outra).
         modelo: número ou nome ('2545', 'Axor 2545 LS e S', '2653 LS/36') ou código QVV; várias versões separadas
-        por 'e', 'ou' ou vírgula. versao: sufixo opcional ('LS', 'S/36'). quantidade: unidades do pedido; escolhe a
+        por 'e', 'ou' ou vírgula. versao: sufixo opcional ('LS', 'S/36'). quantidade (opcional): unidades do pedido; sem ela, devolve o unitário das duas faixas
+        (5-10 e 11-15) — mostre os dois valores, nunca esconda o preço. Com ela, escolhe a
         faixa 5–10 ou 11–15 (fora delas status_consulta = quantidade_fora_condicao_fenatran: não invente preço).
         modalidade: fabrica, estoque_ci102 (preço estoque), concessionario ou todas (padrão). A tabela só tem
         fábrica e estoque CI 102: concessionario volta status indisponivel com justificativa (nunca estime).
         icms: 7 seleciona a condição Fábrica e 12 a Estoque CI 102 (classificação informada pelo solicitante,
         pendente de validação fiscal); os preços são nominais e nunca recalculados. uf: só informativo.
         familia (ACTROS, AXOR, ATEGO, ACCELO), variante (QVV exato), configuracao ('6x2'), ano_modelo e up são
-        filtros opcionais; para comparar uma família inteira basta familia + configuracao, sem modelo. Devolve TODAS as variantes compatíveis, com unitário e
+        filtros opcionais (ano_modelo '2027' = modelo 2027: 26/27 e 27/27); para comparar uma família inteira basta familia + configuracao, sem modelo. Devolve TODAS as variantes compatíveis, com unitário e
         total_lote exatos por origem, QVV, UP, configuração, fonte_documental e página.
         status_consulta: ok | sem_resultados (tabela ativa, modelo não existe nela) | campanha_inativa (diga que a
         tabela não está ativa) | fonte_indisponivel (erro de integração: não diga que o modelo não existe) |

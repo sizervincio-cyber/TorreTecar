@@ -363,7 +363,7 @@ def test_mcp_consulta_respeita_status_e_continua_somente_leitura(amb):
                        json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"}).json()["result"]["tools"]
         t = next(x for x in tools if x["name"] == "consultar_precos_fenatran")
         assert t["annotations"]["readOnlyHint"] is True and t["annotations"]["destructiveHint"] is False
-        assert set(t["inputSchema"]["required"]) == {"quantidade"}
+        assert not t["inputSchema"].get("required")
         assert t["inputSchema"]["properties"]["modalidade"]["enum"] == ["fabrica", "estoque_ci102", "concessionario", "todas"]
         assert "Fenatran" in t["description"] and "ASSOBENS" in t["description"]             # Teste G: roteamento
         pr = next(x for x in tools if x["name"] == "precos")
@@ -511,3 +511,19 @@ def test_mcp_icms_seleciona_condicao_familia_e_outras_marcas(amb):              
         assert r["status_consulta"] == "filtro_obrigatorio" and r["resultados"] == []       # sem extração em massa
         r = sc(m, {"modelo": "2653", "quantidade": 20})
         assert r["status_consulta"] == "quantidade_fora_condicao_fenatran" and r["resultados"] == []
+
+
+def test_mcp_sem_quantidade_mostra_as_duas_faixas_e_ano_2027(amb):
+    importa(amb)
+    marca_conferido(amb)
+    status(amb, "active")
+    with mcp_app(amb["tmp"], amb["priv"]) as m:
+        r = sc(m, {"modelo": "QVV26539881C", "modalidade": "fabrica"})            # pergunta sem quantidade
+        assert r["status_consulta"] == "ok" and r["faixa_aplicada"] is None and "observacao_quantidade" in r
+        f = r["resultados"][0]["precos"]["fabrica"]
+        assert f["5-10"]["unitario"] == "100123.45" and f["11-15"]["unitario"] == "99123.45"
+        assert "total_lote" not in json.dumps(f)
+        r = sc(m, {"modelo": "2653", "ano_modelo": "2027", "quantidade": 5})       # 2027 = ano do modelo
+        assert r["status_consulta"] == "ok" and all(x["ano_modelo"].endswith("/27") for x in r["resultados"])
+        r = sc(m, {"modelo": "2653", "ano_modelo": "2026", "quantidade": 5})
+        assert r["status_consulta"] == "sem_resultados"

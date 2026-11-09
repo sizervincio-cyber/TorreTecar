@@ -103,6 +103,14 @@ def norm_ano(v) -> str:
     return str(v or "").strip()
 
 
+def _casa_ano(ano_tabela: str, pedido) -> bool:
+    """'26/27' exato; '2027' ou '27' = ano do MODELO 2027 (casa 26/27 e 27/27)."""
+    d = re.findall(r"\d+", str(pedido or ""))
+    if len(d) == 1:
+        return ano_tabela.split("/")[-1] == f"{int(d[0]) % 100:02d}"
+    return ano_tabela == norm_ano(pedido)
+
+
 def norm_up(v) -> str:
     s = norm(v)
     return s if s.startswith("UP") else ("UP" + s if len(s) == 1 else s)
@@ -338,7 +346,7 @@ def consultar(snap: dict | None, *, modelo: str | None = None, familia: str | No
             crit = cm if crit == "filtros" else crit
         if fam_q and p["familia"] != fam_q:
             continue
-        if ano_modelo and p["ano_modelo"] != norm_ano(ano_modelo):
+        if ano_modelo and not _casa_ano(p["ano_modelo"], ano_modelo):
             continue
         if up and p["up"] != norm_up(up):
             continue
@@ -480,7 +488,8 @@ def _partes_modelo(modelo: str, versao: str | None) -> list[str]:
     return [p if re.search(r"\d", p) or not prefixo else f"{prefixo} {p}" for p in pedacos]
 
 
-def consultar_mcp(snap: dict | None, *, modelo: str | None, quantidade: int, versao: str | None = None,
+def consultar_mcp(snap: dict | None, *, modelo: str | None, quantidade: int | None = None,
+                  versao: str | None = None,
                   origem: str | None = "todas", configuracao: str | None = None, ano_modelo: str | None = None,
                   up: str | None = None, agora: datetime | None = None, fonte_erro: str | None = None,
                   icms: float | None = None, uf: str | None = None, familia: str | None = None,
@@ -542,11 +551,12 @@ def consultar_mcp(snap: dict | None, *, modelo: str | None, quantidade: int, ver
     if st == "filtro_invalido":
         return {**out, "status_consulta": st, "resultados": [], "mensagem": r0.get("mensagem")}
     faixa, _ = _faixa(quantidade)
+    rot_faixa = faixa.replace("_", "-") if faixa else None
     if not itens:
         num = re.search(r"\d{3,4}", modelo or "")
         todos = sorted({(p["familia"], p["modelo"]) for p in snap.get("precos") or []})
         alt = [f"{f} {m}" for f, m in todos if num and numero_base(norm(m))[:2] == num.group(0)[:2]][:12]
-        return {**out, "status_consulta": "sem_resultados", "faixa_aplicada": faixa.replace("_", "-"),
+        return {**out, "status_consulta": "sem_resultados", "faixa_aplicada": rot_faixa,
                 "resultados": [], "alternativas_cadastradas": alt,
                 "mensagem": f"Nenhuma variante Fenatran para '{modelo or familia or variante or configuracao}'. A tabela "
                             "está ativa e só contém Mercedes-Benz Accelo, Atego, Actros e Axor. As alternativas "
@@ -556,10 +566,16 @@ def consultar_mcp(snap: dict | None, *, modelo: str | None, quantidade: int, ver
     for it, r in itens:
         precos = {}
         for nome, chave in (("fabrica", "fabrica"), ("estoque_ci102", "estoque")):
+            if nome not in mods:
+                continue
             fx = (it.get("faixa_aplicavel") or {}).get(chave)
-            if fx and nome in mods:
+            if fx:
                 precos[nome] = {"unitario": _decimal(fx["unitario_centavos"]), "unitario_brl": fx["unitario"],
                                 "total_lote": _decimal(fx["total_centavos"]), "total_lote_brl": fx["total"]}
+            elif quantidade is None and (it.get("precos") or {}).get(chave):
+                # sem quantidade: as duas faixas, só unitário (total do lote depende da quantidade)
+                precos[nome] = {f.replace("_", "-"): {"unitario": _decimal(v["centavos"]), "unitario_brl": v["valor"]}
+                                for f, v in it["precos"][chave].items() if isinstance(v, dict) and "centavos" in v}
         if "concessionario" in mods:
             precos["concessionario"] = {"status": "indisponivel", "justificativa": JUSTIFICATIVA_CONCESSIONARIO}
         resultados.append({"modelo": it["modelo"], "familia": it["familia"], "ano_modelo": it["ano_modelo"],
@@ -570,7 +586,10 @@ def consultar_mcp(snap: dict | None, *, modelo: str | None, quantidade: int, ver
             familias.append(it["familia"])
     cond = _condicoes({**METADADOS_PADRAO, **(((snap or {}).get("campanha") or {}).get("metadados") or {})},
                       familias, agora)
-    return {**out, "status_consulta": "ok", "faixa_aplicada": faixa.replace("_", "-"),
+    extra = {} if quantidade is not None else {
+        "observacao_quantidade": "Quantidade não informada: mostrando o preço unitário das duas faixas (5-10 e "
+                                 "11-15 unidades). Para o total do lote, informe a quantidade."}
+    return {**out, **extra, "status_consulta": "ok", "faixa_aplicada": rot_faixa,
             "total_encontrado": len(resultados), "resultados": resultados,
             "condicoes_comerciais": cond, "restricoes": r0.get("restricoes", []),
             "condicoes_tributarias": _tributos(snap, icms, uf),
