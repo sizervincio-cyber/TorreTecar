@@ -453,7 +453,11 @@ def _restricoes(meta: dict, origem: str) -> list[str]:
 # ---------------------------------------------------------------------------------------------------------------------
 # Contrato da ferramenta MCP consultar_precos_fenatran (somente leitura). Reaproveita consultar(); não recalcula imposto.
 
-ORIGENS_MCP = {"todas": "ambos", "fabrica": "fabrica", "estoque_ci102": "estoque"}
+ORIGENS_MCP = {"todas": "ambos", "fabrica": "fabrica", "estoque_ci102": "estoque", "estoque": "estoque",
+               "concessionario": "ambos"}
+MODALIDADES = ("fabrica", "estoque_ci102", "concessionario")
+JUSTIFICATIVA_CONCESSIONARIO = ("As circulares Fenatran trazem só preço Fábrica e Estoque CI 102; não existe preço "
+                                "'concessionário' cadastrado. Não estimar: consultar o gestor comercial.")
 _RE_SEPARA = re.compile(r"\s*(?:,|;|\+|\b[EeOo][Uu]?\b(?=\s))\s*")
 
 
@@ -478,7 +482,8 @@ def _partes_modelo(modelo: str, versao: str | None) -> list[str]:
 
 def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: str | None = None,
                   origem: str | None = "todas", configuracao: str | None = None, ano_modelo: str | None = None,
-                  up: str | None = None, agora: datetime | None = None, fonte_erro: str | None = None) -> dict:
+                  up: str | None = None, agora: datetime | None = None, fonte_erro: str | None = None,
+                  icms: float | None = None, uf: str | None = None) -> dict:
     """Resposta padronizada para o ChatGPT/Codex: faixa escolhida pela quantidade, unitário e total do lote em
     decimal exato por origem, fonte documental e restrições. fonte_erro: falha ao ler o snapshot (não é 'sem modelo')."""
     agora = agora or agora_sp()
@@ -489,10 +494,13 @@ def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: st
                 "mensagem": "A base Fenatran não pôde ser lida agora (falha de integração, não ausência do modelo). "
                             "Não use outra fonte de preço; tente de novo ou consulte o painel da Torre.",
                 **({"detalhe_erro": fonte_erro} if fonte_erro else {})}
-    o = ORIGENS_MCP.get((origem or "todas").strip().lower())
+    pedida = sem_acento((origem or "todas").strip().lower())
+    o = ORIGENS_MCP.get(pedida)
     if o is None:
         return {**base, "status_consulta": "filtro_invalido", "resultados": [],
-                "mensagem": "origem deve ser fabrica, estoque_ci102 ou todas"}
+                "mensagem": "modalidade deve ser fabrica, estoque_ci102, concessionario ou todas"}
+    pedida = {"estoque": "estoque_ci102"}.get(pedida, pedida)
+    mods = MODALIDADES if pedida == "todas" else (pedida,)
     if not (modelo or "").strip():
         return {**base, "status_consulta": "filtro_obrigatorio", "resultados": [], "mensagem": "Informe o modelo."}
 
@@ -521,17 +529,24 @@ def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: st
         return {**out, "status_consulta": st, "resultados": [], "mensagem": r0.get("mensagem")}
     faixa, _ = _faixa(quantidade)
     if not itens:
+        num = re.search(r"\d{3,4}", modelo or "")
+        todos = sorted({(p["familia"], p["modelo"]) for p in snap.get("precos") or []})
+        alt = [f"{f} {m}" for f, m in todos if num and numero_base(norm(m))[:2] == num.group(0)[:2]][:12]
         return {**out, "status_consulta": "sem_resultados", "faixa_aplicada": faixa.replace("_", "-"),
-                "resultados": [], "mensagem": f"Nenhuma variante Fenatran para '{modelo}'. A tabela está ativa; "
-                                             "confira o número do modelo (ex.: 2545, 2653, 1719)."}
+                "resultados": [], "alternativas_cadastradas": alt,
+                "mensagem": f"Nenhuma variante Fenatran para '{modelo}'. A tabela está ativa. As alternativas "
+                            "listadas são só modelos cadastrados com numeração próxima: não são equivalentes "
+                            "comerciais e não têm preço presumido."}
     resultados, familias = [], []
     for it, r in itens:
         precos = {}
         for nome, chave in (("fabrica", "fabrica"), ("estoque_ci102", "estoque")):
             fx = (it.get("faixa_aplicavel") or {}).get(chave)
-            if fx:
+            if fx and nome in mods:
                 precos[nome] = {"unitario": _decimal(fx["unitario_centavos"]), "unitario_brl": fx["unitario"],
                                 "total_lote": _decimal(fx["total_centavos"]), "total_lote_brl": fx["total"]}
+        if "concessionario" in mods:
+            precos["concessionario"] = {"status": "indisponivel", "justificativa": JUSTIFICATIVA_CONCESSIONARIO}
         resultados.append({"modelo": it["modelo"], "familia": it["familia"], "ano_modelo": it["ano_modelo"],
                            "up": it["up"], "qvv": it["variante"], "configuracao": it["configuracao"],
                            "precos": precos, "fonte_documental": it["source_file"], "pagina": it["source_page"],
@@ -543,6 +558,25 @@ def consultar_mcp(snap: dict | None, *, modelo: str, quantidade: int, versao: st
     return {**out, "status_consulta": "ok", "faixa_aplicada": faixa.replace("_", "-"),
             "total_encontrado": len(resultados), "resultados": resultados,
             "condicoes_comerciais": cond, "restricoes": r0.get("restricoes", []),
+            "condicoes_tributarias": _tributos(snap, icms, uf),
             "disponibilidade": "Preço não implica veículo disponível; confirmar estoque/programação com o comercial.",
             "atualizacao": {"versao_tabela": r0.get("versao"),
                             "expira_em": ((snap.get("campanha") or {}).get("expira_em"))}}
+
+
+def _tributos(snap: dict, icms: float | None, uf: str | None) -> dict:
+    meta = ((snap.get("campanha") or {}).get("metadados") or {})
+    al = {**METADADOS_PADRAO["aliquotas"], **(meta.get("aliquotas") or {})}
+    d = {"icms_fabrica_pct": al.get("icms_fabrica_pct"), "icms_estoque_ci102_pct": al.get("icms_estoque_pct"),
+         "origem_aliquotas": al.get("origem"), "nota": al.get("nota"),
+         "regra": "Preços nominais das circulares; a ferramenta não recalcula ICMS nem aplica regra por UF."}
+    if icms is not None:
+        d["icms_informado_na_pergunta"] = icms
+        if icms not in (al.get("icms_fabrica_pct"), al.get("icms_estoque_pct")):
+            d["aviso_icms"] = (f"ICMS {icms}% não corresponde às alíquotas cadastradas (fábrica "
+                               f"{al.get('icms_fabrica_pct')}%, estoque {al.get('icms_estoque_pct')}%); nenhum preço "
+                               "foi recalculado.")
+    if uf:
+        d["uf_informada"] = uf.strip().upper()[:2]
+        d["aviso_uf"] = "A tabela Fenatran não diferencia preço por UF."
+    return d

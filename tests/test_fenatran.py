@@ -364,7 +364,7 @@ def test_mcp_consulta_respeita_status_e_continua_somente_leitura(amb):
         t = next(x for x in tools if x["name"] == "consultar_precos_fenatran")
         assert t["annotations"]["readOnlyHint"] is True and t["annotations"]["destructiveHint"] is False
         assert set(t["inputSchema"]["required"]) == {"modelo", "quantidade"}
-        assert t["inputSchema"]["properties"]["origem"]["enum"] == ["fabrica", "estoque_ci102", "todas"]
+        assert t["inputSchema"]["properties"]["modalidade"]["enum"] == ["fabrica", "estoque_ci102", "concessionario", "todas"]
         assert "Fenatran" in t["description"] and "ASSOBENS" in t["description"]             # Teste G: roteamento
         pr = next(x for x in tools if x["name"] == "precos")
         assert "Fenatran" not in pr["description"]
@@ -391,7 +391,7 @@ def test_mcp_faixas_versoes_e_quantidade(amb):
         for q in (4, 16, 0):                                                                # Teste D
             r = sc(m, {"modelo": "2653", "quantidade": q})
             assert r["status_consulta"] == "quantidade_fora_condicao_fenatran" and r["resultados"] == []
-        r = sc(m, {"modelo": "2653", "quantidade": 5, "origem": "estoque_ci102"})
+        r = sc(m, {"modelo": "2653", "quantidade": 5, "modalidade": "estoque_ci102"})
         assert all(set(x["precos"]) == {"estoque_ci102"} for x in r["resultados"])
         r = sc(m, {"modelo": "9999", "quantidade": 5})
         assert r["status_consulta"] == "sem_resultados" and r["status"] == "ativo"
@@ -461,3 +461,28 @@ def test_real_axor_2545_ls_e_s_para_5_unidades():                               
         row = next(l for l in linhas if l["variante"] == x["qvv"])
         c = int(row["preco_fabrica_11_15_centavos"])
         assert x["precos"]["fabrica"]["unitario"] == f"{c // 100}.{c % 100:02d}"
+
+
+def test_mcp_modalidades_icms_e_alternativas(amb):                                    # Testes 01–06
+    importa(amb)
+    marca_conferido(amb)
+    status(amb, "active")
+    with mcp_app(amb["tmp"], amb["priv"]) as m:
+        r = sc(m, {"modelo": "Actros 2653 S", "quantidade": 15, "modalidade": "todas", "icms": 12, "uf": "go"})
+        assert r["status_consulta"] == "ok" and r["faixa_aplicada"] == "11-15"
+        assert {x["qvv"] for x in r["resultados"]} == {"QVV26539881C", "QVV26539929C"}
+        p = r["resultados"][0]["precos"]
+        assert p["fabrica"]["unitario"] == "99123.45" and p["fabrica"]["total_lote"] == "1486851.75"
+        assert p["estoque_ci102"]["unitario"] == "109000.00" and p["estoque_ci102"]["total_lote"] == "1635000.00"
+        assert p["concessionario"]["status"] == "indisponivel" and "unitario" not in p["concessionario"]
+        t = r["condicoes_tributarias"]
+        assert t["icms_fabrica_pct"] == 7 and t["icms_estoque_ci102_pct"] == 12 and "aviso_icms" not in t
+        assert t["uf_informada"] == "GO" and "aviso_uf" in t
+        r = sc(m, {"modelo": "2653", "quantidade": 5, "modalidade": "fabrica", "icms": 18})
+        assert all(set(x["precos"]) == {"fabrica"} for x in r["resultados"])
+        assert "aviso_icms" in r["condicoes_tributarias"]
+        r = sc(m, {"modelo": "Actros 2699", "quantidade": 5})
+        assert r["status_consulta"] == "sem_resultados" and "2653 S/36" in " ".join(r["alternativas_cadastradas"])
+        assert "precos" not in json.dumps(r["alternativas_cadastradas"])
+        r = rpc(m, "consultar_precos_fenatran", {"modelo": "2653", "quantidade": 5, "modalidade": "desconto"}).json()
+        assert r["result"]["isError"] is True and "100123" not in json.dumps(r)          # enum barrado no esquema

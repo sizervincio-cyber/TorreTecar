@@ -32,7 +32,11 @@ if [ -n "${TORRE_MCP_TOKEN:-}" ]; then
   echo "$i" | grep -q '"Torre Tecar"'; passo "Codex: initialize" $?
   l="$(curl -sS --max-time 30 -X POST -H "$T" -H "$J" -H "$A" "$MCP" -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}')"
   n="$(echo "$l" | tr -d ' ' | grep -o '"readOnlyHint":true' | wc -l)"
-  [ "$n" = 13 ]; passo "Codex: 13 ferramentas, todas readOnlyHint" $? "($n)"
+  [ "$n" = 14 ]; passo "Codex: 14 ferramentas, todas readOnlyHint" $? "($n)"
+  echo "$l" | grep -q '"consultar_precos_fenatran"'; passo "Codex: consultar_precos_fenatran publicada" $?
+  f="$(curl -sS --max-time 30 -X POST -H "$T" -H "$J" -H "$A" "$MCP" -d '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"consultar_precos_fenatran","arguments":{"modelo":"Actros 2653 S","quantidade":15}}}')"
+  echo "$f" | tr -d ' ' | grep -qE '"status_consulta":"(ok|campanha_inativa)"'
+  passo "Codex: consultar_precos_fenatran responde (2653 S, 15 un.)" $? "$(echo "$f" | grep -o '"status_consulta":"[a-z_]*"' | head -1)"
   s="$(curl -sS --max-time 60 -X POST -H "$T" -H "$J" -H "$A" "$MCP" -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"status_dados","arguments":{}}}')"
   echo "$s" | grep -q '"structuredContent"' && echo "$s" | tr -d ' ' | grep -q '"isError":false'
   passo "Codex: status_dados com dados reais" $?
