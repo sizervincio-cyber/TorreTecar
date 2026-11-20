@@ -4752,5 +4752,42 @@
    "16:14:34 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
   ],
   "warnings": []
+ },
+ {
+  "id": "20261119-225710",
+  "started_at": "2026-11-19T22:57:10-03:00",
+  "trigger_type": "scheduler",
+  "executed_by": "sizervincio-cyber",
+  "source": "assobens",
+  "finished_at": "2026-11-19T22:59:16-03:00",
+  "status": "success",
+  "file_name": "2257_emplacamentos.xlsx",
+  "file_hash": "734f335c80f32f84dd987d61c6742ca6eb18d7419384a58af79e99945aa86dd0",
+  "rows_downloaded": 3355,
+  "rows_valid": 3354,
+  "rows_imported": 0,
+  "rows_updated": 0,
+  "rows_rejected": 1,
+  "prices_updated": 4,
+  "rows_enriched": 0,
+  "error_message": null,
+  "duration_seconds": 126.1,
+  "steps": [
+   "22:57:17 tentativa 1/3",
+   "22:57:52 login concluído no portal",
+   "22:57:59 BI autenticado",
+   "22:58:21 download concluído: 2257_emplacamentos.xlsx",
+   "22:58:58 enriquecimento: 79 chassis sem proprietário · janela 2026-01-01 → 2026-11-19",
+   "22:59:13 download de enriquecimento concluído: 2257_enriquecimento.xlsx",
+   "22:59:14 arquivo lido: aba 'Export', 3355 linhas, 17 colunas mapeadas",
+   "22:59:14 normalização: {'validas': 3354, 'rejeitadas': 1, 'motivos': {'data inválida': 1}}",
+   "22:59:14 validação: nível ok, qualidade 75/100",
+   "22:59:14 upsert por CHASSI: 0 inseridos, 0 atualizados, 3354 iguais (matriz 27048)",
+   "22:59:15 enriquecimento: 3276 chassis de caminhões no relatório (0 de outros segmentos ignorados) · 0 inseridos · 0 atualizados/com proprietário · 3276 iguais · 0 ignorados",
+   "22:59:16 KPIs: mercado 27048, MB 4108, share 15.19% (12m: 16.24%); Top 10 em 4 segmentos",
+   "22:59:16 conferência ASSOBENS × Torre: Total Mercado 3354/3355 (Δ1); Total Mercedes-Benz 553/553 (Δ0); Market Share MB (%) 16.5/16.48 (Δ-0.02)",
+   "22:59:16 histórico de preços: 4 linhas novas/alteradas de 60 capturadas"
+  ],
+  "warnings": []
  }
 ]
