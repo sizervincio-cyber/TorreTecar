@@ -39,3 +39,6 @@ deploy/ssh/
 
 # Dados comerciais privados (Preço Fenatran: CSV, manifesto, PDFs e snapshot) - NUNCA versionar
 dados_privados/
+
+# Inteligência de carteira: página com dados do CRM, gerada fora do repositório e copiada direto para o VPS (nunca vai ao GitHub)
+inteligencia-carteira.html

@@ -20,6 +20,7 @@ _DADOS = [
     r"Analityc share/consolidado_emplacamentos_2020_2026\.xlsx",
     r"Analityc share/assobens/[\w.-]+\.(json|csv)",
     r"Analityc share/licitacoes/[\w.-]+\.json",
+    r"inteligencia-carteira\.html",  # página com dados do CRM (atendimento e emplacamentos por região)
 ]
 # Host público do simulador: só o necessário para o simule.html abrir.
 _PUBLICO = [r"simule\.html", r"ASSETS/grupo-tecar-squarelogo-1553565271092\.webp", r"LOGO\.png"]
