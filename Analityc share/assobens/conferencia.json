@@ -92,10 +92,10 @@
  "por_subsegmento_torre": [
   {
    "chave": "SEMIPESADOS",
-   "emplacamentos": 1473,
-   "share": 43.76,
-   "mercedes_benz": 243,
-   "share_mb_na_chave": 16.5
+   "emplacamentos": 1474,
+   "share": 43.79,
+   "mercedes_benz": 244,
+   "share_mb_na_chave": 16.55
   },
   {
    "chave": "EXTRAPESADOS",
@@ -106,10 +106,10 @@
   },
   {
    "chave": "MEDIOS",
-   "emplacamentos": 426,
-   "share": 12.66,
-   "mercedes_benz": 111,
-   "share_mb_na_chave": 26.06
+   "emplacamentos": 425,
+   "share": 12.63,
+   "mercedes_benz": 110,
+   "share_mb_na_chave": 25.88
   },
   {
    "chave": "LEVES",
