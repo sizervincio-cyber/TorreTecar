@@ -2638,7 +2638,7 @@ assobens_precos_comparativo,M.BENZ,MB 1733,MT|grupo MB 1726,458057.0,2026-11-26,
 assobens_precos_comparativo,VOLVO,VOLVO VM 290 4X2,MT|grupo MB 1726,472643.0,2026-11-26,2026-11-26T09:49:20-03:00
 assobens_precos_comparativo,VW,VW 18.320,MT|grupo MB 1726,540488.0,2026-11-26,2026-11-26T09:49:20-03:00
 assobens_precos_comparativo,VOLVO,VOLVO VM 290 6X2,Nacional|grupo MB 2429,539683.13,2026-11-27,2026-11-27T07:48:12-03:00
-assobens_precos_comparativo,M.BENZ,MB 2429,Nacional|grupo MB 2429,504122.87,2026-11-27,2026-11-27T07:48:12-03:00
+assobens_precos_comparativo,M.BENZ,MB 2429,Nacional|grupo MB 2429,504122.87,2026-11-27,2026-11-27T09:48:54-03:00
 assobens_precos_comparativo,IVECO,IVECO 24-280,Nacional|grupo MB 2429,516794.25,2026-11-27,2026-11-27T07:48:12-03:00
 assobens_precos_comparativo,VW,VW 26.260,Nacional|grupo MB 2429,514552.95,2026-11-27,2026-11-27T07:48:12-03:00
 assobens_precos_comparativo,M.BENZ,MB 2429,MT|grupo MB 2429,554535.0,2026-11-27,2026-11-27T07:48:12-03:00
@@ -2695,3 +2695,25 @@ assobens_precos_comparativo,M.BENZ,MB 1726,MT|grupo MB 1726,455738.0,2026-11-27,
 assobens_precos_comparativo,M.BENZ,MB 1733,MT|grupo MB 1726,458057.0,2026-11-27,2026-11-27T07:48:12-03:00
 assobens_precos_comparativo,VOLVO,VOLVO VM 290 4X2,MT|grupo MB 1726,472643.0,2026-11-27,2026-11-27T07:48:12-03:00
 assobens_precos_comparativo,VW,VW 18.320,MT|grupo MB 1726,540488.0,2026-11-27,2026-11-27T07:48:12-03:00
+assobens_precos_comparativo,FOTON,FOTON 1217,MT|grupo MB 2429,334615.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,IVECO,IVECO 11-190,MT|grupo MB 2429,352000.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,M.BENZ,MB 1117,MT|grupo MB 2429,363980.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 11.180,MT|grupo MB 2429,377932.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 14.210,Nacional|grupo MB 1719,462480.04,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,M.BENZ,MB 1417,Nacional|grupo MB 1719,440559.52,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,M.BENZ,MB 1419,Nacional|grupo MB 1719,423256.16,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 14.180,Nacional|grupo MB 1719,404794.04,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,IVECO,IVECO 15-210,Nacional|grupo MB 1719,404528.73,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 13.180,Nacional|grupo MB 1719,397611.25,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,M.BENZ,MB 1317,Nacional|grupo MB 1719,390131.83,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,IVECO,IVECO 15-210,MT|grupo MB 1719,399167.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,M.BENZ,MB 1417,MT|grupo MB 1719,464500.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 14.180,MT|grupo MB 1719,392106.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 18.260,Nacional|grupo MB 1726,520952.99,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 18.210,Nacional|grupo MB 1726,468091.86,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 17.210,Nacional|grupo MB 1726,438460.88,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,M.BENZ,MB 1719,Nacional|grupo MB 1726,436629.45,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,IVECO,IVECO 17-210,Nacional|grupo MB 1726,419397.37,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,IVECO,IVECO 15-210,MT|grupo MB 1726,399167.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,M.BENZ,MB 1417,MT|grupo MB 1726,464500.0,2026-11-27,2026-11-27T09:48:54-03:00
+assobens_precos_comparativo,VW,VW 14.180,MT|grupo MB 1726,392106.0,2026-11-27,2026-11-27T09:48:54-03:00
