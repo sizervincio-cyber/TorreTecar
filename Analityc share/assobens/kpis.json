@@ -899,24 +899,24 @@
  "por_terreno": [
   {
    "chave": "ON ROAD",
-   "emplacamentos": 25053,
-   "share": 92.43,
+   "emplacamentos": 25056,
+   "share": 92.44,
    "mercedes_benz": 3524,
-   "share_mb_na_chave": 14.07
+   "share_mb_na_chave": 14.06
   },
   {
    "chave": "OFF ROAD",
-   "emplacamentos": 1447,
-   "share": 5.34,
+   "emplacamentos": 1446,
+   "share": 5.33,
    "mercedes_benz": 464,
-   "share_mb_na_chave": 32.07
+   "share_mb_na_chave": 32.09
   },
   {
    "chave": "(vazio)",
-   "emplacamentos": 606,
-   "share": 2.24,
+   "emplacamentos": 604,
+   "share": 2.23,
    "mercedes_benz": 130,
-   "share_mb_na_chave": 21.45
+   "share_mb_na_chave": 21.52
   }
  ],
  "top_municipios": [
